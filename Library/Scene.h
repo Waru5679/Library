@@ -4,13 +4,12 @@
 class CScene
 {
 public:
-	virtual void Init() = 0;
-	virtual void Update() = 0;
-	virtual void Draw()=0;
-	virtual void Release()=0;
+	virtual void Init() = 0;	//初期化
+	virtual void Update() = 0;	//更新
+	virtual void Draw()=0;		//描画
+	virtual void Release()=0;	//解放
 
-	
-	int id;
+	int m_id; //シーンID
 private:
 	virtual void LoadAudio() = 0;		//音楽
 	virtual void LoadTexture() = 0;		//テクスチャ
@@ -21,11 +20,11 @@ private:
 class CSceneManager
 {
 public:
-	void SetScene(int n);
-	void Update();
-	void Draw();
+	void SetScene(int n);	//シーンのセット
+	void Update();			//更新
+	void Draw();			//描画
 private:
-	CScene* m_pNowScene;
+	CScene* m_pNowScene;	//現在のシーンのポインタ
 };
 
 extern CSceneManager g_Scene;

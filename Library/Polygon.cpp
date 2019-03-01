@@ -8,7 +8,7 @@
 CDraw g_Draw;
 
 //初期化
-void CDrawPolygon::Init()
+void CDraw::Init()
 {
 	//頂点情報
 	MY_VERTEX ver[]=
@@ -18,52 +18,51 @@ void CDrawPolygon::Init()
 		D3DXVECTOR3(0.1f, 0.0f, 0.0f),D3DXVECTOR3(0.0f,1.0f,0.0f),D3DXVECTOR2(1.0f,0.0f),
 		D3DXVECTOR3(0.1f, -0.1f, 0.0f),D3DXVECTOR3(0.0f,1.0f,0.0f),D3DXVECTOR2(1.0f,1.0f)
 	};
-	m_vertex = ver;
+	m_Vertex = ver;
 
 	//バーテックスバッファ作成
 	CreateBartex();
 
 	//マテリアル
-	m_material.Ka = D3DXVECTOR3(0.1f, 0.1f, 0.1f);
-	m_material.Kd = D3DXVECTOR3(0.1f, 0.1f, 0.1f);
-	m_material.Ks = D3DXVECTOR3(0.1f, 0.1f, 0.1f);
+	m_Material.Ka = D3DXVECTOR3(0.1f, 0.1f, 0.1f);
+	m_Material.Kd = D3DXVECTOR3(0.1f, 0.1f, 0.1f);
+	m_Material.Ks = D3DXVECTOR3(0.1f, 0.1f, 0.1f);
 
 }
 
 //描画 中継
-void CDrawPolygon::Draw3D(int TexId, D3DXMATRIX matWorld) 
+void CDraw::Draw3D(int TexId, D3DXMATRIX matWorld) 
 {	
 	Draw3D(g_Task.GetTex(TexId), matWorld);
 }
 
 //描画
-void CDrawPolygon::Draw3D(ID3D10ShaderResourceView* pResView, D3DXMATRIX matWorld)
+void CDraw::Draw3D(ID3D10ShaderResourceView* pResView, D3DXMATRIX matWorld)
 {
 	//テクスチャ
-	m_material.pTexture = pResView;
+	m_Material.pTexture = pResView;
 
 	//ワールド行列
 	m_matWorld = matWorld;
 
 	//シェーダーのセット
-	g_Shader.SetShader(matWorld, m_material);
+	g_Shader.SetShader(matWorld, m_Material);
 
 	//ポリゴンの描画
 	DrawPolygon();
 }
 
 //2D描画 中継
-void CDrawPolygon::Draw2D(int TexId, RECT_F* Out)
+void CDraw::Draw2D(int TexId, RECT_F* Out)
 {
-
 	Draw2D(g_Task.GetTex(TexId),Out);
 }
 
 //2D描画
-void CDrawPolygon::Draw2D(ID3D10ShaderResourceView* pResView, RECT_F*Out)
+void CDraw::Draw2D(ID3D10ShaderResourceView* pResView, RECT_F*Out)
 {
 	//テクスチャ
-	m_material.pTexture = pResView;
+	m_Material.pTexture = pResView;
 
 	//スクリーン座標から位置を取得
 	Camera* pCamera = g_Task.GetCamera(0);
@@ -79,14 +78,14 @@ void CDrawPolygon::Draw2D(ID3D10ShaderResourceView* pResView, RECT_F*Out)
 	m_matWorld = MakeMatWorld(m_vPos, m_vAngle, m_vScale);
 	   
 	//シェーダーのセット
-	g_Shader.SetShader(m_matWorld, m_material);
+	g_Shader.SetShader(m_matWorld, m_Material);
 
 	//ポリゴンの描画
 	DrawPolygon();
 }
 
 //バーテックスバッファー作成
-HRESULT CDrawPolygon::CreateBartex()
+HRESULT CDraw::CreateBartex()
 {
 	D3D10_BUFFER_DESC bd;
 	bd.Usage = D3D10_USAGE_DEFAULT;
@@ -95,7 +94,7 @@ HRESULT CDrawPolygon::CreateBartex()
 	bd.CPUAccessFlags = 0;
 	bd.MiscFlags = 0;
 	D3D10_SUBRESOURCE_DATA InitData;
-	InitData.pSysMem = m_vertex;
+	InitData.pSysMem = m_Vertex;
 	if (FAILED(dx.m_pDevice->CreateBuffer(&bd, &InitData, &m_pBuffer)))
 		return FALSE;
 
@@ -103,7 +102,7 @@ HRESULT CDrawPolygon::CreateBartex()
 }
 
 //ポリゴンの描画
-void CDrawPolygon::DrawPolygon()
+void CDraw::DrawPolygon()
 {
 	//バーテックスバッファーをセット
 	UINT stride = sizeof(MY_VERTEX);
@@ -116,16 +115,16 @@ void CDrawPolygon::DrawPolygon()
 
 	//プリミティブをレンダリング
 	D3D10_TECHNIQUE_DESC dc;
-	dx.m_pTechnique->GetDesc(&dc);
+	g_Shader.m_pTechnique->GetDesc(&dc);
 	for (UINT p = 0; p < dc.Passes; ++p)
 	{
-		dx.m_pTechnique->GetPassByIndex(p)->Apply(0);
+		g_Shader.m_pTechnique->GetPassByIndex(p)->Apply(0);
 		dx.m_pDevice->Draw(4, 0);
 	}
 }
 
 //テクスチャ読み込み
-void CDrawPolygon::LoadTexture(int Id,const char* Name)
+void CDraw::LoadTexture(int Id,const char* Name)
 {
 	ID3D10ShaderResourceView* pTex;
 	//テクスチャーを作成
@@ -133,4 +132,10 @@ void CDrawPolygon::LoadTexture(int Id,const char* Name)
 
 	//登録
 	g_Task.Insert(pTex, Id);
+}
+
+//解放
+void CDraw::Release()
+{
+	m_pBuffer->Release();
 }

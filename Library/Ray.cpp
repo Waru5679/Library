@@ -120,20 +120,19 @@ bool CRay::Ray(D3DXVECTOR3* OutPoint,D3DXVECTOR3 RayPos, D3DXVECTOR3 RayVec, D3D
 				OutPoint->x = x1 + a1 * t;
 				OutPoint->y = y1 + b1 * t;
 				OutPoint->z = z1 + c1 * t;
-
 			}
-
 			return true;
 		}
 		else
 		{
+			//Œğ·‚µ‚Ä‚¢‚È‚¢
 			return false;
 		}
 	}
 	else 
 	{
-			//Œğ·‚µ‚Ä‚¢‚È‚¢
-			return false;
+		//Œğ·‚µ‚Ä‚¢‚È‚¢
+		return false;
 	}	
 }
 

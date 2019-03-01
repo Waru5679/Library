@@ -11,7 +11,7 @@ void CInput::Init()
 		m_key[i] = false;
 }
 
-//マウス位置取得用　ウィンドウプロジージャー内に宣言
+//マウス位置取得
 void CInput::SetMousPos(UINT* uMsg, LPARAM* lParam)
 {
 	switch (*uMsg)

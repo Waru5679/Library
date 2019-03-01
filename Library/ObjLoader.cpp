@@ -217,7 +217,6 @@ HRESULT CObjLoader::LoadObj(const char* FileName, MY_MESH* pMesh)
 				{
 				//	4頂点の時に順番を入れ替える
 				//	N字を描くように
-
 					MY_VERTEX _0 = vartices[3];
 					MY_VERTEX _1 = vartices[2];
 					MY_VERTEX _2 = vartices[0];
@@ -304,7 +303,7 @@ HRESULT CObjLoader::LoadObj(const char* FileName, MY_MESH* pMesh)
 			}
 		}
 	}
-
+	
 	//ファイル終わり
 	fclose(fp);
 
@@ -453,10 +452,10 @@ void CObjLoader::DrawMesh(int ver_num,ID3D10Buffer* VertexBuffer,ID3D10Buffer* I
 
 	//プリミティブをレンダリング
 	D3D10_TECHNIQUE_DESC dc;
-	dx.m_pTechnique->GetDesc(&dc);
+	g_Shader.m_pTechnique->GetDesc(&dc);
 	for (UINT p = 0; p < dc.Passes; ++p)
 	{
-		dx.m_pTechnique->GetPassByIndex(p)->Apply(0);
+		g_Shader.m_pTechnique->GetPassByIndex(p)->Apply(0);
 		dx.m_pDevice->DrawIndexed(ver_num, 0, 0);
 	}
 }

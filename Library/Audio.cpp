@@ -18,10 +18,11 @@ void CAudio::Init()
 
 	if (m_pMasteringVoice != nullptr)
 	{
-		//ミックスボイス
+		//ミックスボイス作成
 		m_pXAudio2->CreateSubmixVoice(&m_pSubmixVoice, 1, 44100, 0, 0, 0, 0);
 	}
 
+	//マスターボリューム設定
 	MasterVolume(1.0f);
 }
 
@@ -30,21 +31,21 @@ void CAudio::Load(int Id,const char* Name,bool Loop)
 {
 	WAVEFORMATEX WaveFormatEx;
 	
+	//Wave情報を読み込む
 	ChunkInfo Chunk;
-	unsigned char* pResourceData = LoadWave(&Chunk, &WaveFormatEx, Name ,Loop);
-	m_ChunkData.insert(m_ChunkData.begin() + Id, Chunk);
+	unsigned char* pResourceData = LoadWave(&Chunk, &WaveFormatEx, Name);
 
-	m_pResourceData.insert(m_pResourceData.begin() + Id, pResourceData);
-
-	//再生のためのインターフェースの作成
 	if (m_pMasteringVoice != nullptr)
 	{
+		//再生のためのインターフェースの作成
+		IXAudio2SourceVoice* pSourceVoice;
 		XAUDIO2_SEND_DESCRIPTOR Send = { 0,m_pSubmixVoice };
 		XAUDIO2_VOICE_SENDS SendList = { 1,&Send };
-	
-		IXAudio2SourceVoice* pSourceVoice;
 		m_pXAudio2->CreateSourceVoice(&pSourceVoice, &WaveFormatEx, 0U, 2.0f, NULL, &SendList);
-		m_pSourceVoice.insert(m_pSourceVoice.begin() + Id, pSourceVoice);
+	
+		//サウンド情報を登録
+		SoundData data(Chunk, pResourceData, pSourceVoice, Loop);
+		m_SoundData.insert(m_SoundData.begin() + Id, data);
 	}
 }
 
@@ -57,68 +58,53 @@ void CAudio::StartMusic(int Id)
 	{
 		//サウンドバッファをソースボイスに送信
 		XAUDIO2_BUFFER SoundBuffer={ 0 };
-		SoundBuffer.AudioBytes = m_ChunkData[Id].Size;
-		SoundBuffer.pAudioData = (BYTE*)m_ChunkData[Id].pData;
+		SoundBuffer.AudioBytes = m_SoundData[Id].m_Chunk.Size;
+		SoundBuffer.pAudioData = (BYTE*)m_SoundData[Id].m_Chunk.pData;
 		SoundBuffer.Flags = XAUDIO2_END_OF_STREAM;
 		SoundBuffer.LoopCount = 0;
 	
-		XAUDIO2_SEND_DESCRIPTOR Send = { 0,m_pSubmixVoice };
-		XAUDIO2_VOICE_SENDS SendList = { 1,&Send };
-		m_pXAudio2->CreateSourceVoice(&m_pSourceVoice[Id], &WaveFormatEx, 0U, 2.0f, NULL, &SendList);
-
 		//サウンドバッファセット
-		HRESULT hr=m_pSourceVoice[Id]->SubmitSourceBuffer(&SoundBuffer);		
-
-		//すでに再生中ではないかチェックする
-		XAUDIO2_VOICE_STATE state;
-		m_pSourceVoice[Id]->GetState(&state);
+		HRESULT hr= m_SoundData[Id].m_pSourceVoice->SubmitSourceBuffer(&SoundBuffer);
 
 		//サウンドスタート
-		m_pSourceVoice[Id]->Start();
-
-		m_ChunkData[Id].Start = true;
+		m_SoundData[Id].m_pSourceVoice->Start();
+		m_SoundData[Id].m_bStart = true;
 	}
 }
 
-
+//更新
 void CAudio::Update()
 {
 	 XAUDIO2_VOICE_STATE state;
-	 for (unsigned int i = 0; i < m_pSourceVoice.size(); i++)
+	 for (unsigned int i = 0; i < m_SoundData.size(); i++)
 	 {
-		 m_pSourceVoice[i]->GetState(&state);
+		 //再生中かどうかをチェックする
+		 m_SoundData[i].m_pSourceVoice->GetState(&state);
 
 		 //再生が終わった時
 		 if (state.BuffersQueued == 0)
 		 {
-			 //再生されていた時
-			 if (m_ChunkData[i].Start == true)
-			 {
-				  //ループならもう一度再生
-				 if (m_ChunkData[i].Loop == true)
-				 {
-					 StopMusic(i);	//停止
-					 StartMusic(i);	//再生
-				 }
-				 else
-				 {
-					 StopMusic(i);	//停止
-				 }
+			 StopMusic(i);	//停止
+
+			 //ループで再生されていたらもう一度再生
+			 if (m_SoundData[i].m_bStart == true && m_SoundData[i].m_bLoop == true)
+			 {  
+				 StartMusic(i);	
 			 }
 		 } 
 	 }
 }
 
-//ストップ
+//停止
 void CAudio::StopMusic(int Id)
 {
-	m_pSourceVoice[Id]->Stop();					//音楽
-	m_pSourceVoice[Id]->FlushSourceBuffers();	//サウンドボイスに保留中のバッファを破棄
-	m_ChunkData[Id].Start = false;
+	m_SoundData[Id].m_pSourceVoice->Stop();					//音楽を止める
+	m_SoundData[Id].m_pSourceVoice->FlushSourceBuffers();	//サウンドボイスに保留中のバッファを破棄
+	m_SoundData[Id].m_bStart = false;
 }
 
 //Wave読み込み
-unsigned char* CAudio::LoadWave(ChunkInfo* pChunkInfo, WAVEFORMATEX* pWave, const char* Name,bool Loop)
+unsigned char* CAudio::LoadWave(ChunkInfo* pChunkInfo, WAVEFORMATEX* pWave, const char* Name)
 {
 	unsigned char* WaveData;
 
@@ -139,7 +125,6 @@ unsigned char* CAudio::LoadWave(ChunkInfo* pChunkInfo, WAVEFORMATEX* pWave, cons
 
 	//RIFFファイルの解析
 	//RIFFデータの先頭アドレスとRIFFデータのサイズを渡す
-	
 	ChunkInfo WaveChunk = FindChunk(WaveData, (char*)"fmt");
 	unsigned char*p = WaveChunk.pData;
 
@@ -169,7 +154,6 @@ unsigned char* CAudio::LoadWave(ChunkInfo* pChunkInfo, WAVEFORMATEX* pWave, cons
 	ChunkInfo info= FindChunk(WaveData, (char*)"data");
 	pChunkInfo->Size = info.Size;
 	pChunkInfo->pData = info.pData;
-	pChunkInfo->Loop = Loop;
 	
 	return WaveData;
 }
@@ -223,27 +207,27 @@ ChunkInfo CAudio::FindChunk(unsigned char* pData, char* pChunkName)
 	return ChunkInfo();
 }
 
-//破棄
-void CAudio::Delete()
-{	
+//音楽情報の破棄
+void CAudio::DeleteMusic()
+{
 	//ソースボイス破棄
-	for (unsigned int i = 0; i < m_pSourceVoice.size(); i++)
+	for (unsigned int i = 0; i < m_SoundData.size(); i++)
 	{
-		if (m_pSourceVoice[i] != nullptr)
+		if (m_SoundData[i].m_pSourceVoice != nullptr)
 		{
-			m_pSourceVoice[i]->Stop();
-			m_pSourceVoice[i]->FlushSourceBuffers();
-			m_pSourceVoice[i]->DestroyVoice();
+			m_SoundData[i].m_pSourceVoice->Stop();
+			m_SoundData[i].m_pSourceVoice->FlushSourceBuffers();
+			m_SoundData[i].m_pSourceVoice->DestroyVoice();
 		}
 	}
-	m_pSourceVoice.erase(m_pSourceVoice.begin(), m_pSourceVoice.end());
-
-	//リソース破棄
-	m_pResourceData.erase(m_pResourceData.begin(), m_pResourceData.end());
-	
 	//サウンド情報破棄
-	m_ChunkData.erase(m_ChunkData.begin(), m_ChunkData.end());
-	
+	m_SoundData.erase(m_SoundData.begin(), m_SoundData.end());
+}
+
+
+//解放
+void CAudio::Release()
+{	
 	//ミックスサウンドの破棄
 	if (m_pSubmixVoice != nullptr)
 	{

@@ -13,128 +13,167 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="リソース ファイル\DirectX">
+      <UniqueIdentifier>{5d519ee9-4825-4f97-948e-37c21f9fe73b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="リソース ファイル\Shader">
+      <UniqueIdentifier>{fe714b0d-c26d-4d3b-b6fe-a38ec7a52bf9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="リソース ファイル\Polygon">
+      <UniqueIdentifier>{a36eb3c5-ba07-4295-8dce-3096fe95ad8d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="リソース ファイル\Math">
+      <UniqueIdentifier>{5865c538-8f2b-4f60-a3bf-65cd37f5c088}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="リソース ファイル\Trace">
+      <UniqueIdentifier>{03a70c71-97e3-4bd7-9ff3-ea635473e8f1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="リソース ファイル\Route">
+      <UniqueIdentifier>{825020d2-e9b4-4a4f-8dd6-505674766f10}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="リソース ファイル\Scene">
+      <UniqueIdentifier>{41d48d84-d4a7-48d1-bc72-dc961793c561}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="リソース ファイル\Input">
+      <UniqueIdentifier>{9e6a97ab-3f4a-47ef-a7f5-abd6dfedb696}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="リソース ファイル\Audio">
+      <UniqueIdentifier>{b5295472-04eb-42df-bd37-b80243fefc40}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="リソース ファイル\Font">
+      <UniqueIdentifier>{66fbf68f-2329-4345-9969-c1ea127e7afc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="リソース ファイル\Ray">
+      <UniqueIdentifier>{ecd47e0d-425e-4d47-b313-d9bb660a4848}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="リソース ファイル\Obb">
+      <UniqueIdentifier>{f1394842-92ca-463a-b107-4e76461297e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="リソース ファイル\Task">
+      <UniqueIdentifier>{692da2e3-4dfa-4136-8a0c-dc6183c0120d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Audio.h">
-      <Filter>ソース ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Camera.h">
-      <Filter>ソース ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="CObj.h">
-      <Filter>ソース ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="DirectX.h">
-      <Filter>ソース ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Font.h">
-      <Filter>ソース ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Input.h">
-      <Filter>ソース ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="MainCamera.h">
-      <Filter>ソース ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Math.h">
-      <Filter>ソース ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Obb.h">
-      <Filter>ソース ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="ObjLoader.h">
       <Filter>ソース ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Player.h">
       <Filter>ソース ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Polygon.h">
-      <Filter>ソース ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Ray.h">
-      <Filter>ソース ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Route.h">
-      <Filter>ソース ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Scene.h">
-      <Filter>ソース ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="SceneMain.h">
-      <Filter>ソース ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Shader.h">
-      <Filter>ソース ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Task.h">
-      <Filter>ソース ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Trace.h">
       <Filter>ソース ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Main.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="DirectX.h">
+      <Filter>リソース ファイル\DirectX</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjLoader.h">
+      <Filter>リソース ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="CObj.h">
+      <Filter>リソース ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>リソース ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader.h">
+      <Filter>リソース ファイル\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="Polygon.h">
+      <Filter>リソース ファイル\Polygon</Filter>
+    </ClInclude>
+    <ClInclude Include="Math.h">
+      <Filter>リソース ファイル\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Trace.h">
+      <Filter>リソース ファイル\Trace</Filter>
+    </ClInclude>
+    <ClInclude Include="Route.h">
+      <Filter>リソース ファイル\Route</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene.h">
+      <Filter>リソース ファイル\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Input.h">
+      <Filter>リソース ファイル\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Audio.h">
+      <Filter>リソース ファイル\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="Font.h">
+      <Filter>リソース ファイル\Font</Filter>
+    </ClInclude>
+    <ClInclude Include="Ray.h">
+      <Filter>リソース ファイル\Ray</Filter>
+    </ClInclude>
+    <ClInclude Include="Obb.h">
+      <Filter>リソース ファイル\Obb</Filter>
+    </ClInclude>
+    <ClInclude Include="Task.h">
+      <Filter>リソース ファイル\Task</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Audio.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="DirectX.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Font.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Input.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="MainCamera.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Math.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Obb.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="ObjLoader.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Player.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Polygon.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Ray.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Route.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Scene.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="SceneMain.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Shader.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Task.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Trace.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Main.cpp">
       <Filter>ヘッダー ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="DirectX.cpp">
+      <Filter>リソース ファイル\DirectX</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjLoader.cpp">
+      <Filter>リソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader.cpp">
+      <Filter>リソース ファイル\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="Polygon.cpp">
+      <Filter>リソース ファイル\Polygon</Filter>
+    </ClCompile>
+    <ClCompile Include="Math.cpp">
+      <Filter>リソース ファイル\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Trace.cpp">
+      <Filter>リソース ファイル\Trace</Filter>
+    </ClCompile>
+    <ClCompile Include="Route.cpp">
+      <Filter>リソース ファイル\Route</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene.cpp">
+      <Filter>リソース ファイル\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Input.cpp">
+      <Filter>リソース ファイル\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="Audio.cpp">
+      <Filter>リソース ファイル\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="Font.cpp">
+      <Filter>リソース ファイル\Font</Filter>
+    </ClCompile>
+    <ClCompile Include="Ray.cpp">
+      <Filter>リソース ファイル\Ray</Filter>
+    </ClCompile>
+    <ClCompile Include="Obb.cpp">
+      <Filter>リソース ファイル\Obb</Filter>
+    </ClCompile>
+    <ClCompile Include="Task.cpp">
+      <Filter>リソース ファイル\Task</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Geometry_Material_Texture.fx">
-      <Filter>ソース ファイル</Filter>
+      <Filter>リソース ファイル</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

@@ -1,6 +1,7 @@
 #include "Font.h"
 #include "DirectX.h"
 #include "Math.h"
+
 HFONT		CFont::m_hFont;		//フォントハンドル(論理)
 HFONT		CFont::m_oldFont;	//フォントハンドル(物理)
 HDC			CFont::m_hdc;		//ディスプレイデバイスコンテキストのハンドル
@@ -173,7 +174,7 @@ void CFont::Init()
 }
 
 //削除
-void CFont::Delete()
+void CFont::Release()
 {
 	list_char_tex->clear();
 	DeleteObject(m_oldFont);

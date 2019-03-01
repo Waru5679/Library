@@ -13,7 +13,7 @@ struct RECT_F
 };
 
 //描画クラス
-typedef class CDrawPolygon
+class CDraw
 {
 public:
 	//初期化
@@ -27,22 +27,30 @@ public:
 
 	//テクスチャ読み込み
 	void LoadTexture(int Id, const char* Name);
+
+	//カメラセット
+	void SetCamera(Camera* pCamera) { m_pCamera = pCamera; }
+
+	//解放
+	void Release();
 	
 private:
 	void DrawPolygon();		//ポリゴン描画
 	HRESULT CreateBartex();	//バーテックスバッファの作成
-
-
-	MY_MATERIAL m_material;	//マテリアル
-	MY_VERTEX* m_vertex;	//頂点
+	
 	ID3D10Buffer* m_pBuffer;//バーテックスバッファ
+
+	MY_MATERIAL m_Material;	//マテリアル
+	MY_VERTEX* m_Vertex;	//頂点
 	
 	D3DXVECTOR3 m_vPos;		//位置
 	D3DXVECTOR3 m_vAngle;	//回転
 	D3DXVECTOR3 m_vScale;	//大きさ
 
 	D3DXMATRIX m_matWorld;	//ワールド行列
+	
+	Camera* m_pCamera;	//カメラポインタ
 
-}CDraw;
+};
 
 extern CDraw g_Draw;

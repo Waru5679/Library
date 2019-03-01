@@ -1,16 +1,9 @@
 #pragma once 
-
-//ヘッダファイル
+#include "Main.h"
 #include <locale.h>
 #include <wchar.h>
-#include <Windows.h>
 #include <memory>
 #include <list>
-
-#include <d3d10.h>
-#include <D3DX10.h>
-#pragma comment(lib,"d3d10.lib")
-
 #include "Polygon.h"
 
 using namespace std;
@@ -52,8 +45,10 @@ private:
 class CFont
 {
 public:
-	static void Init();
-	static void Delete();
+	static void Init();		//初期化
+	static void Release();	//解放
+
+	//文字列描画
 	static void DrawStr(const wchar_t* str,float x,float y,float size);
 
 private:

@@ -10,7 +10,7 @@
 #pragma comment(lib,"d3d10.lib")
 #pragma comment(lib,"d3dx10.lib")
 
-//定数
+//ウインドウサイズ
 #define WINDOW_WIDTH 640
 #define WINDOW_HEIGHT 480
 
@@ -21,15 +21,17 @@ void LoadScene();
 static WCHAR szAppName[] = L"ライブラリ";
 
 //初めのシーン
-#define START_SCENE SceneName::Main
+#define START_SCENE Scene_Main
 
 //シーン
 enum SceneName
 {
-	Main,
+	Scene_Main,	//メイン
 };
 
+//オブジェクト
 enum ObjName
 {
-	Player,
+	Obj_MainCamera,	//メインカメラ
+	Obj_Player,		//プレイヤー
 };

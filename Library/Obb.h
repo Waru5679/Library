@@ -41,15 +41,10 @@ struct HIT_DATA
 	OBB_Data* obb;
 };
 
-
 //OBBクラス
 class COBB
 {
-
 public:
-	COBB() {};
-	~COBB() {};
-
 	//OBBセット
 	OBB_Data SetOBB(D3DXVECTOR3 Pos, D3DXVECTOR3 Angle, D3DXVECTOR3 Scale, D3DXVECTOR3 Min, D3DXVECTOR3 Max, int ObjName, void* p);
 
@@ -64,9 +59,7 @@ public:
 
 	//めり込み修正
 	D3DXVECTOR3 NestingCorrection(OBB_Data* StopObb,OBB_Data* MoveObb);
-
 private:
-
 	//衝突判定
 	bool Collision(OBB_Data* obb1, OBB_Data* obb2);
 

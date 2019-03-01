@@ -1,10 +1,11 @@
 #pragma once
+#include "CObj.h"
 
 //継承用　カメラクラス
-class Camera
+class Camera :public CObj
 {
 public:
-	virtual void Init()=0;	//初期化
+	virtual void Init()=0;		//初期化
 	virtual void Update()=0;	//更新
 
 	D3DXMATRIX GetWorldMatrix() { return m_matWorld; }
@@ -20,7 +21,7 @@ protected:
 	D3DXVECTOR3 m_vUp;	//カメラの向き
 	
 	D3DXVECTOR3 m_vAngle;	//角度
-	D3DXVECTOR3 m_vVertical;//カメラにに垂直になる角度(２D描画用)
+	D3DXVECTOR3 m_vVertical;//カメラに垂直になる角度(２D描画用)
 
 	D3DXMATRIX m_matView;	//ビューマトリックス
 	D3DXMATRIX m_matProj;	//プロジェクションマトリックス

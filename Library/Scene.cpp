@@ -3,6 +3,7 @@
 
 CSceneManager g_Scene;
 
+//シーンセット
 void CSceneManager::SetScene(int n)
 {
 	//現在のシーンの開放
@@ -16,11 +17,13 @@ void CSceneManager::SetScene(int n)
 	m_pNowScene->Init();
 }
 
+//シーンの更新
 void CSceneManager::Update()
 {
 	m_pNowScene->Update();
 }
 
+//シーンの描画
 void CSceneManager::Draw()
 {
 	m_pNowScene->Draw();

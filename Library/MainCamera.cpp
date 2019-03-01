@@ -9,8 +9,8 @@
 void CMainCamera::Init()
 {
 	//èâä˙ÉJÉÅÉâÇÃà íu
-	m_vEye = D3DXVECTOR3(0.0f, 15.0f, -2.0f);
-	m_vLook = D3DXVECTOR3(0.0f, 10.0f, 10.0f);
+	m_vEye = D3DXVECTOR3(0.0f, 5.0f, -2.0f);
+	m_vLook = D3DXVECTOR3(0.0f, 2.0f, 1.0f);
 	m_vUp = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
 
 	D3DXMatrixIdentity(&m_matWorld);

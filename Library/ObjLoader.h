@@ -5,7 +5,7 @@
 
 using namespace std;
 
-//頂点構造体　今回は、位置だけでなく法線も（マテリアル反映は法線が必要）
+//頂点構造体
 struct MY_VERTEX
 {
 	D3DXVECTOR3 vPos;
@@ -13,11 +13,12 @@ struct MY_VERTEX
 	D3DXVECTOR2 vTex;
 };
 
-//オリジナル　マテリアル構造体
+//マテリアル構造体
 struct MY_MATERIAL
 {
 	//マテリアル名
 	CHAR szName[100];
+
 	D3DXVECTOR3 Ka;//アンビエント(環境光)
 	D3DXVECTOR3 Kd;//ディフューズ(拡散光)
 	D3DXVECTOR3 Ks;//スペキュラー(鏡面反射光）
@@ -46,6 +47,7 @@ struct MY_MESH
 	D3DXVECTOR3 vMax;	//頂点の最大座標
 };
 
+//OBJデータ読み込みクラス
 class CObjLoader
 {
 public:

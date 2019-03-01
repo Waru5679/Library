@@ -2,16 +2,16 @@
 #include "Main.h"
 #include "ObjLoader.h"
 
-
-//オブジェクト　継承用クラス
+//オブジェクト　継承用クラス(ゲームオブジェクト全てに継承させる)
 class CObj
 {
 public:
-	virtual void Init() = 0;
-	virtual void Update() = 0;
-	virtual void Draw() = 0;
-	int m_id;
-	bool m_fDelete;
+	virtual void Init() = 0;	//初期化
+	virtual void Update() = 0;	//更新
+	virtual void Draw() = 0;	//描画
+
+	int m_id;		//オブジェクトID
+	bool m_fDelete;	//削除フラグ
 
 protected:
 	//ベクトル

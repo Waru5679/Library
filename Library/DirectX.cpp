@@ -1,8 +1,4 @@
 #include "DirectX.h"
-#include "CObj.h"
-#include "Camera.h"
-#include "Shader.h"
-#include "ObjLoader.h"
 
 CDirectX dx;
 
@@ -24,14 +20,8 @@ HRESULT CDirectX::Init(HWND hWnd)
 	CreateStencil();		
 
 	//ラスタライザ設定
-	CreateRasterizer();
+	SetRasterizer();
 
-	//シェーダー初期化
-	if (FAILED(g_Shader.Init()))
-	{
-		return E_FAIL;
-	}
-	
 	return S_OK;
 }
 
@@ -98,22 +88,21 @@ void CDirectX::CreateStencil()
 	descDepth.BindFlags = D3D10_BIND_DEPTH_STENCIL;
 	descDepth.CPUAccessFlags = 0;
 	descDepth.MiscFlags = 0;
-	dx.m_pDevice->CreateTexture2D(&descDepth, NULL, &dx.m_pDepthStencil);
+	m_pDevice->CreateTexture2D(&descDepth, NULL, &m_pDepthStencil);
 
 	D3D10_DEPTH_STENCIL_VIEW_DESC descDSV;
 	descDSV.Format = descDepth.Format;
 	descDSV.ViewDimension = D3D10_DSV_DIMENSION_TEXTURE2D;
 	descDSV.Texture2D.MipSlice = 0;
-	dx.m_pDevice->CreateDepthStencilView(dx.m_pDepthStencil, &descDSV, &dx.m_pDepthStencilView);
+	m_pDevice->CreateDepthStencilView(m_pDepthStencil, &descDSV, &m_pDepthStencilView);
 
 	//レンダーターゲットビューと深度ステンシルビューをパイプラインにバインド
-	dx.m_pDevice->OMSetRenderTargets(1, &dx.m_pRenderTargetView, dx.m_pDepthStencilView);
+	m_pDevice->OMSetRenderTargets(1, &m_pRenderTargetView, m_pDepthStencilView);
 }
 
-//ラスタライザの作成
-void CDirectX::CreateRasterizer()
+//ラスタライズ設定
+void CDirectX::SetRasterizer()
 {
-	//ラスタライズ設定
 	D3D10_RASTERIZER_DESC rdc;
 	ZeroMemory(&rdc, sizeof(rdc));
 	rdc.CullMode = D3D10_CULL_NONE;//CCW
@@ -127,11 +116,9 @@ void CDirectX::CreateRasterizer()
 //メモリ開放
 void CDirectX::Release()
 {
-	m_pDepthStencil->Release();
 	m_pDepthStencilView->Release();
-	m_pEffect->Release();
-	m_pSwapChain->Release();
+	m_pDepthStencil->Release();
 	m_pRenderTargetView->Release();
-	m_pVertexLayout->Release();
+	m_pSwapChain->Release();
 	m_pDevice->Release();
 }
