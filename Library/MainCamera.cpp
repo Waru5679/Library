@@ -46,7 +46,7 @@ void CMainCamera::Update()
 	}
 
 	//プレイヤーの位置
-	CPlayer* m_pPlayer=dynamic_cast<CPlayer*>(g_Task.Get3DObj(ObjName::Player));
+	CPlayer* m_pPlayer=dynamic_cast<CPlayer*>(g_Task.GetObj(Obj_Player));
 	m_vPlayerPos = m_pPlayer->GetPos();
 
 	//プレイヤーの方向

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Main.h"
+#include "Camera.h"
 #include "ObjLoader.h"
 #include <windef.h>
 
@@ -50,7 +51,6 @@ private:
 	D3DXMATRIX m_matWorld;	//ワールド行列
 	
 	Camera* m_pCamera;	//カメラポインタ
-
 };
 
 extern CDraw g_Draw;

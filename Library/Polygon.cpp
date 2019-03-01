@@ -65,8 +65,7 @@ void CDraw::Draw2D(ID3D10ShaderResourceView* pResView, RECT_F*Out)
 	m_Material.pTexture = pResView;
 
 	//スクリーン座標から位置を取得
-	Camera* pCamera = g_Task.GetCamera(0);
-	CalcScreenToWorld(&m_vPos, Out->m_left, Out->m_top, 0.0f, WINDOW_WIDTH, WINDOW_HEIGHT, &pCamera->GetViewMatrix(), &pCamera->GetProjMatrix());
+	CalcScreenToWorld(&m_vPos, Out->m_left, Out->m_top, 0.0f, WINDOW_WIDTH, WINDOW_HEIGHT, &m_pCamera->GetViewMatrix(), &m_pCamera->GetProjMatrix());
 	
 	//スケール
 	m_vScale.x = (Out->m_right  - Out->m_left) / 240.0f;
@@ -74,7 +73,7 @@ void CDraw::Draw2D(ID3D10ShaderResourceView* pResView, RECT_F*Out)
 	m_vScale.z = 0.0f;
 
 	//カメラの回転を取得
-	m_vAngle= pCamera->GetVertical();
+	m_vAngle= m_pCamera->GetVertical();
 	m_matWorld = MakeMatWorld(m_vPos, m_vAngle, m_vScale);
 	   
 	//シェーダーのセット
