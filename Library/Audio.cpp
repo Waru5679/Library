@@ -52,8 +52,6 @@ void CAudio::Load(int Id,const char* Name,bool Loop)
 //再生
 void CAudio::StartMusic(int Id)
 {
-	WAVEFORMATEX WaveFormatEx;
-
 	if(m_pMasteringVoice!=nullptr)
 	{
 		//サウンドバッファをソースボイスに送信
