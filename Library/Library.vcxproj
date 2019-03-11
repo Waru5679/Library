@@ -133,6 +133,7 @@
     <ClInclude Include="Audio.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CObj.h" />
+    <ClInclude Include="Csv.h" />
     <ClInclude Include="DirectX.h" />
     <ClInclude Include="Font.h" />
     <ClInclude Include="Input.h" />
@@ -158,6 +159,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Audio.cpp" />
+    <ClCompile Include="Csv.cpp" />
     <ClCompile Include="DirectX.cpp" />
     <ClCompile Include="Font.cpp" />
     <ClCompile Include="Input.cpp" />
