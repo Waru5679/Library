@@ -58,8 +58,7 @@ void CMainCamera::Update()
 	m_vEye = m_vPlayerPos - m_vPlayerFront * m_fCameraDis;
 
 	m_vEye.y += 2.0f;
-
-
+	
 	//頂点シェーダ用のマトリックス作成
 	CreateVSMatrix(&m_vEye, &m_vLook, &m_vUp, &m_matView, &m_matProj, WINDOW_WIDTH, WINDOW_HEIGHT);
 }
