@@ -108,6 +108,7 @@ int MostLongComponent(D3DXVECTOR3 Vec)
 			return COMP_Z;
 	}
 }
+
 //スクリーン座標から3D座標を求める
 D3DXVECTOR3* CalcScreenToWorld(
 	D3DXVECTOR3* pOut,

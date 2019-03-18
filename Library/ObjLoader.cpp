@@ -415,7 +415,7 @@ void CObjLoader::Draw(D3DMATRIX matWorld,MY_MESH* pMesh)
 		int size = pMesh->Material[i].pVertex.size();
 
 		//シェーダーのセット
-		g_Shader.SetShader(matWorld, pMesh->Material[i]);
+		g_Shader.SetShader(pMesh->Material[i].pTexture, matWorld);
 
 		for (int j = 0; j <size; j++)
 		{

@@ -22,12 +22,6 @@ void CDraw::Init()
 
 	//バーテックスバッファ作成
 	CreateBartex();
-
-	//マテリアル
-	m_Material.Ka = D3DXVECTOR3(0.1f, 0.1f, 0.1f);
-	m_Material.Kd = D3DXVECTOR3(0.1f, 0.1f, 0.1f);
-	m_Material.Ks = D3DXVECTOR3(0.1f, 0.1f, 0.1f);
-
 }
 
 //描画 中継
@@ -39,14 +33,8 @@ void CDraw::Draw3D(int TexId, D3DXMATRIX matWorld)
 //描画
 void CDraw::Draw3D(ID3D10ShaderResourceView* pResView, D3DXMATRIX matWorld)
 {
-	//テクスチャ
-	m_Material.pTexture = pResView;
-
-	//ワールド行列
-	m_matWorld = matWorld;
-
 	//シェーダーのセット
-	g_Shader.SetShader(matWorld, m_Material);
+	g_Shader.SetShader(pResView,matWorld);
 
 	//ポリゴンの描画
 	DrawPolygon();
@@ -61,9 +49,7 @@ void CDraw::Draw2D(int TexId, RECT_F* Out)
 //2D描画
 void CDraw::Draw2D(ID3D10ShaderResourceView* pResView, RECT_F*Out)
 {
-	//テクスチャ
-	m_Material.pTexture = pResView;
-
+	
 	//スクリーン座標から位置を取得
 	CalcScreenToWorld(&m_vPos, Out->m_left, Out->m_top, 0.0f, WINDOW_WIDTH, WINDOW_HEIGHT, &m_pCamera->GetViewMatrix(), &m_pCamera->GetProjMatrix());
 	
@@ -71,13 +57,14 @@ void CDraw::Draw2D(ID3D10ShaderResourceView* pResView, RECT_F*Out)
 	m_vScale.x = (Out->m_right  - Out->m_left) / 240.0f;
 	m_vScale.y = (Out->m_bottom - Out->m_top)/ 240.0f;
 	m_vScale.z = 0.0f;
+	 
+	//カメラの向きを取得
+	m_vAngle = m_pCamera->GetVertical();
 
-	//カメラの回転を取得
-	m_vAngle= m_pCamera->GetVertical();
 	m_matWorld = MakeMatWorld(m_vPos, m_vAngle, m_vScale);
 	   
 	//シェーダーのセット
-	g_Shader.SetShader(m_matWorld, m_Material);
+	g_Shader.SetShader(pResView,m_matWorld);
 
 	//ポリゴンの描画
 	DrawPolygon();

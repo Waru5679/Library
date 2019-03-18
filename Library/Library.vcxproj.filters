@@ -181,8 +181,8 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Geometry_Material_Texture.fx">
-      <Filter>リソース ファイル</Filter>
+    <FxCompile Include="Geometry_Texture.fx">
+      <Filter>リソース ファイル\Shader</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

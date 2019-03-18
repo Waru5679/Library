@@ -40,10 +40,8 @@ private:
 	HRESULT CreateBartex();	//バーテックスバッファの作成
 	
 	ID3D10Buffer* m_pBuffer;//バーテックスバッファ
-
-	MY_MATERIAL m_Material;	//マテリアル
 	MY_VERTEX* m_Vertex;	//頂点
-	
+	   	
 	D3DXVECTOR3 m_vPos;		//位置
 	D3DXVECTOR3 m_vAngle;	//回転
 	D3DXVECTOR3 m_vScale;	//大きさ
