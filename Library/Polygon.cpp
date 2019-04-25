@@ -41,30 +41,49 @@ void CDraw::Draw3D(ID3D10ShaderResourceView* pResView, D3DXMATRIX matWorld)
 }
 
 //2D描画 中継
-void CDraw::Draw2D(int TexId, RECT_F* Out)
+void CDraw::Draw2D(int TexId, RECT_F* Out, D3DXMATRIX matWorld)
 {
-	Draw2D(g_Task.GetTex(TexId),Out);
+	Draw2D(g_Task.GetTex(TexId),Out,matWorld);
 }
 
 //2D描画
-void CDraw::Draw2D(ID3D10ShaderResourceView* pResView, RECT_F*Out)
+void CDraw::Draw2D(ID3D10ShaderResourceView* pResView, RECT_F*Out,D3DXMATRIX matWorld)
 {
 	
-	//スクリーン座標から位置を取得
-	CalcScreenToWorld(&m_vPos, Out->m_left, Out->m_top, 0.0f, WINDOW_WIDTH, WINDOW_HEIGHT, &m_pCamera->GetViewMatrix(), &m_pCamera->GetProjMatrix());
-	
-	//スケール
-	m_vScale.x = (Out->m_right  - Out->m_left) / 240.0f;
-	m_vScale.y = (Out->m_bottom - Out->m_top)/ 240.0f;
-	m_vScale.z = 0.0f;
-	 
-	//カメラの向きを取得
-	m_vAngle = m_pCamera->GetVertical();
+	////スクリーン座標から位置を取得
+	//CalcScreenToWorld(&m_vPos, Out->m_left, Out->m_top, 0.0f, WINDOW_WIDTH, WINDOW_HEIGHT, &m_pCamera->GetViewMatrix(), &m_pCamera->GetProjMatrix());
+	//
+	////スケール
+	//m_vScale.x = (Out->m_right  - Out->m_left) / 240.0f;
+	//m_vScale.y = (Out->m_bottom - Out->m_top)/ 240.0f;
+	//m_vScale.z = 0.0f;
+	// 
+	////カメラの向きを取得
+	//m_vAngle = m_pCamera->GetVertical();
 
-	m_matWorld = MakeMatWorld(m_vPos, m_vAngle, m_vScale);
-	   
+	//m_matWorld = MakeMatWorld(m_vPos, m_vAngle, m_vScale);
+	//
+//
+//	D3DXVECTOR3 vPos(0.0f, 0.0f, 0.0f);
+//	D3DXVECTOR3 vAngle(0.0f, 0.0f, 0.0f);
+//	D3DXVECTOR3 vScale(1.0f, 1.0f, 1.0f);
+//D3DXMATRIX	matWorld=MakeMatWorld(vPos, vAngle, vScale);
+
+
+	//ポリゴンがでるけどカメラ回転でおかしくなる
+	//正射影行列
+	D3DXMATRIX matOrtho;
+	D3DXMatrixIdentity(&matOrtho);
+	matOrtho._11 = 2.0f / (float)WINDOW_WIDTH;
+	matOrtho._22 = 2.0f / (float)WINDOW_HEIGHT;
+
+	D3DXMATRIX matView;	
+	D3DXMatrixIdentity(&matView);
+	matView = m_pCamera->GetViewMatrix();
+	D3DXMatrixInverse(&matView, NULL, &matView);
+
 	//シェーダーのセット
-	g_Shader.SetShader(pResView,m_matWorld);
+	g_Shader.SetShader(pResView,matWorld*matView);
 
 	//ポリゴンの描画
 	DrawPolygon();
@@ -124,4 +143,13 @@ void CDraw::LoadTexture(int Id,const char* Name)
 void CDraw::Release()
 {
 	m_pBuffer->Release();
+}
+
+//RECT_Fのセット
+void RectSet(float x, float y, float Size_x, float Size_y, RECT_F* pOut)
+{
+	pOut->m_top = y;
+	pOut->m_bottom = pOut->m_top + Size_y;
+	pOut->m_left = x;
+	pOut->m_right = pOut->m_left + Size_x;
 }

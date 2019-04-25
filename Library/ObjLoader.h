@@ -56,6 +56,10 @@ public:
 
 	//メッシュ描画
 	void Draw(D3DMATRIX matWorld, MY_MESH* pMesh);
+
+	//テクスチャを指定してメッシュ描画
+	void Draw(int TexId,D3DMATRIX matWorld, MY_MESH* pMesh);
+
 private:
 	//OBJの読み込み
 	HRESULT LoadObj(const char* FileName, MY_MESH* pMesh);

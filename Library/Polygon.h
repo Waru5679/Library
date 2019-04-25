@@ -23,8 +23,8 @@ public:
 	//描画
 	void Draw3D(int TexId, D3DXMATRIX matWorld);
 	void Draw3D(ID3D10ShaderResourceView* pResView, D3DXMATRIX matWorld);
-	void Draw2D(int TexId,RECT_F* Out);
-	void Draw2D(ID3D10ShaderResourceView* pResView,RECT_F*Out);
+	void Draw2D(int TexId,RECT_F* Out, D3DXMATRIX matWorld);
+	void Draw2D(ID3D10ShaderResourceView* pResView,RECT_F*Out,D3DXMATRIX matWorld);
 
 	//テクスチャ読み込み
 	void LoadTexture(int Id, const char* Name);
@@ -50,5 +50,8 @@ private:
 	
 	Camera* m_pCamera;	//カメラポインタ
 };
+
+//RECT_Fのセット
+void RectSet(float x, float y, float Size_x, float Size_y,RECT_F* pOut );
 
 extern CDraw g_Draw;

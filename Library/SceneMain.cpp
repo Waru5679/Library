@@ -60,7 +60,7 @@ void CSceneMain::LoadAudio()
 //テクスチャ
 void CSceneMain::LoadTexture()
 {
-
+	g_Draw.LoadTexture(0, "Red.png");
 }
 
 //メッシュ

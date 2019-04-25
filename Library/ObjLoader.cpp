@@ -425,6 +425,29 @@ void CObjLoader::Draw(D3DMATRIX matWorld,MY_MESH* pMesh)
 	}
 }
 
+//テクスチャを指定してメッシュ描画
+void CObjLoader::Draw(int TexId, D3DMATRIX matWorld, MY_MESH* pMesh)
+{
+	//テクスチャ
+	ID3D10ShaderResourceView*pTex =	g_Task.GetTex(TexId);
+
+	//マテリアルの数毎に描画
+	for (int i = 0; i < pMesh->MaterialNum; i++)
+	{
+		int size = pMesh->Material[i].pVertex.size();
+
+		//シェーダーのセット
+		g_Shader.SetShader(pTex, matWorld);
+
+		for (int j = 0; j < size; j++)
+		{
+			//ポリゴン描画
+			DrawMesh(pMesh->Material[i].FaceOfVer[j], pMesh->Material[i].pVertex[j], pMesh->Material[i].pIndex[j]);
+		}
+	}
+}
+
+
 //ポリゴン描画
 void CObjLoader::DrawMesh(int ver_num,ID3D10Buffer* VertexBuffer,ID3D10Buffer* IndexBuffer)
 {

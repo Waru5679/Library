@@ -95,6 +95,12 @@ void CPlayer::Input()
 //•`‰æ
 void CPlayer::Draw()
 {
-	CFont::DrawStr(L"‚ ",0.0f, 0.0f, 32.0f);
-	g_Loader.Draw(m_matWorld, &m_Mesh);
+	//CFont::DrawStr(L"‚ ",0.0f, 0.0f, 32.0f,m_matWorld);
+	//g_Loader.Draw(0,m_matWorld, &m_Mesh);
+
+	RECT_F dst;
+	RectSet(0.0f, 0.0f, 32, 32, &dst);
+
+	g_Draw.Draw2D(0, &dst, m_matWorld);
+
 }
