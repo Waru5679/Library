@@ -49,6 +49,15 @@ void CDraw::Draw2D(int TexId, RECT_F* Out, D3DXMATRIX matWorld)
 //2D描画
 void CDraw::Draw2D(ID3D10ShaderResourceView* pResView, RECT_F*Out,D3DXMATRIX matWorld)
 {
+	CalcScreenToWorld(&m_vPos, 0.0f, 0.0f, 0.0f, WINDOW_WIDTH, WINDOW_HEIGHT,
+		&m_pCamera->GetViewMatrix(), &m_pCamera->GetProjMatrix());
+
+
+	m_vAngle = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	m_vScale = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
+	m_matWorld = MakeMatWorld(m_vPos, m_vAngle, m_vScale);
+
+
 	//逆ビュー行列
 	D3DXMATRIX matInvView;	
 	D3DXMatrixIdentity(&matInvView);
@@ -63,9 +72,18 @@ void CDraw::Draw2D(ID3D10ShaderResourceView* pResView, RECT_F*Out,D3DXMATRIX mat
 	matWorld._41 = 0.0f;
 	matWorld._42 = 0.0f;
 	matWorld._43 = 0.0f;
-	
+
+	D3DXMATRIX matOrtho;
+	D3DXMatrixIdentity(&matOrtho);
+	matOrtho._11 = 2 / WINDOW_WIDTH;
+	matOrtho._22 = -2 / WINDOW_HEIGHT;
+	matOrtho._41 = -1;
+	matOrtho._42 = 1;
+
+
+		
 	//シェーダーのセット
-	g_Shader.SetShader(pResView, matWorld *matInvProj*matInvView);
+	g_Shader.SetShader(pResView, matWorld *matInvProj*matInvView*matOrtho);
 
 	//ポリゴンの描画
 	DrawPolygon();

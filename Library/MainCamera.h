@@ -11,9 +11,6 @@ public:
 	void Update();	//更新
 	void Draw() {};	//描画
 
-
-	// カメラと対峙する回転行列を取得
-	D3DXMATRIX GetInvRotateMat();
 private:
 	D3DXVECTOR3 m_vPlayerPos;	//プレイヤーの位置
 	D3DXVECTOR3 m_vPlayerFront;	//プレイヤーの正面方向

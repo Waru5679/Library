@@ -60,8 +60,7 @@ void CPlayer::Update()
 	
 	//当たり判定更新
 	g_Obb.Update(&m_Obb, m_vPos, m_vAngle, m_vScale, m_vMin, m_vMax);
-
-	
+		
 	//ワールド行列作成
 	m_matWorld = MakeMatWorld(m_vPos, m_vAngle, m_vScale);
 
@@ -95,12 +94,8 @@ void CPlayer::Input()
 //描画
 void CPlayer::Draw()
 {
-	//CFont::DrawStr(L"あ",0.0f, 0.0f, 32.0f,m_matWorld);
-	//g_Loader.Draw(0,m_matWorld, &m_Mesh);
+	CFont::DrawStr(L"あ",0.0f, 0.0f, 32.0f,m_matWorld);
+	//g_Loader.Draw(m_matWorld, &m_Mesh);
 
-	RECT_F dst;
-	RectSet(0.0f, 0.0f, 32, 32, &dst);
-
-	g_Draw.Draw2D(0, &dst, m_matWorld);
-
+	
 }

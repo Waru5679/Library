@@ -13,15 +13,14 @@ public:
 	D3DXMATRIX GetProjMatrix() { return m_matProj; }
 	D3DXVECTOR3 GetEye() { return m_vEye; }
 	D3DXVECTOR3 GetAngle() { return m_vAngle; }
-	D3DXVECTOR3 GetVertical() { return m_vVertical; }
 
-protected:
-	D3DXVECTOR3 m_vEye;	//視点
-	D3DXVECTOR3 m_vLook;//注視点
-	D3DXVECTOR3 m_vUp;	//カメラの向き
+
 	
+protected:
+	D3DXVECTOR3 m_vEye;		//視点
+	D3DXVECTOR3 m_vLook;	//注視点
+	D3DXVECTOR3 m_vUp;		//カメラの向き
 	D3DXVECTOR3 m_vAngle;	//角度
-	D3DXVECTOR3 m_vVertical;//カメラに垂直になる角度(２D描画用)
 
 	D3DXMATRIX m_matView;	//ビューマトリックス
 	D3DXMATRIX m_matProj;	//プロジェクションマトリックス

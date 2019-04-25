@@ -13,6 +13,7 @@ void CMainCamera::Init()
 	m_vLook = D3DXVECTOR3(0.0f, 2.0f, 1.0f);
 	m_vUp = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
 
+	//行列初期化
 	D3DXMatrixIdentity(&m_matWorld);
 	D3DXMatrixIdentity(&m_matView);
 	D3DXMatrixIdentity(&m_matProj);
@@ -25,10 +26,6 @@ void CMainCamera::Init()
 
 	//角度
 	m_vAngle = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-
-	//垂直にするための回転量
-	m_vVertical = D3DXVECTOR3(0.79,0.0f,0.0f);
-
 }
 
 //更新関数
