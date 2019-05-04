@@ -217,7 +217,7 @@ void CFont::CreateStrTex(const wchar_t* str)
 }
 
 //ƒtƒHƒ“ƒg•`‰æ
-void CFont::DrawStr(const wchar_t* str, float x, float y, float FontSize,D3DXMATRIX matWorld)
+void CFont::DrawStr(const wchar_t* str, float x, float y, float FontSize)
 {
 	//•¶Žš—ñ“o˜^
 	CreateStrTex(str);
@@ -237,7 +237,7 @@ void CFont::DrawStr(const wchar_t* str, float x, float y, float FontSize,D3DXMAT
 				Out.m_right = Out.m_left+FontSize;
 				Out.m_bottom = Out.m_top+FontSize;			
 
-				g_Draw.Draw2D(&(*itr->get()->GetTex()),&Out,matWorld);
+				g_Draw.Draw2D(&(*itr->get()->GetTex()),&Out,0.0f);
 			}
 		}
 	}	

@@ -130,6 +130,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="2DPolygon.h" />
     <ClInclude Include="Audio.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CObj.h" />
@@ -158,6 +159,7 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="2DPolygon.cpp" />
     <ClCompile Include="Audio.cpp" />
     <ClCompile Include="Csv.cpp" />
     <ClCompile Include="DirectX.cpp" />

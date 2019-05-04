@@ -55,6 +55,9 @@
     <Filter Include="リソース ファイル\Csv">
       <UniqueIdentifier>{60faa4cd-2b3f-412b-8203-853cd800b907}</UniqueIdentifier>
     </Filter>
+    <Filter Include="リソース ファイル\Rect">
+      <UniqueIdentifier>{be9c3128-292a-484d-bd25-2f7b91e024ae}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MainCamera.h">
@@ -120,6 +123,9 @@
     <ClInclude Include="Csv.h">
       <Filter>リソース ファイル\Csv</Filter>
     </ClInclude>
+    <ClInclude Include="2DPolygon.h">
+      <Filter>ソース ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MainCamera.cpp">
@@ -178,6 +184,9 @@
     </ClCompile>
     <ClCompile Include="Csv.cpp">
       <Filter>リソース ファイル\Csv</Filter>
+    </ClCompile>
+    <ClCompile Include="2DPolygon.cpp">
+      <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

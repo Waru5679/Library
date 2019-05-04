@@ -90,12 +90,8 @@ void CPlayer::Input()
 	}
 }
 
-#include "Font.h"
 //•`‰æ
 void CPlayer::Draw()
 {
-	CFont::DrawStr(L"‚ ",0.0f, 0.0f, 32.0f,m_matWorld);
-	//g_Loader.Draw(m_matWorld, &m_Mesh);
-
-	
+	g_Loader.Draw(m_matWorld, &m_Mesh);
 }

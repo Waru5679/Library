@@ -4,6 +4,7 @@
 #include "Shader.h"
 #include "Camera.h"
 #include "Math.h"
+#include "Main.h"
 
 CDraw g_Draw;
 
@@ -13,10 +14,10 @@ void CDraw::Init()
 	//頂点情報
 	MY_VERTEX ver[]=
 	{
-		D3DXVECTOR3(0.0f, 0.0f, 0.0f),D3DXVECTOR3(0.0f,1.0f,0.0f),D3DXVECTOR2(0.0f,0.0f),
-		D3DXVECTOR3(0.0f, -0.1f, 0.0f),D3DXVECTOR3(0.0f,1.0f,0.0f),D3DXVECTOR2(0.0f,1.0f),
-		D3DXVECTOR3(0.1f, 0.0f, 0.0f),D3DXVECTOR3(0.0f,1.0f,0.0f),D3DXVECTOR2(1.0f,0.0f),
-		D3DXVECTOR3(0.1f, -0.1f, 0.0f),D3DXVECTOR3(0.0f,1.0f,0.0f),D3DXVECTOR2(1.0f,1.0f)
+		D3DXVECTOR3(-1.0f, 1.0f, 0.0f),D3DXVECTOR3(0.0f,1.0f,0.0f),D3DXVECTOR2(0.0f,0.0f),	//左上
+		D3DXVECTOR3(-1.0f, -1.0f, 0.0f),D3DXVECTOR3(0.0f,1.0f,0.0f),D3DXVECTOR2(0.0f,1.0f),	//左下
+		D3DXVECTOR3(1.0f, 1.0f, 0.0f),D3DXVECTOR3(0.0f,1.0f,0.0f),D3DXVECTOR2(1.0f,0.0f),	//右上
+		D3DXVECTOR3(1.0f, -1.0f, 0.0f),D3DXVECTOR3(0.0f,1.0f,0.0f),D3DXVECTOR2(1.0f,1.0f)	//右下
 	};
 	m_Vertex = ver;
 
@@ -41,13 +42,13 @@ void CDraw::Draw3D(ID3D10ShaderResourceView* pResView, D3DXMATRIX matWorld)
 }
 
 //2D描画 中継
-void CDraw::Draw2D(int TexId, RECT_F* Out, D3DXMATRIX matWorld)
+void CDraw::Draw2D(int TexId, RECT_F* Out,float Rad)
 {
-	Draw2D(g_Task.GetTex(TexId),Out,matWorld);
+	Draw2D(g_Task.GetTex(TexId),Out,Rad);
 }
 
 //2D描画
-void CDraw::Draw2D(ID3D10ShaderResourceView* pResView, RECT_F*Out,D3DXMATRIX matWorld)
+void CDraw::Draw2D(ID3D10ShaderResourceView* pResView, RECT_F*Out,float Rad)
 {
 	//逆ビュー行列
 	D3DXMATRIX matInvView;	
@@ -59,10 +60,27 @@ void CDraw::Draw2D(ID3D10ShaderResourceView* pResView, RECT_F*Out,D3DXMATRIX mat
 	D3DXMatrixIdentity(&matInvProj);
 	D3DXMatrixInverse(&matInvProj, NULL, &m_pCamera->GetProjMatrix());
 
-	//平行移動無視
-	matWorld._41 = 0.0f;
-	matWorld._42 = 0.0f;
-	matWorld._43 = 0.0f;
+	//ワールド行列
+	D3DXMATRIX matWorld;
+	D3DXMatrixIdentity(&matWorld);
+
+	//サイズを求める
+	D3DXVECTOR2 Size;
+	Size.x = Out->m_right - Out->m_left;
+	Size.y = Out->m_bottom - Out->m_top;
+	matWorld._11 =Size.x/WINDOW_WIDTH;
+	matWorld._22 = Size.y / WINDOW_HEIGHT;
+
+	//Z軸回転行列
+	D3DXMATRIX matRot;
+	D3DXMatrixRotationZ(&matRot, D3DXToRadian(Rad));
+
+	//ワールドに回転をかける
+	matWorld *= matRot;
+
+	//平行移動量を求める
+	matWorld._41 = (2.0f / (float)WINDOW_WIDTH ) * (Out->m_left + Size.x/2.0f) -1.0f;
+	matWorld._42 = (2.0f / (float)WINDOW_HEIGHT) * (Out->m_top  - Size.y/2.0f) +1.0f;
 	
 	//シェーダーのセット
 	g_Shader.SetShader(pResView, matWorld *matInvProj*matInvView);

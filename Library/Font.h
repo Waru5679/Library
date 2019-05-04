@@ -49,7 +49,7 @@ public:
 	static void Release();	//解放
 
 	//文字列描画
-	static void DrawStr(const wchar_t* str,float x,float y,float size, D3DXMATRIX matWorld);
+	static void DrawStr(const wchar_t* str,float x,float y,float size);
 
 private:
 	//文字列を元に文字テクスチャを作成

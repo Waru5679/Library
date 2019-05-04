@@ -5,6 +5,7 @@
 #include "Audio.h"
 #include "Polygon.h"
 #include "Shader.h"
+#include "2DPolygon.h"
 
 //初期化
 void CSceneMain::Init()
@@ -25,6 +26,12 @@ void CSceneMain::Init()
 	//カメラ
 	CMainCamera* pCamera = new CMainCamera();
 	g_Task.InsertObj(pCamera,Obj_MainCamera);
+
+
+	//2DOBJ
+	C2DPolygon* p2D = new C2DPolygon();
+	g_Task.InsertObj(p2D, OBJ_2D);
+
 	
 	//シェーダーにカメラセット
 	g_Shader.SetCamera(pCamera);
@@ -60,7 +67,7 @@ void CSceneMain::LoadAudio()
 //テクスチャ
 void CSceneMain::LoadTexture()
 {
-	g_Draw.LoadTexture(0, "Red.png");
+	g_Draw.LoadTexture(0, "Texture/Test.png");
 }
 
 //メッシュ

@@ -34,4 +34,5 @@ enum ObjName
 {
 	Obj_MainCamera,	//メインカメラ
 	Obj_Player,		//プレイヤー
+	OBJ_2D,			//2D描画
 };

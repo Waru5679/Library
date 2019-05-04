@@ -23,8 +23,8 @@ public:
 	//描画
 	void Draw3D(int TexId, D3DXMATRIX matWorld);
 	void Draw3D(ID3D10ShaderResourceView* pResView, D3DXMATRIX matWorld);
-	void Draw2D(int TexId,RECT_F* Out, D3DXMATRIX matWorld);
-	void Draw2D(ID3D10ShaderResourceView* pResView,RECT_F*Out,D3DXMATRIX matWorld);
+	void Draw2D(int TexId,RECT_F* Out,float Rad);
+	void Draw2D(ID3D10ShaderResourceView* pResView,RECT_F*Out,float Rad);
 
 	//テクスチャ読み込み
 	void LoadTexture(int Id, const char* Name);
@@ -42,12 +42,6 @@ private:
 	ID3D10Buffer* m_pBuffer;//バーテックスバッファ
 	MY_VERTEX* m_Vertex;	//頂点
 	   	
-	D3DXVECTOR3 m_vPos;		//位置
-	D3DXVECTOR3 m_vAngle;	//回転
-	D3DXVECTOR3 m_vScale;	//大きさ
-
-	D3DXMATRIX m_matWorld;	//ワールド行列
-	
 	Camera* m_pCamera;	//カメラポインタ
 };
 
