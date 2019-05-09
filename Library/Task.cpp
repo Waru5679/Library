@@ -3,16 +3,24 @@
 CTask g_Task;
 
 //シーン登録
-void CTask::InsertScene(CScene* Scene, int Id)
+void CTask::InsertScene(CScene* pScene, int Id)
 {
-	m_Scene.insert(m_Scene.begin() + Id, Scene);
-	Scene->m_id = static_cast<int>(Id);
+	MY_SCENE scene;
+	scene.m_pScene = pScene;
+	scene.m_Id = Id;
+
+	m_Scene.push_back(scene);
+	
 }
 
 //テクスチャ登録
 void CTask::Insert(ID3D10ShaderResourceView* pTex, int Id)
 {
-	m_Tex.insert(m_Tex.begin() + Id, pTex);
+	MY_TEXTURE tex;
+	tex.m_pTex = pTex;
+	tex.m_Id = Id;
+
+	m_Tex.push_back(tex);
 }
 
 //オブジェクト登録
@@ -22,12 +30,6 @@ void CTask::InsertObj(CObj* pObj, int Id)
 	pObj->m_id = Id;
 	pObj->m_fDelete = false;
 	pObj->Init();
-}
-
-//メッシュ登録
-void CTask::Insert(MY_MESH Mesh, int Id)
-{
-	m_Mesh.insert(m_Mesh.begin() + Id, Mesh);
 }
 
 //更新
@@ -88,8 +90,8 @@ CScene* CTask::GetScene(int Id)
 {
 	for (unsigned int i = 0; i < m_Scene.size(); i++)
 	{
-		if (m_Scene[i]->m_id == Id)
-			return m_Scene[i];
+		if (m_Scene[i].m_Id == Id)
+			return m_Scene[i].m_pScene;
 	}
 	return NULL;
 }
@@ -97,13 +99,11 @@ CScene* CTask::GetScene(int Id)
 //テクスチャを取得
 ID3D10ShaderResourceView* CTask::GetTex(int Id)
 {
-	return m_Tex[Id];
-}
-
-//メッシュ取得
-MY_MESH CTask::GetMesh(int Id)
-{
-	return m_Mesh[Id];
+	for (unsigned int i = 0; i < m_Tex.size(); i++)
+	{
+		if (m_Tex[i].m_Id == Id)
+			return m_Tex[i].m_pTex;
+	}
 }
 
 //オブジェクト取得
@@ -120,7 +120,6 @@ CObj* CTask::GetObj(int Id)
 //メモリの開放
 void CTask::Release()
 {
-	m_Mesh.erase(m_Mesh.begin(), m_Mesh.end());
 	m_Tex.erase(m_Tex.begin(), m_Tex.end());
 	m_Obj.erase(m_Obj.begin(), m_Obj.end());
 }

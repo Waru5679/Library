@@ -40,6 +40,6 @@ enum ObjName
 
 enum ModelName
 {
-	ModelPlayer,	//プレイヤー
 	ModelStreet,	//町
+	ModelPlayer,	//プレイヤー
 };

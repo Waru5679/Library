@@ -8,8 +8,6 @@ public:
 	virtual void Update() = 0;	//更新
 	virtual void Draw()=0;		//描画
 	virtual void Release()=0;	//解放
-
-	int m_id; //シーンID
 private:
 	virtual void LoadAudio() = 0;		//音楽
 	virtual void LoadTexture() = 0;		//テクスチャ

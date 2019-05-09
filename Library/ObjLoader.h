@@ -45,12 +45,21 @@ struct MY_MESH
 	
 	D3DXVECTOR3 vMin;	//頂点の最小座標
 	D3DXVECTOR3 vMax;	//頂点の最大座標
+
+	int Id;//管理用のID
 };
 
 //OBJデータ読み込みクラス
 class CObjLoader
 {
 public:
+
+	//解放
+	void Release();
+
+	//Mesh取得
+	MY_MESH* GetMesh(int Id);
+
 	//Meshの読み込み
 	void LoadMesh(int Id,const char* Name);
 
@@ -72,6 +81,9 @@ private:
 
 	//ポリゴン描画
 	void DrawMesh(int ver_num, ID3D10Buffer* VertexBuffer, ID3D10Buffer* IndexBuffer);
+
+	//メッシュ
+	vector<MY_MESH>m_Mesh;
 };
 
 extern CObjLoader g_Loader;

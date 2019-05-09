@@ -63,6 +63,7 @@ void CSceneMain::Release()
 {
 	g_Task.Release();
 	g_Audio.DeleteMusic();
+	g_Loader.Release();
 }
 
 //‰¹Šy

@@ -9,9 +9,13 @@ CObjLoader g_Loader;
 void CObjLoader::LoadMesh(int Id, const char* Name)
 {
 	MY_MESH Mesh;
+	Mesh.Id = Id;
 	
+	//読み込み
 	LoadObj(Name, &Mesh);
-	g_Task.Insert(Mesh, Id);
+
+	//ベクター登録
+	m_Mesh.push_back(Mesh);
 }
 
 //OBJファイルの読み込み
@@ -486,4 +490,22 @@ void CObjLoader::DrawMesh(int ver_num,ID3D10Buffer* VertexBuffer,ID3D10Buffer* I
 		g_Shader.m_pTechnique->GetPassByIndex(p)->Apply(0);
 		dx.m_pDevice->DrawIndexed(ver_num, 0, 0);
 	}
+}
+
+//Mesh取得
+MY_MESH* CObjLoader::GetMesh(int Id)
+{
+	for (unsigned int i = 0; i < m_Mesh.size(); i++)
+	{
+		if (m_Mesh[i].Id == Id)
+		{
+			return &m_Mesh[i];
+		}
+	}
+}
+
+//解放
+void CObjLoader::Release()
+{
+	m_Mesh.erase(m_Mesh.begin(), m_Mesh.end());
 }

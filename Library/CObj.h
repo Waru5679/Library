@@ -40,10 +40,6 @@ protected:
 	D3DXMATRIX m_matRot;	//回転
 	D3DXMATRIX m_matScale;	//拡大・縮小
 
-	//モデル
-	MY_MESH	m_Mesh;
-
-	D3DXVECTOR3 m_vMin;	//最小
-	D3DXVECTOR3 m_vMax; //最大
+	MY_MESH* m_pMesh;	//モデルのポインタ
 };
 

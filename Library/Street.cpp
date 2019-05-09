@@ -1,5 +1,5 @@
 #include "Street.h"
-#include "Task.h"
+#include "ObjLoader.h"
 
 
 CStreet::CStreet(D3DXVECTOR3 Pos, D3DXVECTOR3 Angle, D3DXVECTOR3 Scale)
@@ -19,11 +19,7 @@ void CStreet::Init()
 	D3DXMatrixIdentity(&m_matWorld);
 	
 	//モデル
-	m_Mesh = g_Task.GetMesh(ModelName::ModelStreet);
-
-	//最小値・最大値
-	m_vMin = m_Mesh.vMin;
-	m_vMax = m_Mesh.vMax;
+	m_pMesh = g_Loader.GetMesh(ModelName::ModelStreet);
 
 }
 
@@ -36,5 +32,5 @@ void CStreet::Update()
 //描画
 void CStreet::Draw()
 {
-	g_Loader.Draw(m_matWorld, &m_Mesh);
+	g_Loader.Draw(m_matWorld, m_pMesh);
 }
