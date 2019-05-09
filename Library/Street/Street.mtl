@@ -1,0 +1,128 @@
+# Blender MTL File: 'None'
+# Material Count: 11
+
+newmtl 06___Default
+Ns 9.803922
+Ka 0.588000 0.588000 0.588000
+Kd 0.588000 0.588000 0.588000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd Street\building03_c.png
+map_Ka Street\\building03_c.png
+
+newmtl 09___Default
+Ns 9.803922
+Ka 0.588200 0.588200 0.588200
+Kd 0.588200 0.588200 0.588200
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd Street\building05_c.png
+map_Ka Street\\building05_c.png
+
+newmtl 20___Default
+Ns 9.803922
+Ka 0.274500 0.274500 0.274500
+Kd 0.309800 0.454900 0.058800
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+
+newmtl 20___Defaulta
+Ns 29.411765
+Ka 0.270600 0.270600 0.270600
+Kd 0.270600 0.270600 0.270600
+Ks 0.144000 0.144000 0.144000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+
+newmtl 21___Default
+Ns 9.803922
+Ka 0.588200 0.588200 0.588200
+Kd 0.588200 0.588200 0.588200
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+
+newmtl 3db___building_06
+Ns 43.137255
+Ka 0.588000 0.588000 0.588000
+Kd 0.588000 0.588000 0.588000
+Ks 0.324000 0.324000 0.324000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd Street\building_06_c.png
+map_Ka Street\\building_06_c.png
+
+newmtl Building_dnt
+Ns 9.803922
+Ka 0.588000 0.588000 0.588000
+Kd 0.588000 0.588000 0.588000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd Street\Building_V02_C.png
+map_Ka Street\\Building_V02_C.png
+
+newmtl Material__0
+Ns 9.803922
+Ka 0.588000 0.588000 0.588000
+Kd 0.588000 0.588000 0.588000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd Street\Building_V01_C.png
+map_Ka Street\\Building_V01_C.png
+
+newmtl building_025
+Ns 9.803922
+Ka 0.588200 0.588200 0.588200
+Kd 0.588200 0.588200 0.588200
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd Street\building_025_c.png
+map_Ka Street\\building_025_c.png
+
+newmtl building_16
+Ns 9.803922
+Ka 0.588000 0.588000 0.588000
+Kd 0.588000 0.588000 0.588000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd Street\building_016_c.png
+map_Ka Street\\building_016_c.png
+
+newmtl orig_orig_orig_17___Default
+Ns 100.000000
+Ka 0.588000 0.588000 0.588000
+Kd 0.588000 0.588000 0.588000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd Street\building_01_c.png
+map_Ka Street\\building_01_c.png

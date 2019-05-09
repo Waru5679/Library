@@ -163,7 +163,7 @@ void LoadScene()
 {
 	//ƒƒCƒ“
 	CSceneMain* main = new CSceneMain();
-	g_Task.InsertScene(main, Scene_Main);
+	g_Task.InsertScene(main, SceneName::SceneMain);
 
 }
 

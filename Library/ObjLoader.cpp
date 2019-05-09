@@ -54,7 +54,7 @@ HRESULT CObjLoader::LoadObj(const char* FileName, MY_MESH* pMesh)
 	vector<MY_VERTEX> Vertex;
 
 	int iFaceCount = -1;
-
+	
 	//キーワード読み込み
 	fscanf_s(fp, "%s ", key, sizeof(key));
 
@@ -73,7 +73,7 @@ HRESULT CObjLoader::LoadObj(const char* FileName, MY_MESH* pMesh)
 			{
 				//キーワード読み込み
 				fscanf_s(fp, "%s ", key, sizeof(key));
-			
+					
 				//頂点
 				if (strcmp(key, "v") == 0)
 				{
@@ -270,7 +270,7 @@ HRESULT CObjLoader::LoadObj(const char* FileName, MY_MESH* pMesh)
 
 			//マテリアル情報を登録
 			pMesh->Material.push_back(Material);
-
+			
 			pMesh->MaterialNum++;
 
 			iFaceCount = 0;
@@ -316,6 +316,11 @@ HRESULT CObjLoader::LoadMaterial(char* FileName,MY_MESH* pMesh)
 	//マテリアルファイルを開いて内容を読み込む
 	FILE* fp = NULL;
 	fopen_s(&fp, FileName, "rt");
+
+	if (fp == NULL)
+	{
+		return E_FAIL;
+	}
 
 	int mate_count = 0;
 	char key[100] = { 0 };

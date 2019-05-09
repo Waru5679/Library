@@ -6,7 +6,7 @@ CTask g_Task;
 void CTask::InsertScene(CScene* Scene, int Id)
 {
 	m_Scene.insert(m_Scene.begin() + Id, Scene);
-	Scene->m_id = Id;
+	Scene->m_id = static_cast<int>(Id);
 }
 
 //テクスチャ登録

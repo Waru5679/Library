@@ -21,18 +21,25 @@ void LoadScene();
 static WCHAR szAppName[] = L"ライブラリ";
 
 //初めのシーン
-#define START_SCENE Scene_Main
+#define START_SCENE SceneName::SceneMain
 
 //シーン
 enum SceneName
 {
-	Scene_Main,	//メイン
+	SceneMain,	//メイン
 };
 
 //オブジェクト
 enum ObjName
 {
-	Obj_MainCamera,	//メインカメラ
-	Obj_Player,		//プレイヤー
-	OBJ_2D,			//2D描画
+	ObjMainCamera,	//メインカメラ
+	ObjPlayer,		//プレイヤー
+	ObjDraw2D,		//2D描画
+	ObjStreet,		//町
+};
+
+enum ModelName
+{
+	ModelPlayer,	//プレイヤー
+	ModelStreet,	//町
 };

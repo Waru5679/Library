@@ -6,6 +6,7 @@
 #include "Polygon.h"
 #include "Shader.h"
 #include "2DPolygon.h"
+#include "Street.h"
 
 //初期化
 void CSceneMain::Init()
@@ -21,16 +22,22 @@ void CSceneMain::Init()
 	D3DXVECTOR3 vScale(1.0f, 1.0f, 1.0f);
 
 	CPlayer* pPlayer = new CPlayer(vPos, vAngle, vScale);
-	g_Task.InsertObj(pPlayer,Obj_Player);
+	g_Task.InsertObj(pPlayer,ObjName::ObjPlayer);
 
 	//カメラ
 	CMainCamera* pCamera = new CMainCamera();
-	g_Task.InsertObj(pCamera,Obj_MainCamera);
+	g_Task.InsertObj(pCamera, ObjName::ObjMainCamera);
 
 
 	//2DOBJ
 	C2DPolygon* p2D = new C2DPolygon();
-	g_Task.InsertObj(p2D, OBJ_2D);
+	g_Task.InsertObj(p2D, ObjName::ObjDraw2D);
+
+	//町
+	vScale = D3DXVECTOR3(5.0f, 5.0f, 5.0f);
+
+	CStreet* pStreet = new CStreet(vPos, vAngle, vScale);
+	g_Task.InsertObj(pStreet, ObjName::ObjStreet);
 
 	
 	//シェーダーにカメラセット
@@ -73,5 +80,7 @@ void CSceneMain::LoadTexture()
 //メッシュ
 void CSceneMain::LoadMesh()
 {
-	g_Loader.LoadMesh(0, "Player.obj");
+	g_Loader.LoadMesh(ModelName::ModelPlayer, "Player/Player.obj");
+	g_Loader.LoadMesh(ModelName::ModelStreet, "Street/Street.obj");
+
 }

@@ -58,6 +58,9 @@
     <Filter Include="リソース ファイル\Rect">
       <UniqueIdentifier>{be9c3128-292a-484d-bd25-2f7b91e024ae}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Street">
+      <UniqueIdentifier>{6b8fb326-a9db-4303-ad36-cfa4b0ca71b7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MainCamera.h">
@@ -126,6 +129,9 @@
     <ClInclude Include="2DPolygon.h">
       <Filter>ソース ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="Street.h">
+      <Filter>ソース ファイル\Street</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MainCamera.cpp">
@@ -187,6 +193,9 @@
     </ClCompile>
     <ClCompile Include="2DPolygon.cpp">
       <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Street.cpp">
+      <Filter>ソース ファイル\Street</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -22,7 +22,7 @@ void CPlayer::Init()
 	D3DXMatrixIdentity(&m_matWorld);
 	
 	//モデル
-	m_Mesh = g_Task.GetMesh(0);
+	m_Mesh = g_Task.GetMesh(ModelName::ModelPlayer);
 
 	//最小値・最大値
 	m_vMin = m_Mesh.vMin;
@@ -49,7 +49,7 @@ void CPlayer::Update()
 	D3DXVec3Normalize(&m_vMove, &m_vMove);
 
 	//カメラ取得
-	CMainCamera* m_pCamera=dynamic_cast<CMainCamera*> (g_Task.GetObj(Obj_MainCamera));
+	CMainCamera* m_pCamera=dynamic_cast<CMainCamera*> (g_Task.GetObj(ObjName::ObjMainCamera));
 
 	//カメラの向きから移動ベクトルを変換
 	m_matRot = MakeMatRot(m_pCamera->GetAngle());

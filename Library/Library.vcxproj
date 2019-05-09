@@ -150,6 +150,7 @@
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneMain.h" />
     <ClInclude Include="Shader.h" />
+    <ClInclude Include="Street.h" />
     <ClInclude Include="Task.h" />
     <ClInclude Include="Trace.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
@@ -177,6 +178,7 @@
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SceneMain.cpp" />
     <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="Street.cpp" />
     <ClCompile Include="Task.cpp" />
     <ClCompile Include="Trace.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
