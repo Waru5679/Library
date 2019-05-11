@@ -16,8 +16,12 @@ HRESULT CDirectX::Init(HWND hWnd)
 	//ビューポートの設定
 	SetViewport();
 
+
 	//深度ステンシルビューの作成
 	CreateStencil();		
+
+	//ブレンドステート作成
+	CreateBlendState();
 
 	//ラスタライザ設定
 	SetRasterizer();
@@ -61,7 +65,7 @@ void CDirectX::SetViewport()
 	vp.MaxDepth = 1.0f;
 	vp.TopLeftX = 0;
 	vp.TopLeftY = 0;
-	dx.m_pDevice->RSSetViewports(1, &vp);
+	m_pDevice->RSSetViewports(1, &vp);
 }
 
 //レンダーターゲットビューの作成
@@ -100,6 +104,27 @@ void CDirectX::CreateStencil()
 	m_pDevice->OMSetRenderTargets(1, &m_pRenderTargetView, m_pDepthStencilView);
 }
 
+//ブレンドステート作成
+void CDirectX::CreateBlendState()
+{
+	D3D10_BLEND_DESC BlendStateDesc;
+	memset(&BlendStateDesc, 0, sizeof(BlendStateDesc));
+
+	BlendStateDesc.BlendEnable[0] = TRUE;
+	BlendStateDesc.SrcBlend = D3D10_BLEND_SRC_ALPHA;
+	BlendStateDesc.DestBlend = D3D10_BLEND_INV_SRC_ALPHA;
+	BlendStateDesc.BlendOp = D3D10_BLEND_OP_ADD;
+	BlendStateDesc.SrcBlendAlpha = D3D10_BLEND_SRC_ALPHA;
+	BlendStateDesc.DestBlendAlpha = D3D10_BLEND_INV_SRC_ALPHA;
+	BlendStateDesc.BlendOpAlpha = D3D10_BLEND_OP_ADD;
+	BlendStateDesc.RenderTargetWriteMask[0] = D3D10_COLOR_WRITE_ENABLE_ALL;
+
+	m_pBlendState = 0;
+	m_pDevice->CreateBlendState(&BlendStateDesc, &m_pBlendState);
+	m_pDevice->OMSetBlendState(m_pBlendState, D3DXVECTOR4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
+
+}
+
 //ラスタライズ設定
 void CDirectX::SetRasterizer()
 {
@@ -116,6 +141,7 @@ void CDirectX::SetRasterizer()
 //メモリ開放
 void CDirectX::Release()
 {
+	m_pBlendState->Release();
 	m_pDepthStencilView->Release();
 	m_pDepthStencil->Release();
 	m_pRenderTargetView->Release();

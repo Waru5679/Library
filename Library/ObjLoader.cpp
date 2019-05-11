@@ -418,13 +418,19 @@ void CObjLoader::MinAndMax(D3DXVECTOR3 Pos,MY_MESH* pMesh)
 //メッシュ描画
 void CObjLoader::Draw(D3DMATRIX matWorld,MY_MESH* pMesh)
 {
+	//描画色
+	float Color[4] = { 1.0f,1.0f,1.0f,1.0f };
+	
+	//テクスチャ切り取り位置
+	float Src[4] = { 0.0f,0.0f,1.0f,1.0f };
+
 	//マテリアルの数毎に描画
 	for (int i = 0; i < pMesh->MaterialNum; i++)
 	{
 		int size = pMesh->Material[i].pVertex.size();
 
 		//シェーダーのセット
-		g_Shader.SetShader(pMesh->Material[i].pTexture, matWorld);
+		g_Shader.SetShader(pMesh->Material[i].pTexture,Src,Color,matWorld);
 
 		for (int j = 0; j <size; j++)
 		{
@@ -437,6 +443,12 @@ void CObjLoader::Draw(D3DMATRIX matWorld,MY_MESH* pMesh)
 //テクスチャを指定してメッシュ描画
 void CObjLoader::Draw(int TexId, D3DMATRIX matWorld, MY_MESH* pMesh)
 {
+	//描画色
+	float Color[4] = { 1.0f,1.0f,1.0f,1.0f };
+
+	//テクスチャ切り取り位置
+	float Src[4] = { 0.0f,0.0f,1.0f,1.0f };
+
 	//テクスチャ
 	ID3D10ShaderResourceView*pTex =	g_Task.GetTex(TexId);
 
@@ -446,7 +458,7 @@ void CObjLoader::Draw(int TexId, D3DMATRIX matWorld, MY_MESH* pMesh)
 		int size = pMesh->Material[i].pVertex.size();
 
 		//シェーダーのセット
-		g_Shader.SetShader(pTex, matWorld);
+		g_Shader.SetShader(pMesh->Material[i].pTexture, Src, Color, matWorld);
 
 		for (int j = 0; j < size; j++)
 		{

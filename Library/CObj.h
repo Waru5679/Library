@@ -22,6 +22,7 @@ class CObj2D:public CObj
 protected:
 	D3DXVECTOR2 m_ScreenPos;	//描画位置(左上)
 	D3DXVECTOR2 m_Move;			//移動ベクトル
+
 };
 
 //3Dモデルを使用するもの　継承用クラス

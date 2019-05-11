@@ -15,6 +15,13 @@ void C2DPolygon::Init()
 
 	//âÒì]
 	m_fRad = 0.0f;
+
+	//ï`âÊêF
+	m_fColor[0] = 1.0f;
+	m_fColor[1] = 1.0f;
+	m_fColor[2] = 1.0f;
+	m_fColor[3] = 0.5f;
+
 }
 
 //çXêV
@@ -56,6 +63,12 @@ void C2DPolygon::Update()
 //ï`âÊ
 void C2DPolygon::Draw()
 {
+	//êÿÇËéÊÇËà íu
+	m_Src.m_top =0.0f;
+	m_Src.m_left = 0.0f;
+	m_Src.m_right = m_Src.m_left + 512.0f;
+	m_Src.m_bottom = m_Src.m_top + 512.0f;
+	
 	//ï`âÊà íu
 	m_Dst.m_top = m_ScreenPos.y;
 	m_Dst.m_left = m_ScreenPos.x;
@@ -63,5 +76,5 @@ void C2DPolygon::Draw()
 	m_Dst.m_bottom = m_Dst.m_top + 100.0f;
 	
 	//ï`âÊ
-	g_Draw.Draw2D(0, &m_Dst,m_fRad);
+	g_Draw.Draw2D(0,&m_Src, &m_Dst,m_fColor,m_fRad);
 }

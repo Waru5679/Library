@@ -9,6 +9,7 @@
 
 #include "ObjLoader.h"
 #include "Camera.h"
+#include "Polygon.h"
 
 //シェーダクラス
 class CShader
@@ -21,7 +22,7 @@ public:
 	void SetCamera(Camera* pCamera) { m_pCamera = pCamera; }
 
 	//シェーダーセット
-	void SetShader(ID3D10ShaderResourceView* pTexture,D3DXMATRIX matWorld);
+	void SetShader(ID3D10ShaderResourceView* pTexture, float Src[4], float Color[4], D3DXMATRIX matWorld);
 
 	//解放
 	void Release();
@@ -33,7 +34,10 @@ private:
 	//アプリ←→シェーダー架け橋
 	ID3D10EffectMatrixVariable* m_pShaderWorldViewProjection;	//ワールドから射影までの変換行列
 	ID3D10EffectShaderResourceVariable* m_pShaderTexture;		//テクスチャー
-	
+	ID3D10EffectVectorVariable* m_pShaderSrc;			//切り取り位置
+	ID3D10EffectVectorVariable* m_pShaderColor;			//描画色
+
+
 	Camera* m_pCamera;	//カメラポインタ
 };
 

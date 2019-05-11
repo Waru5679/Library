@@ -74,7 +74,7 @@ void CCharClass::CreateCharTex(wchar_t c, HDC hdc, TEXTMETRIC TM)
 		&mapped	);
 	pBits = (BYTE*)mapped.pData;
 
-		//‘‚«o‚µˆÊ’ui¶ã)
+	//‘‚«o‚µˆÊ’ui¶ã)
 	unsigned int iOfs_x = GM.gmptGlyphOrigin.x;
 	unsigned int iOfs_y = TM.tmAscent - GM.gmptGlyphOrigin.y;
 	
@@ -229,7 +229,8 @@ void CFont::DrawStr(const wchar_t* str, float x, float y, float FontSize)
 		{
 			//“o˜^‚³‚ê‚½•¶Žš‚Æstr‚Ì•¶Žš‚ð”äŠr
 			if (*itr->get()->GetChar() == str[i])
-			{	
+			{			
+				
 				//•`‰æ
 				RECT_F Out;
 				Out.m_top = y;
@@ -237,7 +238,7 @@ void CFont::DrawStr(const wchar_t* str, float x, float y, float FontSize)
 				Out.m_right = Out.m_left+FontSize;
 				Out.m_bottom = Out.m_top+FontSize;			
 
-				g_Draw.Draw2D(&(*itr->get()->GetTex()),&Out,0.0f);
+			//	g_Draw.Draw2D(&(*itr->get()->GetTex()),&Out,0.0f);
 			}
 		}
 	}	

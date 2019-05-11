@@ -34,22 +34,31 @@ void CDraw::Draw3D(int TexId, D3DXMATRIX matWorld)
 //描画
 void CDraw::Draw3D(ID3D10ShaderResourceView* pResView, D3DXMATRIX matWorld)
 {
+	//描画色
+	float Color[4] = { 1.0f,1.0f,1.0f,1.0f };
+
+	//テクスチャ切り取り位置
+	float Src[4] = { 0.0f,0.0f,1.0f,1.0f };
+
 	//シェーダーのセット
-	g_Shader.SetShader(pResView,matWorld);
+	g_Shader.SetShader(pResView,Src,Color,matWorld);
 
 	//ポリゴンの描画
 	DrawPolygon();
 }
 
 //2D描画 中継
-void CDraw::Draw2D(int TexId, RECT_F* Out,float Rad)
+void CDraw::Draw2D(int TexId, RECT_F* Src, RECT_F*Out, float Color[4], float Rad)
 {
-	Draw2D(g_Task.GetTex(TexId),Out,Rad);
+	Draw2D(g_Task.GetTex(TexId),Src,Out,Color,Rad);
 }
 
 //2D描画
-void CDraw::Draw2D(ID3D10ShaderResourceView* pResView, RECT_F*Out,float Rad)
+void CDraw::Draw2D(ID3D10ShaderResourceView* pResView, RECT_F* Src,RECT_F*Out,float Color[4],float Rad)
 {
+	float src[4] = { 0.0f,0.0f,1.0f,1.0f };
+	
+
 	//逆ビュー行列
 	D3DXMATRIX matInvView;	
 	D3DXMatrixIdentity(&matInvView);
@@ -83,7 +92,7 @@ void CDraw::Draw2D(ID3D10ShaderResourceView* pResView, RECT_F*Out,float Rad)
 	matWorld._42 = (2.0f / (float)WINDOW_HEIGHT) * (Out->m_top  - Size.y/2.0f) +1.0f;
 	
 	//シェーダーのセット
-	g_Shader.SetShader(pResView, matWorld *matInvProj*matInvView);
+	g_Shader.SetShader(pResView,src,Color,matWorld *matInvProj*matInvView);
 
 	//ポリゴンの描画
 	DrawPolygon();
