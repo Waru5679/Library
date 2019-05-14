@@ -4,6 +4,7 @@
 #include "ObjLoader.h"
 #include "Input.h"
 #include "Camera.h"
+#include <math.h>
 
 CPlayer::CPlayer(D3DXVECTOR3 Pos, D3DXVECTOR3 Angle, D3DXVECTOR3 Scale)
 {
@@ -28,7 +29,7 @@ void CPlayer::Init()
 	m_vMove = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 
 	//移動スピード
-	m_fSpeed=0.8f;
+	m_fSpeed=2.0f;
 
 	//当たり判定セット
 	m_Obb = g_Obb.SetOBB(m_vPos, m_vAngle, m_vScale, m_pMesh->vMin, m_pMesh->vMax, m_id, this);
@@ -56,7 +57,7 @@ void CPlayer::Update()
 	
 	//当たり判定更新
 	g_Obb.Update(&m_Obb, m_vPos, m_vAngle, m_vScale, m_pMesh->vMin, m_pMesh->vMax);
-		
+
 	//ワールド行列作成
 	m_matWorld = MakeMatWorld(m_vPos, m_vAngle, m_vScale);
 

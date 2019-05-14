@@ -9,6 +9,7 @@
 #include "Polygon.h"
 #include "Font.h"
 #include "Audio.h"
+#include "Obb.h"
 
 #include "SceneMain.h"
 
@@ -67,6 +68,9 @@ INT WINAPI WinMain( HINSTANCE hInst,HINSTANCE hPrevInst,LPSTR szStr,INT iCmdShow
 
 	//描画の初期化
 	g_Draw.Init();
+	
+	//Obb初期化
+	g_Obb.Init();
 
 	//フォント描画初期化
 	CFont::Init();
@@ -122,13 +126,6 @@ INT WINAPI WinMain( HINSTANCE hInst,HINSTANCE hPrevInst,LPSTR szStr,INT iCmdShow
 			dx.m_pSwapChain->Present(0, 0);
 		}				
 	}
-
-	//メモリ解放
-	g_Audio.Release();	
-	CFont::Release();
-	g_Draw.Release();
-	g_Shader.Release();
-	dx.Release();		
 	
 	return (INT)msg.wParam;
 }
@@ -138,19 +135,26 @@ LRESULT CALLBACK WndProc(HWND hWnd,UINT iMsg,WPARAM wParam,LPARAM lParam)
 {	
 	switch(iMsg)
 	{
-	case WM_DESTROY:
+		//x印
+		case WM_DESTROY:
 		{
+			Release();//メモリ解放
+
 			PostQuitMessage(0);
 			break;
 		}
-	case WM_KEYDOWN:
+		case WM_KEYDOWN:
 		{
 			switch (wParam)
 			{
-			case VK_ESCAPE:
-
-				PostQuitMessage(0);
-				break;
+				//ESC
+				case VK_ESCAPE:
+				{
+					Release();//メモリ解放
+				
+					PostQuitMessage(0);
+					break;
+				}
 			}
 		}
 		break;		
@@ -165,5 +169,15 @@ void LoadScene()
 	CSceneMain* main = new CSceneMain();
 	g_Task.InsertScene(main, SceneName::SceneMain);
 
+}
+
+//メモリの開放
+void Release()
+{
+	g_Audio.Release();
+	CFont::Release();
+	g_Draw.Release();
+	g_Shader.Release();
+	dx.Release();
 }
 

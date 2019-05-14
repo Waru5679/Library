@@ -1,5 +1,6 @@
 #pragma once
 #include "CObj.h"
+#include "Obb.h"
 
 //’¬ƒNƒ‰ƒX
 class CStreet :public CObj3D
@@ -10,5 +11,5 @@ public:
 	void Update();
 	void Draw();
 private:
-
+	OBB_Data m_Obb;	//Obb
 };

@@ -28,7 +28,7 @@ void CDraw::Init()
 //描画 中継
 void CDraw::Draw3D(int TexId, D3DXMATRIX matWorld) 
 {	
-	Draw3D(g_Task.GetTex(TexId), matWorld);
+	Draw3D(g_Task.GetTex(TexId)->m_pTex, matWorld);
 }
 
 //描画
@@ -47,17 +47,25 @@ void CDraw::Draw3D(ID3D10ShaderResourceView* pResView, D3DXMATRIX matWorld)
 	DrawPolygon();
 }
 
-//2D描画 中継
-void CDraw::Draw2D(int TexId, RECT_F* Src, RECT_F*Out, float Color[4], float Rad)
-{
-	Draw2D(g_Task.GetTex(TexId),Src,Out,Color,Rad);
-}
+////2D描画 中継
+//void CDraw::Draw2D(int TexId, RECT_F* Src, RECT_F*Out, float Color[4], float Rad)
+//{
+//	Draw2D(g_Task.GetTex(TexId),Src,Out,Color,Rad);
+//}
 
 //2D描画
-void CDraw::Draw2D(ID3D10ShaderResourceView* pResView, RECT_F* Src,RECT_F*Out,float Color[4],float Rad)
+void CDraw::Draw2D(int TexId, RECT_F* Src,RECT_F*Out,float Color[4],float Rad)
 {
-	float src[4] = { 0.0f,0.0f,1.0f,1.0f };
-	
+	//テクスチャ情報
+	MY_TEXTURE* pTex;
+	pTex=g_Task.GetTex(TexId);
+
+	//切り取り位置の設定
+	float fSrc[4];
+	fSrc[0] = Src->m_left	/ pTex->m_Width;
+	fSrc[1] = Src->m_top	/ pTex->m_Height;
+	fSrc[2] = Src->m_right	/ pTex->m_Width;
+	fSrc[3] = Src->m_bottom / pTex->m_Height;
 
 	//逆ビュー行列
 	D3DXMATRIX matInvView;	
@@ -92,7 +100,7 @@ void CDraw::Draw2D(ID3D10ShaderResourceView* pResView, RECT_F* Src,RECT_F*Out,fl
 	matWorld._42 = (2.0f / (float)WINDOW_HEIGHT) * (Out->m_top  - Size.y/2.0f) +1.0f;
 	
 	//シェーダーのセット
-	g_Shader.SetShader(pResView,src,Color,matWorld *matInvProj*matInvView);
+	g_Shader.SetShader(pTex->m_pTex,fSrc,Color,matWorld *matInvProj*matInvView);
 
 	//ポリゴンの描画
 	DrawPolygon();
@@ -138,14 +146,14 @@ void CDraw::DrawPolygon()
 }
 
 //テクスチャ読み込み
-void CDraw::LoadTexture(int Id,const char* Name)
+void CDraw::LoadTexture(int Id,const char* Name,int Width,int Height)
 {
 	ID3D10ShaderResourceView* pTex;
 	//テクスチャーを作成
 	D3DX10CreateShaderResourceViewFromFileA(dx.m_pDevice, Name, NULL, NULL, &pTex, NULL);
 
 	//登録
-	g_Task.Insert(pTex, Id);
+	g_Task.Insert(pTex, Id,Width,Height);
 }
 
 //解放

@@ -37,8 +37,6 @@ VS_OUTPUT VS( VS_IN Input)
 
 	//テクスチャー座標
 	//幅と高さでスケーリング→左上の点の差分ずらす
-	//output.Tex = Input.Tex*float2(g_UvWidth, g_UvHeight) + float2(g_UvLeft, g_UvTop);
-
 	output.Tex = Input.Tex*float2(g_UvSrc.z, g_UvSrc.w) + float2(g_UvSrc.x, g_UvSrc.y);
 
     return output;

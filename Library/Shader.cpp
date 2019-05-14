@@ -51,7 +51,7 @@ void CShader::SetShader(ID3D10ShaderResourceView* pTexture, float Src[4],float C
 	//ワールド＊ビュー*プロジェクション
 	D3DXMATRIX objWVP = matWorld *m_pCamera->GetViewMatrix() *m_pCamera->GetProjMatrix();
 	m_pShaderWorldViewProjection->SetMatrix((float*)&(objWVP));
-
+	   
 	//切り取り位置
 	m_pShaderSrc->SetFloatVector(Src);
 

@@ -17,6 +17,9 @@
 //シーン読み込み
 void LoadScene();
 
+//メモリの開放
+void Release();
+
 //ウインドウ名
 static WCHAR szAppName[] = L"ライブラリ";
 

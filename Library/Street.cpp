@@ -20,13 +20,17 @@ void CStreet::Init()
 	
 	//モデル
 	m_pMesh = g_Loader.GetMesh(ModelName::ModelStreet);
-
+	
+	//Obbセット
+	m_Obb = g_Obb.SetOBB(m_vPos, m_vAngle, m_vScale, m_pMesh->vMin, m_pMesh->vMax, ObjStreet, this);
+	g_Obb.Insert(&m_Obb);
 }
 
 //更新
 void CStreet::Update()
 {
-	
+	//当たり判定更新
+	g_Obb.Update(&m_Obb, m_vPos, m_vAngle, m_vScale, m_pMesh->vMin, m_pMesh->vMax);
 }
 
 //描画

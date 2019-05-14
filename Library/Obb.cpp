@@ -16,6 +16,16 @@ D3DXVECTOR3 g_Norm[] =
 	D3DXVECTOR3(0,-1,0)
 };
 
+//初期化
+void COBB::Init()
+{
+	//HitBox描画用オブジェクト
+	g_Loader.LoadObj("HitBox/HitBox.obj", &m_Mesh);
+
+	//描画色
+	SetColor(1.0f, 1.0f, 1.0f, 0.5f, m_fColor);
+}
+
 //OBB登録
 void COBB::Insert(OBB_Data* obb)
 {
@@ -75,10 +85,12 @@ OBB_Data COBB::SetOBB(D3DXVECTOR3 Pos, D3DXVECTOR3 Angle, D3DXVECTOR3 Scale, D3D
 	{
 		D3DXVec3TransformCoord(&obb.Norm[i], &g_Norm[i], &matRot);
 	}
+
 	return obb;
 
 }
 
+//当たり判定(オブジェクト名指定)
 vector<HIT_DATA> COBB::ObjNameHit(OBB_Data* Obb,int Name)
 {
 	vector<HIT_DATA> vecData;
@@ -174,6 +186,15 @@ void COBB::Update(OBB_Data* obb,D3DXVECTOR3 Pos, D3DXVECTOR3 Angle, D3DXVECTOR3 
 		D3DXVec3TransformCoord(&obb->Norm[i], &g_Norm[i], &matRot);
 	}
 
+}
+
+//OBBの描画
+void COBB::Draw()
+{
+	for (unsigned int i = 0; i < m_Data.size(); i++)
+	{
+		g_Loader.Draw(m_Data[i]->matWorld, &m_Mesh, m_fColor);
+	}
 }
 
 //めり込み修正

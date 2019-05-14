@@ -14,11 +14,13 @@ void CTask::InsertScene(CScene* pScene, int Id)
 }
 
 //テクスチャ登録
-void CTask::Insert(ID3D10ShaderResourceView* pTex, int Id)
+void CTask::Insert(ID3D10ShaderResourceView* pTex, int Id,int Width,int Height)
 {
 	MY_TEXTURE tex;
 	tex.m_pTex = pTex;
 	tex.m_Id = Id;
+	tex.m_Width = Width;
+	tex.m_Height = Height;
 
 	m_Tex.push_back(tex);
 }
@@ -97,12 +99,12 @@ CScene* CTask::GetScene(int Id)
 }
 
 //テクスチャを取得
-ID3D10ShaderResourceView* CTask::GetTex(int Id)
+MY_TEXTURE* CTask::GetTex(int Id)
 {
 	for (unsigned int i = 0; i < m_Tex.size(); i++)
 	{
 		if (m_Tex[i].m_Id == Id)
-			return m_Tex[i].m_pTex;
+			return &m_Tex[i];
 	}
 }
 

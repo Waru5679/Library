@@ -45,6 +45,10 @@ struct HIT_DATA
 class COBB
 {
 public:
+
+	//初期化
+	void Init();
+	
 	//OBBセット
 	OBB_Data SetOBB(D3DXVECTOR3 Pos, D3DXVECTOR3 Angle, D3DXVECTOR3 Scale, D3DXVECTOR3 Min, D3DXVECTOR3 Max, int ObjName, void* p);
 
@@ -53,6 +57,9 @@ public:
 
 	//OBB更新
 	void Update(OBB_Data* obb, D3DXVECTOR3 Pos, D3DXVECTOR3 Angle, D3DXVECTOR3 Scale, D3DXVECTOR3 Min, D3DXVECTOR3 Max);
+
+	//OBBの描画
+	void Draw();
 
 	//ヒットチェック
 	vector<HIT_DATA> ObjNameHit(OBB_Data* Obb,int Name);
@@ -68,6 +75,12 @@ private:
 
 	//OBBデータ
 	vector<OBB_Data*> m_Data;
+
+	//OBB表示用メッシュ
+	MY_MESH m_Mesh;
+
+	//描画色
+	float m_fColor[4];
 };
 
 extern COBB g_Obb;

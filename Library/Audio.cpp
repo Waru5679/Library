@@ -10,8 +10,7 @@ void CAudio::Init()
 	m_pSubmixVoice = nullptr;
 
 	//XAudioの作成
-	unsigned int CreateFlag = 0;
-	XAudio2Create(&m_pXAudio2, CreateFlag, XAUDIO2_DEFAULT_PROCESSOR);
+	XAudio2Create(&m_pXAudio2, 0, XAUDIO2_DEFAULT_PROCESSOR);
 
 	//マスターボイスの作成
 	m_pXAudio2->CreateMasteringVoice(&m_pMasteringVoice);
@@ -41,6 +40,7 @@ void CAudio::Load(int Id,const char* Name,bool Loop)
 		IXAudio2SourceVoice* pSourceVoice;
 		XAUDIO2_SEND_DESCRIPTOR Send = { 0,m_pSubmixVoice };
 		XAUDIO2_VOICE_SENDS SendList = { 1,&Send };
+
 		m_pXAudio2->CreateSourceVoice(&pSourceVoice, &WaveFormatEx, 0U, 2.0f, NULL, &SendList);
 	
 		//サウンド情報を登録
@@ -238,6 +238,6 @@ void CAudio::Release()
 		m_pMasteringVoice->DestroyVoice();
 	}
 
-	//XAudio2インタフェースの破棄
+
 	m_pXAudio2->Release();
 }

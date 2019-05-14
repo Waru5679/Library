@@ -64,10 +64,10 @@ void C2DPolygon::Update()
 void C2DPolygon::Draw()
 {
 	//êÿÇËéÊÇËà íu
-	m_Src.m_top =0.0f;
-	m_Src.m_left = 0.0f;
-	m_Src.m_right = m_Src.m_left + 512.0f;
-	m_Src.m_bottom = m_Src.m_top + 512.0f;
+	m_Src.m_top =200.0f;
+	m_Src.m_left = 200.0f;
+	m_Src.m_right = m_Src.m_left + 56.0f;
+	m_Src.m_bottom = m_Src.m_top + 56.0f;
 	
 	//ï`âÊà íu
 	m_Dst.m_top = m_ScreenPos.y;

@@ -17,7 +17,7 @@ void CSceneMain::Init()
 	LoadMesh();
 	
 	//プレイヤー
-	D3DXVECTOR3 vPos(0.0f, 0.0f, 0.0f);
+	D3DXVECTOR3 vPos(0.0f, 5.0f, 0.0f);
 	D3DXVECTOR3 vAngle(0.0f, 0.0f, 0.0f);
 	D3DXVECTOR3 vScale(1.0f, 1.0f, 1.0f);
 
@@ -57,6 +57,7 @@ void CSceneMain::Update()
 void CSceneMain::Draw()
 {
 	g_Task.Draw();
+	g_Obb.Draw();
 }
 
 void CSceneMain::Release()
@@ -75,7 +76,7 @@ void CSceneMain::LoadAudio()
 //テクスチャ
 void CSceneMain::LoadTexture()
 {
-	g_Draw.LoadTexture(0, "Texture/Test.png");
+	g_Draw.LoadTexture(0, "Texture/Test.png",512,512);
 }
 
 //メッシュ

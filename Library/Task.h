@@ -12,8 +12,11 @@ using namespace std;
 //テクスチャ管理用
 struct MY_TEXTURE
 {
-	ID3D10ShaderResourceView* m_pTex;	//テクスチャ
-	int m_Id;							//管理用ID
+	//テクスチャ
+	ID3D10ShaderResourceView* m_pTex;
+	int m_Width;	//幅
+	int m_Height;	//高さ
+	int m_Id;		//管理用ID
 
 };
 
@@ -35,12 +38,12 @@ public:
 	//登録
 	void InsertObj(CObj* pObj, int Id);
 	void InsertScene(CScene* pScene, int Id);
-	void Insert(ID3D10ShaderResourceView* pTex, int Id);
+	void Insert(ID3D10ShaderResourceView* pTex, int Id, int Width, int Height);
 	
 	//取得	
 	CObj* GetObj(int Id);
 	CScene* GetScene(int Id);
-	ID3D10ShaderResourceView* GetTex(int Id);
+	MY_TEXTURE* GetTex(int Id);
 	
 	//OBJリストデータ削除
 	void ObjDelete();

@@ -63,15 +63,19 @@ public:
 	//Meshの読み込み
 	void LoadMesh(int Id,const char* Name);
 
-	//メッシュ描画
+	//メッシュ描画(描画色指定なし)
 	void Draw(D3DMATRIX matWorld, MY_MESH* pMesh);
+
+	//メッシュ描画(描画色指定あり)
+	void Draw(D3DMATRIX matWorld, MY_MESH* pMesh,float fColor[4]);
 
 	//テクスチャを指定してメッシュ描画
 	void Draw(int TexId,D3DMATRIX matWorld, MY_MESH* pMesh);
 
-private:
 	//OBJの読み込み
 	HRESULT LoadObj(const char* FileName, MY_MESH* pMesh);
+
+private:
 
 	//マテリアルの読み込み
 	HRESULT LoadMaterial(char* FileName, MY_MESH* pMesh);
