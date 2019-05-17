@@ -47,14 +47,56 @@ void CDraw::Draw3D(ID3D10ShaderResourceView* pResView, D3DXMATRIX matWorld)
 	DrawPolygon();
 }
 
-////2D描画 中継
-//void CDraw::Draw2D(int TexId, RECT_F* Src, RECT_F*Out, float Color[4], float Rad)
-//{
-//	Draw2D(g_Task.GetTex(TexId),Src,Out,Color,Rad);
-//}
+//2D描画
+void CDraw::Draw2D(ID3D10ShaderResourceView* pTex, RECT_F* pOut,float fRad)
+{
+	//切り取り（等倍）
+	float fSrc[4] = {0.0f,0.0f,1.0f,1.0f};
+
+	//描画色
+	float fColor[4] = { 1.0f,1.0f,1.0f,1.0f };
+	
+	//逆ビュー行列
+	D3DXMATRIX matInvView;
+	D3DXMatrixIdentity(&matInvView);
+	D3DXMatrixInverse(&matInvView, NULL, &m_pCamera->GetViewMatrix());
+
+	//逆プロジェクション行列
+	D3DXMATRIX matInvProj;
+	D3DXMatrixIdentity(&matInvProj);
+	D3DXMatrixInverse(&matInvProj, NULL, &m_pCamera->GetProjMatrix());
+
+	//ワールド行列
+	D3DXMATRIX matWorld;
+	D3DXMatrixIdentity(&matWorld);
+
+	//サイズを求める
+	D3DXVECTOR2 Size;
+	Size.x = pOut->m_right - pOut->m_left;
+	Size.y = pOut->m_bottom - pOut->m_top;
+	matWorld._11 = Size.x / WINDOW_WIDTH;
+	matWorld._22 = Size.y / WINDOW_HEIGHT;
+
+	//Z軸回転行列
+	D3DXMATRIX matRot;
+	D3DXMatrixRotationZ(&matRot, D3DXToRadian(fRad));
+
+	//ワールドに回転をかける
+	matWorld *= matRot;
+
+	//平行移動量を求める
+	matWorld._41 = (2.0f / (float)WINDOW_WIDTH) * (pOut->m_left + Size.x / 2.0f) - 1.0f;
+	matWorld._42 = (2.0f / (float)WINDOW_HEIGHT) * (pOut->m_top - Size.y / 2.0f) + 1.0f;
+
+	//シェーダーのセット
+	g_Shader.SetShader(pTex, fSrc, fColor, matWorld *matInvProj*matInvView);
+
+	//ポリゴンの描画
+	DrawPolygon();
+}
 
 //2D描画
-void CDraw::Draw2D(int TexId, RECT_F* Src,RECT_F*Out,float Color[4],float Rad)
+void CDraw::Draw2D(int TexId, RECT_F* pSrc,RECT_F* pOut,float Color[4],float fRad)
 {
 	//テクスチャ情報
 	MY_TEXTURE* pTex;
@@ -62,10 +104,10 @@ void CDraw::Draw2D(int TexId, RECT_F* Src,RECT_F*Out,float Color[4],float Rad)
 
 	//切り取り位置の設定
 	float fSrc[4];
-	fSrc[0] = Src->m_left	/ pTex->m_Width;
-	fSrc[1] = Src->m_top	/ pTex->m_Height;
-	fSrc[2] = Src->m_right	/ pTex->m_Width;
-	fSrc[3] = Src->m_bottom / pTex->m_Height;
+	fSrc[0] = pSrc->m_left	/ pTex->m_Width;
+	fSrc[1] = pSrc->m_top	/ pTex->m_Height;
+	fSrc[2] = pSrc->m_right	/ pTex->m_Width;
+	fSrc[3] = pSrc->m_bottom/ pTex->m_Height;
 
 	//逆ビュー行列
 	D3DXMATRIX matInvView;	
@@ -83,21 +125,21 @@ void CDraw::Draw2D(int TexId, RECT_F* Src,RECT_F*Out,float Color[4],float Rad)
 
 	//サイズを求める
 	D3DXVECTOR2 Size;
-	Size.x = Out->m_right - Out->m_left;
-	Size.y = Out->m_bottom - Out->m_top;
+	Size.x = pOut->m_right - pOut->m_left;
+	Size.y = pOut->m_bottom - pOut->m_top;
 	matWorld._11 =Size.x/WINDOW_WIDTH;
 	matWorld._22 = Size.y / WINDOW_HEIGHT;
 
 	//Z軸回転行列
 	D3DXMATRIX matRot;
-	D3DXMatrixRotationZ(&matRot, D3DXToRadian(Rad));
+	D3DXMatrixRotationZ(&matRot, D3DXToRadian(fRad));
 
 	//ワールドに回転をかける
 	matWorld *= matRot;
 
 	//平行移動量を求める
-	matWorld._41 = (2.0f / (float)WINDOW_WIDTH ) * (Out->m_left + Size.x/2.0f) -1.0f;
-	matWorld._42 = (2.0f / (float)WINDOW_HEIGHT) * (Out->m_top  - Size.y/2.0f) +1.0f;
+	matWorld._41 = (2.0f / (float)WINDOW_WIDTH ) * (pOut->m_left + Size.x/2.0f) -1.0f;
+	matWorld._42 = (2.0f / (float)WINDOW_HEIGHT) * (pOut->m_top  - Size.y/2.0f) +1.0f;
 	
 	//シェーダーのセット
 	g_Shader.SetShader(pTex->m_pTex,fSrc,Color,matWorld *matInvProj*matInvView);

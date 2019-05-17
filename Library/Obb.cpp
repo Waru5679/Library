@@ -57,9 +57,9 @@ OBB_Data COBB::SetOBB(D3DXVECTOR3 Pos, D3DXVECTOR3 Angle, D3DXVECTOR3 Scale, D3D
 	obb.m_Scale = Scale;
 
 	//’·‚³Žæ“¾ 
-	obb.m_Length[0] = fabsf(obb.vMax.x - obb.vMin.x) * 0.5f;
-	obb.m_Length[1] = fabsf(obb.vMax.y - obb.vMin.y) * 0.5f;
-	obb.m_Length[2] = fabsf(obb.vMax.z - obb.vMin.z) * 0.5f;
+	obb.m_Length[0] = fabsf(obb.vMax.x - obb.vMin.x) /** 0.5f*/;
+	obb.m_Length[1] = fabsf(obb.vMax.y - obb.vMin.y) /** 0.5f*/;
+	obb.m_Length[2] = fabsf(obb.vMax.z - obb.vMin.z) /** 0.5f*/;
 
 	//’†S‚©‚ç‚Ì’·‚³
 	obb.m_Direct[0] = D3DXVECTOR3(matRot._11, matRot._12, matRot._13);
@@ -160,9 +160,9 @@ void COBB::Update(OBB_Data* obb,D3DXVECTOR3 Pos, D3DXVECTOR3 Angle, D3DXVECTOR3 
 	obb->m_Scale = Scale;
 
 	//’·‚³Žæ“¾
-	obb->m_Length[0] = fabsf(obb->vMax.x - obb->vMin.x)*0.5f;
-	obb->m_Length[1] =fabsf(obb->vMax.y - obb->vMin.y)*0.5f;
-	obb->m_Length[2] =fabsf(obb->vMax.z - obb->vMin.z)*0.5f;
+	obb->m_Length[0] = fabsf(obb->vMax.x - obb->vMin.x)/**0.5f*/;
+	obb->m_Length[1] =fabsf(obb->vMax.y - obb->vMin.y)/**0.5f*/;
+	obb->m_Length[2] =fabsf(obb->vMax.z - obb->vMin.z)/**0.5f*/;
 
 	//’†S‚©‚ç‚Ì’·‚³
 	obb->m_Direct[0] = D3DXVECTOR3(matRot._11, matRot._12, matRot._13);

@@ -48,13 +48,20 @@ VS_OUTPUT VS( VS_IN Input)
 float4 PS( VS_OUTPUT input ) : SV_Target
 {
 	//テクスチャ色
+	
 	float4 color = g_texDecal.Sample( samLinear, input.Tex );
 	
-	//テクスチャ色に設定した描画色をかける
-	color.r *= g_Color.r;
-	color.g *= g_Color.g;
-	color.b *= g_Color.b;
-	color.a *= g_Color.a;
+	//完全透過
+	if (color.a <= 0.0f)
+		discard;
+	else
+	{
+		//テクスチャ色に設定した描画色をかける
+		color.r *= g_Color.r;
+		color.g *= g_Color.g;
+		color.b *= g_Color.b;
+		color.a *= g_Color.a;
+	}
 
 	return color;
 }

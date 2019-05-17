@@ -88,10 +88,9 @@ void CCharClass::CreateCharTex(wchar_t c, HDC hdc, TEXTMETRIC TM)
 	DWORD dwColor,dwFontColor,dwBackColor;
 	
 	//背景色
-	dwBackColor = 0x00000000;//黒
-	
+	dwBackColor = 0x00ffffff;//透過(黒	
 	//フォント色
-	dwFontColor = 0x00ffffff;//白
+	dwFontColor = 0xffffffff;//白
 
 	//1ピクセル単位にフォントの色情報(32bit)をテクスチャに書き込み
 	memset(pBits, 0x00, sizeof(pBits)*32*32);
@@ -217,28 +216,29 @@ void CFont::CreateStrTex(const wchar_t* str)
 }
 
 //フォント描画
-void CFont::DrawStr(const wchar_t* str, float x, float y, float FontSize)
+void CFont::DrawStr(const wchar_t* Str, float Pos_x, float Pos_y, float FontSize,float Rad)
 {
 	//文字列登録
-	CreateStrTex(str);
+	CreateStrTex(Str);
 
-	for (unsigned int i = 0; i < wcslen(str); i++)
+	for (unsigned int i = 0; i < wcslen(Str); i++)
 	{
 		//リストから検索
 		for (auto itr = list_char_tex->begin(); itr != list_char_tex->end(); itr++)
 		{
 			//登録された文字とstrの文字を比較
-			if (*itr->get()->GetChar() == str[i])
+			if (*itr->get()->GetChar() == Str[i])
 			{			
+				//テクスチャポインタ
+				ID3D10ShaderResourceView* pTex = (*itr)->GetTex();
 				
-				//描画
+				//描画位置
 				RECT_F Out;
-				Out.m_top = y;
-				Out.m_left= x+FontSize*i;
-				Out.m_right = Out.m_left+FontSize;
-				Out.m_bottom = Out.m_top+FontSize;			
+				RectSet(Pos_x + FontSize * i, Pos_y, FontSize, FontSize,&Out);
+			
+				//描画
+				g_Draw.Draw2D(pTex, &Out, 0.0f);
 
-			//	g_Draw.Draw2D(&(*itr->get()->GetTex()),&Out,0.0f);
 			}
 		}
 	}	

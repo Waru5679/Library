@@ -29,7 +29,7 @@ void CPlayer::Init()
 	m_vMove = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 
 	//移動スピード
-	m_fSpeed=2.0f;
+	m_fSpeed=10.0f;
 
 	//当たり判定セット
 	m_Obb = g_Obb.SetOBB(m_vPos, m_vAngle, m_vScale, m_pMesh->vMin, m_pMesh->vMax, m_id, this);

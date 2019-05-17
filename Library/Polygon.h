@@ -23,9 +23,8 @@ public:
 	//描画
 	void Draw3D(int TexId, D3DXMATRIX matWorld);
 	void Draw3D(ID3D10ShaderResourceView* pResView, D3DXMATRIX matWorld);
-	void Draw2D(int TexId, RECT_F* Src, RECT_F*Out, float Color[4], float Rad);
-	//void Draw2D(ID3D10ShaderResourceView* pResView, RECT_F* Src, RECT_F*Out, float Color[4],float Rad);
-
+	void Draw2D(int TexId, RECT_F* pSrc, RECT_F* pOut, float fColor[4], float fRad);
+	void Draw2D(ID3D10ShaderResourceView* pTex, RECT_F* pOut, float fRad);
 	//テクスチャ読み込み
 	void LoadTexture(int Id, const char* Name,int Width, int Height);
 
