@@ -29,5 +29,7 @@ private:
 	D3DXVECTOR3 m_vLastMove;
 	OBB_Data m_Obb;
 	float m_fSpeed;//移動スピード
+
+	bool m_bHit;//ヒットテスト
 };
 

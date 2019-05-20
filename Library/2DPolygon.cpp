@@ -38,11 +38,11 @@ void C2DPolygon::Update()
 	}
 	if (g_input.GetKeyPush(VK_UP) == true)
 	{
-		m_Move.y = 1.0f;
+		m_Move.y = -1.0f;
 	}
 	if (g_input.GetKeyPush(VK_DOWN) == true)
 	{
-		m_Move.y = -1.0f;
+		m_Move.y = 1.0f;
 	}
 
 	//‰ñ“]ƒeƒXƒg
