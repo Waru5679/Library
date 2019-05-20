@@ -55,7 +55,7 @@ void CDraw::Draw2D(ID3D10ShaderResourceView* pTex, RECT_F* pOut,float fRad)
 
 	//描画色
 	float fColor[4] = { 1.0f,1.0f,1.0f,1.0f };
-	
+
 	//逆ビュー行列
 	D3DXMATRIX matInvView;
 	D3DXMatrixIdentity(&matInvView);
@@ -84,9 +84,14 @@ void CDraw::Draw2D(ID3D10ShaderResourceView* pTex, RECT_F* pOut,float fRad)
 	//ワールドに回転をかける
 	matWorld *= matRot;
 
+	//1ピクセルの大きさを求める
+	D3DXVECTOR2 PixcelSize;
+	PixcelSize.x = (2.0f / (float)WINDOW_WIDTH);
+	PixcelSize.y = (2.0f / (float)WINDOW_HEIGHT);
+
 	//平行移動量を求める
-	matWorld._41 = (2.0f / (float)WINDOW_WIDTH) * (pOut->m_left + Size.x / 2.0f) - 1.0f;
-	matWorld._42 = (2.0f / (float)WINDOW_HEIGHT) * (pOut->m_top - Size.y / 2.0f) + 1.0f;
+	matWorld._41 = PixcelSize.x * pOut->m_left + PixcelSize.x * (Size.x / 2.0f) - 1.0f;
+	matWorld._42 = PixcelSize.y * (pOut->m_top) - PixcelSize.y * (Size.y / 2.0f) + 1.0f;
 
 	//シェーダーのセット
 	g_Shader.SetShader(pTex, fSrc, fColor, matWorld *matInvProj*matInvView);
@@ -137,10 +142,15 @@ void CDraw::Draw2D(int TexId, RECT_F* pSrc,RECT_F* pOut,float Color[4],float fRa
 	//ワールドに回転をかける
 	matWorld *= matRot;
 
+	//1ピクセルの大きさを求める
+	D3DXVECTOR2 PixcelSize;
+	PixcelSize.x = (2.0f / (float)WINDOW_WIDTH);
+	PixcelSize.y = (2.0f / (float)WINDOW_HEIGHT);
+
 	//平行移動量を求める
-	matWorld._41 = (2.0f / (float)WINDOW_WIDTH ) * (pOut->m_left + Size.x/2.0f) -1.0f;
-	matWorld._42 = (2.0f / (float)WINDOW_HEIGHT) * (pOut->m_top  - Size.y/2.0f) +1.0f;
-	
+	matWorld._41 = PixcelSize.x * pOut->m_left + PixcelSize.x * (Size.x / 2.0f) - 1.0f;
+	matWorld._42 = PixcelSize.y * (pOut->m_top) - PixcelSize.y * (Size.y / 2.0f) + 1.0f;
+
 	//シェーダーのセット
 	g_Shader.SetShader(pTex->m_pTex,fSrc,Color,matWorld *matInvProj*matInvView);
 

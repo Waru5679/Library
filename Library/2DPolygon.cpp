@@ -60,9 +60,13 @@ void C2DPolygon::Update()
 	m_Move.y = 0.0f;
 }
 
+#include "Font.h"
+
 //描画
 void C2DPolygon::Draw()
 {
+	CFont::DrawStr(L"テスト", 0, 0, 32, 0);
+
 	//切り取り位置
 	m_Src.m_top =200.0f;
 	m_Src.m_left = 200.0f;
