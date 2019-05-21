@@ -107,7 +107,7 @@ void CPlayer::Input()
 void CPlayer::Draw()
 {
 	//if(m_bHit==true)
-	CFont::DrawStr(L"Hit", 200.0f, 20.0f, 32.0f, 0.0f);
+	CFont::DrawStr("Hit", 200.0f, 20.0f, 32.0f, 0.0f);
 
 	g_Loader.Draw(m_matWorld, m_pMesh);
 }

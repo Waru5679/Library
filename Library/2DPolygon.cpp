@@ -66,7 +66,7 @@ void C2DPolygon::Update()
 void C2DPolygon::Draw()
 {
 	//Font描画テスト
-	CFont::DrawStr(L"テスト", 0, 0, 32, 45);
+	CFont::DrawStr("テスト", 0, 0, 32, 45);
 
 	//切り取り位置
 	m_Src.m_top =200.0f;

@@ -10,6 +10,7 @@
 #include "Font.h"
 #include "Audio.h"
 #include "Obb.h"
+#include "Font.h"
 
 #include "SceneMain.h"
 
@@ -89,8 +90,12 @@ INT WINAPI WinMain( HINSTANCE hInst,HINSTANCE hPrevInst,LPSTR szStr,INT iCmdShow
 	g_Scene.SetScene(START_SCENE);
 	
 	//fps制御
-	DWORD startTime = GetTickCount();
-	DWORD nowTime = 0;
+	DWORD FlameTime, SecondTime, NowTime;
+
+	SecondTime = FlameTime = GetTickCount();
+
+	NowTime = 0;
+	char FpsCount = 0;
 	
 	while( msg.message!=WM_QUIT )
 	{
@@ -108,18 +113,25 @@ INT WINAPI WinMain( HINSTANCE hInst,HINSTANCE hPrevInst,LPSTR szStr,INT iCmdShow
 			//深度バッファクリア
 			dx.m_pDevice->ClearDepthStencilView(dx.m_pDepthStencilView, D3D10_CLEAR_DEPTH, 1.0f, 0);
 
-			nowTime = GetTickCount();
+			//時刻更新
+			NowTime = GetTickCount();
+
+			//1秒毎
+			if (NowTime - SecondTime > 1)
+			{
+				SecondTime = NowTime; 
+				FpsCount = 0;
+			}
 
 			//60fps
-			if (nowTime - startTime > (int)1000 / 60)
+			if (NowTime - FlameTime > (int)1000 / 60)
 			{
-				startTime = nowTime;
+				FlameTime = NowTime;
+				FpsCount++;
 
 				//更新
 				g_Scene.Update();
 			}
-
-			//描画
 			g_Scene.Draw();
 
 			//画面更新（バックバッファをフロントバッファに）
