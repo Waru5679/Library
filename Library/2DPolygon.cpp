@@ -65,7 +65,8 @@ void C2DPolygon::Update()
 //描画
 void C2DPolygon::Draw()
 {
-	CFont::DrawStr(L"テスト", 0, 0, 32, 0);
+	//Font描画テスト
+	CFont::DrawStr(L"テスト", 0, 0, 32, 45);
 
 	//切り取り位置
 	m_Src.m_top =200.0f;
@@ -80,5 +81,5 @@ void C2DPolygon::Draw()
 	m_Dst.m_bottom = m_Dst.m_top + 100.0f;
 	
 	//描画
-	g_Draw.Draw2D(0,&m_Src, &m_Dst,m_fColor,m_fRad);
+	g_Draw.Draw2D(0, &m_Src, &m_Dst, m_fColor, m_fRad);
 }

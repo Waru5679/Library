@@ -237,7 +237,7 @@ void CFont::DrawStr(const wchar_t* Str, float Pos_x, float Pos_y, float FontSize
 				RectSet(Pos_x + FontSize * i, Pos_y, FontSize, FontSize,&Out);
 			
 				//•`‰æ
-				g_Draw.Draw2D(pTex, &Out, 0.0f);
+				g_Draw.Draw2D(pTex, &Out, Rad);
 
 			}
 		}
