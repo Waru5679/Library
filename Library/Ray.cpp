@@ -12,15 +12,27 @@ int FaceNum[6][4] =
 	{3,7,6,2}
 };
 
-bool CRay::RayHit(D3DXVECTOR3* OutPoint,D3DXVECTOR3 Pos, D3DXVECTOR3 RayVec, OBB_Data Obb)
+bool CRay::RayHit(D3DXVECTOR3* OutPoint, D3DXVECTOR3 Pos, D3DXVECTOR3 RayVec, OBB_Data Obb)
 {
+
+	for (unsigned int i = 0; i < Obb.pMesh->Material.size(); i++)
+	{
+
+		//(*itr)[0].vPos;
+		//(*itr)[1].vPos;
+
+		
+		int a = 0;
+	}
+
+
 	for (int i = 0; i < 6; i++)
+
 	{
 		//Ray‚ÌŒð·”»’è
 		if (Ray(OutPoint,Pos, RayVec, Obb.VerPos[FaceNum[i][0]], Obb.VerPos[FaceNum[i][1]], Obb.VerPos[FaceNum[i][2]], Obb.VerPos[FaceNum[i][3]])==true)
 		{
 			WallShear(&m_vShear, RayVec, m_vNorm);
-			return true;
 		}
 	}
 

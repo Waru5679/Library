@@ -7,6 +7,7 @@
 #include <math.h>
 
 #include "Font.h"
+#include "Ray.h"
 
 //コンストラクタ
 CPlayer::CPlayer(D3DXVECTOR3 Pos, D3DXVECTOR3 Angle, D3DXVECTOR3 Scale)
@@ -74,6 +75,8 @@ void CPlayer::Update()
 		m_bHit = false;
 	}
 
+	g_Ray.RayHit(NULL, m_vPos, m_vMove, m_Obb);
+
 	//ワールド行列作成
 	m_matWorld = MakeMatWorld(m_vPos, m_vAngle, m_vScale);
 
@@ -107,7 +110,7 @@ void CPlayer::Input()
 void CPlayer::Draw()
 {
 	//if(m_bHit==true)
-	CFont::DrawStr("Hit", 200.0f, 20.0f, 32.0f, 0.0f);
+	CFont::DrawStr(L"あ", 200.0f, 20.0f, 32.0f, 0.0f);
 
-	g_Loader.Draw(m_matWorld, m_pMesh);
+	//g_Loader.Draw(m_matWorld, m_pMesh);
 }

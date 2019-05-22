@@ -33,7 +33,7 @@ void COBB::Insert(OBB_Data* obb)
 }
 
 //OBBのセット
-OBB_Data COBB::SetOBB(D3DXVECTOR3 Pos, D3DXVECTOR3 Angle, D3DXVECTOR3 Scale, D3DXVECTOR3 Min, D3DXVECTOR3 Max, int ObjName, void* p)
+OBB_Data COBB::SetOBB(D3DXVECTOR3 Pos, D3DXVECTOR3 Angle, D3DXVECTOR3 Scale, D3DXVECTOR3 Min, D3DXVECTOR3 Max, int ObjName, CObj* p)
 {
 	OBB_Data obb;
 
@@ -85,6 +85,9 @@ OBB_Data COBB::SetOBB(D3DXVECTOR3 Pos, D3DXVECTOR3 Angle, D3DXVECTOR3 Scale, D3D
 	{
 		D3DXVec3TransformCoord(&obb.Norm[i], &g_Norm[i], &matRot);
 	}
+
+	//メッシュ情報
+	obb.pMesh = dynamic_cast<CObj3D*>(p)->GetMesh();
 
 	return obb;
 

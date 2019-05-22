@@ -13,6 +13,13 @@ struct MY_VERTEX
 	D3DXVECTOR2 vTex;
 };
 
+//面情報
+struct FACE_INFO
+{
+	int FaceofVer;		//面を構成する頂点の数
+	MY_VERTEX* pVer;	//頂点データ
+};
+
 //マテリアル構造体
 struct MY_MATERIAL
 {
@@ -23,11 +30,17 @@ struct MY_MATERIAL
 	D3DXVECTOR3 Kd;//ディフューズ(拡散光)
 	D3DXVECTOR3 Ks;//スペキュラー(鏡面反射光）
 	
+	//面情報
+	vector<FACE_INFO> FaceInfo;
+
 	//面の頂点の数
 	vector<int>FaceOfVer;
 
 	//ファイス情報
 	vector<int>iFaceBuffer;
+
+	//面の頂点情報
+//	vector <MY_VERTEX*> FaceVertex;
 
 	//テクスチャ
 	ID3D10ShaderResourceView* pTexture;

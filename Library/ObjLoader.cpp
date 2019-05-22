@@ -207,9 +207,7 @@ HRESULT CObjLoader::LoadObj(const char* FileName, MY_MESH* pMesh)
 
 			//面ごとに回す
 			for (int i = 0; i <iFaceCount; i++)
-			{
-				int id = 0;
-							
+			{				
 				//頂点定義
 				MY_VERTEX* vartices = new MY_VERTEX[Material.FaceOfVer[i]];
 				for (int j = 0; j < Material.FaceOfVer[i]; j++)
@@ -231,6 +229,13 @@ HRESULT CObjLoader::LoadObj(const char* FileName, MY_MESH* pMesh)
 					vartices[2] = _2;
 					vartices[3] = _3;
 				}
+
+
+				//面の情報を保存
+				FACE_INFO info;
+				info.FaceofVer = Material.FaceOfVer[i];
+				info.pVer = vartices;
+				Material.FaceInfo.push_back(info);
 
 				//バーテックスバッファーを作成
 				D3D10_BUFFER_DESC bd;
@@ -270,6 +275,7 @@ HRESULT CObjLoader::LoadObj(const char* FileName, MY_MESH* pMesh)
 
 				//使った数だけずらす
 				index_count += Material.FaceOfVer[i];
+
 			}
 
 			//マテリアル情報を登録

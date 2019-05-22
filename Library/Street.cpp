@@ -2,6 +2,7 @@
 #include "ObjLoader.h"
 
 
+
 CStreet::CStreet(D3DXVECTOR3 Pos, D3DXVECTOR3 Angle, D3DXVECTOR3 Scale)
 {
 	m_vPos = Pos;
@@ -31,6 +32,7 @@ void CStreet::Update()
 {
 	//“–‚½‚è”»’èXV
 	g_Obb.Update(&m_Obb, m_vPos, m_vAngle, m_vScale, m_pMesh->vMin, m_pMesh->vMax);
+
 }
 
 //•`‰æ

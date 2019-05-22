@@ -7,6 +7,8 @@
 #include <vector>
 using namespace std;
 
+#include "ObjLoader.h"
+
 //OBB構造体
 struct OBB_Data
 {
@@ -20,8 +22,10 @@ public:
 	D3DXVECTOR3 vMax;		//Mesh最大値
 	D3DXMATRIX matWorld;
 	int Name;
-	void* p;
-	
+	CObj* p;
+
+	MY_MESH* pMesh;	//メッシュポインタ
+		
 	D3DXVECTOR3 m_Angle;
 	D3DXVECTOR3 m_Scale;
 };
@@ -36,7 +40,7 @@ struct HIT_DATA
 	//オブジェクトサイズ
 	D3DXVECTOR3 vMin;	
 	D3DXVECTOR3 vMax;
-	void* p;
+	CObj* p;
 
 	OBB_Data* obb;
 };
@@ -50,7 +54,7 @@ public:
 	void Init();
 	
 	//OBBセット
-	OBB_Data SetOBB(D3DXVECTOR3 Pos, D3DXVECTOR3 Angle, D3DXVECTOR3 Scale, D3DXVECTOR3 Min, D3DXVECTOR3 Max, int ObjName, void* p);
+	OBB_Data SetOBB(D3DXVECTOR3 Pos, D3DXVECTOR3 Angle, D3DXVECTOR3 Scale, D3DXVECTOR3 Min, D3DXVECTOR3 Max, int ObjName, CObj* p);
 
 	//OBB登録
 	void Insert(OBB_Data* obb);

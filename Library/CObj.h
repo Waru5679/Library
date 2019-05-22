@@ -28,6 +28,8 @@ protected:
 //3Dモデルを使用するもの　継承用クラス
 class CObj3D :public CObj
 {
+public :
+	MY_MESH* GetMesh() { return m_pMesh; }
 protected:
 
 	//ベクトル

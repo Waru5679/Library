@@ -63,7 +63,7 @@ void CDraw::Draw2D(ID3D10ShaderResourceView* pTex, RECT_F* pOut, float fRad)
 void CDraw::Draw2D(int TexId, RECT_F* pSrc,RECT_F* pOut,float fColor[4],float fRad)
 {
 	//テクスチャ情報
-	MY_TEXTURE* pTex;
+	MY_TEXTURE* pTex=nullptr;
 	pTex=g_Task.GetTex(TexId);
 
 	//切り取り位置の設定
