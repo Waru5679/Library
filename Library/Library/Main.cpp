@@ -11,8 +11,8 @@
 #include "Audio.h"
 #include "Obb.h"
 #include "Font.h"
+#include "SceneInclude.h"
 
-#include "SceneMain.h"
 
 using namespace std;
 
@@ -84,7 +84,7 @@ INT WINAPI WinMain( HINSTANCE hInst,HINSTANCE hPrevInst,LPSTR szStr,INT iCmdShow
     ZeroMemory( &msg, sizeof(msg) );
 		
 	//シーンロード
-	LoadScene();
+	CSceneInclude::LoadScene();
 
 	//スタートシーンセット
 	g_Scene.SetScene(START_SCENE);
@@ -167,14 +167,7 @@ LRESULT CALLBACK WndProc(HWND hWnd,UINT iMsg,WPARAM wParam,LPARAM lParam)
 	return DefWindowProc (hWnd, iMsg, wParam, lParam);	
 }
 
-//シーン読み込み
-void LoadScene()
-{
-	//メイン
-	CSceneMain* main = new CSceneMain();
-	g_Task.InsertScene(main, SceneName::SceneMain);
 
-}
 
 //メモリの開放
 void Release()

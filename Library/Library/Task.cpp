@@ -106,6 +106,7 @@ MY_TEXTURE* CTask::GetTex(int Id)
 		if (m_Tex[i].m_Id == Id)
 			return &m_Tex[i];
 	}
+	return nullptr;
 }
 
 //オブジェクト取得

@@ -130,68 +130,54 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="2DPolygon.h" />
-    <ClInclude Include="Audio.h" />
-    <ClInclude Include="Camera.h" />
-    <ClInclude Include="CObj.h" />
-    <ClInclude Include="Csv.h" />
-    <ClInclude Include="DirectX.h" />
-    <ClInclude Include="Font.h" />
-    <ClInclude Include="Input.h" />
-    <ClInclude Include="Main.h" />
-    <ClInclude Include="MainCamera.h" />
-    <ClInclude Include="Math.h" />
-    <ClInclude Include="Obb.h" />
-    <ClInclude Include="ObjLoader.h" />
-    <ClInclude Include="Player.h" />
-    <ClInclude Include="Polygon.h" />
-    <ClInclude Include="Ray.h" />
-    <ClInclude Include="Route.h" />
-    <ClInclude Include="Scene.h" />
-    <ClInclude Include="SceneMain.h" />
-    <ClInclude Include="Shader.h" />
-    <ClInclude Include="Street.h" />
-    <ClInclude Include="Task.h" />
-    <ClInclude Include="Trace.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
-    </ClInclude>
+    <ClInclude Include="Game\2DPolygon.h" />
+    <ClInclude Include="Game\MainCamera.h" />
+    <ClInclude Include="Game\Player.h" />
+    <ClInclude Include="Game\SceneMain.h" />
+    <ClInclude Include="Game\Street.h" />
+    <ClInclude Include="Library\Audio.h" />
+    <ClInclude Include="Library\Camera.h" />
+    <ClInclude Include="Library\CObj.h" />
+    <ClInclude Include="Library\Csv.h" />
+    <ClInclude Include="Library\DirectX.h" />
+    <ClInclude Include="Library\Font.h" />
+    <ClInclude Include="Library\Input.h" />
+    <ClInclude Include="Library\Main.h" />
+    <ClInclude Include="Library\Math.h" />
+    <ClInclude Include="Library\Obb.h" />
+    <ClInclude Include="Library\ObjLoader.h" />
+    <ClInclude Include="Library\Polygon.h" />
+    <ClInclude Include="Library\Ray.h" />
+    <ClInclude Include="Library\Route.h" />
+    <ClInclude Include="Library\Scene.h" />
+    <ClInclude Include="Library\SceneInclude.h" />
+    <ClInclude Include="Library\Shader.h" />
+    <ClInclude Include="Library\Task.h" />
+    <ClInclude Include="Library\Trace.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="2DPolygon.cpp" />
-    <ClCompile Include="Audio.cpp" />
-    <ClCompile Include="Csv.cpp" />
-    <ClCompile Include="DirectX.cpp" />
-    <ClCompile Include="Font.cpp" />
-    <ClCompile Include="Input.cpp" />
-    <ClCompile Include="Main.cpp" />
-    <ClCompile Include="MainCamera.cpp" />
-    <ClCompile Include="Math.cpp" />
-    <ClCompile Include="Obb.cpp" />
-    <ClCompile Include="ObjLoader.cpp" />
-    <ClCompile Include="Player.cpp" />
-    <ClCompile Include="Polygon.cpp" />
-    <ClCompile Include="Ray.cpp" />
-    <ClCompile Include="Route.cpp" />
-    <ClCompile Include="Scene.cpp" />
-    <ClCompile Include="SceneMain.cpp" />
-    <ClCompile Include="Shader.cpp" />
-    <ClCompile Include="Street.cpp" />
-    <ClCompile Include="Task.cpp" />
-    <ClCompile Include="Trace.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <FxCompile Include="Geometry_Texture.fx">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-    </FxCompile>
+    <ClCompile Include="Game\2DPolygon.cpp" />
+    <ClCompile Include="Game\MainCamera.cpp" />
+    <ClCompile Include="Game\Player.cpp" />
+    <ClCompile Include="Game\SceneMain.cpp" />
+    <ClCompile Include="Game\Street.cpp" />
+    <ClCompile Include="Library\Audio.cpp" />
+    <ClCompile Include="Library\Csv.cpp" />
+    <ClCompile Include="Library\DirectX.cpp" />
+    <ClCompile Include="Library\Font.cpp" />
+    <ClCompile Include="Library\Input.cpp" />
+    <ClCompile Include="Library\Main.cpp" />
+    <ClCompile Include="Library\Math.cpp" />
+    <ClCompile Include="Library\Obb.cpp" />
+    <ClCompile Include="Library\ObjLoader.cpp" />
+    <ClCompile Include="Library\Polygon.cpp" />
+    <ClCompile Include="Library\Ray.cpp" />
+    <ClCompile Include="Library\Route.cpp" />
+    <ClCompile Include="Library\Scene.cpp" />
+    <ClCompile Include="Library\SceneInclude.cpp" />
+    <ClCompile Include="Library\Shader.cpp" />
+    <ClCompile Include="Library\Task.cpp" />
+    <ClCompile Include="Library\Trace.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,12 +1,16 @@
-#include "SceneMain.h"
-#include "Task.h"
-#include "MainCamera.h"
-#include "ObjLoader.h"
-#include "Audio.h"
-#include "Polygon.h"
-#include "Shader.h"
+//ライブラリファイル
+#include "../Library/Task.h"
+#include "../Library/ObjLoader.h"
+#include "../Library/Audio.h"
+#include "../Library/Polygon.h"
+#include "../Library/Shader.h"
+
+//ゲームファイル
 #include "2DPolygon.h"
 #include "Street.h"
+#include "MainCamera.h"
+#include "SceneMain.h"
+
 
 //初期化
 void CSceneMain::Init()

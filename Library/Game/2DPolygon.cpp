@@ -1,6 +1,9 @@
+//ライブラリファイル
+#include "../Library/Font.h"
+#include "../Library/Input.h"
+
+//ゲームファイル
 #include "2DPolygon.h"
-#include "Font.h"
-#include "Input.h"
 
 //初期化
 void C2DPolygon::Init()
@@ -60,14 +63,9 @@ void C2DPolygon::Update()
 	m_Move.y = 0.0f;
 }
 
-#include "Font.h"
-
 //描画
 void C2DPolygon::Draw()
 {
-	//Font描画テスト
-//	CFont::DrawStr(L"テスト", 0, 0, 32, 45);
-
 	//切り取り位置
 	m_Src.m_top =200.0f;
 	m_Src.m_left = 200.0f;

@@ -1,9 +1,11 @@
 #pragma once
 
-//必要なライブラリファイルのロード
-#include "Main.h"
-#include "CObj.h" 
-#include "Obb.h"
+//ライブラリファイル
+#include "../Library/Main.h"
+#include "../Library/CObj.h" 
+#include "../Library/Obb.h"
+
+//ゲームファイル
 #include "MainCamera.h"
 
 #define POWER_TIME 100
@@ -12,6 +14,7 @@
 class CPlayer:public CObj3D
 {
 public:
+	//コンストラクタ
 	CPlayer(D3DXVECTOR3 Pos, D3DXVECTOR3 Angle, D3DXVECTOR3 Scale);
 	~CPlayer() {};
 
@@ -25,11 +28,12 @@ public:
 	D3DXVECTOR3 GetDir() { return m_vLastMove; }
 	
 private:
-	D3DXVECTOR3 m_vMove;
-	D3DXVECTOR3 m_vLastMove;
-	OBB_Data m_Obb;
-	float m_fSpeed;//移動スピード
+	D3DXVECTOR3 m_vMove;	//移動ベクトル
+	D3DXVECTOR3 m_vLastMove;//最後に移動した向き
+	
+	float m_fSpeed;	//移動スピード
+	bool m_bHit;	//ヒットテスト
 
-	bool m_bHit;//ヒットテスト
+	OBB_Data m_Obb;			//OBBデータ
 };
 

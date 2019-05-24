@@ -1,9 +1,12 @@
+//ライブラリファイル
+#include "../Library/Input.h"
+#include "../Library/DirectX.h"
+#include "../Library/Task.h"
+#include "../Library/Math.h"
+
+//ゲームファイル
 #include "MainCamera.h"
-#include "Input.h"
-#include "DirectX.h"
-#include "Task.h"
 #include "Player.h"
-#include "Math.h"
 
 //初期化
 void CMainCamera::Init()

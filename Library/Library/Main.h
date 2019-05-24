@@ -14,9 +14,6 @@
 #define WINDOW_WIDTH 640
 #define WINDOW_HEIGHT 480
 
-//ƒV[ƒ““Ç‚İ‚İ
-void LoadScene();
-
 //ƒƒ‚ƒŠ‚ÌŠJ•ú
 void Release();
 

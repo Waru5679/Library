@@ -1,7 +1,8 @@
 #pragma once
 
-#include "CObj.h"
-#include "Polygon.h"
+//ライブラリファイル
+#include "../Library/CObj.h"
+#include "../Library/Polygon.h"
 
 //2Dポリゴンクラス
 class C2DPolygon:public CObj2D

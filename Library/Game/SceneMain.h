@@ -1,16 +1,16 @@
 #pragma once
 
-#include "Scene.h"
+//ライブラリファイル
+#include "../Library/Scene.h"
+
+//シーンメイン
 class CSceneMain :public CScene
 {
 public:
-	CSceneMain() {};
-	~CSceneMain() {};
-
-	void Init();
-	void Update();
-	void Draw();
-	void Release();
+	void Init();	//初期化
+	void Update();	//更新	
+	void Draw();	//描画
+	void Release();	//解放
 
 private:
 	void LoadAudio();		//音楽

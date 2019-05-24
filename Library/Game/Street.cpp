@@ -1,8 +1,10 @@
+//ライブラリファイル
+#include "../Library/ObjLoader.h"
+
+//ゲームファイル
 #include "Street.h"
-#include "ObjLoader.h"
 
-
-
+//コンストラクタ
 CStreet::CStreet(D3DXVECTOR3 Pos, D3DXVECTOR3 Angle, D3DXVECTOR3 Scale)
 {
 	m_vPos = Pos;

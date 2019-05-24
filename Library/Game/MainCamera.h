@@ -1,8 +1,11 @@
 #pragma once
 
-#include "Main.h"
+//ライブラリファイル
+#include "../Library/Main.h"
+#include "../Library/Camera.h"
+
+//ゲームファイル
 #include "Player.h"
-#include "Camera.h"
 
 class CMainCamera :public Camera
 {

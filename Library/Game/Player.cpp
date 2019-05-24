@@ -1,13 +1,16 @@
-#include "Player.h"
-#include "Math.h"
-#include "Task.h"
-#include "ObjLoader.h"
-#include "Input.h"
-#include "Camera.h"
 #include <math.h>
 
-#include "Font.h"
-#include "Ray.h"
+//ライブラリファイル
+#include "../Library/Math.h"
+#include "../Library/Task.h"
+#include "../Library/ObjLoader.h"
+#include "../Library/Input.h"
+#include "../Library/Camera.h"
+#include "../Library/Font.h"
+#include "../Library/Ray.h"
+
+//ゲームファイル
+#include "Player.h"
 
 //コンストラクタ
 CPlayer::CPlayer(D3DXVECTOR3 Pos, D3DXVECTOR3 Angle, D3DXVECTOR3 Scale)
