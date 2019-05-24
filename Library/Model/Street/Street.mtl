@@ -10,8 +10,8 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.500000
 d 1.000000
 illum 2
-map_Kd Street\building03_c.png
-map_Ka Street\\building03_c.png
+map_Kd Model\Street\building03_c.png
+map_Ka Model\Street\\building03_c.png
 
 newmtl 09___Default
 Ns 9.803922
@@ -22,8 +22,8 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.500000
 d 1.000000
 illum 2
-map_Kd Street\building05_c.png
-map_Ka Street\\building05_c.png
+map_Kd Model\Street\building05_c.png
+map_Ka Model\Street\\building05_c.png
 
 newmtl 20___Default
 Ns 9.803922
@@ -64,8 +64,8 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.500000
 d 1.000000
 illum 2
-map_Kd Street\building_06_c.png
-map_Ka Street\\building_06_c.png
+map_Kd Model\Street\building_06_c.png
+map_Ka Model\Street\\building_06_c.png
 
 newmtl Building_dnt
 Ns 9.803922
@@ -76,8 +76,8 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.500000
 d 1.000000
 illum 2
-map_Kd Street\Building_V02_C.png
-map_Ka Street\\Building_V02_C.png
+map_Kd Model\Street\Building_V02_C.png
+map_Ka Model\Street\\Building_V02_C.png
 
 newmtl Material__0
 Ns 9.803922
@@ -88,8 +88,8 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.500000
 d 1.000000
 illum 2
-map_Kd Street\Building_V01_C.png
-map_Ka Street\\Building_V01_C.png
+map_Kd Model\Street\Building_V01_C.png
+map_Ka Model\Street\\Building_V01_C.png
 
 newmtl building_025
 Ns 9.803922
@@ -100,8 +100,8 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.500000
 d 1.000000
 illum 2
-map_Kd Street\building_025_c.png
-map_Ka Street\\building_025_c.png
+map_Kd Model\Street\building_025_c.png
+map_Ka Model\Street\\building_025_c.png
 
 newmtl building_16
 Ns 9.803922
@@ -112,8 +112,8 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.500000
 d 1.000000
 illum 2
-map_Kd Street\building_016_c.png
-map_Ka Street\\building_016_c.png
+map_Kd Model\Street\building_016_c.png
+map_Ka Model\Street\\building_016_c.png
 
 newmtl orig_orig_orig_17___Default
 Ns 100.000000
@@ -124,5 +124,5 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.500000
 d 1.000000
 illum 2
-map_Kd Street\building_01_c.png
-map_Ka Street\\building_01_c.png
+map_Kd Model\Street\building_01_c.png
+map_Ka Model\Street\\building_01_c.png

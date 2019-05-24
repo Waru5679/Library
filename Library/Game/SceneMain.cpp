@@ -86,7 +86,7 @@ void CSceneMain::LoadTexture()
 //ÉÅÉbÉVÉÖ
 void CSceneMain::LoadMesh()
 {
-	g_Loader.LoadMesh(ModelName::ModelPlayer, "Player/Player.obj");
-	g_Loader.LoadMesh(ModelName::ModelStreet, "Street/Street.obj");
+	g_Loader.LoadMesh(ModelName::ModelPlayer, "Model/Player/Player.obj");
+	g_Loader.LoadMesh(ModelName::ModelStreet, "Model/Street/Street.obj");
 
 }

@@ -33,15 +33,9 @@ struct MY_MATERIAL
 	//面情報
 	vector<FACE_INFO> FaceInfo;
 
-	//面の頂点の数
-	vector<int>FaceOfVer;
-
 	//ファイス情報
 	vector<int>iFaceBuffer;
-
-	//面の頂点情報
-//	vector <MY_VERTEX*> FaceVertex;
-
+	
 	//テクスチャ
 	ID3D10ShaderResourceView* pTexture;
 

@@ -48,15 +48,13 @@ HRESULT CObjLoader::LoadObj(const char* FileName, MY_MESH* pMesh)
 	vector<D3DXVECTOR3> Pos;
 	vector<D3DXVECTOR3> Nor;
 	vector<D3DXVECTOR2> Tex;
+	vector<MY_VERTEX> Vertex;
 	
 	int index_count = 0;
 
 	pMesh->vMax = D3DXVECTOR3(-999.0f, -999.0f, -999.0f);
 	pMesh->vMin	= D3DXVECTOR3(999.0f, 999.0f, 999.0f);
 	
-	//頂点情報
-	vector<MY_VERTEX> Vertex;
-
 	int iFaceCount = -1;
 	
 	//キーワード読み込み
@@ -68,6 +66,9 @@ HRESULT CObjLoader::LoadObj(const char* FileName, MY_MESH* pMesh)
 		//一時保存用
 		MY_MATERIAL Material;
 		Material.pTexture = NULL;
+
+		//面の頂点数保存用
+		vector<int> FaceOfVer;
 
 		//パーツごとに読み込む
 		if (strcmp(key, "o") == 0)
@@ -145,7 +146,7 @@ HRESULT CObjLoader::LoadObj(const char* FileName, MY_MESH* pMesh)
 					iFaceNum++;
 					
 					//面の頂点の数を保存
-					Material.FaceOfVer.push_back(iFaceNum);
+					FaceOfVer.push_back(iFaceNum);
 						
 					for (int i = 0; i < iFaceNum; i++)
 					{
@@ -209,13 +210,13 @@ HRESULT CObjLoader::LoadObj(const char* FileName, MY_MESH* pMesh)
 			for (int i = 0; i <iFaceCount; i++)
 			{				
 				//頂点定義
-				MY_VERTEX* vartices = new MY_VERTEX[Material.FaceOfVer[i]];
-				for (int j = 0; j < Material.FaceOfVer[i]; j++)
+				MY_VERTEX* vartices = new MY_VERTEX[FaceOfVer[i]];
+				for (int j = 0; j < FaceOfVer[i]; j++)
 				{ 
 					vartices[j]=Vertex[index_count + j];
 				}
 				
-				if (Material.FaceOfVer[i] == 4)
+				if (FaceOfVer[i] == 4)
 				{
 				//	4頂点の時に順番を入れ替える
 				//	N字を描くように
@@ -233,14 +234,14 @@ HRESULT CObjLoader::LoadObj(const char* FileName, MY_MESH* pMesh)
 
 				//面の情報を保存
 				FACE_INFO info;
-				info.FaceofVer = Material.FaceOfVer[i];
+				info.FaceofVer = FaceOfVer[i];
 				info.pVer = vartices;
 				Material.FaceInfo.push_back(info);
 
 				//バーテックスバッファーを作成
 				D3D10_BUFFER_DESC bd;
 				bd.Usage = D3D10_USAGE_DEFAULT;
-				bd.ByteWidth = sizeof(MY_VERTEX) * Material.FaceOfVer[i];
+				bd.ByteWidth = sizeof(MY_VERTEX) * FaceOfVer[i];
 				bd.BindFlags = D3D10_BIND_VERTEX_BUFFER;
 				bd.CPUAccessFlags = 0;
 				bd.MiscFlags = 0;
@@ -254,14 +255,14 @@ HRESULT CObjLoader::LoadObj(const char* FileName, MY_MESH* pMesh)
 
 				//index情報
 				int *index;
-				index = new int[Material.FaceOfVer[i]];
-				for (int k = 0; k < Material.FaceOfVer[i]; k++)
+				index = new int[FaceOfVer[i]];
+				for (int k = 0; k < FaceOfVer[i]; k++)
 				{
 					index[k] = k;
 				}
 				//インデックスバッファーを作成
 				bd.Usage = D3D10_USAGE_DEFAULT;
-				bd.ByteWidth = sizeof(int) * Material.FaceOfVer[i];
+				bd.ByteWidth = sizeof(int) * FaceOfVer[i];
 				bd.BindFlags = D3D10_BIND_INDEX_BUFFER;
 				bd.CPUAccessFlags = 0;
 				bd.MiscFlags = 0;
@@ -274,7 +275,7 @@ HRESULT CObjLoader::LoadObj(const char* FileName, MY_MESH* pMesh)
 				Material.pIndex.insert(Material.pIndex.begin() + i, index_buffer);
 
 				//使った数だけずらす
-				index_count += Material.FaceOfVer[i];
+				index_count += FaceOfVer[i];
 
 			}
 
@@ -290,6 +291,9 @@ HRESULT CObjLoader::LoadObj(const char* FileName, MY_MESH* pMesh)
 			//キーワード読み込み
 			fscanf_s(fp, "%s ", key, sizeof(key));
 		}
+
+		//面の頂点リスト解放
+		FaceOfVer.clear();
 	}
 
 	//ファイルポインタを先頭に戻す
@@ -313,6 +317,12 @@ HRESULT CObjLoader::LoadObj(const char* FileName, MY_MESH* pMesh)
 			}
 		}
 	}
+	
+	//頂点情報解放
+	Pos.clear();
+	Nor.clear();
+	Tex.clear();
+	Vertex.clear();
 	
 	//ファイル終わり
 	fclose(fp);
@@ -447,7 +457,7 @@ void CObjLoader::Draw(D3DMATRIX matWorld, MY_MESH* pMesh, float fColor[4])
 		for (int j = 0; j < size; j++)
 		{
 			//ポリゴン描画
-			DrawMesh(pMesh->Material[i].FaceOfVer[j], pMesh->Material[i].pVertex[j], pMesh->Material[i].pIndex[j]);
+			DrawMesh(pMesh->Material[i].FaceInfo[j].FaceofVer, pMesh->Material[i].pVertex[j], pMesh->Material[i].pIndex[j]);
 		}
 	}
 }
@@ -475,7 +485,7 @@ void CObjLoader::Draw(int TexId, D3DMATRIX matWorld, MY_MESH* pMesh)
 		for (int j = 0; j < size; j++)
 		{
 			//ポリゴン描画
-			DrawMesh(pMesh->Material[i].FaceOfVer[j], pMesh->Material[i].pVertex[j], pMesh->Material[i].pIndex[j]);
+			DrawMesh(pMesh->Material[i].FaceInfo[j].FaceofVer, pMesh->Material[i].pVertex[j], pMesh->Material[i].pIndex[j]);
 		}
 	}
 }

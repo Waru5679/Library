@@ -20,7 +20,7 @@ D3DXVECTOR3 g_Norm[] =
 void COBB::Init()
 {
 	//HitBox描画用オブジェクト
-	g_Loader.LoadObj("HitBox/HitBox.obj", &m_Mesh);
+	g_Loader.LoadObj("Model/HitBox/HitBox.obj", &m_Mesh);
 
 	//描画色
 	SetColor(1.0f, 1.0f, 1.0f, 0.5f, m_fColor);
