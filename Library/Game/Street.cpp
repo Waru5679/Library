@@ -1,8 +1,10 @@
 //ライブラリファイル
 #include "../Library/ObjLoader.h"
+#include "../Library/Ray.h"
 
 //ゲームファイル
 #include "Street.h"
+
 
 //コンストラクタ
 CStreet::CStreet(D3DXVECTOR3 Pos, D3DXVECTOR3 Angle, D3DXVECTOR3 Scale)
@@ -27,6 +29,10 @@ void CStreet::Init()
 	//Obbセット
 	m_Obb = g_Obb.SetOBB(m_vPos, m_vAngle, m_vScale, m_pMesh->vMin, m_pMesh->vMax, ObjStreet, this);
 	g_Obb.Insert(&m_Obb);
+
+	//Rayセット
+	g_Ray.Insert(this);
+	
 }
 
 //更新

@@ -64,21 +64,19 @@ void CPlayer::Update()
 
 	//移動
 	m_vPos += m_vMove * m_fSpeed;
+
+	//最後の移動を保存
+	if(m_vMove!=D3DXVECTOR3(0.0f,0.0f,0.0f))
+		m_vLastMove = m_vMove;
 	
 	//当たり判定更新
 	g_Obb.Update(&m_Obb, m_vPos, m_vAngle, m_vScale, m_pMesh->vMin, m_pMesh->vMax);
 
-	//debug Hit確認
-	if (g_Obb.ObjNameHit(&m_Obb, ObjStreet).size() > 0)
+	D3DXVECTOR3 HitPos;
+	if (g_Ray.RayHit(&HitPos, m_vPos, m_vLastMove) == true)
 	{
-		m_bHit = true;
+		CFont::DrawStr(L"Hit", 200.0f, 32.0f, 32.0f, 0.0f);
 	}
-	else
-	{
-		m_bHit = false;
-	}
-
-	g_Ray.RayHit(NULL, m_vPos, m_vMove, m_Obb);
 
 	//ワールド行列作成
 	m_matWorld = MakeMatWorld(m_vPos, m_vAngle, m_vScale);

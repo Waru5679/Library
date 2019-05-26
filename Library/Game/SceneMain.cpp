@@ -37,7 +37,7 @@ void CSceneMain::Init()
 	g_Task.InsertObj(p2D, ObjName::ObjDraw2D);
 
 	//’¬
-	vScale = D3DXVECTOR3(5.0f, 5.0f, 5.0f);
+	vScale = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
 
 	CStreet* pStreet = new CStreet(vPos, vAngle, vScale);
 	g_Task.InsertObj(pStreet, ObjName::ObjStreet);
