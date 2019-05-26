@@ -58,6 +58,9 @@
     <Filter Include="リソース ファイル\Scene">
       <UniqueIdentifier>{8428ceb3-004a-4aeb-8c3c-d9fd55d2b5c9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="リソース ファイル\Rect">
+      <UniqueIdentifier>{cf6634eb-f612-4b34-9875-9c3103643a6c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Library\Camera.h">
@@ -132,6 +135,9 @@
     <ClInclude Include="Game\Street.h">
       <Filter>ソース ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="Library\Rect.h">
+      <Filter>リソース ファイル\Rect</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Library\Audio.cpp">
@@ -199,6 +205,9 @@
     </ClCompile>
     <ClCompile Include="Game\Street.cpp">
       <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Library\Rect.cpp">
+      <Filter>リソース ファイル\Rect</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

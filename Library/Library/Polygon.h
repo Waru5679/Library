@@ -3,22 +3,15 @@
 #include "Main.h"
 #include "Camera.h"
 #include "ObjLoader.h"
+#include "Rect.h"
 #include <windef.h>
-
-struct RECT_F
-{
-	float m_top;
-	float m_left;
-	float m_right;
-	float m_bottom;
-};
 
 //描画クラス
 class CDraw
 {
-public:
-	//初期化
-	void Init();
+public:	
+	void Init();	//初期化
+	void Release();	//解放
 
 	//描画
 	void Draw3D(int TexId, D3DXMATRIX matWorld);
@@ -32,17 +25,12 @@ public:
 
 	//2D描画
 	void Draw2D(ID3D10ShaderResourceView* pTex, float fSrc[4], RECT_F* pOut, float fColor[4], float fRad);
-
-
+	
 	//テクスチャ読み込み
 	void LoadTexture(int Id, const char* Name,int Width, int Height);
 
 	//カメラセット
-	void SetCamera(Camera* pCamera) { m_pCamera = pCamera; }
-
-	//解放
-	void Release();
-	
+	void SetCamera(Camera* pCamera) { m_pCamera = pCamera; }	
 private:
 	void DrawPolygon();		//ポリゴン描画
 	HRESULT CreateBartex();	//バーテックスバッファの作成
@@ -52,9 +40,5 @@ private:
 	   	
 	Camera* m_pCamera;	//カメラポインタ
 };
-
-//RECT_Fのセット
-void RectSet(float x, float y, float Size_x, float Size_y,RECT_F* pOut );
-
 
 extern CDraw g_Draw;
