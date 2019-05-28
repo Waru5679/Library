@@ -11,6 +11,9 @@
 #include "MainCamera.h"
 #include "SceneMain.h"
 
+//Debug
+#include "RayTest.h"
+
 //初期化
 void CSceneMain::Init()
 {
@@ -37,11 +40,12 @@ void CSceneMain::Init()
 	g_Task.InsertObj(p2D, ObjName::ObjDraw2D);
 
 	//町
-	vScale = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
+	//CStreet* pStreet = new CStreet(vPos, vAngle, vScale);
+	//g_Task.InsertObj(pStreet, ObjName::ObjStreet);
 
-	CStreet* pStreet = new CStreet(vPos, vAngle, vScale);
-	g_Task.InsertObj(pStreet, ObjName::ObjStreet);
-
+	//RayTest
+	CRayTest* pRayTest = new CRayTest(vPos, vAngle, vScale);
+	g_Task.InsertObj(pRayTest, ObjName::ObjRayTest);
 	
 	//シェーダーにカメラセット
 	g_Shader.SetCamera(pCamera);
@@ -87,5 +91,14 @@ void CSceneMain::LoadMesh()
 {
 	g_Loader.LoadMesh(ModelName::ModelPlayer, "Model/Player/Player.obj");
 	g_Loader.LoadMesh(ModelName::ModelStreet, "Model/Street/Street.obj");
+	
+	//RayTest
 
+	//三角ポリゴン
+	//g_Loader.LoadMesh(ModelName::ModelRayTest, "Model/RayTest/Triangle_Cube.obj");
+
+	//四角ポリゴン
+	g_Loader.LoadMesh(ModelName::ModelRayTest, "Model/RayTest/Square_Cube.obj");
+
+	
 }

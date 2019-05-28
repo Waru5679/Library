@@ -5,11 +5,6 @@
 #include "../Library/CObj.h" 
 #include "../Library/Obb.h"
 
-//ゲームファイル
-#include "MainCamera.h"
-
-#define POWER_TIME 100
-
 //プレイヤークラス
 class CPlayer:public CObj3D
 {

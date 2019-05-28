@@ -43,8 +43,9 @@ bool CRay::RayHit(D3DXVECTOR3* OutPoint, D3DXVECTOR3 Pos, D3DXVECTOR3 RayVec)
 				//lŠpƒ|ƒŠƒSƒ“
 				if (VerNum == 4)
 				{
+					//“àÏ‚Ì•„†‚ª“¯‚¶‚É‚È‚Á‚Ä’Ê‚ç‚È‚¢‚Á‚Û‚¢
 					//Ray”»’è
-					if (SquareRay(OutPoint, Pos, RayVec, face.pVer[0].vPos, face.pVer[1].vPos, face.pVer[2].vPos, face.pVer[3].vPos) == true)
+					if (SquareRay(OutPoint, Pos, RayVec, face.pVer[0].vPos, face.pVer[1].vPos, face.pVer[3].vPos, face.pVer[2].vPos) == true)
 					{
 						//•Ç‚·‚è
 						WallShear(&m_vShear, RayVec, m_vNorm);
@@ -54,24 +55,13 @@ bool CRay::RayHit(D3DXVECTOR3* OutPoint, D3DXVECTOR3 Pos, D3DXVECTOR3 RayVec)
 			}
 		}
 	}
-
-	////—§•û‘Ì”»’è
-	//for (int i = 0; i < 6; i++)
-	//{
-	//	//Ray‚ÌŒğ·”»’è
-	//	if (SquareRay(OutPoint,Pos, RayVec, Obb.VerPos[FaceNum[i][0]], Obb.VerPos[FaceNum[i][1]], Obb.VerPos[FaceNum[i][2]], Obb.VerPos[FaceNum[i][3]])==true)
-	//	{
-	//		WallShear(&m_vShear, RayVec, m_vNorm);
-	//	}
-	//}
-
 	return false;
 }
 
 //Ray‚Ì”»’è(OŠp)
 bool CRay::TriangleRay(D3DXVECTOR3* OutPoint, D3DXVECTOR3 RayPos, D3DXVECTOR3 RayVec, D3DXVECTOR3 vA, D3DXVECTOR3 vB, D3DXVECTOR3 vC)
 {
-	
+	return false;
 }
 
 

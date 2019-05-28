@@ -36,10 +36,13 @@ enum ObjName
 	ObjPlayer,		//プレイヤー
 	ObjDraw2D,		//2D描画
 	ObjStreet,		//町
+	ObjRayTest,	//Rayのテスト
 };
 
 enum ModelName
 {
 	ModelStreet,	//町
 	ModelPlayer,	//プレイヤー
+
+	ModelRayTest,//Rayテスト
 };

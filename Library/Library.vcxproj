@@ -133,6 +133,7 @@
     <ClInclude Include="Game\2DPolygon.h" />
     <ClInclude Include="Game\MainCamera.h" />
     <ClInclude Include="Game\Player.h" />
+    <ClInclude Include="Game\RayTest.h" />
     <ClInclude Include="Game\SceneMain.h" />
     <ClInclude Include="Game\Street.h" />
     <ClInclude Include="Library\Audio.h" />
@@ -160,6 +161,7 @@
     <ClCompile Include="Game\2DPolygon.cpp" />
     <ClCompile Include="Game\MainCamera.cpp" />
     <ClCompile Include="Game\Player.cpp" />
+    <ClCompile Include="Game\RayTest.cpp" />
     <ClCompile Include="Game\SceneMain.cpp" />
     <ClCompile Include="Game\Street.cpp" />
     <ClCompile Include="Library\Audio.cpp" />

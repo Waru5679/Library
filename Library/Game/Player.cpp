@@ -11,6 +11,7 @@
 
 //ゲームファイル
 #include "Player.h"
+#include "MainCamera.h"
 
 //コンストラクタ
 CPlayer::CPlayer(D3DXVECTOR3 Pos, D3DXVECTOR3 Angle, D3DXVECTOR3 Scale)
@@ -63,7 +64,7 @@ void CPlayer::Update()
 	D3DXVec3TransformCoord(&m_vMove, &m_vMove, &m_matRot);
 
 	//移動
-	m_vPos += m_vMove * m_fSpeed;
+	m_vPos += m_vMove;//*m_fSpeed;
 
 	//最後の移動を保存
 	if(m_vMove!=D3DXVECTOR3(0.0f,0.0f,0.0f))
