@@ -163,7 +163,7 @@ HRESULT CObjLoader::LoadObj(const char* FileName, MY_MESH* pMesh)
 						//頂点構造体に代入
 						vertex.vPos = Pos[v - 1];
 
-						//法線情報がある時「
+						//法線情報がある時
 						if (Nor.size() != 0)
 						{
 							vertex.vNorm = Nor[vn - 1];
@@ -215,11 +215,10 @@ HRESULT CObjLoader::LoadObj(const char* FileName, MY_MESH* pMesh)
 				{ 
 					vartices[j]=Vertex[index_count + j];
 				}
-				
 				if (FaceOfVer[i] == 4)
 				{
-				//	4頂点の時に順番を入れ替える
-				//	N字を描くように
+					//	4頂点の時に順番を入れ替える
+					//	N字を描くように
 					MY_VERTEX _0 = vartices[3];
 					MY_VERTEX _1 = vartices[2];
 					MY_VERTEX _2 = vartices[0];
@@ -231,12 +230,22 @@ HRESULT CObjLoader::LoadObj(const char* FileName, MY_MESH* pMesh)
 					vartices[3] = _3;
 				}
 
+				//頂点の位置情報
+				D3DXVECTOR3* pvPos = new D3DXVECTOR3[FaceOfVer[i]];
+				for (int j = 0; j < FaceOfVer[i]; j++)
+				{
+					pvPos[j] = vartices[j].vPos;
+				}
 
 				//面の情報を保存
 				FACE_INFO info;
 				info.FaceofVer = FaceOfVer[i];
-				info.pVer = vartices;
-				Material.FaceInfo.push_back(info);
+				info.vNorm = Vertex[index_count].vNorm;
+				//info.pVer = vartices;
+				info.pvPos = pvPos;
+
+				//面情報保存
+				Material.FaceInfo.push_back(info);	   				
 
 				//バーテックスバッファーを作成
 				D3D10_BUFFER_DESC bd;
@@ -247,7 +256,7 @@ HRESULT CObjLoader::LoadObj(const char* FileName, MY_MESH* pMesh)
 				bd.MiscFlags = 0;
 				D3D10_SUBRESOURCE_DATA InitData;
 				InitData.pSysMem = vartices;
-
+				
 				if (FAILED(dx.m_pDevice->CreateBuffer(&bd, &InitData, &vertex_buffer)))
 					return FALSE;
 
@@ -276,7 +285,10 @@ HRESULT CObjLoader::LoadObj(const char* FileName, MY_MESH* pMesh)
 
 				//使った数だけずらす
 				index_count += FaceOfVer[i];
-
+				
+				//解放
+				delete[] vartices;
+				delete[] pvPos;
 			}
 
 			//マテリアル情報を登録

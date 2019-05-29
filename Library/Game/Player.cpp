@@ -76,7 +76,11 @@ void CPlayer::Update()
 	D3DXVECTOR3 HitPos;
 	if (g_Ray.RayHit(&HitPos, m_vPos, m_vLastMove) == true)
 	{
-		CFont::DrawStr(L"Hit", 200.0f, 32.0f, 32.0f, 0.0f);
+		m_bHit = true;
+	}
+	else
+	{
+		m_bHit = false;
 	}
 
 	//ÉèÅ[ÉãÉhçsóÒçÏê¨
@@ -111,8 +115,8 @@ void CPlayer::Input()
 //ï`âÊ
 void CPlayer::Draw()
 {
-	//if(m_bHit==true)
-	CFont::DrawStr(L"Ç†", 200.0f, 20.0f, 32.0f, 0.0f);
+	if(m_bHit==true)
+	CFont::DrawStr(L"Hit", 200.0f, 20.0f, 32.0f, 0.0f);
 
 	//g_Loader.Draw(m_matWorld, m_pMesh);
 }
