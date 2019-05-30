@@ -29,6 +29,12 @@ protected:
 class CObj3D :public CObj
 {
 public :
+	D3DXVECTOR3 GetPos() { return m_vPos; }
+	D3DXVECTOR3 GetAngle() { return m_vAngle; }
+	D3DXVECTOR3 GetScale() { return m_vScale; }
+
+	D3DXMATRIX GetWorld() { return m_matWorld; }
+	
 	MY_MESH* GetMesh() { return m_pMesh; }
 protected:
 

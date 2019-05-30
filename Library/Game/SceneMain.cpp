@@ -23,7 +23,7 @@ void CSceneMain::Init()
 	LoadMesh();
 	
 	//プレイヤー
-	D3DXVECTOR3 vPos(0.0f, 5.0f, 0.0f);
+	D3DXVECTOR3 vPos(0.0f, 0.0f, -10.0f);
 	D3DXVECTOR3 vAngle(0.0f, 0.0f, 0.0f);
 	D3DXVECTOR3 vScale(1.0f, 1.0f, 1.0f);
 
@@ -44,6 +44,7 @@ void CSceneMain::Init()
 	//g_Task.InsertObj(pStreet, ObjName::ObjStreet);
 
 	//RayTest
+	vPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	CRayTest* pRayTest = new CRayTest(vPos, vAngle, vScale);
 	g_Task.InsertObj(pRayTest, ObjName::ObjRayTest);
 	
@@ -89,8 +90,10 @@ void CSceneMain::LoadTexture()
 //メッシュ
 void CSceneMain::LoadMesh()
 {
-	g_Loader.LoadMesh(ModelName::ModelPlayer, "Model/Player/Player.obj");
-	g_Loader.LoadMesh(ModelName::ModelStreet, "Model/Street/Street.obj");
+//	g_Loader.LoadMesh(ModelName::ModelPlayer, "Model/Player/Player.obj");
+
+	g_Loader.LoadMesh(ModelName::ModelPlayer, "Model/RayTest/Triangle_Cube.obj");
+//	g_Loader.LoadMesh(ModelName::ModelStreet, "Model/Street/Street.obj");
 	
 	//RayTest
 

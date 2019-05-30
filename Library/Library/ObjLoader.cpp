@@ -230,19 +230,14 @@ HRESULT CObjLoader::LoadObj(const char* FileName, MY_MESH* pMesh)
 					vartices[3] = _3;
 				}
 
-				//í∏ì_ÇÃà íuèÓïÒ
-				D3DXVECTOR3* pvPos = new D3DXVECTOR3[FaceOfVer[i]];
-				for (int j = 0; j < FaceOfVer[i]; j++)
-				{
-					pvPos[j] = vartices[j].vPos;
-				}
-
 				//ñ ÇÃèÓïÒÇï€ë∂
 				FACE_INFO info;
-				info.FaceofVer = FaceOfVer[i];
 				info.vNorm = Vertex[index_count].vNorm;
-				//info.pVer = vartices;
-				info.pvPos = pvPos;
+	
+				for (int j = 0; j < FaceOfVer[i]; j++)
+				{
+					info.Pos.push_back(vartices[j].vPos);
+				}
 
 				//ñ èÓïÒï€ë∂
 				Material.FaceInfo.push_back(info);	   				
@@ -288,7 +283,6 @@ HRESULT CObjLoader::LoadObj(const char* FileName, MY_MESH* pMesh)
 				
 				//âï˙
 				delete[] vartices;
-				delete[] pvPos;
 			}
 
 			//É}ÉeÉäÉAÉãèÓïÒÇìoò^
@@ -469,7 +463,7 @@ void CObjLoader::Draw(D3DMATRIX matWorld, MY_MESH* pMesh, float fColor[4])
 		for (int j = 0; j < size; j++)
 		{
 			//É|ÉäÉSÉìï`âÊ
-			DrawMesh(pMesh->Material[i].FaceInfo[j].FaceofVer, pMesh->Material[i].pVertex[j], pMesh->Material[i].pIndex[j]);
+			DrawMesh(pMesh->Material[i].FaceInfo[j].Pos.size(), pMesh->Material[i].pVertex[j], pMesh->Material[i].pIndex[j]);
 		}
 	}
 }
@@ -497,7 +491,7 @@ void CObjLoader::Draw(int TexId, D3DMATRIX matWorld, MY_MESH* pMesh)
 		for (int j = 0; j < size; j++)
 		{
 			//É|ÉäÉSÉìï`âÊ
-			DrawMesh(pMesh->Material[i].FaceInfo[j].FaceofVer, pMesh->Material[i].pVertex[j], pMesh->Material[i].pIndex[j]);
+			DrawMesh(pMesh->Material[i].FaceInfo[j].Pos.size(), pMesh->Material[i].pVertex[j], pMesh->Material[i].pIndex[j]);
 		}
 	}
 }

@@ -37,7 +37,7 @@ void CPlayer::Init()
 	m_vMove = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 
 	//移動スピード
-	m_fSpeed=10.0f;
+	m_fSpeed=0.2f;
 
 	//当たり判定セット
 	m_Obb = g_Obb.SetOBB(m_vPos, m_vAngle, m_vScale, m_pMesh->vMin, m_pMesh->vMax, m_id, this);
@@ -64,7 +64,7 @@ void CPlayer::Update()
 	D3DXVec3TransformCoord(&m_vMove, &m_vMove, &m_matRot);
 
 	//移動
-	m_vPos += m_vMove;//*m_fSpeed;
+	m_vPos += m_vMove*m_fSpeed;
 
 	//最後の移動を保存
 	if(m_vMove!=D3DXVECTOR3(0.0f,0.0f,0.0f))
@@ -73,10 +73,19 @@ void CPlayer::Update()
 	//当たり判定更新
 	g_Obb.Update(&m_Obb, m_vPos, m_vAngle, m_vScale, m_pMesh->vMin, m_pMesh->vMax);
 
-	D3DXVECTOR3 HitPos;
-	if (g_Ray.RayHit(&HitPos, m_vPos, m_vLastMove) == true)
+	D3DXVECTOR3 vShear;
+	
+	if (g_Ray.RayHit(&vShear,this,m_vLastMove*m_fSpeed,ObjRayTest) == true)
 	{
 		m_bHit = true;
+
+
+		//移動を戻す
+		m_vPos -= m_vMove * m_fSpeed;
+
+		//壁擦り
+		//m_vPos += vShear * m_fSpeed;
+
 	}
 	else
 	{

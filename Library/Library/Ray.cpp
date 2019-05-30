@@ -1,4 +1,5 @@
 #include "Ray.h"
+#include "Math.h"
 CRay g_Ray;
 
 //登録
@@ -8,57 +9,65 @@ void CRay::Insert(CObj3D* pObj)
 }
 
 //Rayの当たり判定
-bool CRay::RayHit(D3DXVECTOR3* OutPoint, D3DXVECTOR3 Pos, D3DXVECTOR3 RayVec)
+bool CRay::RayHit(D3DXVECTOR3*OutPoint, CObj3D* pOrigin,D3DXVECTOR3 vDir,int Id)
 {
-	MY_MESH* pMesh;
+	//Rayを飛ばす側
+	MY_MESH* pOrigineMesh =pOrigin->GetMesh();
+	D3DXVECTOR3 vOrigin;
+	D3DXMATRIX matOrigin = pOrigin->GetWorld();
 
-	//Meshの数分回す
-	for (unsigned int MeshNum = 0; MeshNum < m_Data.size(); MeshNum++)
+	//マテリアルの数回す
+	for (unsigned int OriginMaterial = 0; OriginMaterial < pOrigineMesh->Material.size(); OriginMaterial++)
 	{
-		pMesh = m_Data[MeshNum]->GetMesh();
-
-		//Materialの数分回す
-		for (unsigned int MaterialNum = 0; MaterialNum < pMesh->Material.size(); MaterialNum++)
+		//面の数回す
+		for (unsigned int OriginFace = 0; OriginFace < pOrigineMesh->Material[OriginMaterial].FaceInfo.size(); OriginFace++)
 		{
-			//面の数だけ回す
-			for (unsigned int FaceNum = 0; FaceNum < pMesh->Material[MaterialNum].FaceInfo.size(); FaceNum++)
+			//面情報
+			FACE_INFO face = pOrigineMesh->Material[OriginMaterial].FaceInfo[OriginFace];
+			
+			//頂点ごとに調べる
+			for (unsigned int OriginVer = 0; OriginVer < face.Pos.size(); OriginVer++)
 			{
-				//面情報
-				FACE_INFO face = pMesh->Material[MaterialNum].FaceInfo[FaceNum];
-
-				//頂点数
-				int VerNum = face.FaceofVer;
+				//頂点をワールド行列で変換
+				D3DXVec3TransformCoord(&vOrigin, &(face.Pos[OriginVer]), &matOrigin);
 				
-				//三角ポリゴン
-				if (VerNum == 3)
+				//登録されてるデータの数回す
+				for (unsigned int DataNum = 0; DataNum < m_Data.size(); DataNum++)
 				{
-					//Ray判定
-					if (TriangleRay(OutPoint, Pos, RayVec, face.pvPos[0], face.pvPos[1],face.pvPos[2],face.vNorm) == true)
+					//指定したオブジェクトだけ
+					if (m_Data[DataNum]->m_id == Id)
 					{
-						//壁すり
-						WallShear(OutPoint, RayVec, face.vNorm);
-						return true;
+						MY_MESH* pTargetMesh = m_Data[DataNum]->GetMesh();
+						D3DXMATRIX matTarget = m_Data[DataNum]->GetWorld();
+
+						//マテリアル分回す
+						for (unsigned int TargetMaterial = 0; TargetMaterial < pTargetMesh->Material.size(); TargetMaterial++)
+						{
+							//面の数
+							for (unsigned int TargetFace = 0; TargetFace < pTargetMesh->Material[TargetMaterial].FaceInfo.size(); TargetFace++)
+							{
+								FACE_INFO Target = pTargetMesh->Material[TargetMaterial].FaceInfo[TargetFace];
+								
+								//面の頂点の数
+								int FaceOfVer = Target.Pos.size();
+
+								if (FaceOfVer == 3)
+								{
+									//各頂点をワールドで変換
+									D3DXVECTOR3 v1, v2, v3;
+									D3DXVec3TransformCoord(&v1, &Target.Pos[0], &matTarget);
+									D3DXVec3TransformCoord(&v2, &Target.Pos[1], &matTarget);
+									D3DXVec3TransformCoord(&v3, &Target.Pos[2], &matTarget);
+									
+									//Ray判定
+									if (TriangleRay(OutPoint,vOrigin, vDir, v1, v2, v3) == true)
+									{
+										return true;
+									}
+								}
+							}
+						}
 					}
-				}
-				//四角ポリゴン
-				if (VerNum == 4)
-				{
-					//内積の符号が同じになって通らないっぽい
-					//Ray判定
-					//if (SquareRay(OutPoint, Pos, RayVec, face.pVer[0].vPos, face.pVer[1].vPos, face.pVer[3].vPos, face.pVer[2].vPos,face.vNorm) == true)
-					//{
-					//	//壁すり
-					//	WallShear(&m_vShear, RayVec, m_vNorm);
-					//	return true;
-					//}
-
-					//if ((face.pVer[0].vNorm == face.pVer[1].vNorm &&
-					//	face.pVer[0].vNorm == face.pVer[2].vNorm &&
-					//	face.pVer[0].vNorm == face.pVer[3].vNorm) == false)
-					//{
-					//	int a = 0;
-
-					//}
 				}
 			}
 		}
@@ -67,18 +76,28 @@ bool CRay::RayHit(D3DXVECTOR3* OutPoint, D3DXVECTOR3 Pos, D3DXVECTOR3 RayVec)
 }
 
 //Rayの判定(三角)
-bool CRay::TriangleRay(D3DXVECTOR3* OutPoint, D3DXVECTOR3 RayPos, D3DXVECTOR3 RayVec, D3DXVECTOR3 vA, D3DXVECTOR3 vB, D3DXVECTOR3 vC,D3DXVECTOR3 vNorm)
+bool CRay::TriangleRay(D3DXVECTOR3* OutPoint, D3DXVECTOR3 vRayOrigin, D3DXVECTOR3 vRayDir, D3DXVECTOR3 vA, D3DXVECTOR3 vB, D3DXVECTOR3 vC)// , D3DXVECTOR3 vNorm)
 {
 	//面の頂点からRayの始点と終点へのベクトル
 	D3DXVECTOR3 vStart, vEnd;
-	vStart = vA - RayPos;
-	vEnd = vA - (RayPos + RayVec);
+	vStart = vA - vRayOrigin;
+	vEnd = vA - (vRayOrigin + vRayDir);
 
+	//各辺へのベクトル
+	D3DXVECTOR3 vAB, vBC, vCA;
+	vAB = vB - vA;
+	vBC = vC - vB;
+	vCA = vA - vC;
+
+	//法線ベクトルを求める
+	D3DXVECTOR3 vNorm;
+	D3DXVec3Cross(&vNorm, &vAB, &vBC);
+	D3DXVec3Normalize(&vNorm,&vNorm);
+	
 	//法線と始点終点へのベクトル
 	float dotStart = D3DXVec3Dot(&vStart, &vNorm);
 	float dotEnd = D3DXVec3Dot(&vEnd, &vNorm);
-		
-	
+			
 	//Rayの始点と終点が平面上にあり、交点を計算できない。
 	if (dotStart == 0.0f && dotEnd == 0.0f)
 	{
@@ -86,8 +105,7 @@ bool CRay::TriangleRay(D3DXVECTOR3* OutPoint, D3DXVECTOR3 RayPos, D3DXVECTOR3 Ra
 	}
 
 	//始点と終点が同じ方向にいる
-	if (dotStart > 0.0f && dotEnd > 0.0f ||
-		dotStart < 0.0f && dotEnd < 0.0f)
+	if (dotStart > 0.0f && dotEnd > 0.0f || dotStart < 0.0f && dotEnd < 0.0f)
 	{
 		return false;
 	}
@@ -104,53 +122,51 @@ bool CRay::TriangleRay(D3DXVECTOR3* OutPoint, D3DXVECTOR3 RayPos, D3DXVECTOR3 Ra
 		float d = -(a*x + b * y + c * z);
 
 		//Rayの直線式の定数tを求める
-		float a1 = RayVec.x;
-		float b1 = RayVec.y;
-		float c1 = RayVec.z;
-		float x1 = RayPos.x;
-		float y1 = RayPos.y;
-		float z1 = RayPos.z;
+		float a1 = vRayDir.x;
+		float b1 = vRayDir.y;
+		float c1 = vRayDir.z;
+		float x1 = vRayOrigin.x;
+		float y1 = vRayOrigin.y;
+		float z1 = vRayOrigin.z;
 		float t = -(a*x1 + b * y1 + c * z1 + d) / (a*a1 + b * b1 + c * c1);
 
 		//直線式から交点を求める
-		D3DXVECTOR3 vInterPoint;
-		vInterPoint.x = x1 + a1 * t;
-		vInterPoint.y = y1 + b1 * t;
-		vInterPoint.z = z1 + c1 * t;
-
-
+		D3DXVECTOR3 vPoint;
+		vPoint.x = x1 + a1 * t;
+		vPoint.y = y1 + b1 * t;
+		vPoint.z = z1 + c1 * t;
+		
 		//交点とそれぞれの辺の外積が法線と同じ向きか知らべる
 
-		D3DXVECTOR3 vA_Inter = vA - vInterPoint;	//交点からAへのベクトル
-		D3DXVECTOR3 vAB = vA - vB;					//BからAへのベクトル
-
-		//交点とABの外積
+		//交点から各頂点へのベクトル
+		D3DXVECTOR3 vPA, vPB, vPC;
+		vPA = vA - vPoint;		
+		vPB = vB - vPoint;
+		vPC = vC - vPoint;
+				
+		//交点からAへのベクトルとABの外積
 		D3DXVECTOR3 vCrossAB;
-		D3DXVec3Cross(&vCrossAB, &vA_Inter, &vAB);
-		float dotAB = D3DXVec3Dot(&vCrossAB, &vNorm);
+		D3DXVec3Cross(&vCrossAB, &vPA, &vAB);
 
-		D3DXVECTOR3 vB_Inter = vB - vInterPoint;	//交点からBへのベクトル
-		D3DXVECTOR3 vBC = vB - vC;					//CからBへのベクトル
-
-		//交点とABの外積
+		//交点からBへのベクトルとBCの外積
 		D3DXVECTOR3 vCrossBC;
-		D3DXVec3Cross(&vCrossBC, &vB_Inter, &vBC);
-		float dotBC = D3DXVec3Dot(&vCrossBC, &vNorm);
-
-
-		D3DXVECTOR3 vC_Inter = vC - vInterPoint;	//交点からCへのベクトル
-		D3DXVECTOR3 vCA = vA - vC;					//AからCへのベクトル
-
-		//交点とABの外積
+		D3DXVec3Cross(&vCrossBC, &vPB, &vBC);
+		
+		//交点からCへのベクトルとCAの外積
 		D3DXVECTOR3 vCrossCA;
-		D3DXVec3Cross(&vCrossCA, &vC_Inter, &vCA);
-		float dotCA = D3DXVec3Dot(&vCrossCA, &vNorm);
+		D3DXVec3Cross(&vCrossCA, &vPC, &vCA);
+		
+		//外積と法線の内積
+		float dot1, dot2, dot3;
+		dot1 = D3DXVec3Dot(&vCrossAB, &vNorm);
+		dot2 = D3DXVec3Dot(&vCrossBC, &vNorm);
+		dot3 = D3DXVec3Dot(&vCrossCA, &vNorm);
 
-		//全ての外積が法線と同じ方向を向いている時交点は面の中にある
-		if (dotAB > 0.0f && dotBC > 0.0f && dotCA > 0.0f)
+		//全ての外積が法線と同じ向きなら当たってる
+		if (dot1 > 0.0f && dot2 > 0.0f && dot3 > 0.0f)
 		{
 			//交点
-			OutPoint = &vInterPoint;
+			OutPoint = &vPoint;
 			return true;
 		}
 	}
@@ -176,8 +192,6 @@ bool CRay::SquareRay(D3DXVECTOR3* OutPoint,D3DXVECTOR3 RayPos, D3DXVECTOR3 RayVe
 	D3DXVECTOR3 PlaneNorm;
 	D3DXVec3Cross(&PlaneNorm, &AB, &BC);
 
-	//法線ベクトルを保持
-	m_vNorm = PlaneNorm;
 
 	//ベクトルと法線の内積
 	float dot1 = D3DXVec3Dot(&vA_Start, &PlaneNorm);
@@ -266,13 +280,18 @@ bool CRay::SquareRay(D3DXVECTOR3* OutPoint,D3DXVECTOR3 RayPos, D3DXVECTOR3 RayVe
 
 
 //壁ずり
-D3DXVECTOR3* CRay::WallShear(D3DXVECTOR3* Out, D3DXVECTOR3 Front, D3DXVECTOR3 Normal)
+D3DXVECTOR3 CRay::WallShear( D3DXVECTOR3 Front, D3DXVECTOR3 Normal)
 {
 	//法線正規化
 	D3DXVECTOR3 Normal_n;
 	D3DXVec3Normalize(&Normal_n, &Normal);
-	
+
 	//壁ずりベクトル
 	D3DXVECTOR3 Shear = Front - D3DXVec3Dot(&Front, &Normal_n) * Normal_n;
-	return D3DXVec3Normalize(Out, &Shear);
+	
+	//正規化壁ずりベクトル
+	D3DXVECTOR3 Shear_norm;
+	D3DXVec3Normalize(&Shear_norm, &Shear);
+
+	return Shear_norm;
 }

@@ -16,9 +16,8 @@ struct MY_VERTEX
 //面情報
 struct FACE_INFO
 {
-	int FaceofVer;		//面を構成する頂点の数
-	D3DXVECTOR3* pvPos;	//頂点の位置
-	D3DXVECTOR3 vNorm;	//面の法線
+	D3DXVECTOR3 vNorm;			//面の法線
+	vector<D3DXVECTOR3> Pos;	//面の頂点
 };
 
 //マテリアル構造体
