@@ -88,6 +88,25 @@ D3DXVECTOR3 MakeAbsVector3(D3DXVECTOR3 Vec)
 	return out;
 }
 
+
+//ƒxƒNƒgƒ‹‚ª“¯‚¶•ûŒü‚ğŒü‚¢‚Ä‚¢‚é‚©‚Ç‚¤‚©‚ğ‚µ‚ç‚×‚é
+bool SameDirectionVector3(D3DXVECTOR3 Vec1, D3DXVECTOR3 Vec2)
+{
+	if (!(Vec1.x < 0.0f && Vec2.x < 0.0f) || (Vec1.x > 0.0f && Vec2.x > 0.0f))
+	{
+		return false;
+	}
+	if (!(Vec1.y < 0.0f && Vec2.y < 0.0f) || (Vec1.y > 0.0f && Vec2.y > 0.0f))
+	{
+		return false;
+	}
+	if (!(Vec1.z < 0.0f && Vec2.z < 0.0f) || (Vec1.z > 0.0f && Vec2.z > 0.0f))
+	{
+		return false;
+	}
+	return true;
+}
+
 //Å‚à’·‚¢¬•ª‚ğ’²‚×‚é
 int MostLongComponent(D3DXVECTOR3 Vec)
 {

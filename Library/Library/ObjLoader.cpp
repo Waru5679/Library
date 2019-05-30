@@ -2,6 +2,7 @@
 #include "DirectX.h"
 #include "Shader.h"
 #include "Task.h"
+#include "Math.h"
 
 CObjLoader g_Loader;
 
@@ -229,15 +230,42 @@ HRESULT CObjLoader::LoadObj(const char* FileName, MY_MESH* pMesh)
 					vartices[2] = _2;
 					vartices[3] = _3;
 				}
+				//三角ポリゴンの場合
+				else if (FaceOfVer[i] == 3)
+				{
+					//各頂点の位置
+					D3DXVECTOR3 vA, vB, vC;
+					vA = vartices[0].vPos;
+					vB = vartices[1].vPos;
+					vC = vartices[2].vPos;
+					
+					//頂点Aから頂点B,Cへのベクトル
+					D3DXVECTOR3 vAB, vAC;
+					vAB = vB - vA;
+					vAC = vC - vA;
 
-			/*	MY_VERTEX _0 = vartices[0];
-				MY_VERTEX _1 = vartices[2];
-				MY_VERTEX _2 = vartices[1];
+					//面の法線を求める
+					D3DXVECTOR3 vNorm;
+					D3DXVec3Cross(&vNorm, &vAB, &vAC);
+					
+					//同じ方向を向いているか
+					bool bSameDir;
+					bSameDir=SameDirectionVector3(vartices[0].vNorm, vNorm);
 
-				vartices[0] = _0;
-				vartices[1] = _1;
-				vartices[2] = _2;*/
+					//違う方向を向いている時は反時計回りなので時計回りに入れ替える
+					if (bSameDir == false)
+					{
+						//反対時計回りを時計回りにする
+						MY_VERTEX _0 = vartices[2];
+						MY_VERTEX _1 = vartices[1];
+						MY_VERTEX _2 = vartices[0];
 
+						vartices[0] = _0;
+						vartices[1] = _1;
+						vartices[2] = _2;
+					}
+				}			
+	
 				//面の情報を保存
 				FACE_INFO info;
 				info.vNorm = Vertex[index_count].vNorm;

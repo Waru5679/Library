@@ -28,6 +28,9 @@ D3DXMATRIX MakeMatWorld(D3DXVECTOR3 Pos, D3DXVECTOR3 Angle, D3DXVECTOR3 Scale);
 //絶対値ベクトルを作る
 D3DXVECTOR3 MakeAbsVector3(D3DXVECTOR3 Vec);
 
+//ベクトルが同じ方向を向いているかどうかをしらべる
+bool SameDirectionVector3(D3DXVECTOR3 Vec1, D3DXVECTOR3 Vec2);
+
 //最も長い成分を調べる
 int MostLongComponent(D3DXVECTOR3 Vec);
 
