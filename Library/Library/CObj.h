@@ -22,18 +22,16 @@ class CObj2D:public CObj
 protected:
 	D3DXVECTOR2 m_ScreenPos;	//描画位置(左上)
 	D3DXVECTOR2 m_Move;			//移動ベクトル
-
 };
 
 //3Dモデルを使用するもの　継承用クラス
 class CObj3D :public CObj
 {
 public :
-	D3DXVECTOR3 GetPos() { return m_vPos; }
-	D3DXVECTOR3 GetAngle() { return m_vAngle; }
-	D3DXVECTOR3 GetScale() { return m_vScale; }
-
-	D3DXMATRIX GetWorld() { return m_matWorld; }
+	D3DXVECTOR3 GetPos()	{ return m_vPos;	}
+	D3DXVECTOR3 GetAngle()	{ return m_vAngle;	}
+	D3DXVECTOR3 GetScale()	{ return m_vScale;	}
+	D3DXMATRIX  GetWorld()	{ return m_matWorld;}
 	
 	MY_MESH* GetMesh() { return m_pMesh; }
 protected:

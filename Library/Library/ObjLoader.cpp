@@ -230,6 +230,14 @@ HRESULT CObjLoader::LoadObj(const char* FileName, MY_MESH* pMesh)
 					vartices[3] = _3;
 				}
 
+			/*	MY_VERTEX _0 = vartices[0];
+				MY_VERTEX _1 = vartices[2];
+				MY_VERTEX _2 = vartices[1];
+
+				vartices[0] = _0;
+				vartices[1] = _1;
+				vartices[2] = _2;*/
+
 				//ñ ÇÃèÓïÒÇï€ë∂
 				FACE_INFO info;
 				info.vNorm = Vertex[index_count].vNorm;

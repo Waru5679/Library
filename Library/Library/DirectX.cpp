@@ -130,7 +130,8 @@ void CDirectX::SetRasterizer()
 {
 	D3D10_RASTERIZER_DESC rdc;
 	ZeroMemory(&rdc, sizeof(rdc));
-	rdc.CullMode = D3D10_CULL_NONE;//CCW
+	//rdc.CullMode = D3D10_CULL_NONE;	//‘S‚Ä•`‰æ
+	rdc.CullMode = D3D10_CULL_BACK;		//Œã‚ëŒü‚«‚Í•`‰æ‚µ‚È‚¢
 	rdc.FillMode = D3D10_FILL_SOLID;
 
 	ID3D10RasterizerState* pIr = NULL;

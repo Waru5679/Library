@@ -45,6 +45,7 @@ void CSceneMain::Init()
 
 	//RayTest
 	vPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	vScale = D3DXVECTOR3(5.0f, 5.0f, 5.0f);
 	CRayTest* pRayTest = new CRayTest(vPos, vAngle, vScale);
 	g_Task.InsertObj(pRayTest, ObjName::ObjRayTest);
 	

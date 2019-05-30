@@ -119,6 +119,42 @@ void CPlayer::Input()
 	{
 		m_vMove += D3DXVECTOR3(-1.0f, 0.0f, 0.0f);
 	}
+	if (g_input.GetKeyPush('Y') == true)
+	{
+		m_vMove += D3DXVECTOR3(0.0f, 1.0f, 0.0f);
+	}
+	if (g_input.GetKeyPush('H') == true)
+	{
+		m_vMove += D3DXVECTOR3(0.0f, -1.0f, 0.0f);
+	}
+
+
+	//‰ñ“]
+	//ˆÚ“®
+	if (g_input.GetKeyPush('J') == true)
+	{
+		m_vAngle += D3DXVECTOR3(0.0f, 0.2f, 0.0f);
+	}
+	if (g_input.GetKeyPush('L') == true)
+	{
+		m_vAngle += D3DXVECTOR3(0.0f, -0.2f, 0.0f);
+	}
+	if (g_input.GetKeyPush('I') == true)
+	{
+		m_vAngle += D3DXVECTOR3(0.2f, 0.0f, 0.0f);
+	}
+	if (g_input.GetKeyPush('K') == true)
+	{
+		m_vAngle += D3DXVECTOR3(-0.2f, 0.0f, 0.0f);
+	}
+	if (g_input.GetKeyPush('U') == true)
+	{
+		m_vAngle += D3DXVECTOR3(0.0f, 0.0f, 0.2f);
+	}
+	if (g_input.GetKeyPush('O') == true)
+	{
+		m_vAngle += D3DXVECTOR3(0.0f, 0.0f, -0.2f);
+	}
 }
 
 //•`‰æ
@@ -127,5 +163,5 @@ void CPlayer::Draw()
 	if(m_bHit==true)
 	CFont::DrawStr(L"Hit", 200.0f, 20.0f, 32.0f, 0.0f);
 
-	//g_Loader.Draw(m_matWorld, m_pMesh);
+	g_Loader.Draw(m_matWorld, m_pMesh);
 }

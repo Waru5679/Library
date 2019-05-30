@@ -10,5 +10,5 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd Model/RayTest/Blue.png
-map_d Model/RayTest/Blue.png
+map_Kd Model/RayTest/Test.png
+map_d Model/RayTest/Test.png
