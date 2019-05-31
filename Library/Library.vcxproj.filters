@@ -58,9 +58,6 @@
     <Filter Include="リソース ファイル\Scene">
       <UniqueIdentifier>{8428ceb3-004a-4aeb-8c3c-d9fd55d2b5c9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="リソース ファイル\Rect">
-      <UniqueIdentifier>{cf6634eb-f612-4b34-9875-9c3103643a6c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\Street">
       <UniqueIdentifier>{02750381-ffe8-44f1-a248-d67da6e024f0}</UniqueIdentifier>
     </Filter>
@@ -69,6 +66,9 @@
     </Filter>
     <Filter Include="ソース ファイル\Player">
       <UniqueIdentifier>{49799f6e-c1b9-4513-9d25-d7aad45464a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="リソース ファイル\Rect">
+      <UniqueIdentifier>{cf6634eb-f612-4b34-9875-9c3103643a6c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

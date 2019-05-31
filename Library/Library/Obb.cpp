@@ -139,7 +139,6 @@ vector<HIT_DATA> COBB::ObjNameHit(OBB_Data* Obb,int Name)
 	return vecData;
 }
 
-
 //çXêV
 void COBB::Update(OBB_Data* obb,D3DXVECTOR3 Pos, D3DXVECTOR3 Angle, D3DXVECTOR3 Scale, D3DXVECTOR3 Min, D3DXVECTOR3 Max)
 {
@@ -188,16 +187,15 @@ void COBB::Update(OBB_Data* obb,D3DXVECTOR3 Pos, D3DXVECTOR3 Angle, D3DXVECTOR3 
 	{
 		D3DXVec3TransformCoord(&obb->Norm[i], &g_Norm[i], &matRot);
 	}
-
 }
 
 //OBBÇÃï`âÊ
 void COBB::Draw()
 {
-	for (unsigned int i = 0; i < m_Data.size(); i++)
+	/*for (unsigned int i = 0; i < m_Data.size(); i++)
 	{
 		g_Loader.Draw(m_Data[i]->matWorld, &m_Mesh, m_fColor);
-	}
+	}*/
 }
 
 //ÇﬂÇËçûÇ›èCê≥

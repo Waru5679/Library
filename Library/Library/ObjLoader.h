@@ -16,8 +16,8 @@ struct MY_VERTEX
 //面情報
 struct FACE_INFO
 {
-	D3DXVECTOR3 vNorm;			//面の法線
-	vector<D3DXVECTOR3> Pos;	//面の頂点
+	vector<MY_VERTEX> Vertex;	//頂点情報
+	D3DXVECTOR3 vNorm;			//法線
 };
 
 //マテリアル構造体
@@ -92,7 +92,7 @@ private:
 
 	//ポリゴン描画
 	void DrawMesh(int ver_num, ID3D10Buffer* VertexBuffer, ID3D10Buffer* IndexBuffer);
-
+	
 	//メッシュ
 	vector<MY_MESH>m_Mesh;
 };

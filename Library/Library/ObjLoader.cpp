@@ -28,6 +28,7 @@ HRESULT CObjLoader::LoadObj(const char* FileName, MY_MESH* pMesh)
 
 	if (fp == NULL)
 	{
+		//ファイル読み込み失敗
 		return E_FAIL;
 	}
 
@@ -86,7 +87,7 @@ HRESULT CObjLoader::LoadObj(const char* FileName, MY_MESH* pMesh)
 					fscanf_s(fp, "%f %f %f", &x, &y, &z);
 					
 					D3DXVECTOR3 pos;
-					pos.x = -x;//OBJは右手、Direct3Dは左手座標系。
+					pos.x = x;// -x;//OBJは右手、Direct3Dは左手座標系。
 					pos.y = y;
 					pos.z = z;
 
@@ -102,7 +103,7 @@ HRESULT CObjLoader::LoadObj(const char* FileName, MY_MESH* pMesh)
 					fscanf_s(fp, "%f %f %f", &x, &y, &z);
 					
 					D3DXVECTOR3 nor;
-					nor.x = -x;//OBJは右手、Direct3Dは左手座標系。
+					nor.x = x;//-x;//OBJは右手、Direct3Dは左手座標系。
 					nor.y = y;
 					nor.z = z;
 					
@@ -122,7 +123,6 @@ HRESULT CObjLoader::LoadObj(const char* FileName, MY_MESH* pMesh)
 				//フェイス(ポリゴン)
 				if (strcmp(key, "f") == 0)
 				{
-
 					iFaceCount++;
 
 					//面ごとの頂点の数
@@ -216,67 +216,64 @@ HRESULT CObjLoader::LoadObj(const char* FileName, MY_MESH* pMesh)
 				{ 
 					vartices[j]=Vertex[index_count + j];
 				}
+
+				//面の法線を求める
+				D3DXVECTOR3 vNorm;
+
+				//四角ポリゴン
 				if (FaceOfVer[i] == 4)
 				{
-					//	4頂点の時に順番を入れ替える
-					//	N字を描くように
-					MY_VERTEX _0 = vartices[3];
-					MY_VERTEX _1 = vartices[2];
-					MY_VERTEX _2 = vartices[0];
-					MY_VERTEX _3 = vartices[1];
 
-					vartices[0] = _0;
-					vartices[1] = _1;
-					vartices[2] = _2;
-					vartices[3] = _3;
+					//N字を描くように順番を入れ替える
+					MY_VERTEX tmp = vartices[2];
+					vartices[0] = vartices[0];
+					vartices[1] = vartices[1];
+					vartices[2] = vartices[3];
+					vartices[3] = tmp;
+
+
 				}
 				//三角ポリゴンの場合
 				else if (FaceOfVer[i] == 3)
-				{
-					//各頂点の位置
-					D3DXVECTOR3 vA, vB, vC;
-					vA = vartices[0].vPos;
-					vB = vartices[1].vPos;
-					vC = vartices[2].vPos;
-					
-					//頂点Aから頂点B,Cへのベクトル
-					D3DXVECTOR3 vAB, vAC;
-					vAB = vB - vA;
-					vAC = vC - vA;
+				{					
+					//頂点0から頂点1,2へのベクトル
+					D3DXVECTOR3 v01, v02;
+					v01 = vartices[1].vPos - vartices[0].vPos;
+					v02 = vartices[2].vPos - vartices[0].vPos;
 
-					//面の法線を求める
-					D3DXVECTOR3 vNorm;
-					D3DXVec3Cross(&vNorm, &vAB, &vAC);
+					//法線ベクトルを求める
+					D3DXVec3Cross(&vNorm, &v01, &v02);
+					D3DXVec3Normalize(&vNorm, &vNorm);
 					
 					//同じ方向を向いているか
-					bool bSameDir;
-					bSameDir=SameDirectionVector3(vartices[0].vNorm, vNorm);
+					float dot = D3DXVec3Dot(&vartices[0].vNorm, &vNorm);
 
 					//違う方向を向いている時は反時計回りなので時計回りに入れ替える
-					if (bSameDir == false)
+					if (dot<0.0f)
 					{
-						//反対時計回りを時計回りにする
-						MY_VERTEX _0 = vartices[2];
-						MY_VERTEX _1 = vartices[1];
-						MY_VERTEX _2 = vartices[0];
+					//	//反対時計回りを時計回りにする
+					//	MY_VERTEX tmp = vartices[1];
+					//	vartices[1] = vartices[2];
+					//	vartices[2] = tmp;
+					//	
+					//	//法線ベクトルを求める
+					//	v01 = vartices[1].vPos - vartices[0].vPos;
+					//	v02 = vartices[2].vPos - vartices[0].vPos;
 
-						vartices[0] = _0;
-						vartices[1] = _1;
-						vartices[2] = _2;
+					//	D3DXVec3Cross(&vNorm, &v01, &v02);
+					//	D3DXVec3Normalize(&vNorm, &vNorm);
 					}
 				}			
-	
+
 				//面の情報を保存
 				FACE_INFO info;
-				info.vNorm = Vertex[index_count].vNorm;
-	
-				for (int j = 0; j < FaceOfVer[i]; j++)
+				for (int VerNum = 0; VerNum < FaceOfVer[i]; VerNum++)
 				{
-					info.Pos.push_back(vartices[j].vPos);
+					info.Vertex.push_back(vartices[VerNum]);
 				}
+				info.vNorm = vNorm;
 
-				//面情報保存
-				Material.FaceInfo.push_back(info);	   				
+				Material.FaceInfo.push_back(info);
 
 				//バーテックスバッファーを作成
 				D3D10_BUFFER_DESC bd;
@@ -318,6 +315,7 @@ HRESULT CObjLoader::LoadObj(const char* FileName, MY_MESH* pMesh)
 				index_count += FaceOfVer[i];
 				
 				//解放
+				delete[] index;
 				delete[] vartices;
 			}
 
@@ -499,7 +497,7 @@ void CObjLoader::Draw(D3DMATRIX matWorld, MY_MESH* pMesh, float fColor[4])
 		for (int j = 0; j < size; j++)
 		{
 			//ポリゴン描画
-			DrawMesh(pMesh->Material[i].FaceInfo[j].Pos.size(), pMesh->Material[i].pVertex[j], pMesh->Material[i].pIndex[j]);
+			DrawMesh(pMesh->Material[i].FaceInfo[j].Vertex.size() , pMesh->Material[i].pVertex[j], pMesh->Material[i].pIndex[j]);
 		}
 	}
 }
@@ -527,7 +525,7 @@ void CObjLoader::Draw(int TexId, D3DMATRIX matWorld, MY_MESH* pMesh)
 		for (int j = 0; j < size; j++)
 		{
 			//ポリゴン描画
-			DrawMesh(pMesh->Material[i].FaceInfo[j].Pos.size(), pMesh->Material[i].pVertex[j], pMesh->Material[i].pIndex[j]);
+			DrawMesh(pMesh->Material[i].FaceInfo[j].Vertex.size(), pMesh->Material[i].pVertex[j], pMesh->Material[i].pIndex[j]);
 		}
 	}
 }
@@ -578,6 +576,7 @@ MY_MESH* CObjLoader::GetMesh(int Id)
 			return &m_Mesh[i];
 		}
 	}
+	return nullptr;
 }
 
 //解放

@@ -79,7 +79,6 @@ void CPlayer::Update()
 	{
 		m_bHit = true;
 
-
 		//ˆÚ“®‚ð–ß‚·
 		m_vPos -= m_vMove * m_fSpeed;
 
