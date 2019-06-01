@@ -84,7 +84,6 @@ void CPlayer::Update()
 
 		//•ÇŽC‚è
 		//m_vPos += vShear * m_fSpeed;
-
 	}
 	else
 	{

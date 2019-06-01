@@ -109,33 +109,6 @@ int MostLongComponent(D3DXVECTOR3 Vec)
 	}
 }
 
-//スクリーン座標から3D座標を求める
-D3DXVECTOR3* CalcScreenToWorld(
-	D3DXVECTOR3* pOut,
-	float Sx,  // スクリーンX座標
-	float Sy,  // スクリーンY座標
-	float fZ,  // 射影空間でのZ値（0～1）
-	int Screen_w,
-	int Screen_h,
-	D3DXMATRIX* matView,
-	D3DXMATRIX* matProj
-) {
-	// 各行列の逆行列を算出
-	D3DXMATRIX InvView, InvPrj, VP, InvViewport;
-	D3DXMatrixInverse(&InvView, NULL, matView);
-	D3DXMatrixInverse(&InvPrj, NULL, matProj);
-	D3DXMatrixIdentity(&VP);
-	VP._11 = Screen_w / 2.0f; VP._22 = -Screen_h / 2.0f;
-	VP._41 = Screen_w / 2.0f; VP._42 = Screen_h / 2.0f;
-	D3DXMatrixInverse(&InvViewport, NULL, &VP);
-
-	// 逆変換
-	D3DXMATRIX tmp = InvViewport * InvPrj * InvView;
-	D3DXVec3TransformCoord(pOut, &D3DXVECTOR3(Sx, Sy, fZ), &tmp);
-
-	return pOut;
-}
-
 //頂点シェーダ用のマトリックスの作成
 void CreateVSMatrix(D3DXVECTOR3* vEye, D3DXVECTOR3* vLook, D3DXVECTOR3* vUp, D3DXMATRIX* matView, D3DXMATRIX* matProj, int width, int height)
 {
