@@ -17,7 +17,6 @@ struct MY_VERTEX
 struct FACE_INFO
 {
 	vector<MY_VERTEX> Vertex;	//頂点情報
-	D3DXVECTOR3 vNorm;			//法線
 };
 
 //マテリアル構造体
@@ -32,10 +31,7 @@ struct MY_MATERIAL
 	
 	//面情報
 	vector<FACE_INFO> FaceInfo;
-
-	//ファイス情報
-	vector<int>iFaceBuffer;
-	
+		
 	//テクスチャ
 	ID3D10ShaderResourceView* pTexture;
 
@@ -48,7 +44,6 @@ struct MY_MATERIAL
 struct MY_MESH
 {
 	vector<MY_MATERIAL> Material;	//マテリアル
-	int MaterialNum;				//マテリアルの数
 	
 	D3DXVECTOR3 vMin;	//頂点の最小座標
 	D3DXVECTOR3 vMax;	//頂点の最大座標
@@ -91,7 +86,7 @@ private:
 	void MinAndMax(D3DXVECTOR3 Pos,MY_MESH* pMesh);
 
 	//ポリゴン描画
-	void DrawMesh(int ver_num, ID3D10Buffer* VertexBuffer, ID3D10Buffer* IndexBuffer);
+	//void DrawMesh(int ver_num, ID3D10Buffer* VertexBuffer, ID3D10Buffer* IndexBuffer);
 	
 	//メッシュ
 	vector<MY_MESH>m_Mesh;

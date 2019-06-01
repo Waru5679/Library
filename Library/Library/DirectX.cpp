@@ -2,6 +2,7 @@
 
 CDirectX dx;
 
+//初期化
 HRESULT CDirectX::Init(HWND hWnd)
 {
 	// デバイスとスワップチェーンの作成
@@ -15,8 +16,7 @@ HRESULT CDirectX::Init(HWND hWnd)
 
 	//ビューポートの設定
 	SetViewport();
-
-
+	
 	//深度ステンシルビューの作成
 	CreateStencil();		
 
@@ -130,7 +130,6 @@ void CDirectX::SetRasterizer()
 {
 	D3D10_RASTERIZER_DESC rdc;
 	ZeroMemory(&rdc, sizeof(rdc));
-	//rdc.CullMode = D3D10_CULL_NONE;	//全て描画
 	rdc.CullMode = D3D10_CULL_BACK;		//後ろ向きは描画しない
 	rdc.FillMode = D3D10_FILL_SOLID;
 

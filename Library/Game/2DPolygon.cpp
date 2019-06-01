@@ -79,5 +79,5 @@ void C2DPolygon::Draw()
 	m_Dst.m_bottom = m_Dst.m_top + 100.0f;
 	
 	//•`‰æ
-	g_Draw.Draw2D(0, &m_Src, &m_Dst, m_fColor, m_fRad);
+	g_Draw.DrawTexture(0, &m_Src, &m_Dst, m_fColor, m_fRad);
 }

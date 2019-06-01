@@ -75,7 +75,7 @@ void CPlayer::Update()
 
 	D3DXVECTOR3 vShear;
 	
-	if (g_Ray.RayHit(&vShear,this,m_vLastMove*m_fSpeed,ObjStreet) == true)
+	if (g_Ray.RayHit(&vShear,this,m_vLastMove*m_fSpeed,ObjRayTest) == true)
 	{
 		m_bHit = true;
 

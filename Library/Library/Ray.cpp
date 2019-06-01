@@ -12,7 +12,7 @@ void CRay::Insert(CObj3D* pObj)
 bool CRay::RayHit(D3DXVECTOR3*OutPoint, CObj3D* pOrigin,D3DXVECTOR3 vDir,int Id)
 {
 	//Ray‚ð”ò‚Î‚·‘¤
-	MY_MESH* pOrigineMesh =pOrigin->GetMesh();
+	MY_MESH* pOrigineMesh = pOrigin->GetMesh();
 	D3DXVECTOR3 vOrigin;
 	D3DXMATRIX matOrigin = pOrigin->GetWorld();
 
@@ -93,19 +93,17 @@ bool CRay::RayHit(D3DXVECTOR3*OutPoint, CObj3D* pOrigin,D3DXVECTOR3 vDir,int Id)
 
 									//ŽOŠpƒ|ƒŠƒSƒ“2‚Â‚É•ª‰ð‚µ‚Ä’²‚×‚é
 
-									//Ray”»’è
+									//1‚Â–Ú‚ÌŽOŠpƒ|ƒŠƒSƒ“Ray”»’è
 									if (TriangleRay(OutPoint, vOrigin, vDir, v1, v2, v3) == true)
 									{
 										return true;
 									}
 
-									//Ray”»’è
+									//2‚Â–Ú‚ÌŽOŠpƒ|ƒŠƒSƒ“Ray”»’è
 									if (TriangleRay(OutPoint, vOrigin, vDir, v2, v4, v3) == true)
 									{
 										return true;
 									}
-									
-
 								}
 							}
 						}
