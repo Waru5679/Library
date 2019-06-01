@@ -81,6 +81,7 @@ bool CRay::RayHit(D3DXVECTOR3*OutPoint, CObj3D* pOrigin,D3DXVECTOR3 vDir,int Id)
 										return true;
 									}
 								}
+								//四角ポリゴン
 								else
 								{
 									//各頂点をワールドで変換
@@ -90,8 +91,16 @@ bool CRay::RayHit(D3DXVECTOR3*OutPoint, CObj3D* pOrigin,D3DXVECTOR3 vDir,int Id)
 									D3DXVec3TransformCoord(&v3, &Target.Vertex[2].vPos, &matTarget);
 									D3DXVec3TransformCoord(&v4, &Target.Vertex[3].vPos, &matTarget);
 
-									//Ray
-									if (SquareRay(OutPoint, vOrigin,vDir, v1, v2, v3, v4) == true)
+									//三角ポリゴン2つに分解して調べる
+
+									//Ray判定
+									if (TriangleRay(OutPoint, vOrigin, vDir, v1, v2, v3) == true)
+									{
+										return true;
+									}
+
+									//Ray判定
+									if (TriangleRay(OutPoint, vOrigin, vDir, v2, v4, v3) == true)
 									{
 										return true;
 									}
@@ -108,7 +117,7 @@ bool CRay::RayHit(D3DXVECTOR3*OutPoint, CObj3D* pOrigin,D3DXVECTOR3 vDir,int Id)
 	return false;
 }
 
-//Rayの判定(三角)
+//Rayの判定
 bool CRay::TriangleRay(D3DXVECTOR3* OutPoint, D3DXVECTOR3 vRayOrigin, D3DXVECTOR3 vRayDir, D3DXVECTOR3 vA, D3DXVECTOR3 vB, D3DXVECTOR3 vC)
 {
 	//面の頂点からRayの始点と終点へのベクトル
@@ -197,111 +206,6 @@ bool CRay::TriangleRay(D3DXVECTOR3* OutPoint, D3DXVECTOR3 vRayOrigin, D3DXVECTOR
 
 		//全ての外積が法線と同じ向きなら当たってる
 		if (dot1 > 0.0f && dot2 > 0.0f && dot3 > 0.0f)
-		{
-			//交点
-			OutPoint = &vPoint;
-			return true;
-		}
-	}
-	return false;
-}
-
-//Rayの判定(四角ポリゴン)
-bool CRay::SquareRay(D3DXVECTOR3* OutPoint, D3DXVECTOR3 vRayOrigin, D3DXVECTOR3 vRayDir, D3DXVECTOR3 vA, D3DXVECTOR3 vB, D3DXVECTOR3 vC, D3DXVECTOR3 vD)
-{
-	//面の頂点からRayの始点と終点へのベクトル
-	D3DXVECTOR3 vStart, vEnd;
-	vStart = vA - vRayOrigin;
-	vEnd = vA - (vRayOrigin + vRayDir);
-
-	//各辺へのベクトル
-	D3DXVECTOR3 vAB, vBC, vCD, vDA;
-	vAB = vB - vA;
-	vBC = vC - vB;
-	vCD = vD - vC;
-	vDA = vA - vD;
-
-	//法線ベクトルを求める
-	D3DXVECTOR3 vNorm;
-	D3DXVec3Cross(&vNorm, &vAB, &vBC);
-	D3DXVec3Normalize(&vNorm, &vNorm);
-
-	//法線と始点終点へのベクトル
-	float dotStart = D3DXVec3Dot(&vStart, &vNorm);
-	float dotEnd = D3DXVec3Dot(&vEnd, &vNorm);
-
-	//Rayの始点と終点が平面上にあり、交点を計算できない。
-	if (dotStart == 0.0f && dotEnd == 0.0f)
-	{
-		return false;
-	}
-
-	//始点と終点が同じ方向にいる
-	if (dotStart > 0.0f && dotEnd > 0.0f || dotStart < 0.0f && dotEnd < 0.0f)
-	{
-		return false;
-	}
-	//交点をもとめる
-	else
-	{
-		//平面の方程式
-		float a = vNorm.x;
-		float b = vNorm.y;
-		float c = vNorm.z;
-		float x = vA.x;
-		float y = vA.y;
-		float z = vA.z;
-		float d = -(a*x + b * y + c * z);
-
-		//Rayの直線式の定数tを求める
-		float a1 = vRayDir.x;
-		float b1 = vRayDir.y;
-		float c1 = vRayDir.z;
-		float x1 = vRayOrigin.x;
-		float y1 = vRayOrigin.y;
-		float z1 = vRayOrigin.z;
-		float t = -(a*x1 + b * y1 + c * z1 + d) / (a*a1 + b * b1 + c * c1);
-
-		//直線式から交点を求める
-		D3DXVECTOR3 vPoint;
-		vPoint.x = x1 + a1 * t;
-		vPoint.y = y1 + b1 * t;
-		vPoint.z = z1 + c1 * t;
-
-		//交点とそれぞれの辺の外積が法線と同じ向きか知らべる
-
-		//交点から各頂点へのベクトル
-		D3DXVECTOR3 vPA, vPB, vPC, vPD;
-		vPA = vA - vPoint;
-		vPB = vB - vPoint;
-		vPC = vC - vPoint;
-		vPC = vD - vPoint;
-
-		//交点からAへのベクトルとABの外積
-		D3DXVECTOR3 vCrossAB;
-		D3DXVec3Cross(&vCrossAB, &vPA, &vAB);
-
-		//交点からBへのベクトルとBCの外積
-		D3DXVECTOR3 vCrossBC;
-		D3DXVec3Cross(&vCrossBC, &vPB, &vBC);
-
-		//交点からCへのベクトルとCDの外積
-		D3DXVECTOR3 vCrossCD;
-		D3DXVec3Cross(&vCrossCD, &vPC, &vCD);
-
-		//交点からDへのベクトルとDAの外積
-		D3DXVECTOR3 vCrossDA;
-		D3DXVec3Cross(&vCrossDA, &vPD, &vDA);
-
-		//外積と法線の内積
-		float dot1, dot2, dot3, dot4;
-		dot1 = D3DXVec3Dot(&vCrossAB, &vNorm);
-		dot2 = D3DXVec3Dot(&vCrossBC, &vNorm);
-		dot3 = D3DXVec3Dot(&vCrossCD, &vNorm);
-		dot4 = D3DXVec3Dot(&vCrossDA, &vNorm);
-
-		//全ての外積が法線と同じ向きなら当たってる
-		if (dot1 > 0.0f && dot2 > 0.0f && dot3 > 0.0f && dot4 > 0.0f)
 		{
 			//交点
 			OutPoint = &vPoint;

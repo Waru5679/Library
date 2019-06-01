@@ -17,10 +17,7 @@ public:
 	bool RayHit(D3DXVECTOR3*OutPoint, CObj3D* pOrigin,D3DXVECTOR3 vDir, int Id);
 
 private:
-	//Ray‚Ì”»’è(ŽlŠp)
-	bool SquareRay(D3DXVECTOR3* OutPoint, D3DXVECTOR3 vRayOrigin, D3DXVECTOR3 vRayDir, D3DXVECTOR3 vA, D3DXVECTOR3 vB, D3DXVECTOR3 vC, D3DXVECTOR3 vD);
-
-	//Ray‚Ì”»’è(ŽOŠp)
+	//Ray‚Ì”»’è
 	bool TriangleRay(D3DXVECTOR3* OutPoint,D3DXVECTOR3 vRayOrigin, D3DXVECTOR3 vRayDir, D3DXVECTOR3 vA, D3DXVECTOR3 vB, D3DXVECTOR3 vC);
 
 	////•ÇŽC‚è
