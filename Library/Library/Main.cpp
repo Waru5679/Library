@@ -74,7 +74,7 @@ INT WINAPI WinMain( HINSTANCE hInst,HINSTANCE hPrevInst,LPSTR szStr,INT iCmdShow
 	g_Obb.Init();
 
 	//フォント描画初期化
-	CFont::Init();
+	g_Font.Init();
 
 	//音楽初期化
 	g_Audio.Init();
@@ -173,7 +173,7 @@ LRESULT CALLBACK WndProc(HWND hWnd,UINT iMsg,WPARAM wParam,LPARAM lParam)
 void Release()
 {
 	g_Audio.Release();
-	CFont::Release();
+	g_Font.Release();
 	g_Draw.Release();
 	g_Shader.Release();
 	dx.Release();
