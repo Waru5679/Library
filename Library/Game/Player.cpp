@@ -31,7 +31,7 @@ void CPlayer::Init()
 	D3DXMatrixIdentity(&m_matWorld);
 	
 	//モデル
-	m_pMesh = g_Loader.GetMesh(ModelName::ModelPlayer);
+	m_pMesh = g_Loader.GetMesh(ModelName::ModelSphere);
 	
 	//移動ベクトル
 	m_vMove = D3DXVECTOR3(0.0f, 0.0f, 0.0f);

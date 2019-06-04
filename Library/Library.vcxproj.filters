@@ -70,6 +70,9 @@
     <Filter Include="リソース ファイル\Rect">
       <UniqueIdentifier>{cf6634eb-f612-4b34-9875-9c3103643a6c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Sphere">
+      <UniqueIdentifier>{8f830aeb-b78e-45ff-a692-8a83fa2721e3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Library\Camera.h">
@@ -150,6 +153,9 @@
     <ClInclude Include="Game\RayTest.h">
       <Filter>ソース ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="Game\Sphere.h">
+      <Filter>ソース ファイル\Sphere</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Library\Audio.cpp">
@@ -223,6 +229,9 @@
     </ClCompile>
     <ClCompile Include="Game\RayTest.cpp">
       <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Sphere.cpp">
+      <Filter>ソース ファイル\Sphere</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -13,6 +13,7 @@
 
 //Debug
 #include "RayTest.h"
+#include "Sphere.h"
 
 //初期化
 void CSceneMain::Init()
@@ -40,16 +41,20 @@ void CSceneMain::Init()
 	g_Task.InsertObj(p2D, ObjName::ObjDraw2D);
 
 	//町
-	/*vPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-
-	CStreet* pStreet = new CStreet(vPos, vAngle, vScale);
+/*	CStreet* pStreet = new CStreet(vPos, vAngle, vScale);
 	g_Task.InsertObj(pStreet, ObjName::ObjStreet);
 */
-	//RayTest
+
 	vPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	CRayTest* pRayTest = new CRayTest(vPos, vAngle, vScale);
-	g_Task.InsertObj(pRayTest, ObjName::ObjRayTest);
-	
+
+	//球
+	CSphere* pSphere = new CSphere(vPos, vAngle, vScale);
+	g_Task.InsertObj(pSphere, ObjName::ObjSphere);
+
+	//RayTest
+	//CRayTest* pRayTest = new CRayTest(vPos, vAngle, vScale);
+	//g_Task.InsertObj(pRayTest, ObjName::ObjRayTest);
+	//
 
 	//シェーダーにカメラセット
 	g_Shader.SetCamera(pCamera);
@@ -97,10 +102,12 @@ void CSceneMain::LoadMesh()
 	g_Loader.LoadMesh(ModelName::ModelPlayer, "Model/Player/Player.obj");
 
 	//町
-//	g_Loader.LoadMesh(ModelName::ModelStreet, "Model/Street/Street.obj");
+	//g_Loader.LoadMesh(ModelName::ModelStreet, "Model/Street/Street.obj");
+
+	//球
+	g_Loader.LoadMesh(ModelName::ModelSphere, "Model/Sphere/Sphere.obj");
 
 	//RayTest
-
 	//三角ポリゴン
 	g_Loader.LoadMesh(ModelName::ModelRayTest, "Model/RayTest/Triangle_Cube.obj");
 

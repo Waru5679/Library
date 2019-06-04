@@ -135,6 +135,7 @@
     <ClInclude Include="Game\Player.h" />
     <ClInclude Include="Game\RayTest.h" />
     <ClInclude Include="Game\SceneMain.h" />
+    <ClInclude Include="Game\Sphere.h" />
     <ClInclude Include="Game\Street.h" />
     <ClInclude Include="Library\Audio.h" />
     <ClInclude Include="Library\Camera.h" />
@@ -163,6 +164,7 @@
     <ClCompile Include="Game\Player.cpp" />
     <ClCompile Include="Game\RayTest.cpp" />
     <ClCompile Include="Game\SceneMain.cpp" />
+    <ClCompile Include="Game\Sphere.cpp" />
     <ClCompile Include="Game\Street.cpp" />
     <ClCompile Include="Library\Audio.cpp" />
     <ClCompile Include="Library\Csv.cpp" />

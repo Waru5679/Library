@@ -88,24 +88,24 @@ D3DXVECTOR3 MakeAbsVector3(D3DXVECTOR3 Vec)
 	return out;
 }
 
-//Å‚à’·‚¢¬•ª‚ğ’²‚×‚é
-int MostLongComponent(D3DXVECTOR3 Vec)
+//Å‚à’·‚¢¬•ª‚ğ•Ô‚·
+float MostLongComponent(D3DXVECTOR3 Vec)
 {
 	Vec=MakeAbsVector3(Vec);
 
 	if (Vec.x > Vec.y)
 	{
 		if (Vec.x > Vec.z)
-			return COMP_X;
+			return Vec.x;
 		else
-			return COMP_Z;
+			return Vec.z;
 	}
 	else
 	{
 		if (Vec.y > Vec.z)
-			return COMP_Y;
+			return Vec.y;
 		else
-			return COMP_Z;
+			return Vec.z;
 	}
 }
 
