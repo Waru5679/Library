@@ -46,17 +46,39 @@ HRESULT CShader::Init(ID3D10Device* pDevice)
 }
 
 //シェーダーセット
-void CShader::SetShader(ID3D10ShaderResourceView* pTexture, float Src[4],float Color[4], D3DXMATRIX matWorld)
+void CShader::SetShader(ID3D10ShaderResourceView* pTexture, RECT_F* pSrc,ColorData* pColor, D3DXMATRIX matWorld)
 {	
 	//ワールド＊ビュー*プロジェクション
 	D3DXMATRIX objWVP = matWorld *m_pCamera->GetViewMatrix() *m_pCamera->GetProjMatrix();
 	m_pShaderWorldViewProjection->SetMatrix((float*)&(objWVP));
 	   
+
 	//切り取り位置
-	m_pShaderSrc->SetFloatVector(Src);
+	D3DXVECTOR4 vSrc;
+	if (pSrc == NULL)
+	{
+		//切り取り位置の指定がないとき
+		vSrc = D3DXVECTOR4(0.0f, 0.0f, 1.0f, 1.0f);
+	}
+	else
+	{
+		vSrc = D3DXVECTOR4(pSrc->m_Top, pSrc->m_Left, pSrc->m_Right, pSrc->m_Bottom);
+	}
+	m_pShaderSrc->SetFloatVector(vSrc);
 
 	//描画色
-	m_pShaderColor->SetFloatVector(Color);
+
+	D3DXVECTOR4 vColor;
+	if (pColor == NULL)
+	{
+		//色データの指定がないとき
+		vColor = D3DXVECTOR4(1.0f, 1.0f, 1.0f, 1.0f);
+	}
+	else
+	{
+		vColor = D3DXVECTOR4(pColor->m_Red, pColor->m_Green, pColor->m_Blue, pColor->m_Alpha);
+	}
+	m_pShaderColor->SetFloatVector(vColor);
 
 	//テクスチャ情報があれば
 	if (pTexture != NULL)

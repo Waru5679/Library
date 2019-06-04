@@ -24,37 +24,25 @@ void CDraw::Init()
 	m_pVertexBuffer= BufferCreate(ver,sizeof(MY_VERTEX)*4, D3D10_BIND_VERTEX_BUFFER);
 }
 
-//2D描画(Fontなど切り取り位置のないもの用の中継)
-void CDraw::DrawTexture(ID3D10ShaderResourceView* pTex, RECT_F* pOut, float fRad)
-{
-	//切り取り（等倍）
-	float fSrc[4] = {0.0f,0.0f,1.0f,1.0f};
-
-	//描画色
-	float fColor[4] = { 1.0f,1.0f,1.0f,1.0f };
-	
-	DrawTexture(pTex, fSrc, pOut, fColor, fRad);
-}
-
 //2D描画(テクスチャのサイズから切り取り位置の設定がいるもの用中継)
-void CDraw::DrawTexture(int TexId, RECT_F* pSrc,RECT_F* pOut,float fColor[4],float fRad)
+void CDraw::DrawTexture(int TexId, RECT_F* pSrc,RECT_F* pOut,ColorData* pColor,float fRad)
 {
 	//テクスチャ情報
 	MY_TEXTURE* pTex=nullptr;
 	pTex=g_Task.GetTex(TexId);
 
 	//切り取り位置の設定
-	float fSrc[4];
-	fSrc[0] = pSrc->m_left	/ pTex->m_Width;
-	fSrc[1] = pSrc->m_top	/ pTex->m_Height;
-	fSrc[2] = pSrc->m_right	/ pTex->m_Width;
-	fSrc[3] = pSrc->m_bottom/ pTex->m_Height;
+	RECT_F Src;
+	Src.m_Top	= pSrc->m_Left	/ pTex->m_Width;
+	Src.m_Left	= pSrc->m_Top	/ pTex->m_Height;
+	Src.m_Right = pSrc->m_Right	/ pTex->m_Width;
+	Src.m_Bottom= pSrc->m_Bottom/ pTex->m_Height;
 
-	DrawTexture(pTex->m_pTex, fSrc, pOut, fColor, fRad);
+	DrawTexture(pTex->m_pTex, &Src, pOut, pColor, fRad);
 }
 
 //2D描画
-void CDraw::DrawTexture(ID3D10ShaderResourceView* pTex, float fSrc[4], RECT_F* pOut, float Color[4], float fRad)
+void CDraw::DrawTexture(ID3D10ShaderResourceView* pTex, RECT_F* pSrc, RECT_F* pOut, ColorData* pColor, float fRad)
 {
 	//逆ビュー行列
 	D3DXMATRIX matInvView;
@@ -72,15 +60,15 @@ void CDraw::DrawTexture(ID3D10ShaderResourceView* pTex, float fSrc[4], RECT_F* p
 
 	//サイズを求める
 	D3DXVECTOR2 OutSize;
-	OutSize.x = pOut->m_right - pOut->m_left;
-	OutSize.y = pOut->m_bottom - pOut->m_top;
+	OutSize.x = pOut->m_Right - pOut->m_Left;
+	OutSize.y = pOut->m_Bottom - pOut->m_Top;
 	matWorld._11 = OutSize.x / WINDOW_WIDTH;
 	matWorld._22 = OutSize.y / WINDOW_HEIGHT;
 
 	//Z軸回転行列
 	D3DXMATRIX matRot;
-	D3DXMatrixRotationZ(&matRot, D3DXToRadian(fRad));
-
+	D3DXMatrixRotationZ(&matRot, (float)D3DXToRadian(fRad));
+	
 	//ワールドに回転をかける
 	matWorld *= matRot;
 
@@ -90,21 +78,21 @@ void CDraw::DrawTexture(ID3D10ShaderResourceView* pTex, float fSrc[4], RECT_F* p
 	PixcelSize.y = (2.0f / (float)WINDOW_HEIGHT);
 
 	//マイナスが上に来るように上下反転する
-	pOut->m_top = WINDOW_HEIGHT - pOut->m_bottom;
-	pOut->m_bottom = WINDOW_HEIGHT - pOut->m_top;
+	pOut->m_Top = WINDOW_HEIGHT - pOut->m_Bottom;
+	pOut->m_Bottom = WINDOW_HEIGHT - pOut->m_Top;
 
 	//平行移動量を求める
-	matWorld._41 = PixcelSize.x * pOut->m_left + PixcelSize.x * (OutSize.x / 2.0f) - 1.0f;
-	matWorld._42 = PixcelSize.y * pOut->m_top + PixcelSize.y * (OutSize.y / 2.0f) - 1.0f;
+	matWorld._41 = PixcelSize.x * pOut->m_Left + PixcelSize.x * (OutSize.x / 2.0f) - 1.0f;
+	matWorld._42 = PixcelSize.y * pOut->m_Top + PixcelSize.y * (OutSize.y / 2.0f) - 1.0f;
 
 	//シェーダーのセット
-	g_Shader.SetShader(pTex, fSrc, Color, matWorld *matInvProj*matInvView);
+	g_Shader.SetShader(pTex, pSrc, pColor, matWorld *matInvProj*matInvView);
 
 	//ポリゴンの描画
 	DrawPolygon(4,m_pVertexBuffer,NULL);
 }
 
-//バーテックスバッファー作成
+//バッファー作成
 ID3D10Buffer* CDraw::BufferCreate(void* pHead, unsigned int Size, int BufferType)
 {
 	D3D10_BUFFER_DESC bd;

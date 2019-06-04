@@ -6,6 +6,8 @@
 
 CObjLoader g_Loader;
 
+#define ARRAY_SIZE 100
+
 //モデル読み込み
 void CObjLoader::LoadMesh(int Id, const char* Name)
 {
@@ -33,7 +35,7 @@ HRESULT CObjLoader::LoadObj(const char* FileName, MY_MESH* pMesh)
 	}
 
 	//キーワード読み込み用
-	char key[200];
+	char key[ARRAY_SIZE];
 
 	float uv_x[4] = { 0.0f,-1.0f,-1.0f,0.0f };	
 	float uv_y[4] = { 0.0f,0.0f,1.0f,1.0f };
@@ -118,9 +120,9 @@ HRESULT CObjLoader::LoadObj(const char* FileName, MY_MESH* pMesh)
 					int iFaceNum = 0;
 										
 					//空白込みで1行読み込む
-					char str[200];
+					char str[ARRAY_SIZE];
 					char* pStr = str;
-					fgets(str, 200, fp);
+					fgets(str, ARRAY_SIZE, fp);
 							
 					//空白の数から頂点の数を数える
 					for (int j = 0; str[j] != '\0'; j++)
@@ -323,7 +325,7 @@ HRESULT CObjLoader::LoadMaterial(char* FileName,MY_MESH* pMesh)
 	}
 
 	int mate_count = 0;
-	char key[100] = { 0 };
+	char key[ARRAY_SIZE] = { 0 };
 	D3DXVECTOR3 v;
 
 	//キーワード読み込み
@@ -410,56 +412,17 @@ void CObjLoader::MinAndMax(D3DXVECTOR3 Pos,MY_MESH* pMesh)
 		pMesh->vMin.z = Pos.z;
 }
 
-//メッシュ描画(描画色指定なし)
-void CObjLoader::Draw(D3DMATRIX matWorld,MY_MESH* pMesh)
-{
-	//描画色
-	float Color[4] = { 1.0f,1.0f,1.0f,1.0f };
-	
-	Draw(matWorld, pMesh, Color);
-}
 
-//メッシュ描画(描画色指定あり)
-void CObjLoader::Draw(D3DMATRIX matWorld, MY_MESH* pMesh, float fColor[4])
+//メッシュ描画
+void CObjLoader::Draw(D3DMATRIX matWorld, MY_MESH* pMesh,ColorData* pColor)
 {
-	//テクスチャ切り取り位置
-	float Src[4] = { 0.0f,0.0f,1.0f,1.0f };
-
 	//マテリアルの数毎に描画
 	for (unsigned int i = 0; i < pMesh->Material.size(); i++)
 	{
 		int size = pMesh->Material[i].pVertex.size();
 
 		//シェーダーのセット
-		g_Shader.SetShader(pMesh->Material[i].pTexture, Src, fColor, matWorld);
-
-		for (int j = 0; j < size; j++)
-		{
-			//ポリゴン描画
-			g_Draw.DrawPolygon(pMesh->Material[i].FaceInfo[j].Vertex.size() , pMesh->Material[i].pVertex[j], pMesh->Material[i].pIndex[j]);
-		}
-	}
-}
-
-//テクスチャを指定してメッシュ描画
-void CObjLoader::Draw(int TexId, D3DMATRIX matWorld, MY_MESH* pMesh)
-{
-	//描画色
-	float Color[4] = { 1.0f,1.0f,1.0f,1.0f };
-
-	//テクスチャ切り取り位置
-	float Src[4] = { 0.0f,0.0f,1.0f,1.0f };
-
-	//テクスチャ
-	ID3D10ShaderResourceView*pTex =	g_Task.GetTex(TexId)->m_pTex;
-
-	//マテリアルの数毎に描画
-	for (unsigned int i = 0; i < pMesh->Material.size(); i++)
-	{
-		int size = pMesh->Material[i].pVertex.size();
-
-		//シェーダーのセット
-		g_Shader.SetShader(pMesh->Material[i].pTexture, Src, Color, matWorld);
+		g_Shader.SetShader(pMesh->Material[i].pTexture, NULL, pColor, matWorld);
 
 		for (int j = 0; j < size; j++)
 		{

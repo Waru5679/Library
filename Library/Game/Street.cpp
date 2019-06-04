@@ -46,5 +46,5 @@ void CStreet::Update()
 //•`‰æ
 void CStreet::Draw()
 {
-	g_Loader.Draw(m_matWorld, m_pMesh);
+	g_Loader.Draw(m_matWorld, m_pMesh,NULL);
 }

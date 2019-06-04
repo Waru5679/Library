@@ -44,5 +44,5 @@ void CRayTest::Update()
 //•`‰æ
 void CRayTest::Draw()
 {
-	g_Loader.Draw(m_matWorld, m_pMesh);
+	g_Loader.Draw(m_matWorld, m_pMesh,NULL);
 }

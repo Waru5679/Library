@@ -22,7 +22,7 @@ public:
 	void SetCamera(Camera* pCamera) { m_pCamera = pCamera; }
 
 	//シェーダーセット
-	void SetShader(ID3D10ShaderResourceView* pTexture, float Src[4], float Color[4], D3DXMATRIX matWorld);
+	void SetShader(ID3D10ShaderResourceView* pTexture, RECT_F* pSrc, ColorData* pColor, D3DXMATRIX matWorld);
 
 	//解放
 	void Release();

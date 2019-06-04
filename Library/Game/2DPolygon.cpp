@@ -20,11 +20,7 @@ void C2DPolygon::Init()
 	m_fRad = 0.0f;
 
 	//描画色
-	m_fColor[0] = 1.0f;
-	m_fColor[1] = 1.0f;
-	m_fColor[2] = 1.0f;
-	m_fColor[3] = 0.5f;
-
+	m_Color = ColorData(1.0f, 1.0f, 1.0f, 0.5f);
 }
 
 //更新
@@ -67,17 +63,11 @@ void C2DPolygon::Update()
 void C2DPolygon::Draw()
 {
 	//切り取り位置
-	m_Src.m_top =200.0f;
-	m_Src.m_left = 200.0f;
-	m_Src.m_right = m_Src.m_left + 56.0f;
-	m_Src.m_bottom = m_Src.m_top + 56.0f;
+	m_Src=RECT_F(200.0f, 200.0f, 56.0f, 56.0f);
 	
 	//描画位置
-	m_Dst.m_top = m_ScreenPos.y;
-	m_Dst.m_left = m_ScreenPos.x;
-	m_Dst.m_right = m_Dst.m_left + 100.0f;
-	m_Dst.m_bottom = m_Dst.m_top + 100.0f;
+	m_Dst = RECT_F(m_ScreenPos.y, m_ScreenPos.x, 100.0f, 100.0f);
 	
 	//描画
-	g_Draw.DrawTexture(0, &m_Src, &m_Dst, m_fColor, m_fRad);
+	g_Draw.DrawTexture(0, &m_Src, &m_Dst, &m_Color, m_fRad);
 }

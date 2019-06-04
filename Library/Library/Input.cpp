@@ -7,7 +7,7 @@ void CInput::Init()
 	m_mous_x = 0;
 	m_mous_y = 0;
 
-	for (int i = 0; i < 256; i++)
+	for (int i = 0; i < ARRAY_SIZE; i++)
 		m_key[i] = false;
 }
 

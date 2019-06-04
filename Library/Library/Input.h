@@ -3,6 +3,8 @@
 //入出力に必要なヘッダー
 #include <Windows.h>
 
+#define ARRAY_SIZE 256
+
 //入力クラス
 class CInput
 {
@@ -22,7 +24,7 @@ public:
 private:
 	int m_mous_x;	//マウスの位置X
 	int m_mous_y;	//マウスの位置Y
-	bool m_key[256];//キーの状態を保存する
+	bool m_key[ARRAY_SIZE];//キーの状態を保存する
 };
 
 extern CInput g_input;

@@ -251,11 +251,10 @@ void CFont::DrawStr(const wchar_t* Str, float Pos_x, float Pos_y, float FontSize
 				ID3D10ShaderResourceView* pTex = (*itr)->GetTex();
 				
 				//•`‰æˆÊ’u
-				RECT_F Out;
-				RectSet(Pos_x + FontSize * i, Pos_y, FontSize, FontSize,&Out);
+				RECT_F Out( Pos_y, Pos_x + FontSize * i, FontSize, FontSize);
 			
 				//•`‰æ
-				g_Draw.DrawTexture(pTex, &Out, Rad);
+				g_Draw.DrawTexture(pTex,NULL, &Out,NULL,Rad);
 			}
 		}
 	}	
