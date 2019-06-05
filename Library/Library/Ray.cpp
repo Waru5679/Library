@@ -213,6 +213,12 @@ bool CRay::TriangleRay(D3DXVECTOR3* OutPoint, D3DXVECTOR3 vRayOrigin, D3DXVECTOR
 	return false;
 }
 
+//‰ð•ú
+void CRay::Release()
+{
+	VectorRelease(m_Data);
+}
+
 //
 ////•Ç‚¸‚è
 //D3DXVECTOR3 CRay::WallShear( D3DXVECTOR3 Front, D3DXVECTOR3 Normal)

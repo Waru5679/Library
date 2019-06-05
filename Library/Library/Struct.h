@@ -7,7 +7,7 @@ using namespace std;
 
 //ベクターのメモリ解放
 template <typename T>
-void VectorRelease(vector<T> vec )
+void VectorRelease(vector<T> vec)
 {
 	vec.shrink_to_fit();
 	vec.resize(0);
@@ -65,11 +65,13 @@ struct FACE_INFO
 	vector<MY_VERTEX> Vertex;	//頂点情報
 };
 
+#define ARRAY_SIZE 100
+
 //マテリアル構造体
 struct MY_MATERIAL
 {
 	//マテリアル名
-	CHAR szName[100];
+	CHAR szName[ARRAY_SIZE];
 
 	D3DXVECTOR3 Ka;//アンビエント(環境光)
 	D3DXVECTOR3 Kd;//ディフューズ(拡散光)

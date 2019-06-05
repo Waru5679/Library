@@ -5,5 +5,4 @@ class CSceneInclude
 {
 public:
 	static void LoadScene();//ƒV[ƒ“‚Ì“Ç‚İ‚İ
-	
 };

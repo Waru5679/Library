@@ -10,6 +10,8 @@ using namespace std;
 class CRay
 {
 public:
+	void Release();	//‰ð•ú
+
 	//“o˜^
 	void Insert(CObj3D* pObj);
 

@@ -105,6 +105,7 @@ void CCharClass::CreateCharTex(wchar_t c, HDC hdc, TEXTMETRIC TM)
 	
 	//ƒf[ƒ^íœ 
 	delete[] ptr;
+	 
 	pTexture->Release();
 }
 

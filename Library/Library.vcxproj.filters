@@ -111,9 +111,6 @@
     <ClInclude Include="Library\Shader.h">
       <Filter>リソース ファイル\Shader</Filter>
     </ClInclude>
-    <ClInclude Include="Library\Math.h">
-      <Filter>リソース ファイル\Math</Filter>
-    </ClInclude>
     <ClInclude Include="Library\Trace.h">
       <Filter>リソース ファイル\Trace</Filter>
     </ClInclude>
@@ -155,6 +152,9 @@
     </ClInclude>
     <ClInclude Include="Library\Struct.h">
       <Filter>リソース ファイル\Struct</Filter>
+    </ClInclude>
+    <ClInclude Include="Library\Math.h">
+      <Filter>リソース ファイル\Math</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

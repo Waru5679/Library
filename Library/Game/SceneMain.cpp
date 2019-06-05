@@ -4,6 +4,7 @@
 #include "../Library/Audio.h"
 #include "../Library/Polygon.h"
 #include "../Library/Shader.h"
+#include "../Library/Ray.h" 
 
 //ゲームファイル
 #include "2DPolygon.h"
@@ -81,6 +82,9 @@ void CSceneMain::Release()
 	g_Task.Release();
 	g_Audio.DeleteMusic();
 	g_Loader.Release();
+	g_Obb.Release();
+	g_Ray.Release();	
+
 }
 
 //音楽

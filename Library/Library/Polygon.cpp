@@ -167,5 +167,6 @@ void CDraw::LoadTexture(int Id,const char* Name,int Width,int Height)
 //‰ð•ú
 void CDraw::Release()
 {
+	delete m_pCamera;
 	m_pVertexBuffer->Release();
 }

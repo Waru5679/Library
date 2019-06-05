@@ -274,7 +274,7 @@ HRESULT CObjLoader::LoadObj(const char* FileName, MY_MESH* pMesh)
 		}
 
 		//面の頂点リスト解放
-		FaceOfVer.clear();
+		VectorRelease(FaceOfVer);
 	}
 
 	//ファイルポインタを先頭に戻す
@@ -300,11 +300,11 @@ HRESULT CObjLoader::LoadObj(const char* FileName, MY_MESH* pMesh)
 	}
 	
 	//頂点情報解放
-	Pos.clear();
-	Nor.clear();
-	Tex.clear();
-	Vertex.clear();
-	
+	VectorRelease(Pos);
+	VectorRelease(Nor);
+	VectorRelease(Tex);
+	VectorRelease(Vertex);
+		
 	//ファイル終わり
 	fclose(fp);
 
@@ -365,7 +365,7 @@ HRESULT CObjLoader::LoadMaterial(char* FileName,MY_MESH* pMesh)
 				//map_Kd　テクスチャー
 				if (strcmp(key, "map_Kd") == 0)
 				{
-					char texName[100];
+					char texName[ARRAY_SIZE];
 					fscanf_s(fp, "%s", texName, sizeof(texName));
 					//テクスチャーを作成
 					if (FAILED(D3DX10CreateShaderResourceViewFromFileA(dx.m_pDevice, texName, NULL, NULL, &pMesh->Material[mate_count].pTexture, NULL)))
@@ -448,5 +448,5 @@ MY_MESH* CObjLoader::GetMesh(int Id)
 //解放
 void CObjLoader::Release()
 {
-	m_Mesh.erase(m_Mesh.begin(), m_Mesh.end());
+	VectorRelease(m_Mesh);
 }

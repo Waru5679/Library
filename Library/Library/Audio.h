@@ -17,6 +17,7 @@ struct ChunkInfo
 //サウンド情報
 struct SoundData
 {
+	SoundData() {}
 	//コンストラクタ
 	SoundData(ChunkInfo Chunk, unsigned char* pResourceData, IXAudio2SourceVoice* pSourceVoice, bool Loop)
 	{

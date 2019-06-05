@@ -172,6 +172,7 @@ LRESULT CALLBACK WndProc(HWND hWnd,UINT iMsg,WPARAM wParam,LPARAM lParam)
 //ƒƒ‚ƒŠ‚ÌŠJ•ú
 void Release()
 {
+	g_Scene.Release();
 	g_Audio.Release();
 	g_Font.Release();
 	g_Draw.Release();

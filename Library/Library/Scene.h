@@ -35,7 +35,7 @@ public:
 	CSceneBase* GetScene(int Id);			//シーン取得
 private:
 	CSceneBase* m_pNowScene;				//現在のシーンのポインタ
-	vector<MY_SCENE> m_Scene;	//シーンリスト
+	vector<MY_SCENE> m_Scene;				//シーンリスト
 };
 
 extern CSceneManager g_Scene;

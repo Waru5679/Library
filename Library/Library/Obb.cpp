@@ -23,8 +23,15 @@ void COBB::Init()
 	g_Loader.LoadObj("Model/HitBox/HitBox.obj", &m_Mesh);
 
 	//•`‰æF
-	SetColor(1.0f, 1.0f, 1.0f, 0.5f, m_fColor);
+	m_Color=ColorData(1.0f, 1.0f, 1.0f, 0.5f);
 }
+
+//‰ğ•ú
+void COBB::Release()
+{
+	VectorRelease(m_Data);
+}
+
 
 //OBB“o˜^
 void COBB::Insert(OBB_Data* obb)

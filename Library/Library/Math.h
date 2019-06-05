@@ -29,5 +29,3 @@ float MostLongComponent(D3DXVECTOR3 Vec);
 //頂点シェーダ用のマトリックスの作成
 void CreateVSMatrix(D3DXVECTOR3* vEye, D3DXVECTOR3* vLook, D3DXVECTOR3* vUp, D3DXMATRIX* matView, D3DXMATRIX* matProj, int width, int height);
 
-//色セット
-void SetColor(float r, float g,float b, float a, float pColor[4]);

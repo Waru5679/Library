@@ -1,4 +1,5 @@
 #include "Audio.h"
+#include "Struct.h"
 
 CAudio g_Audio;
 
@@ -219,7 +220,7 @@ void CAudio::DeleteMusic()
 		}
 	}
 	//サウンド情報破棄
-	m_SoundData.erase(m_SoundData.begin(), m_SoundData.end());
+	VectorRelease(m_SoundData);
 }
 
 
@@ -238,6 +239,6 @@ void CAudio::Release()
 		m_pMasteringVoice->DestroyVoice();
 	}
 
-
+	//XAudio2オブジェクト破棄
 	m_pXAudio2->Release();
 }
