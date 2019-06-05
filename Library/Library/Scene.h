@@ -1,7 +1,9 @@
 #pragma once
+#include <vector>
+using namespace std;
 
 //シーンクラス(継承用)
-class CScene
+class CSceneBase
 {
 public:
 	virtual void Init() = 0;	//初期化
@@ -14,15 +16,26 @@ private:
 	virtual void LoadMesh() = 0;		//メッシュ
 };
 
+//シーン管理用構造体
+struct MY_SCENE
+{
+	CSceneBase* m_pScene;	//シーンポインタ
+	int m_Id;				//管理用ID
+};
+
 //シーンマネージャー
 class CSceneManager
 {
 public:
-	void SetScene(int n);	//シーンのセット
-	void Update();			//更新
-	void Draw();			//描画
+	void Update();							//更新
+	void Draw();							//描画
+	void Release();							//解放
+	void Insert(CSceneBase* pScene, int Id);//登録
+	void SetScene(int n);					//シーンのセット
+	CSceneBase* GetScene(int Id);			//シーン取得
 private:
-	CScene* m_pNowScene;	//現在のシーンのポインタ
+	CSceneBase* m_pNowScene;				//現在のシーンのポインタ
+	vector<MY_SCENE> m_Scene;	//シーンリスト
 };
 
 extern CSceneManager g_Scene;

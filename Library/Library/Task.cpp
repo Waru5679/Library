@@ -2,17 +2,6 @@
 
 CTask g_Task;
 
-//シーン登録
-void CTask::InsertScene(CScene* pScene, int Id)
-{
-	MY_SCENE scene;
-	scene.m_pScene = pScene;
-	scene.m_Id = Id;
-
-	m_Scene.push_back(scene);
-	
-}
-
 //テクスチャ登録
 void CTask::Insert(ID3D10ShaderResourceView* pTex, int Id,int Width,int Height)
 {
@@ -87,16 +76,6 @@ void CTask::Draw()
 	}
 }
 
-//シーン取得
-CScene* CTask::GetScene(int Id)
-{
-	for (unsigned int i = 0; i < m_Scene.size(); i++)
-	{
-		if (m_Scene[i].m_Id == Id)
-			return m_Scene[i].m_pScene;
-	}
-	return NULL;
-}
 
 //テクスチャを取得
 MY_TEXTURE* CTask::GetTex(int Id)
@@ -123,8 +102,8 @@ CObj* CTask::GetObj(int Id)
 //メモリの開放
 void CTask::Release()
 {
-	m_Tex.erase(m_Tex.begin(), m_Tex.end());
-	m_Obj.erase(m_Obj.begin(), m_Obj.end());
+	VectorRelease(m_Tex);
+	VectorRelease(m_Obj);
 }
 
 

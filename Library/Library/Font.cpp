@@ -23,12 +23,10 @@ void CCharClass::CreateCharTex(wchar_t c, HDC hdc, TEXTMETRIC TM)
 	//テクスチャのピクセル情報を入れるポインタ
 	BYTE* pBits;
 
-
 	//識別文字コード登録
 	m_pc.reset(new wchar_t(c));
 	code = (UINT)*m_pc.get();
 	
-
 	//フォント情報から文字のビットマップ取得
 	//文字のビットマップの大きさ取得
 	size = GetGlyphOutline(hdc, code, GGO_GRAY4_BITMAP, &GM, 0, NULL, &Mat);

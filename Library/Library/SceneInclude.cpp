@@ -10,6 +10,5 @@ void CSceneInclude::LoadScene()
 {
 	//ƒƒCƒ“
 	CSceneMain* main = new CSceneMain();
-	g_Task.InsertScene(main, SceneName::SceneMain);
-
+	g_Scene.Insert(main, SceneName::SceneMain);
 }

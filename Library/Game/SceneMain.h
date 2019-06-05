@@ -4,7 +4,7 @@
 #include "../Library/Scene.h"
 
 //ƒV[ƒ“ƒƒCƒ“
-class CSceneMain :public CScene
+class CSceneMain :public CSceneBase
 {
 public:
 	void Init();	//‰Šú‰»
