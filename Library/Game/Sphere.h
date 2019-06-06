@@ -1,4 +1,7 @@
 #include "../Library/CObj.h"
+#include "../Library/Hit.h"
+#include <vector>
+using namespace std;
 
 //‹…ƒNƒ‰ƒX
 class CSphere:public CObj3D
@@ -12,4 +15,5 @@ public:
 	void Draw();	//•`‰æ
 private:
 	float m_fRadius;	//‹…‚Ì”¼Œa
+	SphereData m_SphereData;
 };

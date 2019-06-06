@@ -4,6 +4,7 @@
 #include "../Library/Main.h"
 #include "../Library/CObj.h" 
 #include "../Library/Obb.h"
+#include "../Library/Hit.h"
 
 //プレイヤークラス
 class CPlayer:public CObj3D
@@ -30,5 +31,6 @@ private:
 	bool m_bHit;	//ヒットテスト
 
 	OBB_Data m_Obb;			//OBBデータ
+	SphereData m_SphereData;	//球データ
 };
 

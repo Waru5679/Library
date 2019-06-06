@@ -73,6 +73,9 @@
     <Filter Include="リソース ファイル\Struct">
       <UniqueIdentifier>{8e1d718e-4a9c-45cf-9c2f-8d97a756b1c0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="リソース ファイル\Hit">
+      <UniqueIdentifier>{805a6bb3-e752-41b0-a0e4-3f478b18ef25}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Library\Camera.h">
@@ -156,6 +159,9 @@
     <ClInclude Include="Library\Math.h">
       <Filter>リソース ファイル\Math</Filter>
     </ClInclude>
+    <ClInclude Include="Library\Hit.h">
+      <Filter>リソース ファイル\Hit</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Library\Audio.cpp">
@@ -229,6 +235,9 @@
     </ClCompile>
     <ClCompile Include="Game\Sphere.cpp">
       <Filter>ソース ファイル\Sphere</Filter>
+    </ClCompile>
+    <ClCompile Include="Library\Hit.cpp">
+      <Filter>リソース ファイル\Hit</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

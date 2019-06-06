@@ -6,11 +6,7 @@ CSceneManager g_Scene;
 //“o˜^
 void CSceneManager::Insert(CSceneBase* pScene, int Id)
 {
-	MY_SCENE scene;
-	scene.m_pScene = pScene;
-	scene.m_Id = Id;
-
-	m_Scene.push_back(scene);
+	m_Scene.push_back(new MY_SCENE(pScene,Id));
 }
 
 //ƒV[ƒ“æ“¾
@@ -18,8 +14,8 @@ CSceneBase* CSceneManager::GetScene(int Id)
 {
 	for (int i = 0; i < m_Scene.size(); i++)
 	{
-		if (m_Scene[i].m_Id == Id)
-			return m_Scene[i].m_pScene;
+		if (m_Scene[i]->m_Id == Id)
+			return m_Scene[i]->m_pScene;
 	}
 	return nullptr;
 }

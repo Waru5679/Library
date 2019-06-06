@@ -143,6 +143,7 @@
     <ClInclude Include="Library\Csv.h" />
     <ClInclude Include="Library\DirectX.h" />
     <ClInclude Include="Library\Font.h" />
+    <ClInclude Include="Library\Hit.h" />
     <ClInclude Include="Library\Input.h" />
     <ClInclude Include="Library\Main.h" />
     <ClInclude Include="Library\Math.h" />
@@ -170,6 +171,7 @@
     <ClCompile Include="Library\Csv.cpp" />
     <ClCompile Include="Library\DirectX.cpp" />
     <ClCompile Include="Library\Font.cpp" />
+    <ClCompile Include="Library\Hit.cpp" />
     <ClCompile Include="Library\Input.cpp" />
     <ClCompile Include="Library\Main.cpp" />
     <ClCompile Include="Library\Math.cpp" />

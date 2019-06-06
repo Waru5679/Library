@@ -1,4 +1,5 @@
 #pragma once
+
 #include <vector>
 using namespace std;
 
@@ -19,6 +20,12 @@ private:
 //シーン管理用構造体
 struct MY_SCENE
 {
+	MY_SCENE(CSceneBase* pScene,int Id)
+	{
+		m_pScene = pScene;
+		m_Id = Id;
+	}
+
 	CSceneBase* m_pScene;	//シーンポインタ
 	int m_Id;				//管理用ID
 };
@@ -35,7 +42,7 @@ public:
 	CSceneBase* GetScene(int Id);			//シーン取得
 private:
 	CSceneBase* m_pNowScene;				//現在のシーンのポインタ
-	vector<MY_SCENE> m_Scene;				//シーンリスト
+	vector<MY_SCENE*> m_Scene;				//シーンリスト
 };
 
 extern CSceneManager g_Scene;

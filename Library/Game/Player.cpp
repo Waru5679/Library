@@ -8,6 +8,7 @@
 #include "../Library/Camera.h"
 #include "../Library/Font.h"
 #include "../Library/Ray.h"
+#include "../Library/Hit.h"
 
 //ゲームファイル
 #include "Player.h"
@@ -45,6 +46,20 @@ void CPlayer::Init()
 
 	//ヒットテスト
 	m_bHit=false;
+
+	//半径求める
+	D3DXVECTOR3 vMax, vMin;
+	vMax = m_pMesh->vMax;
+	vMin = m_pMesh->vMin;
+
+	//一番長い距離から半径を設定
+	float Dia = MostLongComponent(vMax - vMin);
+	Dia = fabsf(Dia);
+	float radius = Dia / 2.0f;
+
+	//登録
+	m_SphereData = g_Hit.Create(m_vPos, radius,m_vScale);
+	g_Hit.Insert(&m_SphereData);
 }
 
 //更新
@@ -73,9 +88,12 @@ void CPlayer::Update()
 	//当たり判定更新
 	g_Obb.Update(&m_Obb, m_vPos, m_vAngle, m_vScale, m_pMesh->vMin, m_pMesh->vMax);
 
-	D3DXVECTOR3 vShear;
+	//球データ更新
+	g_Hit.UpData(&m_SphereData, m_vPos);
 	
-	if (g_Ray.RayHit(&vShear,this,m_vLastMove*m_fSpeed,ObjRayTest) == true)
+	D3DXVECTOR3 vShear;
+	if(g_Hit.SphereHit()==true)
+	//if (g_Ray.RayHit(&vShear,this,m_vLastMove*m_fSpeed,ObjRayTest) == true)
 	{
 		m_bHit = true;
 
@@ -158,7 +176,7 @@ void CPlayer::Input()
 //描画
 void CPlayer::Draw()
 {
-	//if(m_bHit==true)
+	if(m_bHit==true)
 	g_Font.DrawStr(L"Hit", 200.0f, 20.0f, 32.0f, 0.0f);
 
 	g_Loader.Draw(m_matWorld, m_pMesh,NULL);
