@@ -24,13 +24,11 @@ public:
 	D3DXVECTOR3 GetDir() { return m_vLastMove; }
 	
 private:
-	D3DXVECTOR3 m_vMove;	//移動ベクトル
-	D3DXVECTOR3 m_vLastMove;//最後に移動した向き
-	
-	float m_fSpeed;	//移動スピード
-	bool m_bHit;	//ヒットテスト
+	D3DXVECTOR3 m_vMove;		//移動ベクトル
+	D3DXVECTOR3 m_vLastMove;	//最後に移動した向き
+	CollisionData m_Collision;	//当たり判定	
+	float m_fSpeed;				//移動スピード
 
-	OBB_Data m_Obb;			//OBBデータ
-	SphereData m_SphereData;	//球データ
+	bool m_bHit;				//ヒットテスト
 };
 

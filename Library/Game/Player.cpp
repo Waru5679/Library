@@ -40,26 +40,13 @@ void CPlayer::Init()
 	//移動スピード
 	m_fSpeed=0.2f;
 
-	//当たり判定セット
-	m_Obb = g_Obb.SetOBB(m_vPos, m_vAngle, m_vScale, m_pMesh->vMin, m_pMesh->vMax, m_Id, this);
-	g_Obb.Insert(&m_Obb);
-
+	
 	//ヒットテスト
 	m_bHit=false;
 
-	//半径求める
-	D3DXVECTOR3 vMax, vMin;
-	vMax = m_pMesh->vMax;
-	vMin = m_pMesh->vMin;
-
-	//一番長い距離から半径を設定
-	float Dia = MostLongComponent(vMax - vMin);
-	Dia = fabsf(Dia);
-	float radius = Dia / 2.0f;
-
-	//登録
-	m_SphereData = g_Hit.Create(m_vPos, radius,m_vScale);
-	g_Hit.Insert(&m_SphereData);
+	m_Collision = g_Hit.CollisionCreate(this);
+	g_Hit.Insert(&m_Collision);
+	
 }
 
 //更新
@@ -84,12 +71,9 @@ void CPlayer::Update()
 	//最後の移動を保存
 	if(m_vMove!=D3DXVECTOR3(0.0f,0.0f,0.0f))
 		m_vLastMove = m_vMove;
-	
-	//当たり判定更新
-	g_Obb.Update(&m_Obb, m_vPos, m_vAngle, m_vScale, m_pMesh->vMin, m_pMesh->vMax);
 
 	//球データ更新
-	g_Hit.UpData(&m_SphereData, m_vPos);
+	g_Hit.UpData(&m_Collision, m_vPos);
 	
 	D3DXVECTOR3 vShear;
 	if(g_Hit.SphereHit()==true)

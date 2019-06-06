@@ -22,22 +22,10 @@ void CSphere::Init()
 
 	//ƒ‚ƒfƒ‹
 	m_pMesh = g_Loader.GetMesh(ModelName::ModelSphere);
-
-	//”¼Œa‹‚ß‚é
-	D3DXVECTOR3 vMax, vMin;
-	vMax = m_pMesh->vMax;
-	vMin = m_pMesh->vMin;
-
-	//ˆê”Ô’·‚¢‹——£‚©‚ç”¼Œa‚ğİ’è
-	float Dia = MostLongComponent(vMax - vMin);
-	Dia = fabsf(Dia);
-	m_fRadius = Dia / 2.0f;
-
-
-	
+	   	
 	//“o˜^
-	m_SphereData = g_Hit.Create(m_vPos, m_fRadius,m_vScale);
-	g_Hit.Insert(&m_SphereData);
+	m_Collision =g_Hit.CollisionCreate(this);
+	g_Hit.Insert(&m_Collision);
 
 	//ƒ[ƒ‹ƒhs—ñì¬
 	m_matWorld = MakeMatWorld(m_vPos, m_vAngle, m_vScale);
@@ -46,7 +34,7 @@ void CSphere::Init()
 //XV
 void CSphere::Update()
 {
-	g_Hit.UpData(&m_SphereData, m_vPos);
+	g_Hit.UpData(&m_Collision, m_vPos);
 }
 
 //•`‰æ

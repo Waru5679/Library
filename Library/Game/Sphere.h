@@ -15,5 +15,6 @@ public:
 	void Draw();	//•`‰æ
 private:
 	float m_fRadius;	//‹…‚Ì”¼Œa
-	SphereData m_SphereData;
+
+	CollisionData m_Collision;//“–‚½‚è”»’è—p
 };

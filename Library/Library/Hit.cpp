@@ -2,33 +2,48 @@
 #include "Math.h"
 
  CHit g_Hit;
-
-//ì¬
-SphereData CHit::Create(D3DXVECTOR3 vPos, float fRadius,D3DXVECTOR3 vScale)
+ 
+//“–‚½‚è”»’èƒf[ƒ^“o˜^
+CollisionData CHit::CollisionCreate(CObj3DBase* pCobj)
 {
-	SphereData data;
-	data.m_vPos = vPos;
-	data.m_fRadius=fRadius;
+	//“–‚½‚è”»’èî•ñ
+	CollisionData coll_data;
+	coll_data.m_pObj = pCobj;
+	coll_data.m_pMesh = pCobj->GetMesh();
+	coll_data.m_Id = pCobj->GetId();
 	
-	return data;
+	//”¼Œa‹‚ß‚é
+	D3DXVECTOR3 vMax, vMin;
+	vMax = coll_data.m_pMesh->vMax;
+	vMin = coll_data.m_pMesh->vMin;
+
+	//ˆê”Ô’·‚¢‹——£‚©‚ç”¼Œa‚ğİ’è
+	float diameter = MostLongComponent(vMax - vMin);	//’¼Œa
+	float radius = fabsf(diameter) / 2.0f;				//”¼Œa
+
+	//‹…ƒf[ƒ^‚ğŠi”[
+	coll_data.m_SphereData.m_fRadius = radius;
+	coll_data.m_SphereData.m_vPos = pCobj->GetPos();
+	
+	return coll_data;
 }
 
-//“o˜^
-void CHit::Insert(SphereData* pData)
+void CHit::Insert(CollisionData* pData)
 {
-	m_data.push_back(pData);
+	// “o˜^
+	m_Collision.push_back(pData);
 }
 
 //XV
-void CHit::UpData(SphereData* pData,D3DXVECTOR3 vPos)
+void CHit::UpData(CollisionData* pData,D3DXVECTOR3 vPos)
 {
-	pData->m_vPos = vPos;
+	pData->m_SphereData.m_vPos = vPos;
 }
 
 //‹…Õ“Ë”»’è
 bool CHit::SphereHit()
 {
-	return SphereAndSphre(m_data[0], m_data[1]);
+	return SphereAndSphre( &m_Collision[0]->m_SphereData, &m_Collision[1]->m_SphereData);
 }
 
 //‹…‚Æ‹…‚ÌÕ“Ë”»’è
