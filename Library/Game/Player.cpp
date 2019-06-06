@@ -41,7 +41,7 @@ void CPlayer::Init()
 	m_fSpeed=0.2f;
 
 	//当たり判定セット
-	m_Obb = g_Obb.SetOBB(m_vPos, m_vAngle, m_vScale, m_pMesh->vMin, m_pMesh->vMax, m_id, this);
+	m_Obb = g_Obb.SetOBB(m_vPos, m_vAngle, m_vScale, m_pMesh->vMin, m_pMesh->vMax, m_Id, this);
 	g_Obb.Insert(&m_Obb);
 
 	//ヒットテスト

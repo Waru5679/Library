@@ -7,7 +7,7 @@
 #include "../Library/Hit.h"
 
 //プレイヤークラス
-class CPlayer:public CObj3D
+class CPlayer:public CObj3DBase
 {
 public:
 	//コンストラクタ

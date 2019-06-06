@@ -5,7 +5,7 @@
 #include "../Library/Polygon.h"
 
 //2Dƒ|ƒŠƒSƒ“ƒNƒ‰ƒX
-class C2DPolygon:public CObj2D
+class C2DPolygon:public CObj2DBase
 {
 public:
 	void Init();	//‰Šú‰»

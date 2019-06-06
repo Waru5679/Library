@@ -52,7 +52,6 @@ void CShader::SetShader(ID3D10ShaderResourceView* pTexture, RECT_F* pSrc,ColorDa
 	D3DXMATRIX objWVP = matWorld *m_pCamera->GetViewMatrix() *m_pCamera->GetProjMatrix();
 	m_pShaderWorldViewProjection->SetMatrix((float*)&(objWVP));
 	   
-
 	//Ø‚èŽæ‚èˆÊ’u
 	D3DXVECTOR4 vSrc;
 	if (pSrc == NULL)
@@ -86,7 +85,6 @@ void CShader::SetShader(ID3D10ShaderResourceView* pTexture, RECT_F* pSrc,ColorDa
 		m_pShaderTexture->SetResource(pTexture);
 	}
 }
-
 
 //‰ð•ú
 void CShader::Release()

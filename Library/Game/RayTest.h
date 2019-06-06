@@ -5,7 +5,7 @@
 #include "../Library/CObj.h" 
 
 //Rayのテストクラス
-class CRayTest :public CObj3D
+class CRayTest :public CObj3DBase
 {
 public:
 	//コンストラクタ

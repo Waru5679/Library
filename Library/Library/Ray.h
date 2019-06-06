@@ -13,10 +13,10 @@ public:
 	void Release();	//解放
 
 	//登録
-	void Insert(CObj3D* pObj);
+	void Insert(CObj3DBase* pObj);
 
 	//Ray判定を呼び出す
-	bool RayHit(D3DXVECTOR3*OutPoint, CObj3D* pOrigin,D3DXVECTOR3 vDir, int Id);
+	bool RayHit(D3DXVECTOR3*OutPoint, CObj3DBase* pOrigin,D3DXVECTOR3 vDir, int Id);
 
 private:
 	//Rayの判定
@@ -25,7 +25,7 @@ private:
 	////壁擦り
 	//D3DXVECTOR3 WallShear(D3DXVECTOR3 Front, D3DXVECTOR3 Normal);
 
-	vector<CObj3D*> m_Data;//Ray判定を行うリスト
+	vector<CObj3DBase*> m_Data;//Ray判定を行うリスト
 };
 
 extern CRay g_Ray;

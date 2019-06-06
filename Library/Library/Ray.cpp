@@ -3,13 +3,13 @@
 CRay g_Ray;
 
 //登録
-void CRay::Insert(CObj3D* pObj)
+void CRay::Insert(CObj3DBase* pObj)
 {
 	m_Data.push_back(pObj);
 }
 
 //Rayの当たり判定
-bool CRay::RayHit(D3DXVECTOR3*OutPoint, CObj3D* pOrigin,D3DXVECTOR3 vDir,int Id)
+bool CRay::RayHit(D3DXVECTOR3*OutPoint, CObj3DBase* pOrigin,D3DXVECTOR3 vDir,int Id)
 {
 	//Rayを飛ばす側
 	MY_MESH* pOrigineMesh = pOrigin->GetMesh();
@@ -50,7 +50,7 @@ bool CRay::RayHit(D3DXVECTOR3*OutPoint, CObj3D* pOrigin,D3DXVECTOR3 vDir,int Id)
 				for (unsigned int DataNum = 0; DataNum < m_Data.size(); DataNum++)
 				{
 					//指定したオブジェクトだけ
-					if (m_Data[DataNum]->m_id == Id)
+					if (m_Data[DataNum]->GetId()== Id)
 					{
 						MY_MESH* pTargetMesh = m_Data[DataNum]->GetMesh();
 						D3DXMATRIX matTarget = m_Data[DataNum]->GetWorld();

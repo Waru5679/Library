@@ -22,7 +22,7 @@ public:
 	D3DXVECTOR3 vMax;		//Mesh最大値
 	D3DXMATRIX matWorld;
 	int Name;
-	CObj* p;
+	CObjBase* p;
 
 	MY_MESH* pMesh;	//メッシュポインタ
 		
@@ -40,7 +40,7 @@ struct HIT_DATA
 	//オブジェクトサイズ
 	D3DXVECTOR3 vMin;	
 	D3DXVECTOR3 vMax;
-	CObj* p;
+	CObjBase* p;
 
 	OBB_Data* obb;
 };
@@ -54,7 +54,7 @@ public:
 	void Release();	//解放
 
 	//OBBセット
-	OBB_Data SetOBB(D3DXVECTOR3 Pos, D3DXVECTOR3 Angle, D3DXVECTOR3 Scale, D3DXVECTOR3 Min, D3DXVECTOR3 Max, int ObjName, CObj* p);
+	OBB_Data SetOBB(D3DXVECTOR3 Pos, D3DXVECTOR3 Angle, D3DXVECTOR3 Scale, D3DXVECTOR3 Min, D3DXVECTOR3 Max, int ObjName, CObjBase* p);
 
 	//OBB登録
 	void Insert(OBB_Data* obb);

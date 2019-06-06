@@ -15,11 +15,11 @@ void CTask::Insert(ID3D10ShaderResourceView* pTex, int Id,int Width,int Height)
 }
 
 //オブジェクト登録
-void CTask::InsertObj(CObj* pObj, int Id)
+void CTask::InsertObj(CObjBase* pObj, int Id)
 {
 	m_Obj.push_back(pObj);
-	pObj->m_id = Id;
-	pObj->m_fDelete = false;
+	pObj->SetId(Id);
+	pObj->SetDelete(false);
 	pObj->Init();
 }
 
@@ -45,7 +45,7 @@ void CTask::ObjDelete()
 	//削除する要素を探す
 	for (unsigned int i = 0; i < m_Obj.size(); i++)
 	{
-		if (m_Obj[i]->m_fDelete == true)
+		if (m_Obj[i]->GetDelete() == true)
 		{
 			DeleteNum.push_back(i);
 		}
@@ -89,11 +89,11 @@ MY_TEXTURE* CTask::GetTex(int Id)
 }
 
 //オブジェクト取得
-CObj* CTask::GetObj(int Id)
+CObjBase* CTask::GetObj(int Id)
 {
 	for (unsigned int i = 0; i < m_Obj.size(); i++)
 	{
-		if (m_Obj[i]->m_id == Id)
+		if (m_Obj[i]->GetId() == Id)
 			return m_Obj[i];
 	}
 	return nullptr;

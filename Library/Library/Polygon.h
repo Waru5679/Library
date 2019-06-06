@@ -24,7 +24,7 @@ public:
 	void LoadTexture(int Id, const char* Name,int Width, int Height);
 
 	//カメラセット
-	void SetCamera(Camera* pCamera) { m_pCamera = pCamera; }	
+	void SetCamera(CameraBase* pCamera) { m_pCamera = pCamera; }
 
 	//ポリゴン描画
 	void DrawPolygon(int VerNum, ID3D10Buffer* VertexBuffer, ID3D10Buffer* IndexBuffer);
@@ -32,7 +32,7 @@ private:
 	
 	ID3D10Buffer* m_pVertexBuffer;//バーテックスバッファ
 	  	
-	Camera* m_pCamera;	//カメラポインタ
+	CameraBase* m_pCamera;	//カメラポインタ
 };
 
 extern CDraw g_Draw;

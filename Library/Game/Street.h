@@ -5,7 +5,7 @@
 #include "../Library/Obb.h"
 
 //町クラス
-class CStreet :public CObj3D
+class CStreet :public CObj3DBase
 {
 public:
 	//コンストラクタ

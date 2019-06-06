@@ -4,7 +4,7 @@
 using namespace std;
 
 //球クラス
-class CSphere:public CObj3D
+class CSphere:public CObj3DBase
 {
 public:
 	//コンストラクタ

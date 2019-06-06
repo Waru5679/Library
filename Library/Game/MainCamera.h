@@ -7,7 +7,7 @@
 //ゲームファイル
 #include "Player.h"
 
-class CMainCamera :public Camera
+class CMainCamera :public CameraBase
 {
 public:
 	void Init();	//初期化

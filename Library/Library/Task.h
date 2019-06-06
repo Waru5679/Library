@@ -29,17 +29,17 @@ public:
 	void Release();	//解放
 		
 	//登録
-	void InsertObj(CObj* pObj, int Id);
+	void InsertObj(CObjBase* pObj, int Id);
 	void Insert(ID3D10ShaderResourceView* pTex, int Id, int Width, int Height);
 	
 	//取得	
-	CObj* GetObj(int Id);
+	CObjBase* GetObj(int Id);
 	MY_TEXTURE* GetTex(int Id);
 	
 	//OBJリストデータ削除
 	void ObjDelete();
 private:
-	vector<CObj*> m_Obj;		//オブジェクト
+	vector<CObjBase*> m_Obj;		//オブジェクト
 	vector<MY_TEXTURE> m_Tex;	//テクスチャ
 };
 

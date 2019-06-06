@@ -81,9 +81,6 @@
     <ClInclude Include="Library\Camera.h">
       <Filter>リソース ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Library\CObj.h">
-      <Filter>リソース ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Library\Audio.h">
       <Filter>リソース ファイル\Audio</Filter>
     </ClInclude>
@@ -161,6 +158,9 @@
     </ClInclude>
     <ClInclude Include="Library\Hit.h">
       <Filter>リソース ファイル\Hit</Filter>
+    </ClInclude>
+    <ClInclude Include="Library\CObj.h">
+      <Filter>リソース ファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
