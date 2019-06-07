@@ -35,6 +35,8 @@ public :
 	D3DXVECTOR3 GetAngle()	{ return m_vAngle;	}
 	D3DXVECTOR3 GetScale()	{ return m_vScale;	}
 	D3DXMATRIX  GetWorld()	{ return m_matWorld;}
+
+	void SetScale(float fScale) { m_vScale = D3DXVECTOR3(fScale, fScale, fScale); }
 	
 	MY_MESH* GetMesh() { return m_pMesh; }
 protected:

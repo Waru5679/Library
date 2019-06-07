@@ -39,13 +39,15 @@ void CPlayer::Init()
 
 	//移動スピード
 	m_fSpeed=0.2f;
-
-	
+		
 	//ヒットテスト
 	m_bHit=false;
 
 	m_Collision = g_Hit.CollisionCreate(this);
 	g_Hit.Insert(&m_Collision);
+
+	m_Obb = g_Obb.SetOBB(m_vPos, m_vAngle, m_vScale, m_pMesh->vMin, m_pMesh->vMax, m_Id, this);
+	g_Obb.Insert(&m_Obb);
 	
 }
 
@@ -75,17 +77,16 @@ void CPlayer::Update()
 	//球データ更新
 	g_Hit.UpData(&m_Collision, m_vPos);
 	
-	D3DXVECTOR3 vShear;
+	//OBBデータ更新
+	g_Obb.Update(&m_Obb, m_vPos, m_vAngle, m_vScale, m_pMesh->vMin, m_pMesh->vMax);
+
+
+	D3DXVECTOR3 vShear;	
+	//if (g_Obb.ObjNameHit(&m_Obb, ObjSphere) == true)
 	if(g_Hit.SphereHit()==true)
 	//if (g_Ray.RayHit(&vShear,this,m_vLastMove*m_fSpeed,ObjRayTest) == true)
 	{
 		m_bHit = true;
-
-		//移動を戻す
-		m_vPos -= m_vMove * m_fSpeed;
-
-		//壁擦り
-		//m_vPos += vShear * m_fSpeed;
 	}
 	else
 	{

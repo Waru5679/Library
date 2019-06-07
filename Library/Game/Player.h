@@ -30,5 +30,6 @@ private:
 	float m_fSpeed;				//移動スピード
 
 	bool m_bHit;				//ヒットテスト
+	OBB_Data m_Obb;
 };
 

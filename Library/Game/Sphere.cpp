@@ -27,6 +27,9 @@ void CSphere::Init()
 	m_Collision =g_Hit.CollisionCreate(this);
 	g_Hit.Insert(&m_Collision);
 
+	m_Obb = g_Obb.SetOBB(m_vPos, m_vAngle, m_vScale, m_pMesh->vMin, m_pMesh->vMax, m_Id, this);
+	g_Obb.Insert(&m_Obb);
+
 	//ワールド行列作成
 	m_matWorld = MakeMatWorld(m_vPos, m_vAngle, m_vScale);
 }
@@ -34,7 +37,11 @@ void CSphere::Init()
 //更新
 void CSphere::Update()
 {
+	//ワールド行列作成
+	m_matWorld = MakeMatWorld(m_vPos, m_vAngle, m_vScale);
+
 	g_Hit.UpData(&m_Collision, m_vPos);
+	g_Obb.Update(&m_Obb, m_vPos, m_vAngle, m_vScale, m_pMesh->vMin, m_pMesh->vMax);
 }
 
 //描画

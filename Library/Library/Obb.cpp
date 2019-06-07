@@ -54,7 +54,7 @@ OBB_Data COBB::SetOBB(D3DXVECTOR3 Pos, D3DXVECTOR3 Angle, D3DXVECTOR3 Scale, D3D
 	D3DXVec3TransformCoord(&obb.vMin, &Min, &matScale);
 
 	//中心点
-	D3DXVECTOR3 vTempPos = (obb.vMin + obb.vMax) * 0.5f + Pos;
+	D3DXVECTOR3 vTempPos = (obb.vMin + obb.vMax) /2.0f + Pos;
 	obb.m_Pos = vTempPos;
 
 	//回転
@@ -64,9 +64,9 @@ OBB_Data COBB::SetOBB(D3DXVECTOR3 Pos, D3DXVECTOR3 Angle, D3DXVECTOR3 Scale, D3D
 	obb.m_Scale = Scale;
 
 	//長さ取得 
-	obb.m_Length[0] = fabsf(obb.vMax.x - obb.vMin.x) /** 0.5f*/;
-	obb.m_Length[1] = fabsf(obb.vMax.y - obb.vMin.y) /** 0.5f*/;
-	obb.m_Length[2] = fabsf(obb.vMax.z - obb.vMin.z) /** 0.5f*/;
+	obb.m_Length[0] = fabsf(obb.vMax.x - obb.vMin.x) /2.0f;
+	obb.m_Length[1] = fabsf(obb.vMax.y - obb.vMin.y) /2.0f;
+	obb.m_Length[2] = fabsf(obb.vMax.z - obb.vMin.z) / 2.0f;
 
 	//中心からの長さ
 	obb.m_Direct[0] = D3DXVECTOR3(matRot._11, matRot._12, matRot._13);
@@ -87,11 +87,11 @@ OBB_Data COBB::SetOBB(D3DXVECTOR3 Pos, D3DXVECTOR3 Angle, D3DXVECTOR3 Scale, D3D
 	obb.VerPos[6] = D3DXVECTOR3(vTempPos.x + obb.vMax.x, vTempPos.y + obb.vMin.y, vTempPos.z + obb.vMax.z);
 	obb.VerPos[7] = D3DXVECTOR3(vTempPos.x + obb.vMin.x, vTempPos.y + obb.vMin.y, vTempPos.z + obb.vMax.z);
 
-	//法線
-	for (int i = 0; i < 6; i++)
-	{
-		D3DXVec3TransformCoord(&obb.Norm[i], &g_Norm[i], &matRot);
-	}
+	////法線
+	//for (int i = 0; i < 6; i++)
+	//{
+	//	D3DXVec3TransformCoord(&obb.Norm[i], &g_Norm[i], &matRot);
+	//}
 
 	//メッシュ情報
 	obb.pMesh = dynamic_cast<CObj3DBase*>(p)->GetMesh();
@@ -101,49 +101,22 @@ OBB_Data COBB::SetOBB(D3DXVECTOR3 Pos, D3DXVECTOR3 Angle, D3DXVECTOR3 Scale, D3D
 }
 
 //当たり判定(オブジェクト名指定)
-vector<HIT_DATA> COBB::ObjNameHit(OBB_Data* Obb,int Name)
+bool COBB::ObjNameHit(OBB_Data* Obb,int Name)
 {
-	vector<HIT_DATA> vecData;
-	HIT_DATA data;
-	bool bHit=false;
 	for (unsigned int i = 0; i<m_Data.size(); i++)
 	{
 		if (m_Data[i] != Obb)
 		{
 			if (m_Data[i]->Name == Name)
 			{
-				bHit = Collision(Obb, m_Data[i]);
-				if (bHit == true)
+				if (Collision(Obb, m_Data[i]) == true)
 				{
-					//詳細情報を入れる
-
-					//方向
-					D3DXVECTOR3 vDir = Obb->m_Pos - m_Data[i]->m_Pos;
-					data.vDir = vDir;
-					
-					//距離
-					data.fDis = D3DXVec3Length(&vDir);
-				
-					//方向の正規化
-					D3DXVec3Normalize(&vDir, &vDir);
-					data.vnDir = vDir;	
-
-					//オブジェクトのサイズ
-					data.vMin = m_Data[i]->vMin;
-					data.vMax = m_Data[i]->vMax;
-					
-					//オブジェクトのポインタ
-					data.p=m_Data[i]->p;
-
-					//OBBのポインタ
-					data.obb = m_Data[i];
-
-					vecData.push_back(data);
+					return true;
 				}
 			}
 		}
 	}
-	return vecData;
+	return false;
 }
 
 //更新
@@ -159,7 +132,7 @@ void COBB::Update(OBB_Data* obb,D3DXVECTOR3 Pos, D3DXVECTOR3 Angle, D3DXVECTOR3 
 	D3DXVec3TransformCoord(&obb->vMin, &Min, &matScale);
 
 	//中心点
-	D3DXVECTOR3 vTempPos = (Min + Max) * 0.5f + Pos;
+	D3DXVECTOR3 vTempPos = (Min + Max)/2.0f + Pos;
 	obb->m_Pos = vTempPos;
 
 	//回転
@@ -169,9 +142,9 @@ void COBB::Update(OBB_Data* obb,D3DXVECTOR3 Pos, D3DXVECTOR3 Angle, D3DXVECTOR3 
 	obb->m_Scale = Scale;
 
 	//長さ取得
-	obb->m_Length[0] = fabsf(obb->vMax.x - obb->vMin.x)/**0.5f*/;
-	obb->m_Length[1] =fabsf(obb->vMax.y - obb->vMin.y)/**0.5f*/;
-	obb->m_Length[2] =fabsf(obb->vMax.z - obb->vMin.z)/**0.5f*/;
+	obb->m_Length[0] =fabsf(obb->vMax.x - obb->vMin.x)/2.0f;
+	obb->m_Length[1] =fabsf(obb->vMax.y - obb->vMin.y)/2.0f;
+	obb->m_Length[2] =fabsf(obb->vMax.z - obb->vMin.z)/2.0f;
 
 	//中心からの長さ
 	obb->m_Direct[0] = D3DXVECTOR3(matRot._11, matRot._12, matRot._13);
@@ -189,11 +162,11 @@ void COBB::Update(OBB_Data* obb,D3DXVECTOR3 Pos, D3DXVECTOR3 Angle, D3DXVECTOR3 
 	obb->VerPos[6] = D3DXVECTOR3(vTempPos.x + obb->vMax.x, vTempPos.y + obb->vMin.y, vTempPos.z + obb->vMax.z);
 	obb->VerPos[7] = D3DXVECTOR3(vTempPos.x + obb->vMin.x, vTempPos.y + obb->vMin.y, vTempPos.z + obb->vMax.z);
 
-	//法線
-	for (int i = 0; i < 6; i++)
-	{
-		D3DXVec3TransformCoord(&obb->Norm[i], &g_Norm[i], &matRot);
-	}
+	////法線
+	//for (int i = 0; i < 6; i++)
+	//{
+	//	D3DXVec3TransformCoord(&obb->Norm[i], &g_Norm[i], &matRot);
+	//}
 }
 
 //OBBの描画
@@ -214,11 +187,11 @@ D3DXVECTOR3 COBB::NestingCorrection(OBB_Data* StopObb, OBB_Data* MoveObb)
 	D3DXVECTOR3 Point[6];	//平面上の点
 	D3DXVECTOR3 Norm[6];	//法線
 
-	for (int i = 0; i < 6; i++)
+	/*for (int i = 0; i < 6; i++)
 	{
 		Norm[i] = StopObb->Norm[i];
 		Point[i] = StopObb->VerPos[ VerNum[i] ];
-	}
+	}*/
 
 	//スケール
 	D3DXVECTOR3 Scale = MoveObb->m_Scale;
