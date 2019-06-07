@@ -15,5 +15,4 @@ public:
 	void Update();	//XV
 	void Draw();	//•`‰æ
 private:
-	OBB_Data m_Obb;	//Obb
 };

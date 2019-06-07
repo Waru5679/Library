@@ -43,22 +43,31 @@ struct CollisionData
 class CHit
 {
 public:
-	bool SphereHit();
+	bool Hit(D3DXVECTOR3* vOut);
 	void UpData(CollisionData* pData, D3DXVECTOR3 vPos);
 
 	//当たり判定データ登録
 	CollisionData CollisionCreate(CObj3DBase* pCobj);
 	void Insert(CollisionData* pData);
 private:
-	//球と級のヒット判定
-	bool SphereAndSphre(SphereData* data1, SphereData* data2);
+	//球と球のヒット判定
+	bool SphereAndSphre(SphereData* pData1, SphereData* pData2);
 
 	//OBBにセット
 	ObbData SetObbData(CObj3DBase* pCobj, MY_MESH* pMesh);
+	
+	//OBBとOBBの判定
+	bool ObbAndObb(ObbData* pData1, ObbData* pData2);
 
 	//球情報セット
 	SphereData SetSphereData(CObj3DBase* pCobj, MY_MESH* pMesh);
-	
+
+	// 分離軸に投影された軸成分から投影線分長を算出
+	float LenSegOnSeparateAxis(D3DXVECTOR3 *Sep, D3DXVECTOR3 *e1, D3DXVECTOR3 *e2, D3DXVECTOR3 *e3 );
+
+	//OBBのめり込み修正
+	D3DXVECTOR3 NestingCorrection(ObbData* StopObb,ObbData* MoveObb);
+
 	vector<CollisionData* > m_Collision;	//当たり判定データ
 
 	MY_MESH m_DrawObb;		//描画用Box

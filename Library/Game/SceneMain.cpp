@@ -47,7 +47,7 @@ void CSceneMain::Init()
 */
 
 	vPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	vScale = D3DXVECTOR3(1.0f, 2.0f, 1.0f);
+	vScale = D3DXVECTOR3(1.0f, 1.00f, 1.0f);
 
 	//‹…
 	CSphere* pSphere = new CSphere(vPos, vAngle, vScale);
@@ -75,7 +75,6 @@ void CSceneMain::Update()
 void CSceneMain::Draw()
 {
 	g_Task.Draw();
-	g_Obb.Draw();
 }
 
 void CSceneMain::Release()
@@ -83,7 +82,6 @@ void CSceneMain::Release()
 	g_Task.Release();
 	g_Audio.DeleteMusic();
 	g_Loader.Release();
-	g_Obb.Release();
 	g_Ray.Release();	
 
 }

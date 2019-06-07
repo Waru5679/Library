@@ -70,9 +70,6 @@ INT WINAPI WinMain( HINSTANCE hInst,HINSTANCE hPrevInst,LPSTR szStr,INT iCmdShow
 	//•`‰æ‚Ì‰Šú‰»
 	g_Draw.Init();
 	
-	//Obb‰Šú‰»
-	g_Obb.Init();
-
 	//ƒtƒHƒ“ƒg•`‰æ‰Šú‰»
 	g_Font.Init();
 
