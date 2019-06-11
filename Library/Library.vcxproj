@@ -147,7 +147,9 @@
     <ClInclude Include="Library\Input.h" />
     <ClInclude Include="Library\Main.h" />
     <ClInclude Include="Library\Math.h" />
-    <ClInclude Include="Library\Obb.h" />
+    <ClInclude Include="Library\Obb.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="Library\ObjLoader.h" />
     <ClInclude Include="Library\Polygon.h" />
     <ClInclude Include="Library\Ray.h" />
@@ -175,7 +177,9 @@
     <ClCompile Include="Library\Input.cpp" />
     <ClCompile Include="Library\Main.cpp" />
     <ClCompile Include="Library\Math.cpp" />
-    <ClCompile Include="Library\Obb.cpp" />
+    <ClCompile Include="Library\Obb.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="Library\ObjLoader.cpp" />
     <ClCompile Include="Library\Polygon.cpp" />
     <ClCompile Include="Library\Ray.cpp" />

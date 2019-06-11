@@ -55,29 +55,11 @@ INT WINAPI WinMain( HINSTANCE hInst,HINSTANCE hPrevInst,LPSTR szStr,INT iCmdShow
 	//ウインドウの初期設定
 	WinInit(hInst);
 		
-	// DirectXの初期化関数を呼ぶ
-	if(FAILED(dx.Init(g_hWnd)))
+	//初期化
+	if (FAILED(Init()))
 	{
 		return 0;
 	}
-
-	//シェーダー初期化
-	if (FAILED(g_Shader.Init(dx.m_pDevice)))
-	{
-		return E_FAIL;
-	}
-
-	//描画の初期化
-	g_Draw.Init();
-	
-	//Obb初期化
-	g_Obb.Init();
-
-	//フォント描画初期化
-	g_Font.Init();
-
-	//音楽初期化
-	g_Audio.Init();
 	
 	// メッセージループ
 	MSG msg;
@@ -126,6 +108,8 @@ INT WINAPI WinMain( HINSTANCE hInst,HINSTANCE hPrevInst,LPSTR szStr,INT iCmdShow
 
 			//描画
 			g_Scene.Draw();
+
+			g_Hit.Draw();
 		
 			//画面更新（バックバッファをフロントバッファに）
 			dx.m_pSwapChain->Present(0, 0);
@@ -167,11 +151,40 @@ LRESULT CALLBACK WndProc(HWND hWnd,UINT iMsg,WPARAM wParam,LPARAM lParam)
 	return DefWindowProc (hWnd, iMsg, wParam, lParam);	
 }
 
+//初期化
+HRESULT Init()
+{
+	// DirectXの初期化関数を呼ぶ
+	if (FAILED(dx.Init(g_hWnd)))
+	{
+		return E_FAIL;
+	}
 
+	//シェーダー初期化
+	if (FAILED(g_Shader.Init(dx.m_pDevice)))
+	{
+		return E_FAIL;
+	}
+
+	//描画の初期化
+	g_Draw.Init();
+
+	//フォント描画初期化
+	g_Font.Init();
+
+	//音楽初期化
+	g_Audio.Init();
+	
+	//当たり判定初期化
+	g_Hit.Init();
+
+	return S_OK;
+}
 
 //メモリの開放
 void Release()
 {
+	g_Hit.Release();
 	g_Scene.Release();
 	g_Audio.Release();
 	g_Font.Release();

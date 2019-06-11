@@ -10,5 +10,5 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 
-map_Kd Model\HitBox\HitBox.png
+map_Kd Model\Hit\HitBox.png
 illum 2

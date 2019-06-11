@@ -42,6 +42,7 @@ HRESULT CShader::Init(ID3D10Device* pDevice)
 	m_pShaderTexture = m_pEffect->GetVariableByName("g_texDecal")->AsShaderResource();
 	m_pShaderSrc = m_pEffect->GetVariableByName("g_UvSrc")->AsVector();
 	m_pShaderColor = m_pEffect->GetVariableByName("g_Color")->AsVector();
+	
 	return S_OK;
 }
 

@@ -9,8 +9,10 @@ using namespace std;
 //球データ
 struct SphereData
 {
-	D3DXVECTOR3 m_vPos;	//位置
-	float m_fRadius;	//半径
+	D3DXVECTOR3 m_vPos;		//位置
+	float m_fRadius;		//半径
+
+	D3DXMATRIX m_matWorld;	//描画用
 };
 
 //Obbデータ
@@ -26,6 +28,7 @@ struct ObbData
 
 	D3DXVECTOR3 m_vVertexPos[8];//頂点の位置
 
+	D3DXMATRIX	m_matWorld;		//描画用
 };
 
 //当たり判定
@@ -43,26 +46,40 @@ struct CollisionData
 class CHit
 {
 public:
-	bool SphereHit();
-	void UpData(CollisionData* pData, D3DXVECTOR3 vPos);
+	void Init();						//初期化
+	void UpData(CollisionData* pData);	//更新
+	void Draw();						//描画
+	void Release();						//解放
+
+	//当たり判定
+	bool Hit();
 
 	//当たり判定データ登録
 	CollisionData CollisionCreate(CObj3DBase* pCobj);
 	void Insert(CollisionData* pData);
+
 private:
 	//球と級のヒット判定
 	bool SphereAndSphre(SphereData* data1, SphereData* data2);
 
 	//OBBにセット
-	ObbData SetObbData(CObj3DBase* pCobj, MY_MESH* pMesh);
+	void SetObbData(CObj3DBase* pCobj, MY_MESH* pMesh, ObbData* pObb);
 
 	//球情報セット
-	SphereData SetSphereData(CObj3DBase* pCobj, MY_MESH* pMesh);
+	void SetSphereData(CObj3DBase* pCobj, MY_MESH* pMesh,SphereData* pSphere);
 	
+	//衝突判定
+	bool ObbAndObb(ObbData* obb1, ObbData* obb2);
+
+	// 分離軸に投影された軸成分から投影線分長を算出
+	float LenSegOnSeparateAxis(D3DXVECTOR3* Sep, D3DXVECTOR3* e1, D3DXVECTOR3* e2, D3DXVECTOR3* e3);
+
+
 	vector<CollisionData* > m_Collision;	//当たり判定データ
 
 	MY_MESH m_DrawObb;		//描画用Box
 	MY_MESH m_DrawSphere;	//描画用Sphere
+	ColorData m_Color;		//描画色
 
 };
 

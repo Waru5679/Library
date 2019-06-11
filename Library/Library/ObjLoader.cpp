@@ -47,7 +47,7 @@ HRESULT CObjLoader::LoadObj(const char* FileName, MY_MESH* pMesh)
 	vector<MY_VERTEX> Vertex;
 	
 	int index_count = 0;
-
+	
 	pMesh->vMax = D3DXVECTOR3(-999.0f, -999.0f, -999.0f);
 	pMesh->vMin	= D3DXVECTOR3(999.0f, 999.0f, 999.0f);
 	

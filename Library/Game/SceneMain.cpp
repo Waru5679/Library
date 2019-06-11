@@ -75,7 +75,6 @@ void CSceneMain::Update()
 void CSceneMain::Draw()
 {
 	g_Task.Draw();
-	g_Obb.Draw();
 }
 
 void CSceneMain::Release()
@@ -83,7 +82,6 @@ void CSceneMain::Release()
 	g_Task.Release();
 	g_Audio.DeleteMusic();
 	g_Loader.Release();
-	g_Obb.Release();
 	g_Ray.Release();	
 
 }

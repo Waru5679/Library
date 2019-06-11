@@ -19,6 +19,4 @@ private:
 	float m_fRadius;	//球の半径
 
 	CollisionData m_Collision;//当たり判定用
-	OBB_Data m_Obb;//OBBデータ
-
 };
