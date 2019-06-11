@@ -37,7 +37,7 @@ HRESULT CObjLoader::LoadObj(const char* FileName, MY_MESH* pMesh)
 	//キーワード読み込み用
 	char key[ARRAY_SIZE];
 
-	float uv_x[4] = { 0.0f,-1.0f,-1.0f,0.0f };	
+	float uv_x[4] = { 0.0f,1.0f,1.0f,0.0f };	
 	float uv_y[4] = { 0.0f,0.0f,1.0f,1.0f };
 
 	//頂点情報
@@ -178,8 +178,8 @@ HRESULT CObjLoader::LoadObj(const char* FileName, MY_MESH* pMesh)
 						else
 						{
 							D3DXVECTOR2 tex;
-							tex.x = uv_x[i];
-							tex.y = uv_y[i];
+							tex.x =uv_x[i];
+							tex.y =uv_y[i];
 							vertex.vTex = tex;
 						}
 
@@ -216,6 +216,11 @@ HRESULT CObjLoader::LoadObj(const char* FileName, MY_MESH* pMesh)
 					pVertex[j]=Vertex[index_count + j];
 				}
 				
+				//三角ポリゴン
+				if (FaceOfVer[i] == 3)
+				{
+				}
+
 				//四角ポリゴン
 				if (FaceOfVer[i] == 4)
 				{

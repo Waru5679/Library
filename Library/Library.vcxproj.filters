@@ -31,9 +31,6 @@
     <Filter Include="リソース ファイル\ObjLoader">
       <UniqueIdentifier>{5c4fa0fd-b6eb-4faf-9d80-3d51501013b5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="リソース ファイル\Obb">
-      <UniqueIdentifier>{3a6591c6-7e69-40d9-a44f-1724ad86666d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="リソース ファイル\Polygon">
       <UniqueIdentifier>{161f5fd8-a710-4a04-806d-59a8b184e911}</UniqueIdentifier>
     </Filter>
@@ -95,9 +92,6 @@
     </ClInclude>
     <ClInclude Include="Library\Font.h">
       <Filter>リソース ファイル\Font</Filter>
-    </ClInclude>
-    <ClInclude Include="Library\Obb.h">
-      <Filter>リソース ファイル\Obb</Filter>
     </ClInclude>
     <ClInclude Include="Library\ObjLoader.h">
       <Filter>リソース ファイル\ObjLoader</Filter>
@@ -178,9 +172,6 @@
     </ClCompile>
     <ClCompile Include="Library\Font.cpp">
       <Filter>リソース ファイル\Font</Filter>
-    </ClCompile>
-    <ClCompile Include="Library\Obb.cpp">
-      <Filter>リソース ファイル\Obb</Filter>
     </ClCompile>
     <ClCompile Include="Library\ObjLoader.cpp">
       <Filter>リソース ファイル\ObjLoader</Filter>

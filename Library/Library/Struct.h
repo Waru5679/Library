@@ -7,7 +7,7 @@ using namespace std;
 
 //ベクターのメモリ解放
 template <typename T>
-void VectorRelease(vector<T> vec)
+void VectorRelease(vector<T>& vec)
 {
 	vec.shrink_to_fit();
 	vec.resize(0);

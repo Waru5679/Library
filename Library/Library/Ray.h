@@ -2,7 +2,7 @@
 
 //ライブラリファイル
 #include "Main.h"
-#include "Obb.h"
+#include "CObj.h"
 #include <vector>
 using namespace std;
 
