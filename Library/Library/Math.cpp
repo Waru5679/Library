@@ -89,24 +89,34 @@ D3DXVECTOR3 MakeAbsVector3(D3DXVECTOR3 Vec)
 }
 
 //最も長い成分を返す
-float MostLongComponent(D3DXVECTOR3 Vec)
+float MostLongComponent(float f1, float f2, float f3)
 {
-	Vec=MakeAbsVector3(Vec);
-
-	if (Vec.x > Vec.y)
+	if (f1 > f2)
 	{
-		if (Vec.x > Vec.z)
-			return Vec.x;
+		if (f1 > f3)
+			return f1;
 		else
-			return Vec.z;
+			return f3;
 	}
 	else
 	{
-		if (Vec.y > Vec.z)
-			return Vec.y;
+		if (f2 > f3)
+			return f2;
 		else
-			return Vec.z;
+			return f3;
 	}
+}
+
+//最も長い成分を返す
+float MostLongComponent(D3DXVECTOR3 Vec)
+{
+	//絶対値化
+	Vec=MakeAbsVector3(Vec);
+
+	//長さ比較
+	float out = MostLongComponent(Vec.x,Vec.y,Vec.z);
+
+	return out;
 }
 
 //頂点シェーダ用のマトリックスの作成

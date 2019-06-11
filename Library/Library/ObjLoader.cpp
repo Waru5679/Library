@@ -342,8 +342,7 @@ HRESULT CObjLoader::LoadMaterial(char* FileName,MY_MESH* pMesh)
 		if (strcmp(key, "newmtl") == 0)
 		{
 			fscanf_s(fp, "%s ", key, sizeof(key));
-			strcpy_s(pMesh->Material[mate_count].szName, key);
-
+		
 			//Ÿ‚Ìƒ}ƒeƒŠƒAƒ‹‚Ü‚Å“Ç‚İ‚Ş
 			do
 			{

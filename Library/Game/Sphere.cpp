@@ -43,5 +43,5 @@ void CSphere::Update()
 //•`‰æ
 void CSphere::Draw()
 {
-//	g_Loader.Draw(m_matWorld, m_pMesh,NULL);
+	g_Loader.Draw(m_matWorld, m_pMesh,NULL);
 }

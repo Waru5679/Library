@@ -3,7 +3,6 @@
 //ライブラリファイル
 #include "../Library/Main.h"
 #include "../Library/CObj.h" 
-#include "../Library/Obb.h"
 #include "../Library/Hit.h"
 
 //プレイヤークラス

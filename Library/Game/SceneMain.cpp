@@ -47,7 +47,7 @@ void CSceneMain::Init()
 */
 
 	vPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	vScale = D3DXVECTOR3(1.0f, 1.00f, 1.0f);
+	vScale = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
 
 	//‹…
 	CSphere* pSphere = new CSphere(vPos, vAngle, vScale);

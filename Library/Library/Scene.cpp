@@ -12,7 +12,7 @@ void CSceneManager::Insert(CSceneBase* pScene, int Id)
 //ƒV[ƒ“æ“¾
 CSceneBase* CSceneManager::GetScene(int Id)
 {
-	for (int i = 0; i < m_Scene.size(); i++)
+	for (unsigned int i = 0; i < m_Scene.size(); i++)
 	{
 		if (m_Scene[i]->m_Id == Id)
 			return m_Scene[i]->m_pScene;

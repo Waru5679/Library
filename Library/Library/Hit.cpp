@@ -20,7 +20,7 @@
 	 g_Loader.LoadObj("Model/Hit/Sphere.obj", &m_DrawSphere);
 
 	 //色
-	 m_Color = ColorData(1.0f, 1.0f, 1.0f, 0.2f);
+	 m_Color = ColorData(1.0f, 1.0f, 1.0f, 0.5f);
 
  }
 
@@ -33,15 +33,16 @@ CollisionData CHit::CollisionCreate(CObj3DBase* pCobj)
 	coll_data.m_pMesh = pCobj->GetMesh();
 	coll_data.m_Id = pCobj->GetId();
 	
-	//球情報
-	SphereData sphere_data;
-	SetSphereData(pCobj, coll_data.m_pMesh, &sphere_data);
-	coll_data.m_SphereData = sphere_data;
-	
 	//Obbデータ
 	ObbData obb_data;
 	SetObbData(pCobj, coll_data.m_pMesh, &obb_data);
 	coll_data.m_ObbData = obb_data;
+
+	////球情報
+	SphereData sphere_data;
+	SetSphereData(pCobj,&coll_data.m_ObbData, coll_data.m_pMesh, &sphere_data);
+	coll_data.m_SphereData = sphere_data;
+	
 	
 	return coll_data;
 }
@@ -56,7 +57,7 @@ void CHit::Release()
 void CHit::UpData(CollisionData* pData)
 {
 	//球データ
-	SetSphereData(pData->m_pObj, pData->m_pMesh, &pData->m_SphereData);
+	SetSphereData(pData->m_pObj,&pData->m_ObbData,pData->m_pMesh, &pData->m_SphereData);
 
 	//OBBデータ
 	SetObbData(pData->m_pObj, pData->m_pMesh, &pData->m_ObbData);
@@ -65,16 +66,14 @@ void CHit::UpData(CollisionData* pData)
 //衝突判定
 bool CHit::Hit()
 {
-	////球の衝突判定
-	//if (SphereAndSphre(&m_Collision[0]->m_SphereData, &m_Collision[1]->m_SphereData) == true)
-	//{
-	//	return true;
-	//}
-
-	//OBBの衝突判定
-	if (ObbAndObb(&m_Collision[0]->m_ObbData, &m_Collision[1]->m_ObbData) == true)
+	//球の衝突判定
+	if (SphereAndSphre(&m_Collision[0]->m_SphereData, &m_Collision[1]->m_SphereData) == true)
 	{
-		return true;
+		//OBBの衝突判定
+		if (ObbAndObb(&m_Collision[0]->m_ObbData, &m_Collision[1]->m_ObbData) == true)
+		{
+			return true;
+		}
 	}
 
 	return false;
@@ -239,7 +238,6 @@ bool CHit::ObbAndObb(ObbData* obb1, ObbData* obb2)
 	return true;
 }
 
-
 //球と球の衝突判定
 bool CHit::SphereAndSphre(SphereData* data1, SphereData* data2)
 {
@@ -261,29 +259,27 @@ bool CHit::SphereAndSphre(SphereData* data1, SphereData* data2)
 }
 
 //球情報セット
-void CHit::SetSphereData(CObj3DBase* pCobj, MY_MESH* pMesh,SphereData* pSphere)
+void CHit::SetSphereData(CObj3DBase* pCobj,ObbData* pObb, MY_MESH* pMesh,SphereData* pSphere)
 {
-	//半径求める
-	D3DXVECTOR3 vMax, vMin;
-	vMax = pMesh->vMax;
-	vMin = pMesh->vMin;
+	//中心点から面の長さ
+	float x, y, z;
+	x = pObb->m_vLength.x;
+	y = pObb->m_vLength.y;
+	z = pObb->m_vLength.z;
 
-	//スケール
-	D3DXVECTOR3 vScale = pCobj->GetScale();
+	//各軸の長さから一番長いものを調べる
+	float xy, xz, yz;
+	xy = sqrtf(x * x + y * y);
+	xz = sqrtf(x * x + z * z);
+	yz = sqrtf(y * y + z * z);
 
-	//一番大きい倍率をとる
-	float scale = MostLongComponent(vScale);
-
-	//一番長い距離から半径を設定
-	float diameter = MostLongComponent(vMax - vMin) * scale;	//直径
-	float radius = fabsf(diameter) / 2.0f;						//半径
-
-	//半径から描画用スケール設定
-	vScale = D3DXVECTOR3(radius, radius, radius);
+	//半径
+	float radius = MostLongComponent(xy, xz, yz);
 
 	//描画用にワールドマトリックスを作る
 	D3DXVECTOR3 vPos = pCobj->GetPos();
 	D3DXVECTOR3 vAngle = pCobj->GetAngle();
+	D3DXVECTOR3 vScale = D3DXVECTOR3(radius,radius,radius);
 	D3DXMATRIX	matWorld = MakeMatWorld(vPos, vAngle, vScale);
 
 	//球データを格納
@@ -299,15 +295,10 @@ void CHit::SetObbData(CObj3DBase* pCobj, MY_MESH* pMesh, ObbData* pObb)
 	vPos	= pCobj->GetPos();
 	vAngle	= pCobj->GetAngle();
 	vScale	= pCobj->GetScale();
-
-	//基礎情報
-	pObb->m_vPos	= vPos;
-	pObb->m_vAngle	= vAngle;
-	pObb->m_vScale	= vScale;
-
+	
 	//行列
-	D3DXMATRIX matRot = MakeMatRot(pObb->m_vAngle);
-	D3DXMATRIX matScale = MakeMatScale(pObb->m_vScale);
+	D3DXMATRIX matRot = MakeMatRot(vAngle);
+	D3DXMATRIX matScale = MakeMatScale(vScale);
 
 	//スケールから最大・最小を求める
 	D3DXVECTOR3 vMin, vMax;
@@ -315,7 +306,7 @@ void CHit::SetObbData(CObj3DBase* pCobj, MY_MESH* pMesh, ObbData* pObb)
 	D3DXVec3TransformCoord(&vMin, &pMesh->vMin, &matScale);
 
 	//中心点
-	D3DXVECTOR3 vCenterPos = (vMin + vMax) / 2.0f + pObb->m_vPos;
+	D3DXVECTOR3 vCenterPos = (vMin + vMax) / 2.0f + vPos;
 	pObb->m_vCenterPos = vCenterPos;
 
 	//中心点から各軸への長さ 
@@ -326,17 +317,16 @@ void CHit::SetObbData(CObj3DBase* pCobj, MY_MESH* pMesh, ObbData* pObb)
 	pObb->m_vDirect[1] = D3DXVECTOR3(matRot._21, matRot._22, matRot._23);
 	pObb->m_vDirect[2] = D3DXVECTOR3(matRot._31, matRot._32, matRot._33);
 
-	//頂点の位置
-	pObb->m_vVertexPos[0] = D3DXVECTOR3(vCenterPos.x + vMin.x, vCenterPos.y + vMax.y, vCenterPos.z + vMin.z);
-	pObb->m_vVertexPos[1] = D3DXVECTOR3(vCenterPos.x + vMax.x, vCenterPos.y + vMax.y, vCenterPos.z + vMin.z);
-	pObb->m_vVertexPos[2] = D3DXVECTOR3(vCenterPos.x + vMax.x, vCenterPos.y + vMin.y, vCenterPos.z + vMin.z);
-	pObb->m_vVertexPos[3] = D3DXVECTOR3(vCenterPos.x + vMin.x, vCenterPos.y + vMin.y, vCenterPos.z + vMin.z);
-	pObb->m_vVertexPos[4] = D3DXVECTOR3(vCenterPos.x + vMin.x, vCenterPos.y + vMax.y, vCenterPos.z + vMax.z);
-	pObb->m_vVertexPos[5] = D3DXVECTOR3(vCenterPos.x + vMax.x, vCenterPos.y + vMax.y, vCenterPos.z + vMax.z);
-	pObb->m_vVertexPos[6] = D3DXVECTOR3(vCenterPos.x + vMax.x, vCenterPos.y + vMin.y, vCenterPos.z + vMax.z);
-	pObb->m_vVertexPos[7] = D3DXVECTOR3(vCenterPos.x + vMin.x, vCenterPos.y + vMin.y, vCenterPos.z + vMax.z);
+	////頂点の位置
+	//pObb->m_vVertexPos[0] = D3DXVECTOR3(vCenterPos.x + vMin.x, vCenterPos.y + vMax.y, vCenterPos.z + vMin.z);
+	//pObb->m_vVertexPos[1] = D3DXVECTOR3(vCenterPos.x + vMax.x, vCenterPos.y + vMax.y, vCenterPos.z + vMin.z);
+	//pObb->m_vVertexPos[2] = D3DXVECTOR3(vCenterPos.x + vMax.x, vCenterPos.y + vMin.y, vCenterPos.z + vMin.z);
+	//pObb->m_vVertexPos[3] = D3DXVECTOR3(vCenterPos.x + vMin.x, vCenterPos.y + vMin.y, vCenterPos.z + vMin.z);
+	//pObb->m_vVertexPos[4] = D3DXVECTOR3(vCenterPos.x + vMin.x, vCenterPos.y + vMax.y, vCenterPos.z + vMax.z);
+	//pObb->m_vVertexPos[5] = D3DXVECTOR3(vCenterPos.x + vMax.x, vCenterPos.y + vMax.y, vCenterPos.z + vMax.z);
+	//pObb->m_vVertexPos[6] = D3DXVECTOR3(vCenterPos.x + vMax.x, vCenterPos.y + vMin.y, vCenterPos.z + vMax.z);
+	//pObb->m_vVertexPos[7] = D3DXVECTOR3(vCenterPos.x + vMin.x, vCenterPos.y + vMin.y, vCenterPos.z + vMax.z);
 
 	//描画用にワールドマトリックス作る
 	pObb->m_matWorld = MakeMatWorld(vCenterPos, vAngle, vScale);
 }
-

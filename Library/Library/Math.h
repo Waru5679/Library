@@ -25,6 +25,7 @@ D3DXVECTOR3 MakeAbsVector3(D3DXVECTOR3 Vec);
 
 //最も長い成分を調べる
 float MostLongComponent(D3DXVECTOR3 Vec);
+float MostLongComponent(float f1, float f2, float f3);
 
 //頂点シェーダ用のマトリックスの作成
 void CreateVSMatrix(D3DXVECTOR3* vEye, D3DXVECTOR3* vLook, D3DXVECTOR3* vUp, D3DXMATRIX* matView, D3DXMATRIX* matProj, int width, int height);

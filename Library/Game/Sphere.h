@@ -1,8 +1,5 @@
 #include "../Library/CObj.h"
 #include "../Library/Hit.h"
-#include "../Library/Obb.h"
-#include <vector>
-using namespace std;
 
 //‹…ƒNƒ‰ƒX
 class CSphere:public CObj3DBase

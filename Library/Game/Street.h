@@ -2,7 +2,6 @@
 
 //ライブラリファイル
 #include "../Library/CObj.h"
-#include "../Library/Obb.h"
 
 //町クラス
 class CStreet :public CObj3DBase

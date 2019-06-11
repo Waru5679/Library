@@ -65,14 +65,9 @@ struct FACE_INFO
 	vector<MY_VERTEX> Vertex;	//頂点情報
 };
 
-#define ARRAY_SIZE 100
-
 //マテリアル構造体
 struct MY_MATERIAL
 {
-	//マテリアル名
-	CHAR szName[ARRAY_SIZE];
-
 	D3DXVECTOR3 Ka;//アンビエント(環境光)
 	D3DXVECTOR3 Kd;//ディフューズ(拡散光)
 	D3DXVECTOR3 Ks;//スペキュラー(鏡面反射光）

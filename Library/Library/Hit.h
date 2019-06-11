@@ -18,15 +18,11 @@ struct SphereData
 //Obbデータ
 struct ObbData
 {
-	D3DXVECTOR3 m_vPos;		//位置
-	D3DXVECTOR3 m_vAngle;	//回転
-	D3DXVECTOR3 m_vScale;	//スケール
-
 	D3DXVECTOR3 m_vDirect[3];	//各軸の面の方向
 	D3DXVECTOR3 m_vLength;		//中心点から各軸への長さ
 	D3DXVECTOR3 m_vCenterPos;	//中心点の位置
 
-	D3DXVECTOR3 m_vVertexPos[8];//頂点の位置
+	//D3DXVECTOR3 m_vVertexPos[8];//頂点の位置
 
 	D3DXMATRIX	m_matWorld;		//描画用
 };
@@ -66,14 +62,13 @@ private:
 	void SetObbData(CObj3DBase* pCobj, MY_MESH* pMesh, ObbData* pObb);
 
 	//球情報セット
-	void SetSphereData(CObj3DBase* pCobj, MY_MESH* pMesh,SphereData* pSphere);
+	void SetSphereData(CObj3DBase* pCobj,ObbData* pObb, MY_MESH* pMesh,SphereData* pSphere);
 	
 	//衝突判定
 	bool ObbAndObb(ObbData* obb1, ObbData* obb2);
 
 	// 分離軸に投影された軸成分から投影線分長を算出
 	float LenSegOnSeparateAxis(D3DXVECTOR3* Sep, D3DXVECTOR3* e1, D3DXVECTOR3* e2, D3DXVECTOR3* e3);
-
 
 	vector<CollisionData* > m_Collision;	//当たり判定データ
 
