@@ -112,7 +112,7 @@ void CSceneMain::LoadMesh()
 
 	//RayTest
 	//OŠpƒ|ƒŠƒSƒ“
-	g_Loader.LoadMesh(ModelName::ModelRayTest, "Model/RayTest/Triangle_Cube.obj");
+	//g_Loader.LoadMesh(ModelName::ModelRayTest, "Model/RayTest/Triangle_Cube.obj");
 
 	//lŠpƒ|ƒŠƒSƒ“
 	//g_Loader.LoadMesh(ModelName::ModelRayTest, "Model/RayTest/Square_Cube.obj");	

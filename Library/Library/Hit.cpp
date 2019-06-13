@@ -46,10 +46,26 @@ CollisionData CHit::CollisionCreate(CObj3DBase* pCobj)
 	return coll_data;
 }
 
-//解放
-void CHit::Release()
+//衝突判定
+bool CHit::Hit()
 {
-	VectorRelease(m_Collision);
+	for (unsigned int i = 0; i < m_Collision.size() - 1; i++)
+	{
+		for (unsigned int j = i + 1; j < m_Collision.size(); j++)
+		{
+			//球の衝突判定
+			if (SphereAndSphre(&m_Collision[i]->m_SphereData, &m_Collision[j]->m_SphereData) == true)
+			{
+				//OBBの衝突判定
+				if (ObbAndObb(&m_Collision[i]->m_ObbData, &m_Collision[j]->m_ObbData) == true)
+				{
+					return true;
+				}
+			}
+		}
+	}
+
+	return false;
 }
 
 //更新
@@ -60,22 +76,6 @@ void CHit::UpData(CollisionData* pData)
 
 	//OBBデータ
 	SetObbData(pData->m_pObj, pData->m_pMesh, &pData->m_ObbData);
-}
-
-//衝突判定
-bool CHit::Hit()
-{
-	//球の衝突判定
-	if (SphereAndSphre(&m_Collision[0]->m_SphereData, &m_Collision[1]->m_SphereData) == true)
-	{
-		//OBBの衝突判定
-		if (ObbAndObb(&m_Collision[0]->m_ObbData, &m_Collision[1]->m_ObbData) == true)
-		{
-			return true;
-		}
-	}
-		
-	return false;
 }
 
 //描画
@@ -93,22 +93,27 @@ void CHit::Draw()
 	}
 }
 
+//解放
+void CHit::Release()
+{
+	VectorRelease(m_Collision);
+}
+
+
 // 分離軸に投影された軸成分から投影線分長を算出
 float CHit::LenSegOnSeparateAxis(D3DXVECTOR3* Sep, D3DXVECTOR3* e1, D3DXVECTOR3* e2, D3DXVECTOR3* e3 = 0)
 {
 	// 3つの内積の絶対値の和で投影線分長を計算
-	// 分離軸Sepは標準化されていること
 	float r1 = (float)fabs(D3DXVec3Dot(Sep, e1));
 	float r2 = (float)fabs(D3DXVec3Dot(Sep, e2));
 	float r3 = e3 ? ((float)fabs(D3DXVec3Dot(Sep, e3))) : 0;
 	return r1 + r2 + r3;
 }
 
-//衝突判定
+//OBBとOBBの衝突判定
 bool CHit::ObbAndObb(ObbData* obb1, ObbData* obb2)
 {
 	// 各方向ベクトルの確保
-	// （N***:標準化方向ベクトル）
 	D3DXVECTOR3 NAe1 = obb1->m_vDirect[0], Ae1 = NAe1 * obb1->m_vLength.x;
 	D3DXVECTOR3 NAe2 = obb1->m_vDirect[1], Ae2 = NAe2 * obb1->m_vLength.y;
 	D3DXVECTOR3 NAe3 = obb1->m_vDirect[2], Ae3 = NAe3 * obb1->m_vLength.z;
@@ -321,16 +326,6 @@ void CHit::SetObbData(CObj3DBase* pCobj, MY_MESH* pMesh, ObbData* pObb)
 	pObb->m_vDirect[0] = D3DXVECTOR3(matRot._11, matRot._12, matRot._13);
 	pObb->m_vDirect[1] = D3DXVECTOR3(matRot._21, matRot._22, matRot._23);
 	pObb->m_vDirect[2] = D3DXVECTOR3(matRot._31, matRot._32, matRot._33);
-
-	////頂点の位置
-	//pObb->m_vVertexPos[0] = D3DXVECTOR3(vCenterPos.x + vMin.x, vCenterPos.y + vMax.y, vCenterPos.z + vMin.z);
-	//pObb->m_vVertexPos[1] = D3DXVECTOR3(vCenterPos.x + vMax.x, vCenterPos.y + vMax.y, vCenterPos.z + vMin.z);
-	//pObb->m_vVertexPos[2] = D3DXVECTOR3(vCenterPos.x + vMax.x, vCenterPos.y + vMin.y, vCenterPos.z + vMin.z);
-	//pObb->m_vVertexPos[3] = D3DXVECTOR3(vCenterPos.x + vMin.x, vCenterPos.y + vMin.y, vCenterPos.z + vMin.z);
-	//pObb->m_vVertexPos[4] = D3DXVECTOR3(vCenterPos.x + vMin.x, vCenterPos.y + vMax.y, vCenterPos.z + vMax.z);
-	//pObb->m_vVertexPos[5] = D3DXVECTOR3(vCenterPos.x + vMax.x, vCenterPos.y + vMax.y, vCenterPos.z + vMax.z);
-	//pObb->m_vVertexPos[6] = D3DXVECTOR3(vCenterPos.x + vMax.x, vCenterPos.y + vMin.y, vCenterPos.z + vMax.z);
-	//pObb->m_vVertexPos[7] = D3DXVECTOR3(vCenterPos.x + vMin.x, vCenterPos.y + vMin.y, vCenterPos.z + vMax.z);
 
 	//描画用にワールドマトリックス作る
 	pObb->m_matWorld = MakeMatWorld(vCenterPos, vAngle, vScale);
