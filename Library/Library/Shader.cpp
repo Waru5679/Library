@@ -67,7 +67,6 @@ void CShader::SetShader(ID3D10ShaderResourceView* pTexture, RECT_F* pSrc,ColorDa
 	m_pShaderSrc->SetFloatVector(vSrc);
 
 	//•`‰æF
-
 	D3DXVECTOR4 vColor;
 	if (pColor == NULL)
 	{

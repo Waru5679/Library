@@ -17,7 +17,7 @@ void VectorRelease(vector<T>& vec)
 struct RECT_F
 {
 	//コンストラクタ
-	RECT_F() {};
+	RECT_F() {}
 	RECT_F(float Top, float Left, float Width, float Height)
 	{
 		m_Top = Top;
@@ -36,7 +36,7 @@ struct RECT_F
 struct ColorData
 {
 	//コンストラクタ
-	ColorData() {};
+	ColorData() {}
 	ColorData(float R, float G, float B, float A)
 	{
 		m_Red = R;

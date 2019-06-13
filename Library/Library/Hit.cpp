@@ -38,12 +38,11 @@ CollisionData CHit::CollisionCreate(CObj3DBase* pCobj)
 	SetObbData(pCobj, coll_data.m_pMesh, &obb_data);
 	coll_data.m_ObbData = obb_data;
 
-	////‹…î•ñ
+	//‹…î•ñ
 	SphereData sphere_data;
 	SetSphereData(pCobj,&coll_data.m_ObbData, coll_data.m_pMesh, &sphere_data);
 	coll_data.m_SphereData = sphere_data;
-	
-	
+		
 	return coll_data;
 }
 
@@ -75,7 +74,7 @@ bool CHit::Hit()
 			return true;
 		}
 	}
-
+		
 	return false;
 }
 
@@ -267,14 +266,20 @@ void CHit::SetSphereData(CObj3DBase* pCobj,ObbData* pObb, MY_MESH* pMesh,SphereD
 	y = pObb->m_vLength.y;
 	z = pObb->m_vLength.z;
 
-	//ŠeŽ²‚Ì’·‚³‚©‚çˆê”Ô’·‚¢‚à‚Ì‚ð’²‚×‚é
+	//‰~‚Ì”¼Œa
 	float xy, xz, yz;
 	xy = sqrtf(x * x + y * y);
 	xz = sqrtf(x * x + z * z);
 	yz = sqrtf(y * y + z * z);
 
+	//‹…‚Ì”¼Œa
+	float xy_z, xz_y, yz_x;
+	xy_z = sqrtf(xy * xy + z * z);
+	xz_y = sqrtf(xz * xz + y * y);
+	yz_x = sqrtf(yz * yz + x * x);
+
 	//”¼Œa
-	float radius = MostLongComponent(xy, xz, yz);
+	float radius = MostLongComponent(xy_z, xz_y, yz_x);
 
 	//•`‰æ—p‚Éƒ[ƒ‹ƒhƒ}ƒgƒŠƒbƒNƒX‚ðì‚é
 	D3DXVECTOR3 vPos = pCobj->GetPos();
