@@ -6,7 +6,11 @@ CSceneManager g_Scene;
 //“o˜^
 void CSceneManager::Insert(CSceneBase* pScene, int Id)
 {
-	m_Scene.push_back(new MY_SCENE(pScene,Id));
+	pMyScene my_scene;
+	my_scene.reset( new MY_SCENE(pScene, Id));
+
+	m_Scene.push_back(move(my_scene));
+	//m_Scene.push_back(new MY_SCENE());
 }
 
 //ƒV[ƒ“æ“¾

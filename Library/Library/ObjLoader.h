@@ -6,7 +6,6 @@
 class CObjLoader
 {
 public:
-
 	//‰ð•ú
 	void Release();
 

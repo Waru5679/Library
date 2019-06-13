@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <memory>
 using namespace std;
 
 //シーンクラス(継承用)
@@ -20,15 +21,25 @@ private:
 //シーン管理用構造体
 struct MY_SCENE
 {
+	//コンストラクタ
+	MY_SCENE() {}
 	MY_SCENE(CSceneBase* pScene,int Id)
 	{
 		m_pScene = pScene;
 		m_Id = Id;
 	}
 
+	//デストラクタ
+	~MY_SCENE()
+	{
+		
+	}
+
 	CSceneBase* m_pScene;	//シーンポインタ
 	int m_Id;				//管理用ID
 };
+
+using pMyScene=unique_ptr<MY_SCENE>;
 
 //シーンマネージャー
 class CSceneManager
@@ -42,7 +53,7 @@ public:
 	CSceneBase* GetScene(int Id);			//シーン取得
 private:
 	CSceneBase* m_pNowScene;				//現在のシーンのポインタ
-	vector<MY_SCENE*> m_Scene;				//シーンリスト
+	vector<pMyScene> m_Scene;				//シーンリスト
 };
 
 extern CSceneManager g_Scene;

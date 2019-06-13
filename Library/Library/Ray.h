@@ -3,6 +3,7 @@
 //ライブラリファイル
 #include "Main.h"
 #include "CObj.h"
+#include "Hit.h"
 #include <vector>
 using namespace std;
 

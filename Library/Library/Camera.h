@@ -12,10 +12,7 @@ public:
 	D3DXMATRIX GetViewMatrix() { return m_matView; }
 	D3DXMATRIX GetProjMatrix() { return m_matProj; }
 	D3DXVECTOR3 GetEye() { return m_vEye; }
-	D3DXVECTOR3 GetAngle() { return m_vAngle; }
-
-
-	
+	D3DXVECTOR3 GetAngle() { return m_vAngle; }	
 protected:
 	D3DXVECTOR3 m_vEye;		//éãì_
 	D3DXVECTOR3 m_vLook;	//íçéãì_
