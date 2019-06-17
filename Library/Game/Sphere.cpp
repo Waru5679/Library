@@ -1,7 +1,8 @@
 #include "../Library/Math.h"
+#include "../Library/Hit.h"
+#include "../Library/Ray.h"
 #include "Sphere.h"
 #include <math.h>
-#include "../Library/Hit.h"
 
 //コンストラクタ
 CSphere::CSphere(D3DXVECTOR3 vPos, D3DXVECTOR3 vAngle, D3DXVECTOR3 vScale)
@@ -26,6 +27,9 @@ void CSphere::Init()
 	//登録
 	m_Collision =g_Hit.CollisionCreate(this);
 	g_Hit.Insert(&m_Collision);
+
+	//Ray登録
+	g_Ray.Insert(this);
 
 	//ワールド行列作成
 	m_matWorld = MakeMatWorld(m_vPos, m_vAngle, m_vScale);

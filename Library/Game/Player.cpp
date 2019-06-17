@@ -46,7 +46,9 @@ void CPlayer::Init()
 	//当たり判定
 	m_Collision = g_Hit.CollisionCreate(this);
 	g_Hit.Insert(&m_Collision);
-
+	
+	//Ray登録
+	g_Ray.Insert(this);
 }
 
 //更新
@@ -78,6 +80,12 @@ void CPlayer::Update()
 	//ヒット確認
 	if(g_Hit.Hit()==true)
 	{
+		OutData out_data;
+		if (g_Ray.RayHit(&out_data, this, m_vLastMove, ObjSphere )== true)
+		{
+			m_vPos += out_data.m_vRub;
+			
+		}
 		m_bHit = true;
 	}
 	else

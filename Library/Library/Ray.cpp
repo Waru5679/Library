@@ -9,7 +9,7 @@ void CRay::Insert(CObj3DBase* pObj)
 }
 
 //Rayの当たり判定
-bool CRay::RayHit(D3DXVECTOR3*OutPoint, CObj3DBase* pOrigin,D3DXVECTOR3 vDir,int Id)
+bool CRay::RayHit(OutData* pOut,CObj3DBase* pOrigin,D3DXVECTOR3 vDir,int Id)
 {
 	//Rayを飛ばす側
 	MY_MESH* pOrigineMesh = pOrigin->GetMesh();
@@ -66,6 +66,12 @@ bool CRay::RayHit(D3DXVECTOR3*OutPoint, CObj3DBase* pOrigin,D3DXVECTOR3 vDir,int
 								//面の頂点の数
 								int FaceOfVer = Target.Vertex.size();
 
+								//法線
+								D3DXVECTOR3 vNorm;
+
+								//交点
+								D3DXVECTOR3 vInter;
+
 								//三角ポリゴン
 								if (FaceOfVer == 3)
 								{
@@ -76,8 +82,21 @@ bool CRay::RayHit(D3DXVECTOR3*OutPoint, CObj3DBase* pOrigin,D3DXVECTOR3 vDir,int
 									D3DXVec3TransformCoord(&v3, &Target.Vertex[2].vPos, &matTarget);
 
 									//Ray判定
-									if (TriangleRay(OutPoint, vOrigin, vDir, v1, v2, v3) == true)
+									if (TriangleRay(&vInter,&vNorm,vOrigin,vDir, v1, v2, v3) == true)
 									{
+										//出力データ
+										if (pOut != NULL)
+										{
+											//交点
+											pOut->m_vInter = vInter;
+											
+											//法線
+											pOut->m_vRub = WallShear(&vDir,&vNorm);
+
+											//反射
+											pOut->m_vRef = Reflection(&vDir, &vNorm);
+										}
+
 										return true;
 									}
 								}
@@ -94,16 +113,41 @@ bool CRay::RayHit(D3DXVECTOR3*OutPoint, CObj3DBase* pOrigin,D3DXVECTOR3 vDir,int
 									//三角ポリゴン2つに分解して調べる
 
 									//1つ目の三角ポリゴンRay判定
-									if (TriangleRay(OutPoint, vOrigin, vDir, v1, v2, v3) == true)
+									if (TriangleRay(&vInter, &vNorm, vOrigin, vDir, v1, v2, v3) == true)
 									{
+										//出力データ
+										if (pOut != NULL)
+										{
+											//交点
+											pOut->m_vInter = vInter;
+
+											//法線
+											pOut->m_vRub = WallShear(&vDir, &vNorm);
+
+											//反射
+											pOut->m_vRef = Reflection(&vDir, &vNorm);
+										}
 										return true;
 									}
 
-									//2つ目の三角ポリゴンRay判定
-									if (TriangleRay(OutPoint, vOrigin, vDir, v2, v4, v3) == true)
+									//Ray判定
+									if (TriangleRay(&vInter, &vNorm, vOrigin, vDir, v2, v4, v3) == true)
 									{
+										//出力データ
+										if (pOut != NULL)
+										{
+											//交点
+											pOut->m_vInter = vInter;
+
+											//法線
+											pOut->m_vRub = WallShear(&vDir, &vNorm);
+
+											//反射
+											pOut->m_vRef = Reflection(&vDir, &vNorm);
+										}
 										return true;
 									}
+
 								}
 							}
 						}
@@ -116,7 +160,7 @@ bool CRay::RayHit(D3DXVECTOR3*OutPoint, CObj3DBase* pOrigin,D3DXVECTOR3 vDir,int
 }
 
 //Rayの判定
-bool CRay::TriangleRay(D3DXVECTOR3* OutPoint, D3DXVECTOR3 vRayOrigin, D3DXVECTOR3 vRayDir, D3DXVECTOR3 vA, D3DXVECTOR3 vB, D3DXVECTOR3 vC)
+bool CRay::TriangleRay(D3DXVECTOR3* OutPoint,D3DXVECTOR3* OutNorm ,D3DXVECTOR3 vRayOrigin, D3DXVECTOR3 vRayDir, D3DXVECTOR3 vA, D3DXVECTOR3 vB, D3DXVECTOR3 vC)
 {
 	//面の頂点からRayの始点と終点へのベクトル
 	D3DXVECTOR3 vStart, vEnd;
@@ -133,6 +177,11 @@ bool CRay::TriangleRay(D3DXVECTOR3* OutPoint, D3DXVECTOR3 vRayOrigin, D3DXVECTOR
 	D3DXVECTOR3 vNorm;
 	D3DXVec3Cross(&vNorm, &vAB, &vBC);
 	D3DXVec3Normalize(&vNorm,&vNorm);
+
+	//出力用法線
+	OutNorm->x = vNorm.x;
+	OutNorm->y = vNorm.y;
+	OutNorm->z = vNorm.z;
 
 	//法線と始点終点へのベクトル
 	float dotStart = D3DXVec3Dot(&vStart, &vNorm);
@@ -219,20 +268,37 @@ void CRay::Release()
 	VectorRelease(m_Data);
 }
 
-//
-////壁ずり
-//D3DXVECTOR3 CRay::WallShear( D3DXVECTOR3 Front, D3DXVECTOR3 Normal)
-//{
-//	//法線正規化
-//	D3DXVECTOR3 Normal_n;
-//	D3DXVec3Normalize(&Normal_n, &Normal);
-//
-//	//壁ずりベクトル
-//	D3DXVECTOR3 Shear = Front - D3DXVec3Dot(&Front, &Normal_n) * Normal_n;
-//	
-//	//正規化壁ずりベクトル
-//	D3DXVECTOR3 Shear_norm;
-//	D3DXVec3Normalize(&Shear_norm, &Shear);
-//
-//	return Shear_norm;
-//}
+
+//壁ずり
+D3DXVECTOR3 CRay::WallShear( D3DXVECTOR3* Front, D3DXVECTOR3* Norm)
+{
+	//法線正規化
+	D3DXVECTOR3 Normal_n;
+	D3DXVec3Normalize(&Normal_n, Norm);
+
+	//壁ずりベクトル
+	D3DXVECTOR3 Shear = (*Front) - D3DXVec3Dot(Front, &Normal_n) * Normal_n;
+	
+	//正規化壁ずりベクトル
+	D3DXVECTOR3 Shear_norm;
+	D3DXVec3Normalize(&Shear_norm, &Shear);
+
+	return Shear_norm;
+}
+
+//反射ベクトル
+D3DXVECTOR3 CRay::Reflection(D3DXVECTOR3* Front, D3DXVECTOR3* Norm)
+{
+	//法線初期化
+	D3DXVECTOR3 Normal_n;
+	D3DXVec3Normalize(&Normal_n,Norm);
+
+	//反射ベクトル
+	D3DXVECTOR3 Rub,Rub_norm;
+	Rub = (*Front) - 2.0f * D3DXVec3Dot(Front, &Normal_n) * Normal_n;
+	
+	//反射初期化
+	D3DXVec3Normalize(&Rub_norm, &Rub);
+	
+	return Rub_norm;
+}
