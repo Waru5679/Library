@@ -49,7 +49,7 @@ void CPlayer::Init()
 	
 	//Ray“o˜^
 	g_Ray.Insert(this);
-}
+	}
 
 //XV
 void CPlayer::Update()
@@ -81,10 +81,9 @@ void CPlayer::Update()
 	if(g_Hit.Hit()==true)
 	{
 		OutData out_data;
-		if (g_Ray.RayHit(&out_data, this, m_vLastMove, ObjSphere )== true)
+		if (g_Ray.RayHit(&out_data, this, m_vLastMove)== true)
 		{
-			m_vPos += out_data.m_vRub;
-			
+			m_vMove = out_data.m_vRub;
 		}
 		m_bHit = true;
 	}
@@ -97,7 +96,7 @@ void CPlayer::Update()
 	m_matWorld = MakeMatWorld(m_vPos, m_vAngle, m_vScale);
 
 	//ˆÚ“®‰Šú‰»
-	m_vMove = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	//m_vMove = D3DXVECTOR3(0.0f, 0.0f, 1.0f);
 }
 
 //“ü—Í

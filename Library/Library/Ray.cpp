@@ -8,8 +8,15 @@ void CRay::Insert(CObj3DBase* pObj)
 	m_Data.push_back(pObj);
 }
 
-//Rayの当たり判定
-bool CRay::RayHit(OutData* pOut,CObj3DBase* pOrigin,D3DXVECTOR3 vDir,int Id)
+//RayのHit判定
+bool CRay::RayHit(OutData* pOut, CObj3DBase* pOrigin, D3DXVECTOR3 vDir)
+{
+	return OriginSet(pOut, pOrigin, vDir);
+}
+
+
+//Rayの発射点を決める
+bool CRay::OriginSet(OutData* pOut,CObj3DBase* pOrigin,D3DXVECTOR3 vDir)
 {
 	//Rayを飛ばす側
 	MY_MESH* pOrigineMesh = pOrigin->GetMesh();
@@ -25,6 +32,46 @@ bool CRay::RayHit(OutData* pOut,CObj3DBase* pOrigin,D3DXVECTOR3 vDir,int Id)
 			//面情報
 			FACE_INFO face = pOrigineMesh->Material[OriginMaterial].FaceInfo[OriginFace];
 			
+			//面の重心をしらべる
+			int OriginVerNum = face.Vertex.size();
+		
+			D3DXVECTOR3 v1, v2, v3;
+			D3DXVec3TransformCoord(&v1, &face.Vertex[0].vPos, &matOrigin);
+			D3DXVec3TransformCoord(&v2, &face.Vertex[1].vPos, &matOrigin);
+			D3DXVec3TransformCoord(&v3, &face.Vertex[2].vPos, &matOrigin);
+				
+			//重心の位置を求める
+			D3DXVECTOR3 Center=CenterOfGravity(v1, v2, v3);
+
+			//重心からRayを飛ばす
+			vOrigin = Center;
+
+			//ターゲットになるポリゴンのセット
+			if (TargetSet(pOut, vOrigin, vDir) == true)
+			{
+				return true;
+			}
+
+			//四角ポリゴンは3角ポリゴン2つに分ける
+			if (OriginVerNum == 4)
+			{
+				//各頂点をワールドで変換
+				D3DXVECTOR3 v4;
+				D3DXVec3TransformCoord(&v4, &face.Vertex[3].vPos, &matOrigin);
+
+				//重心の位置を求める
+				D3DXVECTOR3 Center = CenterOfGravity(v2, v4, v3);
+
+				//重心からRayを飛ばす
+				vOrigin = Center;
+				
+				//ターゲットになるポリゴンのセット
+				if (TargetSet(pOut, vOrigin, vDir) == true)
+				{
+					return true;
+				}
+			}
+			
 			//頂点ごとに調べる
 			for (unsigned int OriginVer = 0; OriginVer < face.Vertex.size(); OriginVer++)
 			{
@@ -33,124 +80,92 @@ bool CRay::RayHit(OutData* pOut,CObj3DBase* pOrigin,D3DXVECTOR3 vDir,int Id)
 
 				//頂点をワールド行列で変換
 				D3DXVec3TransformCoord(&vOrigin, &vOrigin, &matOrigin);
-
-				//法線の方向へ
-				D3DXVECTOR3 vFaceNorm = face.Vertex[OriginVer].vNorm;
-
-				//Rayベクトルと頂点の法線の内積
-				float dot = D3DXVec3Dot(&vDir, &vFaceNorm);
-
-				if (dot < 0.0f)
+				
+				//ターゲットになるポリゴンのセット
+				if (TargetSet(pOut, vOrigin, vDir) == true)
 				{
-					//内積がマイナスなら当たらない
-					break;
+					return true;
 				}
+			}
+		}
+	}
+	return false;
+}
 
-				//登録されてるデータの数回す
-				for (unsigned int DataNum = 0; DataNum < m_Data.size(); DataNum++)
+//ターゲットになるポリゴン情報をセットする
+bool CRay::TargetSet(OutData* pOut,D3DXVECTOR3 vOrigin, D3DXVECTOR3 vDir)
+{
+	//登録されてるデータの数回す
+	for (unsigned int DataNum = 0; DataNum < m_Data.size(); DataNum++)
+	{
+		MY_MESH* pMesh = m_Data[DataNum]->GetMesh();
+		D3DXMATRIX matWorld = m_Data[DataNum]->GetWorld();
+
+		//マテリアル分回す
+		for (unsigned int MaterialNum = 0; MaterialNum < pMesh->Material.size(); MaterialNum++)
+		{
+			//面の数
+			for (unsigned int FaceNum = 0; FaceNum < pMesh->Material[MaterialNum].FaceInfo.size(); FaceNum++)
+			{
+				FACE_INFO face_info = pMesh->Material[MaterialNum].FaceInfo[FaceNum];
+
+				//面の頂点の数
+				int FaceOfVer = face_info.Vertex.size();
+
+				//法線
+				D3DXVECTOR3 vNorm;
+
+				//交点
+				D3DXVECTOR3 vInter;
+								
+				//各頂点をワールドで変換
+				D3DXVECTOR3 v1, v2, v3;
+				D3DXVec3TransformCoord(&v1, &face_info.Vertex[0].vPos, &matWorld);
+				D3DXVec3TransformCoord(&v2, &face_info.Vertex[1].vPos, &matWorld);
+				D3DXVec3TransformCoord(&v3, &face_info.Vertex[2].vPos, &matWorld);
+
+				//Ray判定
+				if (TriangleRay(&vInter, &vNorm, vOrigin, vDir, v1, v2, v3) == true)
 				{
-					//指定したオブジェクトだけ
-					if (m_Data[DataNum]->GetId()== Id)
+					//出力データ
+					if (pOut != NULL)
 					{
-						MY_MESH* pTargetMesh = m_Data[DataNum]->GetMesh();
-						D3DXMATRIX matTarget = m_Data[DataNum]->GetWorld();
+						//交点
+						pOut->m_vInter = vInter;
 
-						//マテリアル分回す
-						for (unsigned int TargetMaterial = 0; TargetMaterial < pTargetMesh->Material.size(); TargetMaterial++)
+						//法線
+						pOut->m_vRub = WallShear(&vDir, &vNorm);
+
+						//反射
+						pOut->m_vRef = Reflection(&vDir, &vNorm);
+					}
+
+					return true;
+				}
+				
+				//四角ポリゴンは三角ポリゴン2つに分ける
+				if(FaceOfVer==4)
+				{
+					//各頂点をワールドで変換
+					D3DXVECTOR3 v4;
+					D3DXVec3TransformCoord(&v4, &face_info.Vertex[3].vPos, &matWorld);
+					
+					//Ray判定
+					if (TriangleRay(&vInter, &vNorm, vOrigin, vDir, v2, v4, v3) == true)
+					{
+						//出力データ
+						if (pOut != NULL)
 						{
-							//面の数
-							for (unsigned int TargetFace = 0; TargetFace < pTargetMesh->Material[TargetMaterial].FaceInfo.size(); TargetFace++)
-							{
-								FACE_INFO Target = pTargetMesh->Material[TargetMaterial].FaceInfo[TargetFace];
+							//交点
+							pOut->m_vInter = vInter;
 
-								//面の頂点の数
-								int FaceOfVer = Target.Vertex.size();
+							//法線
+							pOut->m_vRub = WallShear(&vDir, &vNorm);
 
-								//法線
-								D3DXVECTOR3 vNorm;
-
-								//交点
-								D3DXVECTOR3 vInter;
-
-								//三角ポリゴン
-								if (FaceOfVer == 3)
-								{
-									//各頂点をワールドで変換
-									D3DXVECTOR3 v1, v2, v3;
-									D3DXVec3TransformCoord(&v1, &Target.Vertex[0].vPos, &matTarget);
-									D3DXVec3TransformCoord(&v2, &Target.Vertex[1].vPos, &matTarget);
-									D3DXVec3TransformCoord(&v3, &Target.Vertex[2].vPos, &matTarget);
-
-									//Ray判定
-									if (TriangleRay(&vInter,&vNorm,vOrigin,vDir, v1, v2, v3) == true)
-									{
-										//出力データ
-										if (pOut != NULL)
-										{
-											//交点
-											pOut->m_vInter = vInter;
-											
-											//法線
-											pOut->m_vRub = WallShear(&vDir,&vNorm);
-
-											//反射
-											pOut->m_vRef = Reflection(&vDir, &vNorm);
-										}
-
-										return true;
-									}
-								}
-								//四角ポリゴン
-								else
-								{
-									//各頂点をワールドで変換
-									D3DXVECTOR3 v1, v2, v3,v4;
-									D3DXVec3TransformCoord(&v1, &Target.Vertex[0].vPos, &matTarget);
-									D3DXVec3TransformCoord(&v2, &Target.Vertex[1].vPos, &matTarget);
-									D3DXVec3TransformCoord(&v3, &Target.Vertex[2].vPos, &matTarget);
-									D3DXVec3TransformCoord(&v4, &Target.Vertex[3].vPos, &matTarget);
-
-									//三角ポリゴン2つに分解して調べる
-
-									//1つ目の三角ポリゴンRay判定
-									if (TriangleRay(&vInter, &vNorm, vOrigin, vDir, v1, v2, v3) == true)
-									{
-										//出力データ
-										if (pOut != NULL)
-										{
-											//交点
-											pOut->m_vInter = vInter;
-
-											//法線
-											pOut->m_vRub = WallShear(&vDir, &vNorm);
-
-											//反射
-											pOut->m_vRef = Reflection(&vDir, &vNorm);
-										}
-										return true;
-									}
-
-									//Ray判定
-									if (TriangleRay(&vInter, &vNorm, vOrigin, vDir, v2, v4, v3) == true)
-									{
-										//出力データ
-										if (pOut != NULL)
-										{
-											//交点
-											pOut->m_vInter = vInter;
-
-											//法線
-											pOut->m_vRub = WallShear(&vDir, &vNorm);
-
-											//反射
-											pOut->m_vRef = Reflection(&vDir, &vNorm);
-										}
-										return true;
-									}
-
-								}
-							}
+							//反射
+							pOut->m_vRef = Reflection(&vDir, &vNorm);
 						}
+						return true;
 					}
 				}
 			}
@@ -255,7 +270,10 @@ bool CRay::TriangleRay(D3DXVECTOR3* OutPoint,D3DXVECTOR3* OutNorm ,D3DXVECTOR3 v
 		if (dot1 > 0.0f && dot2 > 0.0f && dot3 > 0.0f)
 		{
 			//交点
-			OutPoint = &vPoint;
+			OutPoint->x = vPoint.x;
+			OutPoint->y = vPoint.y;
+			OutPoint->z = vPoint.z;
+
 			return true;
 		}
 	}
@@ -268,6 +286,16 @@ void CRay::Release()
 	VectorRelease(m_Data);
 }
 
+//3角ポリゴンの重心の位置を求める
+D3DXVECTOR3 CRay::CenterOfGravity(D3DXVECTOR3 v1, D3DXVECTOR3 v2, D3DXVECTOR3 v3)
+{
+	D3DXVECTOR3 Out;
+	Out.x = (v1.x + v2.x + v3.x) / 3;
+	Out.y = (v1.y + v2.y + v3.y) / 3;
+	Out.z = (v1.z + v2.z + v3.z) / 3;
+
+	return Out;
+}
 
 //壁ずり
 D3DXVECTOR3 CRay::WallShear( D3DXVECTOR3* Front, D3DXVECTOR3* Norm)
@@ -294,10 +322,10 @@ D3DXVECTOR3 CRay::Reflection(D3DXVECTOR3* Front, D3DXVECTOR3* Norm)
 	D3DXVec3Normalize(&Normal_n,Norm);
 
 	//反射ベクトル
-	D3DXVECTOR3 Rub,Rub_norm;
-	Rub = (*Front) - 2.0f * D3DXVec3Dot(Front, &Normal_n) * Normal_n;
+	D3DXVECTOR3 Rub = (*Front) - 2.0f * D3DXVec3Dot(Front, &Normal_n) * Normal_n;
 	
 	//反射初期化
+	D3DXVECTOR3 Rub_norm;
 	D3DXVec3Normalize(&Rub_norm, &Rub);
 	
 	return Rub_norm;

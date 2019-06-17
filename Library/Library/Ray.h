@@ -24,12 +24,21 @@ public:
 	//登録
 	void Insert(CObj3DBase* pObj);
 
-	//Ray判定を呼び出す
-	bool RayHit(OutData* pOut, CObj3DBase* pOrigin, D3DXVECTOR3 vDir, int Id);
-
+	//RayのHit判定
+	bool RayHit(OutData* pOut, CObj3DBase* pOrigin, D3DXVECTOR3 vDir);
+	
 private:
 	//Rayの判定
 	bool TriangleRay(D3DXVECTOR3* OutPoint, D3DXVECTOR3* OutNorm,D3DXVECTOR3 vRayOrigin, D3DXVECTOR3 vRayDir, D3DXVECTOR3 vA, D3DXVECTOR3 vB, D3DXVECTOR3 vC);
+
+	//3角ポリゴンの重心の位置を求める
+	D3DXVECTOR3 CenterOfGravity(D3DXVECTOR3 v1, D3DXVECTOR3 v2, D3DXVECTOR3 v3);
+
+	//ターゲットになるポリゴンを決める
+	bool TargetSet(OutData* pOut,D3DXVECTOR3 vOrigin, D3DXVECTOR3 vDir);
+	
+	//Ray発射点を決める
+	bool OriginSet(OutData* pOut, CObj3DBase* pOrigin, D3DXVECTOR3 vDir);
 
 	//壁擦り
 	D3DXVECTOR3 WallShear(D3DXVECTOR3* Front, D3DXVECTOR3* Norm);
