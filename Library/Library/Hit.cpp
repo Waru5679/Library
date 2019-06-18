@@ -330,3 +330,34 @@ void CHit::SetObbData(CObj3DBase* pCobj, MY_MESH* pMesh, ObbData* pObb)
 	//描画用にワールドマトリックス作る
 	pObb->m_matWorld = MakeMatWorld(vCenterPos, vAngle, vScale);
 }
+
+//めり込み修正
+D3DXVECTOR3 CHit::Fixation(D3DXVECTOR3 Pos, D3DXVECTOR3 Norm, ObbData* pObb)
+{
+	//Obbの中心点
+	D3DXVECTOR3 Center = pObb->m_vCenterPos;
+
+	//面から中心点へのベクトル
+	D3DXVECTOR3 FaceFromCenter = Center - Pos;
+
+	//各軸の方向ベクトル
+	D3DXVECTOR3 Dir_x = pObb->m_vDirect[0];
+	D3DXVECTOR3 Dir_y = pObb->m_vDirect[1];
+	D3DXVECTOR3 Dir_z = pObb->m_vDirect[2];
+
+	//各軸のベクトル長さ
+	float Length_x = pObb->m_vLength.x;
+	float Length_y = pObb->m_vLength.y;
+	float Length_z = pObb->m_vLength.z;
+
+	//各軸のベクトルと面の法線の内積
+	float dot_x = D3DXVec3Dot(&(Dir_x * Length_x), &Norm);
+	float dot_y = D3DXVec3Dot(&(Dir_y * Length_y), &Norm);
+	float dot_z = D3DXVec3Dot(&(Dir_z * Length_z), &Norm);
+	
+	//中心と頂点の長さ
+	float r = fabsf(dot_x) + fabsf(dot_y) + fabsf(dot_z);
+
+	//面と中心の長さ
+	float s = fabsf(D3DXVec3Dot(&(Center - Pos), &Norm));	 
+}

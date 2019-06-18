@@ -22,8 +22,6 @@ struct ObbData
 	D3DXVECTOR3 m_vLength;		//中心点から各軸への長さ
 	D3DXVECTOR3 m_vCenterPos;	//中心点の位置
 
-	//D3DXVECTOR3 m_vVertexPos[8];//頂点の位置
-
 	D3DXMATRIX	m_matWorld;		//描画用
 };
 
@@ -54,8 +52,11 @@ public:
 	CollisionData CollisionCreate(CObj3DBase* pCobj);
 	void Insert(CollisionData* pData);
 
+	//めり込み修正
+	D3DXVECTOR3 Fixation(D3DXVECTOR3 Pos, D3DXVECTOR3 Norm, ObbData* pObb);
+
 private:
-	//球と級のヒット判定
+	//球と球のヒット判定
 	bool SphereAndSphre(SphereData* data1, SphereData* data2);
 
 	//OBBにセット

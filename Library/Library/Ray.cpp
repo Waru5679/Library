@@ -14,7 +14,6 @@ bool CRay::RayHit(OutData* pOut, CObj3DBase* pOrigin, D3DXVECTOR3 vDir)
 	return OriginSet(pOut, pOrigin, vDir);
 }
 
-
 //Rayの発射点を決める
 bool CRay::OriginSet(OutData* pOut,CObj3DBase* pOrigin,D3DXVECTOR3 vDir)
 {
@@ -138,6 +137,12 @@ bool CRay::TargetSet(OutData* pOut,D3DXVECTOR3 vOrigin, D3DXVECTOR3 vDir)
 
 						//反射
 						pOut->m_vRef = Reflection(&vDir, &vNorm);
+
+						//衝突面
+						pOut->m_HitFace = face_info;
+
+						//衝突面の法線
+						pOut->m_vNorm = vNorm;
 					}
 
 					return true;
@@ -164,6 +169,12 @@ bool CRay::TargetSet(OutData* pOut,D3DXVECTOR3 vOrigin, D3DXVECTOR3 vDir)
 
 							//反射
 							pOut->m_vRef = Reflection(&vDir, &vNorm);
+
+							//衝突面
+							pOut->m_HitFace = face_info;
+
+							//衝突面の法線
+							pOut->m_vNorm = vNorm;
 						}
 						return true;
 					}
@@ -310,6 +321,7 @@ D3DXVECTOR3 CRay::WallShear( D3DXVECTOR3* Front, D3DXVECTOR3* Norm)
 	//正規化壁ずりベクトル
 	D3DXVECTOR3 Shear_norm;
 	D3DXVec3Normalize(&Shear_norm, &Shear);
+
 
 	return Shear_norm;
 }

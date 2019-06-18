@@ -13,6 +13,9 @@ struct OutData
 	D3DXVECTOR3 m_vRef;		//反射
 	D3DXVECTOR3 m_vRub;		//壁すり
 	D3DXVECTOR3 m_vInter;	//交点
+	
+	D3DXVECTOR3 m_vNorm;	//衝突面の法線
+	FACE_INFO m_HitFace;	//衝突面
 };
 
 //レイの判定用クラス
