@@ -334,6 +334,8 @@ void CHit::SetObbData(CObj3DBase* pCobj, MY_MESH* pMesh, ObbData* pObb)
 //ÇﬂÇËçûÇ›èCê≥
 D3DXVECTOR3 CHit::Fixation(D3DXVECTOR3 Pos, D3DXVECTOR3 Norm, ObbData* pObb)
 {
+	D3DXVECTOR3 out;
+
 	//ObbÇÃíÜêSì_
 	D3DXVECTOR3 Center = pObb->m_vCenterPos;
 
@@ -360,4 +362,6 @@ D3DXVECTOR3 CHit::Fixation(D3DXVECTOR3 Pos, D3DXVECTOR3 Norm, ObbData* pObb)
 
 	//ñ Ç∆íÜêSÇÃí∑Ç≥
 	float s = fabsf(D3DXVec3Dot(&(Center - Pos), &Norm));	 
+
+	return out;
 }
