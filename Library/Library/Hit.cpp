@@ -334,7 +334,9 @@ void CHit::SetObbData(CObj3DBase* pCobj, MY_MESH* pMesh, ObbData* pObb)
 //めり込み修正
 D3DXVECTOR3 CHit::Fixation(D3DXVECTOR3 Pos, D3DXVECTOR3 Norm, ObbData* pObb)
 {
-	D3DXVECTOR3 out;
+	//法線正規化
+	D3DXVECTOR3 Norm_n;
+	D3DXVec3Normalize(&Norm_n, &Norm);
 
 	//Obbの中心点
 	D3DXVECTOR3 Center = pObb->m_vCenterPos;
@@ -361,7 +363,27 @@ D3DXVECTOR3 CHit::Fixation(D3DXVECTOR3 Pos, D3DXVECTOR3 Norm, ObbData* pObb)
 	float r = fabsf(dot_x) + fabsf(dot_y) + fabsf(dot_z);
 
 	//面と中心の長さ
-	float s = fabsf(D3DXVec3Dot(&(Center - Pos), &Norm));	 
+	float s = fabsf(D3DXVec3Dot(&FaceFromCenter, &Norm));
 
-	return out;
+	//面から中心点へのベクトルと法線の内積
+	float dot = D3DXVec3Dot(&FaceFromCenter, &Norm);
+
+	//戻す長さ
+	float fix_length;
+
+	//中心が面の法線と同じ方向にある
+	if (dot > 0.0f)
+	{
+		fix_length = r - s;
+	}
+	//中心が面の法線と反対の方向にある
+	else
+	{
+		fix_length = r + s;
+	}
+
+	//面の法線の方向へ戻す
+	D3DXVECTOR3 vOut = Norm * fix_length;
+
+	return vOut;
 }

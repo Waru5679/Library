@@ -25,7 +25,7 @@ void CSceneMain::Init()
 	LoadMesh();
 	
 	//ÉvÉåÉCÉÑÅ[
-	D3DXVECTOR3 vPos(0.0f, 0.0f, -10.0f);
+	D3DXVECTOR3 vPos(0.0f, 0.0f, -20.0f);
 	D3DXVECTOR3 vAngle(0.0f, 0.0f, 0.0f);
 	D3DXVECTOR3 vScale(1.0f, 1.0f, 1.0f);
 
@@ -47,7 +47,7 @@ void CSceneMain::Init()
 */
 
 	vPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	vScale = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
+	vScale = D3DXVECTOR3(10.0f, 10.0f, 10.0f);
 
 	//ãÖ
 	CSphere* pSphere = new CSphere(vPos, vAngle, vScale);

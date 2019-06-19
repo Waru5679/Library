@@ -83,11 +83,16 @@ void CPlayer::Update()
 		OutData out_data;
 		if (g_Ray.RayHit(&out_data, this, m_vLastMove)== true)
 		{
+			D3DXVECTOR3 vFix = g_Hit.Fixation(out_data.m_HitFace.Vertex[0].vPos, out_data.m_vNorm, &m_Collision.m_ObbData);
+			
+			//‚ß‚è‚İC³
+			m_vPos += vFix;
+
 			//•ÇC‚è
-			m_vPos += out_data.m_vRub;
+			m_vMove= out_data.m_vRub*m_fSpeed;
 
 			//”½Ë
-			//m_vPos += out_data.m_vRef;
+			//m_vMove = out_data.m_vRef;
 		}
 		m_bHit = true;
 	}
@@ -100,7 +105,7 @@ void CPlayer::Update()
 	m_matWorld = MakeMatWorld(m_vPos, m_vAngle, m_vScale);
 
 	//ˆÚ“®‰Šú‰»
-	m_vMove = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	//m_vMove = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 }
 
 //“ü—Í
