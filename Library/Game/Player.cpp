@@ -38,7 +38,7 @@ void CPlayer::Init()
 	m_vMove = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 
 	//移動スピード
-	m_fSpeed=0.2f;
+	m_fSpeed=1.0f;
 		
 	//ヒットテスト
 	m_bHit=false;
@@ -49,7 +49,7 @@ void CPlayer::Init()
 	
 	//Ray登録
 	g_Ray.Insert(this);
-	}
+}
 
 //更新
 void CPlayer::Update()
@@ -80,20 +80,6 @@ void CPlayer::Update()
 	//ヒット確認
 	if(g_Hit.Hit()==true)
 	{
-		OutData out_data;
-		if (g_Ray.RayHit(&out_data, this, m_vLastMove)== true)
-		{
-			D3DXVECTOR3 vFix = g_Hit.Fixation(out_data.m_HitFace.Vertex[0].vPos, out_data.m_vNorm, &m_Collision.m_ObbData);
-			
-			//めり込み修正
-			m_vPos += vFix;
-
-			//壁擦り
-			m_vMove= out_data.m_vRub*m_fSpeed;
-
-			//反射
-			//m_vMove = out_data.m_vRef;
-		}
 		m_bHit = true;
 	}
 	else
@@ -101,11 +87,12 @@ void CPlayer::Update()
 		m_bHit = false;
 	}
 
+	
 	//ワールド行列作成
 	m_matWorld = MakeMatWorld(m_vPos, m_vAngle, m_vScale);
 
 	//移動初期化
-	//m_vMove = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	m_vMove = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 }
 
 //入力

@@ -355,18 +355,18 @@ D3DXVECTOR3 CHit::Fixation(D3DXVECTOR3 Pos, D3DXVECTOR3 Norm, ObbData* pObb)
 	float Length_z = pObb->m_vLength.z;
 
 	//各軸のベクトルと面の法線の内積
-	float dot_x = D3DXVec3Dot(&(Dir_x * Length_x), &Norm);
-	float dot_y = D3DXVec3Dot(&(Dir_y * Length_y), &Norm);
-	float dot_z = D3DXVec3Dot(&(Dir_z * Length_z), &Norm);
+	float dot_x = D3DXVec3Dot(&(Dir_x * Length_x), &Norm_n);
+	float dot_y = D3DXVec3Dot(&(Dir_y * Length_y), &Norm_n);
+	float dot_z = D3DXVec3Dot(&(Dir_z * Length_z), &Norm_n);
 	
 	//中心と頂点の長さ
 	float r = fabsf(dot_x) + fabsf(dot_y) + fabsf(dot_z);
 
 	//面と中心の長さ
-	float s = fabsf(D3DXVec3Dot(&FaceFromCenter, &Norm));
+	float s = fabsf(D3DXVec3Dot(&FaceFromCenter, &Norm_n));
 
 	//面から中心点へのベクトルと法線の内積
-	float dot = D3DXVec3Dot(&FaceFromCenter, &Norm);
+	float dot = D3DXVec3Dot(&FaceFromCenter, &Norm_n);
 
 	//戻す長さ
 	float fix_length;

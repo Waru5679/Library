@@ -26,44 +26,18 @@ void CTask::InsertObj(CObjBase* pObj, int Id)
 //更新
 void CTask::Update()
 {
-	//OBJ削除
-	ObjDelete();
-
 	//OBJ更新
 	for (unsigned int i = 0; i < m_Obj.size(); i++)
 	{
 		m_Obj[i]->Update();
-	}
-}
 
-//データ削除
-void CTask::ObjDelete()
-{
-	//削除する要素数を保存する
-	vector <int> DeleteNum;
-	
-	//削除する要素を探す
-	for (unsigned int i = 0; i < m_Obj.size(); i++)
-	{
+		//削除
 		if (m_Obj[i]->GetDelete() == true)
 		{
-			DeleteNum.push_back(i);
+			m_Obj.erase(m_Obj.begin()+i);
+			i--;
 		}
 	}
-	
-	//削除カウンター
-	int count = 0;
-
-	//OBJ削除
-	for (unsigned int i = 0; i < DeleteNum.size(); i++)
-	{
-		//消去
-		m_Obj.erase(m_Obj.begin() + DeleteNum[i] - count);
-		count++;
-	}
-
-	//要素数を破棄
-	DeleteNum.erase(DeleteNum.begin(), DeleteNum.end());	
 }
 
 //描画

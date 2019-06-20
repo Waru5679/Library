@@ -11,8 +11,11 @@
 #pragma comment(lib,"d3dx10.lib")
 
 //ウインドウサイズ
-#define WINDOW_WIDTH 640
-#define WINDOW_HEIGHT 480
+constexpr int WINDOW_WIDTH{ 640 };
+constexpr int WINDOW_HEIGHT{ 480 };
+
+//フレームレート
+constexpr int FRAME_RATE{ 60 };
 
 //初期化
 HRESULT Init();
@@ -24,7 +27,7 @@ void Release();
 static WCHAR szAppName[] = L"ライブラリ";
 
 //初めのシーン
-#define START_SCENE SceneName::SceneMain
+#define START_SCENE SceneName::SceneMain 
 
 //シーン
 enum SceneName
@@ -38,17 +41,14 @@ enum ObjName
 	ObjMainCamera,	//メインカメラ
 	ObjPlayer,		//プレイヤー
 	ObjDraw2D,		//2D描画
-	ObjStreet,		//町
-	ObjRayTest,	//Rayのテスト
-	ObjSphere,	//球
+	ObjSphere,		//球
+	ObjEnemy,		//敵
+	ObjBullet,		//弾
 };
 
 //モデル
 enum ModelName
 {
-	ModelStreet,	//町
 	ModelPlayer,	//プレイヤー
-
-	ModelRayTest,	//Rayテスト
 	ModelSphere,	//球
 };

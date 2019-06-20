@@ -55,9 +55,6 @@
     <Filter Include="リソース ファイル\Scene">
       <UniqueIdentifier>{8428ceb3-004a-4aeb-8c3c-d9fd55d2b5c9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\Street">
-      <UniqueIdentifier>{02750381-ffe8-44f1-a248-d67da6e024f0}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\2D">
       <UniqueIdentifier>{0fcceea1-99c6-4f74-bdb2-2924a52bf396}</UniqueIdentifier>
     </Filter>
@@ -72,6 +69,15 @@
     </Filter>
     <Filter Include="リソース ファイル\Hit">
       <UniqueIdentifier>{805a6bb3-e752-41b0-a0e4-3f478b18ef25}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Enemy">
+      <UniqueIdentifier>{d4d6d514-aead-4462-bebe-ca98e4195e7d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Bullet">
+      <UniqueIdentifier>{318c806b-44b0-4a9c-8651-e182b8ed2808}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="リソース ファイル\FrameRate">
+      <UniqueIdentifier>{5c43d44d-2b30-4c08-a1f6-ac262a44af2d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -129,17 +135,11 @@
     <ClInclude Include="Game\SceneMain.h">
       <Filter>ソース ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Game\Street.h">
-      <Filter>ソース ファイル\Street</Filter>
-    </ClInclude>
     <ClInclude Include="Game\2DPolygon.h">
       <Filter>ソース ファイル\2D</Filter>
     </ClInclude>
     <ClInclude Include="Game\Player.h">
       <Filter>ソース ファイル\Player</Filter>
-    </ClInclude>
-    <ClInclude Include="Game\RayTest.h">
-      <Filter>ソース ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Game\Sphere.h">
       <Filter>ソース ファイル\Sphere</Filter>
@@ -155,6 +155,15 @@
     </ClInclude>
     <ClInclude Include="Library\CObj.h">
       <Filter>リソース ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Enemy.h">
+      <Filter>ソース ファイル\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Bullet.h">
+      <Filter>ソース ファイル\Bullet</Filter>
+    </ClInclude>
+    <ClInclude Include="Library\FrameRate.h">
+      <Filter>リソース ファイル\FrameRate</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -212,23 +221,26 @@
     <ClCompile Include="Game\SceneMain.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Game\Street.cpp">
-      <Filter>ソース ファイル\Street</Filter>
-    </ClCompile>
     <ClCompile Include="Game\2DPolygon.cpp">
       <Filter>ソース ファイル\2D</Filter>
     </ClCompile>
     <ClCompile Include="Game\Player.cpp">
       <Filter>ソース ファイル\Player</Filter>
     </ClCompile>
-    <ClCompile Include="Game\RayTest.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="Game\Sphere.cpp">
       <Filter>ソース ファイル\Sphere</Filter>
     </ClCompile>
     <ClCompile Include="Library\Hit.cpp">
       <Filter>リソース ファイル\Hit</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Enemy.cpp">
+      <Filter>ソース ファイル\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Bullet.cpp">
+      <Filter>ソース ファイル\Bullet</Filter>
+    </ClCompile>
+    <ClCompile Include="Library\FrameRate.cpp">
+      <Filter>リソース ファイル\FrameRate</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

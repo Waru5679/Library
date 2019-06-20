@@ -131,18 +131,19 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Game\2DPolygon.h" />
+    <ClInclude Include="Game\Bullet.h" />
+    <ClInclude Include="Game\Enemy.h" />
     <ClInclude Include="Game\MainCamera.h" />
     <ClInclude Include="Game\Player.h" />
-    <ClInclude Include="Game\RayTest.h" />
     <ClInclude Include="Game\SceneMain.h" />
     <ClInclude Include="Game\Sphere.h" />
-    <ClInclude Include="Game\Street.h" />
     <ClInclude Include="Library\Audio.h" />
     <ClInclude Include="Library\Camera.h" />
     <ClInclude Include="Library\CObj.h" />
     <ClInclude Include="Library\Csv.h" />
     <ClInclude Include="Library\DirectX.h" />
     <ClInclude Include="Library\Font.h" />
+    <ClInclude Include="Library\FrameRate.h" />
     <ClInclude Include="Library\Hit.h" />
     <ClInclude Include="Library\Input.h" />
     <ClInclude Include="Library\Main.h" />
@@ -160,16 +161,17 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Game\2DPolygon.cpp" />
+    <ClCompile Include="Game\Bullet.cpp" />
+    <ClCompile Include="Game\Enemy.cpp" />
     <ClCompile Include="Game\MainCamera.cpp" />
     <ClCompile Include="Game\Player.cpp" />
-    <ClCompile Include="Game\RayTest.cpp" />
     <ClCompile Include="Game\SceneMain.cpp" />
     <ClCompile Include="Game\Sphere.cpp" />
-    <ClCompile Include="Game\Street.cpp" />
     <ClCompile Include="Library\Audio.cpp" />
     <ClCompile Include="Library\Csv.cpp" />
     <ClCompile Include="Library\DirectX.cpp" />
     <ClCompile Include="Library\Font.cpp" />
+    <ClCompile Include="Library\FrameRate.cpp" />
     <ClCompile Include="Library\Hit.cpp" />
     <ClCompile Include="Library\Input.cpp" />
     <ClCompile Include="Library\Main.cpp" />

@@ -11,6 +11,7 @@
 #include "Audio.h"
 #include "Font.h"
 #include "Hit.h"
+#include "FrameRate.h"
 #include "SceneInclude.h"
 
 
@@ -70,14 +71,7 @@ INT WINAPI WinMain( HINSTANCE hInst,HINSTANCE hPrevInst,LPSTR szStr,INT iCmdShow
 
 	//スタートシーンセット
 	g_Scene.SetScene(START_SCENE);
-	
-	//fps制御
-	DWORD FlameTime,NowTime;
-		FlameTime = GetTickCount();
-
-	NowTime = 0;
-	int FpsCount = 0;
-	
+		
 	while( msg.message!=WM_QUIT )
 	{
 		if( PeekMessage( &msg, NULL, 0U, 0U, PM_REMOVE ) )
@@ -94,23 +88,23 @@ INT WINAPI WinMain( HINSTANCE hInst,HINSTANCE hPrevInst,LPSTR szStr,INT iCmdShow
 			//深度バッファクリア
 			dx.m_pDevice->ClearDepthStencilView(dx.m_pDepthStencilView, D3D10_CLEAR_DEPTH, 1.0f, 0);
 
-			//時刻更新
-			NowTime = GetTickCount();
-
-			//60fps
-			if (NowTime - FlameTime > 1000.0f / 60.0f)
-			{
-				FlameTime = NowTime;
-			
+			////60fps
+			//if (NowTime - FlameTime > 1000.0f / 60.0f)
+			//{
+				
 				//更新
 				g_Scene.Update();
-			}
+			//}
 
 			//描画
 			g_Scene.Draw();
 
+			//当たり判定描画
 			g_Hit.Draw();
-		
+			
+			//フレームレート計算
+			g_Frame.FrameCount();
+
 			//画面更新（バックバッファをフロントバッファに）
 			dx.m_pSwapChain->Present(0, 0);
 		}				
@@ -175,6 +169,9 @@ HRESULT Init()
 	//音楽初期化
 	g_Audio.Init();
 	
+	//フレームレート
+	g_Frame.Init();
+
 	//当たり判定初期化
 	g_Hit.Init();
 
@@ -185,6 +182,7 @@ HRESULT Init()
 void Release()
 {
 	g_Hit.Release();
+	g_Frame.Release();
 	g_Scene.Release();
 	g_Audio.Release();
 	g_Font.Release();

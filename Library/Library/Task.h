@@ -36,8 +36,6 @@ public:
 	CObjBase* GetObj(int Id);
 	MY_TEXTURE* GetTex(int Id);
 	
-	//OBJリストデータ削除
-	void ObjDelete();
 private:
 	vector<CObjBase*> m_Obj;	//オブジェクト
 	vector<MY_TEXTURE> m_Tex;	//テクスチャ

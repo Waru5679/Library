@@ -14,7 +14,7 @@ public:
 	void SetDelete(bool isDelete)	{ m_bDelete = isDelete; }
 	int	 GetId()					{ return m_Id; }
 	bool GetDelete()				{ return m_bDelete; }
-protected:
+private:
 	int m_Id;		//オブジェクトID
 	bool m_bDelete;	//削除フラグ
 };
