@@ -11,12 +11,18 @@ void CFrameRate::Init()
 
 	//開始時刻取得
 	m_StartTime = timeGetTime();
-	
+
+	//精度を戻す
+	timeEndPeriod(1);
+		
 	//描画時刻
 	m_DrawTime = m_StartTime;
 		
 	//カウンタ
 	m_Count = 0;
+
+	//FPS
+	m_FrameRate = 0;
 }
 
 //フレームレートの計算
@@ -24,39 +30,48 @@ void CFrameRate::FrameCount()
 {
 	//カウンタ更新
 	m_Count++;
+	
+	//精度上げる
+	timeBeginPeriod(1);
 
 	//現在時刻取得
 	m_NowTime = timeGetTime();
-
+	
 	//このフレームでかかった時間
-	float FrameTime = static_cast<float>(m_NowTime - m_StartTime)/1000;
+	float FrameTime = static_cast<float>(m_NowTime - m_StartTime);
 
 	//時間に余裕があるとき
-	if ( FrameTime < MIN_FRAME_TIME)
+	if (FrameTime < MIN_FRAME_TIME)
 	{
 		//余分な時間
-		DWORD SleepTime = static_cast<DWORD>((MIN_FRAME_TIME - FrameTime)* 1000);
-		
+		DWORD SleepTime = static_cast<DWORD>((MIN_FRAME_TIME - FrameTime));
+
 		//待機
 		Sleep(SleepTime);
+
+		//現在時刻の更新
+		m_NowTime = timeGetTime();
 	}
 
-	//1秒経過してるとき
-	float draw_time = static_cast<float>(m_NowTime - m_DrawTime) / 1000;
-	if ( draw_time >= 1.0f)
+	//精度を戻す
+	timeEndPeriod(1);
+
+	//開始時刻更新
+	m_StartTime = m_NowTime;
+
+	//前回の描画から1秒経過してるとき
+	float draw_time = static_cast<float>(m_NowTime - m_DrawTime);
+	if ( draw_time >= (FRAME_RATE*MIN_FRAME_TIME))
 	{
 		//描画時刻更新
 		m_DrawTime = m_NowTime;
 
-		//フレーム数描画
-		Draw();
+		//フレームレート更新
+		m_FrameRate = m_Count;
 
 		//カウンタ初期化
 		m_Count = 0;
 	}
-
-	//開始時刻更新
-	m_StartTime = m_NowTime;
 }
 
 //描画
@@ -64,14 +79,8 @@ void CFrameRate::Draw()
 {
 	//変換
 	wchar_t buf[12];
-	_itow_s(m_Count, buf, 10);
+	_itow_s(m_FrameRate, buf, 10);
 
-	g_Font.DrawStr(buf, 0.0f, 0.0f, 32.0f, 0.0f);
-}
-
-//解放
-void CFrameRate::Release()
-{
-	//精度を戻す
-	timeEndPeriod(1);
+	//描画
+	g_Font.DrawStr(buf, 200.0f, 0.0f, 32.0f, 0.0f);
 }

@@ -71,7 +71,7 @@ INT WINAPI WinMain( HINSTANCE hInst,HINSTANCE hPrevInst,LPSTR szStr,INT iCmdShow
 
 	//スタートシーンセット
 	g_Scene.SetScene(START_SCENE);
-		
+
 	while( msg.message!=WM_QUIT )
 	{
 		if( PeekMessage( &msg, NULL, 0U, 0U, PM_REMOVE ) )
@@ -87,15 +87,10 @@ INT WINAPI WinMain( HINSTANCE hInst,HINSTANCE hPrevInst,LPSTR szStr,INT iCmdShow
 
 			//深度バッファクリア
 			dx.m_pDevice->ClearDepthStencilView(dx.m_pDepthStencilView, D3D10_CLEAR_DEPTH, 1.0f, 0);
-
-			////60fps
-			//if (NowTime - FlameTime > 1000.0f / 60.0f)
-			//{
-				
-				//更新
-				g_Scene.Update();
-			//}
-
+			
+			//更新
+			g_Scene.Update();
+		
 			//描画
 			g_Scene.Draw();
 
@@ -105,11 +100,13 @@ INT WINAPI WinMain( HINSTANCE hInst,HINSTANCE hPrevInst,LPSTR szStr,INT iCmdShow
 			//フレームレート計算
 			g_Frame.FrameCount();
 
+			//フレームレート数描画
+			g_Frame.Draw();
+
 			//画面更新（バックバッファをフロントバッファに）
 			dx.m_pSwapChain->Present(0, 0);
 		}				
 	}
-	
 	return (INT)msg.wParam;
 }
 
@@ -182,7 +179,6 @@ HRESULT Init()
 void Release()
 {
 	g_Hit.Release();
-	g_Frame.Release();
 	g_Scene.Release();
 	g_Audio.Release();
 	g_Font.Release();

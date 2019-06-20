@@ -7,7 +7,7 @@
 
 #include "Player.h"
 
-constexpr int DELETE_TIME{ 1000 };
+constexpr int DELETE_TIME{ 300 };
 
 //’eƒNƒ‰ƒX
 class CBullet :public CObj3DBase
