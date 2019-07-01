@@ -109,7 +109,7 @@ ID3D10Buffer* CDraw::BufferCreate(void* pHead, unsigned int Size, int BufferType
 
 	//バッファ作成
 	ID3D10Buffer* pOut;
-	if (FAILED(dx.m_pDevice->CreateBuffer(&bd, &InitData, &pOut)))
+	if (FAILED(DX->GetDevice()->CreateBuffer(&bd, &InitData, &pOut)))
 		return nullptr;
 
 	return pOut;
@@ -121,26 +121,26 @@ void CDraw::DrawPolygon(int VerNum, ID3D10Buffer* VertexBuffer, ID3D10Buffer* In
 	//バーテックスバッファーをセット
 	UINT stride = sizeof(MY_VERTEX);
 	UINT offset = 0;
-	dx.m_pDevice->IASetVertexBuffers(0, 1, &VertexBuffer, &stride, &offset);
+	DX->GetDevice()->IASetVertexBuffers(0, 1, &VertexBuffer, &stride, &offset);
 
 	//インデックスバッファーをセット
 	if (IndexBuffer != NULL)
 	{
 		stride = sizeof(int);
 		offset = 0;
-		dx.m_pDevice->IASetIndexBuffer(IndexBuffer, DXGI_FORMAT_R32_UINT, 0);
+		DX->GetDevice()->IASetIndexBuffer(IndexBuffer, DXGI_FORMAT_R32_UINT, 0);
 	}
 
 	//プリミティブ・トポロジーをセット
 	if (VerNum == 3)
 	{
 		//三角形
-		dx.m_pDevice->IASetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		DX->GetDevice()->IASetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	}
 	if (VerNum == 4)
 	{
 		//四角形
-		dx.m_pDevice->IASetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+		DX->GetDevice()->IASetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 	}
 
 	//プリミティブをレンダリング
@@ -149,7 +149,7 @@ void CDraw::DrawPolygon(int VerNum, ID3D10Buffer* VertexBuffer, ID3D10Buffer* In
 	for (UINT p = 0; p < dc.Passes; ++p)
 	{
 		g_Shader.m_pTechnique->GetPassByIndex(p)->Apply(0);
-		dx.m_pDevice->Draw(VerNum, 0);
+		DX->GetDevice()->Draw(VerNum, 0);
 	}
 }
 
@@ -158,7 +158,7 @@ void CDraw::LoadTexture(int Id,const char* Name,int Width,int Height)
 {
 	ID3D10ShaderResourceView* pTex;
 	//テクスチャーを作成
-	D3DX10CreateShaderResourceViewFromFileA(dx.m_pDevice, Name, NULL, NULL, &pTex, NULL);
+	D3DX10CreateShaderResourceViewFromFileA(DX->GetDevice(), Name, NULL, NULL, &pTex, NULL);
 
 	//登録
 	g_Task.Insert(pTex, Id,Width,Height);

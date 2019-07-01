@@ -146,6 +146,7 @@
     <ClInclude Include="Library\FrameRate.h" />
     <ClInclude Include="Library\Hit.h" />
     <ClInclude Include="Library\Input.h" />
+    <ClInclude Include="Library\LibraryMain.h" />
     <ClInclude Include="Library\Main.h" />
     <ClInclude Include="Library\Math.h" />
     <ClInclude Include="Library\ObjLoader.h" />
@@ -174,6 +175,7 @@
     <ClCompile Include="Library\FrameRate.cpp" />
     <ClCompile Include="Library\Hit.cpp" />
     <ClCompile Include="Library\Input.cpp" />
+    <ClCompile Include="Library\LibraryMain.cpp" />
     <ClCompile Include="Library\Main.cpp" />
     <ClCompile Include="Library\Math.cpp" />
     <ClCompile Include="Library\ObjLoader.cpp" />

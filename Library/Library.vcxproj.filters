@@ -165,6 +165,9 @@
     <ClInclude Include="Library\FrameRate.h">
       <Filter>リソース ファイル\FrameRate</Filter>
     </ClInclude>
+    <ClInclude Include="Library\LibraryMain.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Library\Audio.cpp">
@@ -241,6 +244,9 @@
     </ClCompile>
     <ClCompile Include="Library\FrameRate.cpp">
       <Filter>リソース ファイル\FrameRate</Filter>
+    </ClCompile>
+    <ClCompile Include="Library\LibraryMain.cpp">
+      <Filter>ヘッダー ファイル</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

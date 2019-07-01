@@ -6,7 +6,7 @@
 CShader g_Shader;
 
 //初期化
-HRESULT CShader::Init(ID3D10Device* pDevice)
+bool CShader::Init(ID3D10Device* pDevice)
 {
 	//エフェクトを作成
 	D3DX10CreateEffectFromFile(L"Geometry_Texture.fx", NULL, NULL, "fx_4_0",
@@ -31,7 +31,7 @@ HRESULT CShader::Init(ID3D10Device* pDevice)
 	if (FAILED(pDevice->CreateInputLayout(layout, numElements, PassDesc.pIAInputSignature,
 		PassDesc.IAInputSignatureSize, &m_pVertexLayout)))
 	{
-		return E_FAIL;
+		return false;
 	}
 
 	//頂点インプットレイアウトをセット
@@ -43,7 +43,7 @@ HRESULT CShader::Init(ID3D10Device* pDevice)
 	m_pShaderSrc = m_pEffect->GetVariableByName("g_UvSrc")->AsVector();
 	m_pShaderColor = m_pEffect->GetVariableByName("g_Color")->AsVector();
 	
-	return S_OK;
+	return true;
 }
 
 //シェーダーセット

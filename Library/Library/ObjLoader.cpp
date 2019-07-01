@@ -372,7 +372,7 @@ HRESULT CObjLoader::LoadMaterial(char* FileName,MY_MESH* pMesh)
 					char texName[ARRAY_SIZE];
 					fscanf_s(fp, "%s", texName, sizeof(texName));
 					//テクスチャーを作成
-					if (FAILED(D3DX10CreateShaderResourceViewFromFileA(dx.m_pDevice, texName, NULL, NULL, &pMesh->Material[mate_count].pTexture, NULL)))
+					if (FAILED(D3DX10CreateShaderResourceViewFromFileA(DX->GetDevice(), texName, NULL, NULL, &pMesh->Material[mate_count].pTexture, NULL)))
 					{
 						return E_FAIL;
 					}

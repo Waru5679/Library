@@ -77,8 +77,11 @@ void CFrameRate::FrameCount()
 //描画
 void CFrameRate::Draw()
 {
+	//配列のサイズ
+	constexpr int ARRAY_SIZE{ 12 };
+
 	//変換
-	wchar_t buf[12];
+	wchar_t buf[ARRAY_SIZE];
 	_itow_s(m_FrameRate, buf, 10);
 
 	//描画

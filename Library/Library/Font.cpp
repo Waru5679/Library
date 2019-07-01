@@ -127,7 +127,7 @@ ID3D10Texture2D* CCharClass::CreateTexture()
 	
 	//設定を元に空テクスチャを作成
 	ID3D10Texture2D* pOut;
-	if (FAILED(dx.m_pDevice->CreateTexture2D(&desc, 0, &pOut)))
+	if (FAILED(DX->GetDevice()->CreateTexture2D(&desc, 0, &pOut)))
 		return nullptr;
 
 	return pOut;
@@ -149,7 +149,7 @@ ID3D10ShaderResourceView* CCharClass::CreateResourceView(ID3D10Texture2D* pTex)
 
 	//設定を元にShaderResourceView作成
 	ID3D10ShaderResourceView* pOut;
-	if (FAILED(dx.m_pDevice->CreateShaderResourceView(pTex, &srvDesc, &pOut)))
+	if (FAILED(DX->GetDevice()->CreateShaderResourceView(pTex, &srvDesc, &pOut)))
 		return nullptr;
 
 	return pOut;

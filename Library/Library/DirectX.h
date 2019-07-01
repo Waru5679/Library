@@ -4,20 +4,38 @@
 //DirectXクラス
 class CDirectX
 {
+private:
+	CDirectX() {};	//コンストラクタ
+	~CDirectX() {};	//デストラクタ
+
+	//インスタンス
+	static CDirectX* m_pInstance;
 public:
+	//インスタンス取得
+	static CDirectX* GetInstance()
+	{
+		//インスタンス化されてなければインスタンス化
+		if (m_pInstance == nullptr)
+		{
+			m_pInstance = new CDirectX();
+		}
+
+		return m_pInstance;
+	}
 
 	//初期化
-	HRESULT Init(HWND hWnd);
+	bool Init(HWND hWnd);
 
 	//メモリの開放
 	void Release();
 
-	ID3D10Device*			m_pDevice;				//デバイス
-	IDXGISwapChain*			m_pSwapChain;			//スワップチェイン
-	ID3D10RenderTargetView* m_pRenderTargetView;	//レンダーターゲットビュー
-	ID3D10DepthStencilView* m_pDepthStencilView;	//深度ステンシルビュー
-	ID3D10Texture2D*		m_pDepthStencil;		//深度ステンシル
-	ID3D10BlendState*		m_pBlendState;			//ブレンドステート
+	//アクセサ
+	ID3D10Device*			GetDevice()				{ return m_pDevice; }	
+	IDXGISwapChain*			GetSwapChain()			{ return m_pSwapChain; }
+	ID3D10RenderTargetView* GetRenderTargetView()	{ return m_pRenderTargetView; }
+	ID3D10DepthStencilView* GetDepthStencilView()	{ return m_pDepthStencilView; }
+	ID3D10Texture2D*		GetDepthStencil()		{ return m_pDepthStencil; }
+	ID3D10BlendState*		GetBlendState()			{ return m_pBlendState; }
 private:
 	//スワップチェイン作成
 	HRESULT CreateSwapChain(HWND hWnd);
@@ -36,6 +54,11 @@ private:
 
 	//ラスタライザ設定
 	void SetRasterizer();	
-};
 
-extern CDirectX dx;
+	ID3D10Device* m_pDevice;					//デバイス
+	IDXGISwapChain* m_pSwapChain;				//スワップチェイン
+	ID3D10RenderTargetView* m_pRenderTargetView;//レンダーターゲットビュー
+	ID3D10DepthStencilView* m_pDepthStencilView;//深度ステンシルビュー
+	ID3D10Texture2D* m_pDepthStencil;			//深度ステンシル
+	ID3D10BlendState* m_pBlendState;			//ブレンドステート
+};

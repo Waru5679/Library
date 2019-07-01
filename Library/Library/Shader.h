@@ -16,7 +16,7 @@ class CShader
 {
 public:
 	//初期化
-	HRESULT Init(ID3D10Device* pDevice);
+	bool Init(ID3D10Device* pDevice);
 
 	//カメラセット
 	void SetCamera(CameraBase* pCamera) { m_pCamera = pCamera; }

@@ -17,14 +17,17 @@ constexpr int WINDOW_HEIGHT{ 480 };
 //フレームレート
 constexpr int FRAME_RATE{ 60 };
 
-//初期化
-HRESULT Init();
+//DirectX
+#define DX CDirectX::GetInstance()
 
-//メモリの開放
-void Release();
+////window初期設定
+//void WinInit(HINSTANCE hInst);
 
-//ウインドウ名
-static WCHAR szAppName[] = L"ライブラリ";
+////ウインドウ名
+//static WCHAR szAppName[] = L"ライブラリ";
+
+//コールバック関数
+LRESULT CALLBACK WndProc(HWND hWnd, UINT iMsg, WPARAM wParam, LPARAM lParam);
 
 //初めのシーン
 #define START_SCENE SceneName::SceneMain 

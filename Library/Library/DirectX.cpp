@@ -1,14 +1,15 @@
 #include "DirectX.h"
 
-CDirectX dx;
+//インスタンス
+CDirectX* CDirectX::m_pInstance = nullptr;
 
 //初期化
-HRESULT CDirectX::Init(HWND hWnd)
+bool CDirectX::Init(HWND hWnd)
 {
 	// デバイスとスワップチェーンの作成
 	if (FAILED(CreateSwapChain(hWnd)))
 	{
-		return FALSE;
+		return false;
 	}	
 
 	//レンダーターゲットビューの作成
@@ -26,7 +27,7 @@ HRESULT CDirectX::Init(HWND hWnd)
 	//ラスタライザ設定
 	SetRasterizer();
 
-	return S_OK;
+	return true;
 }
 
 //スワップチェイン作成
@@ -122,7 +123,6 @@ void CDirectX::CreateBlendState()
 	m_pBlendState = 0;
 	m_pDevice->CreateBlendState(&BlendStateDesc, &m_pBlendState);
 	m_pDevice->OMSetBlendState(m_pBlendState, D3DXVECTOR4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
-
 }
 
 //ラスタライズ設定
