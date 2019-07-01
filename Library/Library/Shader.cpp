@@ -1,9 +1,8 @@
-#pragma once
-#include "Main.h"
 #include "Shader.h"
-#include "Camera.h"
+#include "Main.h"
 
-CShader g_Shader;
+//インスタンス
+CShader* CShader::m_pInstance = nullptr;
 
 //初期化
 bool CShader::Init(ID3D10Device* pDevice)
@@ -91,4 +90,7 @@ void CShader::Release()
 {
 	m_pVertexLayout->Release();
 	m_pEffect->Release();
+
+	//インスタンス破棄
+	delete m_pInstance;
 }

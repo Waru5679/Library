@@ -1,8 +1,9 @@
+#pragma once
+
 //必要なヘッダーファイルのインクルード
-#include "Main.h"
 #include "LibraryMain.h"
 
-//インスタンス
+//ライブラリメイン
 #define LIB_MAIN CLibraryMain::GetInstance()
 
 //アプリケーションのエントリー関数

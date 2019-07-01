@@ -147,4 +147,7 @@ void CDirectX::Release()
 	m_pRenderTargetView->Release();
 	m_pSwapChain->Release();
 	m_pDevice->Release();
+
+	//インスタンス破棄
+	delete m_pInstance;
 }

@@ -147,7 +147,10 @@
     <ClInclude Include="Library\Hit.h" />
     <ClInclude Include="Library\Input.h" />
     <ClInclude Include="Library\LibraryMain.h" />
-    <ClInclude Include="Library\Main.h" />
+    <ClInclude Include="Library\Main.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="Library\Math.h" />
     <ClInclude Include="Library\ObjLoader.h" />
     <ClInclude Include="Library\Polygon.h" />

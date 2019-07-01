@@ -1,9 +1,6 @@
 #include "LibraryMain.h"
 #include "Main.h"
 
-//グローバル変数
-HWND g_hWnd = NULL;
-
 #include "SceneInclude.h"
 
 #include "DirectX.h"
@@ -20,18 +17,20 @@ CLibraryMain* CLibraryMain::m_pInstance = nullptr;
 //初期化
 bool CLibraryMain::Init(HINSTANCE hInst)
 {
+	//ウインドウハンドル
+	m_hWnd = nullptr;
+
 	//window初期化
 	WinInit(hInst);
 
 	// DirectXの初期化関数を呼ぶ
-
-	if (DX->Init(g_hWnd)==false)
+	if (DX->Init(m_hWnd)==false)
 	{
 		return false;
 	}
 
 	//シェーダー初期化
-	if (g_Shader.Init(DX->GetDevice())==false)
+	if (SHADER->Init(DX->GetDevice())==false)
 	{
 		return false;
 	}
@@ -46,7 +45,7 @@ bool CLibraryMain::Init(HINSTANCE hInst)
 	g_Audio.Init();
 
 	//フレームレート
-	g_Frame.Init();
+	FRAME->Init();
 
 	//当たり判定初期化
 	g_Hit.Init();
@@ -55,7 +54,7 @@ bool CLibraryMain::Init(HINSTANCE hInst)
 	CSceneInclude::LoadScene();
 
 	//スタートシーンセット
-	g_Scene.SetScene(START_SCENE);
+	SCENE->SetScene(START_SCENE);
 	
 	return true;
 }
@@ -71,19 +70,19 @@ void CLibraryMain::Update()
 	DX->GetDevice()->ClearDepthStencilView(DX->GetDepthStencilView(), D3D10_CLEAR_DEPTH, 1.0f, 0);
 
 	//更新
-	g_Scene.Update();
+	SCENE->Update();
 
 	//描画
-	g_Scene.Draw();
+	SCENE->Draw();
 
 	//当たり判定描画
 	g_Hit.Draw();
 
 	//フレームレート計算
-	g_Frame.FrameCount();
+	FRAME->FrameCount();
 
 	//フレームレート数描画
-	g_Frame.Draw();
+	FRAME->Draw();
 
 	//画面更新（バックバッファをフロントバッファに）
 	DX->GetSwapChain()->Present(0, 0);
@@ -93,7 +92,7 @@ void CLibraryMain::Update()
 void CLibraryMain::WinInit(HINSTANCE hInst)
 {
 	// ウィンドウの設定
-	WNDCLASSEX  wndclass;
+	WNDCLASSEX wndclass;
 
 	wndclass.cbSize = sizeof(wndclass);
 	wndclass.style = CS_HREDRAW | CS_VREDRAW;
@@ -110,22 +109,25 @@ void CLibraryMain::WinInit(HINSTANCE hInst)
 	RegisterClassEx(&wndclass);
 
 	//ウインドウ作成
-	g_hWnd = CreateWindow(szAppName, szAppName, WS_OVERLAPPEDWINDOW,
+	m_hWnd = CreateWindow(szAppName, szAppName, WS_OVERLAPPEDWINDOW,
 		0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, NULL, NULL, hInst, NULL);
 
-	ShowWindow(g_hWnd, SW_SHOW);
-	UpdateWindow(g_hWnd);
+	ShowWindow(m_hWnd, SW_SHOW);
+	UpdateWindow(m_hWnd);
 }
 
 //メモリの開放
 void  CLibraryMain::Release()
 {
 	g_Hit.Release();
-	g_Scene.Release();
+	SCENE->Release();
 	g_Audio.Release();
 	g_Font.Release();
 	g_Draw.Release();
-	g_Shader.Release();
+	SHADER->Release();
 	DX->Release();
+	
+	//インスタンス破棄
+	delete m_pInstance;
 }
 

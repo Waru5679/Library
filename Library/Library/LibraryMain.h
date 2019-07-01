@@ -1,9 +1,5 @@
 #pragma once
-
 #include "Main.h"
-
-//ウインドウ名
-static WCHAR szAppName[] = L"ライブラリ";
 
 //ライブラリメインクラス
 class CLibraryMain
@@ -24,7 +20,6 @@ public:
 		{
 			m_pInstance = new CLibraryMain();
 		}
-
 		return m_pInstance;
 	}
 
@@ -39,4 +34,7 @@ public:
 private:	
 	//window初期設定
 	void WinInit(HINSTANCE hInst);
+
+	//ウインドウハンドル
+	HWND m_hWnd;
 };

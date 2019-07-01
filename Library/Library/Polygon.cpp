@@ -86,7 +86,7 @@ void CDraw::DrawTexture(ID3D10ShaderResourceView* pTex, RECT_F* pSrc, RECT_F* pO
 	matWorld._42 = PixcelSize.y * pOut->m_Top + PixcelSize.y * (OutSize.y / 2.0f) - 1.0f;
 
 	//シェーダーのセット
-	g_Shader.SetShader(pTex, pSrc, pColor, matWorld *matInvProj*matInvView);
+	SHADER->SetShader(pTex, pSrc, pColor, matWorld *matInvProj*matInvView);
 
 	//ポリゴンの描画
 	DrawPolygon(4,m_pVertexBuffer,NULL);
@@ -145,10 +145,10 @@ void CDraw::DrawPolygon(int VerNum, ID3D10Buffer* VertexBuffer, ID3D10Buffer* In
 
 	//プリミティブをレンダリング
 	D3D10_TECHNIQUE_DESC dc;
-	g_Shader.m_pTechnique->GetDesc(&dc);
+	SHADER->GetTechnique()->GetDesc(&dc);
 	for (UINT p = 0; p < dc.Passes; ++p)
 	{
-		g_Shader.m_pTechnique->GetPassByIndex(p)->Apply(0);
+		SHADER->GetTechnique()->GetPassByIndex(p)->Apply(0);
 		DX->GetDevice()->Draw(VerNum, 0);
 	}
 }
@@ -167,6 +167,5 @@ void CDraw::LoadTexture(int Id,const char* Name,int Width,int Height)
 //解放
 void CDraw::Release()
 {
-	delete m_pCamera;
 	m_pVertexBuffer->Release();
 }

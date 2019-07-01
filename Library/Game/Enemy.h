@@ -6,7 +6,6 @@
 #include "../Library/Hit.h"
 #include "Bullet.h"
 
-#include <memory>
 #include <vector>
 using namespace std;
 
@@ -35,13 +34,10 @@ public:
 private:
 	D3DXVECTOR3 m_vMove;		//移動ベクトル
 	CollisionData m_Collision;	//当たり判定	
-	int m_AttackCount;	//攻撃のカウント
-	float m_AttackLength_x;	//攻撃距離
-	float m_AttackLength_y;	//攻撃距離
+	int m_AttackCount;			//攻撃のカウント
+	float m_AttackLength_x;		//攻撃距離
+	float m_AttackLength_y;		//攻撃距離
 
 	float m_fSpeed;				//移動スピード
-
-	//弾のリスト
-	vector<CBullet*> m_BulletList;
 };
 

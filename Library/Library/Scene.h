@@ -28,13 +28,7 @@ struct MY_SCENE
 		m_pScene = pScene;
 		m_Id = Id;
 	}
-
-	//デストラクタ
-	~MY_SCENE()
-	{
-		
-	}
-
+	
 	CSceneBase* m_pScene;	//シーンポインタ
 	int m_Id;				//管理用ID
 };
@@ -44,7 +38,25 @@ using pMyScene=unique_ptr<MY_SCENE>;
 //シーンマネージャー
 class CSceneManager
 {
+private:
+	CSceneManager() {};	//コンストラクタ
+	~CSceneManager() {};	//デストラクタ
+
+	//インスタンス
+	static CSceneManager* m_pInstance;
+
 public:
+	//インスタンス取得
+	static CSceneManager* GetInstance()
+	{
+		//インスタンス化されてなければインスタンス化
+		if (m_pInstance == nullptr)
+		{
+			m_pInstance = new CSceneManager();
+		}
+		return m_pInstance;
+	}
+
 	void Update();							//更新
 	void Draw();							//描画
 	void Release();							//解放
@@ -55,8 +67,3 @@ private:
 	CSceneBase* m_pNowScene;				//現在のシーンのポインタ
 	vector<pMyScene> m_Scene;				//シーンリスト
 };
-
-extern CSceneManager g_Scene;
-
-
-

@@ -10,6 +10,9 @@
 #pragma comment(lib,"d3d10.lib")
 #pragma comment(lib,"d3dx10.lib")
 
+//ウインドウ名
+static WCHAR szAppName[] = L"ライブラリ";
+
 //ウインドウサイズ
 constexpr int WINDOW_WIDTH{ 640 };
 constexpr int WINDOW_HEIGHT{ 480 };
@@ -17,20 +20,16 @@ constexpr int WINDOW_HEIGHT{ 480 };
 //フレームレート
 constexpr int FRAME_RATE{ 60 };
 
-//DirectX
-#define DX CDirectX::GetInstance()
-
-////window初期設定
-//void WinInit(HINSTANCE hInst);
-
-////ウインドウ名
-//static WCHAR szAppName[] = L"ライブラリ";
+//初めのシーン
+#define START_SCENE SceneName::SceneMain 
 
 //コールバック関数
 LRESULT CALLBACK WndProc(HWND hWnd, UINT iMsg, WPARAM wParam, LPARAM lParam);
 
-//初めのシーン
-#define START_SCENE SceneName::SceneMain 
+#define DX CDirectX::GetInstance()
+#define SHADER CShader::GetInstance()
+#define FRAME CFrameRate::GetInstance()
+#define SCENE CSceneManager::GetInstance()
 
 //シーン
 enum SceneName

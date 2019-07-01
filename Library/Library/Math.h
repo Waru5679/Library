@@ -1,5 +1,5 @@
 #pragma once
-#include "main.h"
+#include "Main.h"
 #include <math.h>
 
 //ƒxƒNƒgƒ‹‚ÌŠ|‚¯ŽZ

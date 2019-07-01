@@ -17,7 +17,6 @@ struct MY_TEXTURE
 	int m_Width;	//幅
 	int m_Height;	//高さ
 	int m_Id;		//管理用ID
-
 };
 
 //管理用　クラス

@@ -6,7 +6,6 @@
 
 CObjLoader g_Loader;
 
-#define ARRAY_SIZE 100
 
 //モデル読み込み
 void CObjLoader::LoadMesh(int Id, const char* Name)
@@ -35,6 +34,7 @@ HRESULT CObjLoader::LoadObj(const char* FileName, MY_MESH* pMesh)
 	}
 
 	//キーワード読み込み用
+	constexpr int ARRAY_SIZE{ 100 };
 	char key[ARRAY_SIZE];
 
 	float uv_x[4] = { 0.0f,1.0f,1.0f,0.0f };	
@@ -329,7 +329,10 @@ HRESULT CObjLoader::LoadMaterial(char* FileName,MY_MESH* pMesh)
 		return E_FAIL;
 	}
 
+	//マテリアルカウント
 	int mate_count = 0;
+
+	constexpr int ARRAY_SIZE{ 100 };
 	char key[ARRAY_SIZE] = { 0 };
 	D3DXVECTOR3 v;
 
@@ -426,7 +429,7 @@ void CObjLoader::Draw(D3DMATRIX matWorld, MY_MESH* pMesh,ColorData* pColor)
 		int size = pMesh->Material[i].pVertex.size();
 
 		//シェーダーのセット
-		g_Shader.SetShader(pMesh->Material[i].pTexture, NULL, pColor, matWorld);
+		SHADER->SetShader(pMesh->Material[i].pTexture, NULL, pColor, matWorld);
 
 		for (int j = 0; j < size; j++)
 		{

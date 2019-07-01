@@ -17,6 +17,9 @@
 #include "RayTest.h"
 #include "Sphere.h"
 
+#include <memory>
+using namespace std;
+
 //初期化
 void CSceneMain::Init()
 {
@@ -30,7 +33,7 @@ void CSceneMain::Init()
 	D3DXVECTOR3 vAngle(0.0f, 0.0f, 0.0f);
 	D3DXVECTOR3 vScale(1.0f, 1.0f, 1.0f);
 
-	CPlayer* pPlayer = new CPlayer(vPos, vAngle, vScale);
+	CPlayer* pPlayer=new CPlayer(vPos, vAngle, vScale);
 	g_Task.InsertObj(pPlayer,ObjName::ObjPlayer);
 
 	//カメラ
@@ -38,23 +41,20 @@ void CSceneMain::Init()
 	g_Task.InsertObj(pCamera, ObjName::ObjMainCamera);
 
 	//2DOBJ
-	C2DPolygon* p2D = new C2DPolygon();
+	C2DPolygon* p2D=new C2DPolygon();
 	g_Task.InsertObj(p2D, ObjName::ObjDraw2D);
 
-
 	//敵
-	vPos =D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	vPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	vAngle = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	vScale = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
 
-	CEnemy* pEnemy = new CEnemy(vPos,vAngle,vScale);
+	CEnemy* pEnemy=new CEnemy(vPos, vAngle, vScale);
 	g_Task.InsertObj(pEnemy, ObjName::ObjEnemy);
 
-
 	//シェーダーにカメラセット
-	g_Shader.SetCamera(pCamera);
-	g_Draw.SetCamera(pCamera);
-	
+	SHADER->SetCamera(dynamic_cast<CameraBase*>(pCamera));
+	g_Draw.SetCamera(dynamic_cast<CameraBase*>(pCamera));
 }
 
 //更新
@@ -76,6 +76,8 @@ void CSceneMain::Release()
 	g_Audio.DeleteMusic();
 	g_Loader.Release();
 	g_Ray.Release();	
+
+
 
 }
 

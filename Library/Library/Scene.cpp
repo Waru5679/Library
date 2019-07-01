@@ -1,7 +1,8 @@
 #include "Scene.h"
 #include "Task.h"
 
-CSceneManager g_Scene;
+//インスタンス
+CSceneManager* CSceneManager::m_pInstance=nullptr;
 
 //登録
 void CSceneManager::Insert(CSceneBase* pScene, int Id)
@@ -54,5 +55,8 @@ void CSceneManager::Release()
 {
 	delete m_pNowScene;
 	VectorRelease(m_Scene);	
+
+	//インスタンス破棄
+	delete m_pInstance;
 }
 

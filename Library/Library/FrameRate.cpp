@@ -1,7 +1,8 @@
 #include "FrameRate.h"
 #include "Font.h"
 
-CFrameRate g_Frame;
+//インスタンス
+CFrameRate* CFrameRate::m_pInstance = nullptr;
 
 //初期化
 void CFrameRate::Init()
@@ -23,6 +24,10 @@ void CFrameRate::Init()
 
 	//FPS
 	m_FrameRate = 0;
+
+	//表示用文字列カウンタ
+	constexpr int ARRAY_SIZE{ 12 };
+	m_pDrawStr = new wchar_t[ARRAY_SIZE];
 }
 
 //フレームレートの計算
@@ -77,13 +82,16 @@ void CFrameRate::FrameCount()
 //描画
 void CFrameRate::Draw()
 {
-	//配列のサイズ
-	constexpr int ARRAY_SIZE{ 12 };
-
-	//変換
-	wchar_t buf[ARRAY_SIZE];
-	_itow_s(m_FrameRate, buf, 10);
+	//文字列に変換する
+	_itow_s(m_FrameRate, m_pDrawStr,sizeof(m_pDrawStr), 10);
 
 	//描画
-	g_Font.DrawStr(buf, 200.0f, 0.0f, 32.0f, 0.0f);
+	g_Font.DrawStr(m_pDrawStr, 200.0f, 0.0f, 32.0f, 0.0f);
+}
+
+//解放
+void CFrameRate::Release()
+{
+	//インスタンス破棄
+	delete m_pInstance;
 }
