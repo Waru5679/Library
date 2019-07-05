@@ -61,7 +61,7 @@ void CSceneMain::Init()
 void CSceneMain::Update()
 {
 	g_Task.Update();
-	g_Audio.Update();
+	AUDIO->Update();
 }
 
 //•`‰æ
@@ -73,7 +73,7 @@ void CSceneMain::Draw()
 void CSceneMain::Release()
 {
 	g_Task.Release();
-	g_Audio.DeleteMusic();
+	AUDIO->DeleteMusic();
 	g_Loader.Release();
 	g_Ray.Release();	
 

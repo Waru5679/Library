@@ -38,7 +38,24 @@ struct SoundData
 //オーディオクラス
 class CAudio
 {
+private:
+	CAudio() {};	//コンストラクタ
+	~CAudio() {};	//デストラクタ
+
+	//インスタンス
+	static CAudio* m_pInstance;
 public:
+	//インスタンス取得
+	static CAudio* GetInstance() 
+	{
+		//インスタンス化されてなければインスタンス化
+		if (m_pInstance == nullptr)
+		{
+			m_pInstance = new CAudio();
+		}
+		return m_pInstance;
+	}
+
 	void Init();	//初期化
 	void Update();	//解放
 	void Release();	//解放
@@ -76,5 +93,3 @@ private:
 	IXAudio2SubmixVoice* m_pSubmixVoice;		//サブミクスインターフェース
 	vector<SoundData> m_SoundData;				//サウンド情報
 };
-
-extern CAudio g_Audio;

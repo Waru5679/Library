@@ -42,7 +42,7 @@ bool CLibraryMain::Init(HINSTANCE hInst)
 	g_Font.Init();
 
 	//音楽初期化
-	g_Audio.Init();
+	AUDIO->Init();
 
 	//フレームレート
 	FRAME->Init();
@@ -121,7 +121,7 @@ void  CLibraryMain::Release()
 {
 	g_Hit.Release();
 	SCENE->Release();
-	g_Audio.Release();
+	AUDIO->Release();
 	g_Font.Release();
 	g_Draw.Release();
 	SHADER->Release();

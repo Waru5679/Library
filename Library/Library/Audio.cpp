@@ -1,7 +1,8 @@
 #include "Audio.h"
 #include "Struct.h"
 
-CAudio g_Audio;
+//インスタンス
+CAudio* CAudio::m_pInstance = nullptr;
 
 //初期化
 void CAudio::Init()

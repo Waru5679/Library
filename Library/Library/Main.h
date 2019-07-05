@@ -30,6 +30,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMsg, WPARAM wParam, LPARAM lParam);
 #define SHADER CShader::GetInstance()
 #define FRAME CFrameRate::GetInstance()
 #define SCENE CSceneManager::GetInstance()
+#define AUDIO CAudio::GetInstance()
 
 //ÉVÅ[Éì
 enum SceneName
