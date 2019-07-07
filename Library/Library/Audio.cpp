@@ -1,5 +1,5 @@
 #include "Audio.h"
-#include "Struct.h"
+#include "Release.h"
 
 //インスタンス
 CAudio* CAudio::m_pInstance = nullptr;
@@ -223,7 +223,6 @@ void CAudio::DeleteMusic()
 	//サウンド情報破棄
 	VectorRelease(m_SoundData);
 }
-
 
 //解放
 void CAudio::Release()

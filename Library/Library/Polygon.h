@@ -7,7 +7,24 @@
 //描画クラス
 class CDraw
 {
+private:
+	CDraw() {};		//コンストラクタ
+	~CDraw() {};	//デストラクタ
+
+	//インスタンス
+	static CDraw* m_pInstance;
 public:	
+	//インスタンス取得
+	static CDraw* GetInstance()
+	{
+		//インスタンス化されてなければインスタンス化
+		if (m_pInstance == nullptr)
+		{
+			m_pInstance = new CDraw();
+		}
+		return m_pInstance;
+	}
+
 	void Init();	//初期化
 	void Release();	//解放
 
@@ -34,5 +51,3 @@ private:
 	  	
 	CameraBase* m_pCamera;	//カメラポインタ
 };
-
-extern CDraw g_Draw;

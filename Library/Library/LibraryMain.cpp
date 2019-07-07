@@ -1,5 +1,5 @@
 #include "LibraryMain.h"
-#include "Main.h"
+
 
 #include "SceneInclude.h"
 
@@ -36,10 +36,10 @@ bool CLibraryMain::Init(HINSTANCE hInst)
 	}
 
 	//描画の初期化
-	g_Draw.Init();
+	DRAW->Init();
 
 	//フォント描画初期化
-	g_Font.Init();
+	FONT->Init();
 
 	//音楽初期化
 	AUDIO->Init();
@@ -122,12 +122,13 @@ void  CLibraryMain::Release()
 	g_Hit.Release();
 	SCENE->Release();
 	AUDIO->Release();
-	g_Font.Release();
-	g_Draw.Release();
+	FONT->Release();
+	DRAW->Release();
 	SHADER->Release();
 	DX->Release();
 	
 	//インスタンス破棄
 	delete m_pInstance;
+	m_pInstance = nullptr;
 }
 

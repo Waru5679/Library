@@ -1,5 +1,6 @@
 #include "Scene.h"
 #include "Task.h"
+#include "Release.h"
 
 //インスタンス
 CSceneManager* CSceneManager::m_pInstance=nullptr;
@@ -54,7 +55,7 @@ void CSceneManager::Draw()
 void CSceneManager::Release()
 {
 	delete m_pNowScene;
-	VectorRelease(m_Scene);	
+	VectorRelease(m_Scene);
 
 	//インスタンス破棄
 	delete m_pInstance;

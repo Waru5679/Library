@@ -155,6 +155,7 @@
     <ClInclude Include="Library\ObjLoader.h" />
     <ClInclude Include="Library\Polygon.h" />
     <ClInclude Include="Library\Ray.h" />
+    <ClInclude Include="Library\Release.h" />
     <ClInclude Include="Library\Route.h" />
     <ClInclude Include="Library\Scene.h" />
     <ClInclude Include="Library\SceneInclude.h" />
@@ -184,6 +185,7 @@
     <ClCompile Include="Library\ObjLoader.cpp" />
     <ClCompile Include="Library\Polygon.cpp" />
     <ClCompile Include="Library\Ray.cpp" />
+    <ClCompile Include="Library\Release.cpp" />
     <ClCompile Include="Library\Route.cpp" />
     <ClCompile Include="Library\Scene.cpp" />
     <ClCompile Include="Library\SceneInclude.cpp" />

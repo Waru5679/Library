@@ -1,6 +1,7 @@
 #pragma once
-
 #include "Struct.h"
+#include <vector>
+using namespace std;
 
 //OBJデータ読み込みクラス
 class CObjLoader

@@ -54,7 +54,7 @@ void CSceneMain::Init()
 
 	//シェーダーにカメラセット
 	SHADER->SetCamera(dynamic_cast<CameraBase*>(pCamera));
-	g_Draw.SetCamera(dynamic_cast<CameraBase*>(pCamera));
+	DRAW->SetCamera(dynamic_cast<CameraBase*>(pCamera));
 }
 
 //更新
@@ -90,7 +90,7 @@ void CSceneMain::LoadAudio()
 //テクスチャ
 void CSceneMain::LoadTexture()
 {
-	g_Draw.LoadTexture(0, "Texture/Test.png",512,512);
+	DRAW->LoadTexture(0, "Texture/Test.png",512,512);
 }
 
 //メッシュ

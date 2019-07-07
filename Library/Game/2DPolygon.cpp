@@ -69,5 +69,5 @@ void C2DPolygon::Draw()
 	m_Dst = RECT_F(m_ScreenPos.y, m_ScreenPos.x, 100.0f, 100.0f);
 	
 	//•`‰æ
-	g_Draw.DrawTexture(0, &m_Src, &m_Dst, &m_Color, m_fRad);
+	DRAW->DrawTexture(0, &m_Src, &m_Dst, &m_Color, m_fRad);
 }

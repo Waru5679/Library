@@ -86,7 +86,7 @@ void CFrameRate::Draw()
 	_itow_s(m_FrameRate, m_pDrawStr,sizeof(m_pDrawStr), 10);
 
 	//•`‰æ
-	g_Font.DrawStr(m_pDrawStr, 200.0f, 0.0f, 32.0f, 0.0f);
+	FONT->DrawStr(m_pDrawStr, 200.0f, 0.0f, 32.0f, 0.0f);
 }
 
 //‰ð•ú

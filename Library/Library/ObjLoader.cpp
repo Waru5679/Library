@@ -3,9 +3,9 @@
 #include "Shader.h"
 #include "Task.h"
 #include "Math.h"
+#include "Release.h"
 
 CObjLoader g_Loader;
-
 
 //モデル読み込み
 void CObjLoader::LoadMesh(int Id, const char* Name)
@@ -241,7 +241,7 @@ HRESULT CObjLoader::LoadObj(const char* FileName, MY_MESH* pMesh)
 				Material.FaceInfo.push_back(info);
 
 				//バーテックスバッファーを作成
-				VertexBuffer = g_Draw.BufferCreate(pVertex,sizeof(MY_VERTEX)*FaceOfVer[i], D3D10_BIND_VERTEX_BUFFER);
+				VertexBuffer = DRAW->BufferCreate(pVertex,sizeof(MY_VERTEX)*FaceOfVer[i], D3D10_BIND_VERTEX_BUFFER);
 
 				//バーテックスバッファ情報登録
 				Material.pVertex.insert(Material.pVertex.begin() + i, VertexBuffer);
@@ -254,7 +254,7 @@ HRESULT CObjLoader::LoadObj(const char* FileName, MY_MESH* pMesh)
 				}
 
 				//インデックスバッファーを作成
-				IndexBuffer = g_Draw.BufferCreate(pIndex, sizeof(int)*FaceOfVer[i],D3D10_BIND_INDEX_BUFFER);
+				IndexBuffer = DRAW->BufferCreate(pIndex, sizeof(int)*FaceOfVer[i],D3D10_BIND_INDEX_BUFFER);
 		
 				//インデックスバッファ登録
 				Material.pIndex.insert(Material.pIndex.begin() + i, IndexBuffer);
@@ -434,7 +434,7 @@ void CObjLoader::Draw(D3DMATRIX matWorld, MY_MESH* pMesh,ColorData* pColor)
 		for (int j = 0; j < size; j++)
 		{
 			//ポリゴン描画
-			g_Draw.DrawPolygon(pMesh->Material[i].FaceInfo[j].Vertex.size(), pMesh->Material[i].pVertex[j], pMesh->Material[i].pIndex[j]);
+			DRAW->DrawPolygon(pMesh->Material[i].FaceInfo[j].Vertex.size(), pMesh->Material[i].pVertex[j], pMesh->Material[i].pIndex[j]);
 		}
 	}
 }

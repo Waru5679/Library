@@ -2,7 +2,8 @@
 #include "DirectX.h"
 #include "Math.h"
 
-CFont g_Font;
+//インスタンス
+CFont* CFont::m_pInstance = nullptr;
 
 //文字テクスチャ作成
 void CCharClass::CreateCharTex(wchar_t c, HDC hdc, TEXTMETRIC TM)
@@ -253,7 +254,7 @@ void CFont::DrawStr(const wchar_t* Str, float Pos_x, float Pos_y, float FontSize
 				RECT_F Out( Pos_y, Pos_x + FontSize * i, FontSize, FontSize);
 			
 				//描画
-				g_Draw.DrawTexture(pTex,NULL, &Out,NULL,Rad);
+				DRAW->DrawTexture(pTex,NULL, &Out,NULL,Rad);
 			}
 		}
 	}	

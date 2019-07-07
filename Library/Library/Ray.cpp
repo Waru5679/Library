@@ -1,5 +1,7 @@
 #include "Ray.h"
 #include "Math.h"
+#include "Release.h"
+
 CRay g_Ray;
 
 //“o˜^

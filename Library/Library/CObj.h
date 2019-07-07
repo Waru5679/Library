@@ -1,6 +1,6 @@
 #pragma once
 #include "Main.h"
-#include "ObjLoader.h"
+#include "Struct.h"
 
 //オブジェクト　継承用クラス(ゲームオブジェクト全てに継承させる)
 class CObjBase

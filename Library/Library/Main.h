@@ -26,11 +26,18 @@ constexpr int FRAME_RATE{ 60 };
 //コールバック関数
 LRESULT CALLBACK WndProc(HWND hWnd, UINT iMsg, WPARAM wParam, LPARAM lParam);
 
+
+
 #define DX CDirectX::GetInstance()
 #define SHADER CShader::GetInstance()
 #define FRAME CFrameRate::GetInstance()
 #define SCENE CSceneManager::GetInstance()
 #define AUDIO CAudio::GetInstance()
+#define FONT CFont::GetInstance()
+#define DRAW CDraw::GetInstance()
+//
+//#include "Release.h"
+//#define RELEASE CRelease::GetInstance()
 
 //シーン
 enum SceneName

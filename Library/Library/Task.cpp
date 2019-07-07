@@ -1,4 +1,5 @@
 #include "Task.h"
+#include "Release.h"
 
 CTask g_Task;
 
@@ -79,5 +80,3 @@ void CTask::Release()
 	VectorRelease(m_Tex);
 	VectorRelease(m_Obj);
 }
-
-

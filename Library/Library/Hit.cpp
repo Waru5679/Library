@@ -1,5 +1,6 @@
 #include "Hit.h"
 #include "Math.h"
+#include "Release.h"
 
  CHit g_Hit;
  

@@ -4,6 +4,8 @@
 #include <memory>
 using namespace std;
 
+#include "Main.h"
+
 //シーンクラス(継承用)
 class CSceneBase
 {

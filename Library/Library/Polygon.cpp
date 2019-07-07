@@ -5,8 +5,10 @@
 #include "Camera.h"
 #include "Math.h"
 #include "Main.h"
+#include "Struct.h"
 
-CDraw g_Draw;
+//インスタンス
+CDraw* CDraw::m_pInstance = nullptr;
 
 //初期化
 void CDraw::Init()
@@ -168,4 +170,8 @@ void CDraw::LoadTexture(int Id,const char* Name,int Width,int Height)
 void CDraw::Release()
 {
 	m_pVertexBuffer->Release();
+	
+	//インスタンス破棄
+	delete m_pInstance;
+	m_pInstance = nullptr;
 }

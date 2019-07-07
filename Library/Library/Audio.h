@@ -3,7 +3,6 @@
 #include <Windows.h>
 #include <XAudio2.h>
 #include <vector>
-
 using namespace std;
 
 //ƒ`ƒƒƒ“ƒNî•ñ
