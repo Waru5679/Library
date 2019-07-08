@@ -82,6 +82,9 @@
     <Filter Include="リソース ファイル\Release">
       <UniqueIdentifier>{b5971fc6-7829-4cf5-8e42-9de50a720248}</UniqueIdentifier>
     </Filter>
+    <Filter Include="リソース ファイル\Singleton">
+      <UniqueIdentifier>{03d5bdf2-bc95-47ae-872e-9e4869b49239}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Library\Camera.h">
@@ -173,6 +176,9 @@
     </ClInclude>
     <ClInclude Include="Library\Release.h">
       <Filter>リソース ファイル\Release</Filter>
+    </ClInclude>
+    <ClInclude Include="Library\Singleton.h">
+      <Filter>リソース ファイル\Singleton</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

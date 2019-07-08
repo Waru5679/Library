@@ -1,30 +1,19 @@
 #pragma once
 #include "Main.h"
+#include "Singleton.h"
 
 constexpr float MIN_FRAME_TIME{ 1000.0f / FRAME_RATE };
 
 //フレームレート計算クラス
-class CFrameRate
+class CFrameRate:public CSingleton<CFrameRate>
 {
 private:
+	//シングルトンだけでインスタンス化
+	friend CSingleton<CFrameRate>;
+
 	CFrameRate() {};	//コンストラクタ
 	~CFrameRate() {};	//デストラクタ
-
-	//インスタンス
-	static CFrameRate* m_pInstance;
-
 public:
-	//インスタンス取得
-	static CFrameRate* GetInstance()
-	{
-		//インスタンス化されてなければインスタンス化
-		if (m_pInstance == nullptr)
-		{
-			m_pInstance = new CFrameRate();
-		}
-		return m_pInstance;
-	}
-
 	void Init();		//初期化
 	void FrameCount();	//フレーム計算
 	void Draw();		//描画

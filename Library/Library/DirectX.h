@@ -1,28 +1,17 @@
 #pragma once
 #include "Main.h"
+#include "Singleton.h"
 
 //DirectXクラス
-class CDirectX
+class CDirectX :public CSingleton<CDirectX>
 {
 private:
+	//シングルトンクラスだけでインスタンス化する
+	friend CSingleton<CDirectX>;
+
 	CDirectX() {};	//コンストラクタ
 	~CDirectX() {};	//デストラクタ
-
-	//インスタンス
-	static CDirectX* m_pInstance;
 public:
-	//インスタンス取得
-	static CDirectX* GetInstance()
-	{
-		//インスタンス化されてなければインスタンス化
-		if (m_pInstance == nullptr)
-		{
-			m_pInstance = new CDirectX();
-		}
-
-		return m_pInstance;
-	}
-
 	//初期化
 	bool Init(HWND hWnd);
 

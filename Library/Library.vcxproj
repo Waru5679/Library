@@ -160,6 +160,7 @@
     <ClInclude Include="Library\Scene.h" />
     <ClInclude Include="Library\SceneInclude.h" />
     <ClInclude Include="Library\Shader.h" />
+    <ClInclude Include="Library\Singleton.h" />
     <ClInclude Include="Library\Struct.h" />
     <ClInclude Include="Library\Task.h" />
     <ClInclude Include="Library\Trace.h" />

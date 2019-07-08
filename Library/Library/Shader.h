@@ -10,29 +10,17 @@
 #include "ObjLoader.h"
 #include "Camera.h"
 #include "Polygon.h"
+#include "Singleton.h"
 
 //シェーダクラス
-class CShader
+class CShader:public CSingleton<CShader>
 {
 private:
+	//シングルトンクラスだけでインスタンス化
+	friend CSingleton<CShader>;
 	CShader() {};	//コンストラクタ
 	~CShader() {};	//デストラクタ
-
-	//インスタンス
-	static CShader* m_pInstance;
-
 public:
-	//インスタンス取得
-	static CShader* GetInstance()
-	{
-		//インスタンス化されてなければインスタンス化
-		if (m_pInstance == nullptr)
-		{
-			m_pInstance = new CShader();
-		}
-		return m_pInstance;
-	}
-	
 	bool Init(ID3D10Device* pDevice);	//初期化
 	void Release();						//解放
 

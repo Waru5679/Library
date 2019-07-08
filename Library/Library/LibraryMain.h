@@ -1,28 +1,17 @@
 #pragma once
 #include "Main.h"
+#include "Singleton.h"
 
 //ライブラリメインクラス
-class CLibraryMain
+class CLibraryMain:public CSingleton<CLibraryMain>
 {
 private:
+	//シングルトンクラスだけでインスタンス化する
+	friend CSingleton<CLibraryMain>;	
+
 	CLibraryMain() {};	//コンストラクタ
 	~CLibraryMain() {};	//デストラクタ
-
-	//インスタンス
-	static CLibraryMain* m_pInstance;
-
 public:
-	//インスタンス取得
-	static CLibraryMain* GetInstance()
-	{
-		//インスタンス化されてなければインスタンス化
-		if (m_pInstance == nullptr)
-		{
-			m_pInstance = new CLibraryMain();
-		}
-		return m_pInstance;
-	}
-
 	//初期化
 	bool Init(HINSTANCE hInst);
 
