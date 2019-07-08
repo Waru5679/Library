@@ -3,28 +3,17 @@
 #include "Main.h"
 #include "Camera.h"
 #include "Struct.h"
+#include "Singleton.h"
 
 //描画クラス
-class CDraw
+class CDraw:public CSingleton<CDraw>
 {
 private:
+	//シングルトン
+	friend CSingleton<CDraw>;
 	CDraw() {};		//コンストラクタ
 	~CDraw() {};	//デストラクタ
-
-	//インスタンス
-	static CDraw* m_pInstance;
 public:	
-	//インスタンス取得
-	static CDraw* GetInstance()
-	{
-		//インスタンス化されてなければインスタンス化
-		if (m_pInstance == nullptr)
-		{
-			m_pInstance = new CDraw();
-		}
-		return m_pInstance;
-	}
-
 	void Init();	//初期化
 	void Release();	//解放
 

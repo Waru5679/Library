@@ -3,6 +3,7 @@
 #include "CObj.h"
 #include "Main.h"
 #include "ObjLoader.h"
+#include "Singleton.h"
 #include <vector>
 using namespace std;
 
@@ -37,8 +38,13 @@ struct CollisionData
 };
 
 //当たり判定クラス
-class CHit
+class CHit:public CSingleton<CHit>
 {
+private:
+	//シングルトン
+	friend CSingleton<CHit>;
+	CHit() {}	//コンストラクタ
+	~CHit() {}	//デストラクタ
 public:
 	void Init();						//初期化
 	void UpData(CollisionData* pData);	//更新
@@ -54,7 +60,6 @@ public:
 
 	//めり込み修正
 	D3DXVECTOR3 Fixation(D3DXVECTOR3 Pos, D3DXVECTOR3 Norm, ObbData* pObb);
-
 private:
 	//球と球のヒット判定
 	bool SphereAndSphre(SphereData* data1, SphereData* data2);
@@ -76,7 +81,4 @@ private:
 	MY_MESH m_DrawObb;		//描画用Box
 	MY_MESH m_DrawSphere;	//描画用Sphere
 	ColorData m_Color;		//描画色
-
 };
-
-extern CHit g_Hit;

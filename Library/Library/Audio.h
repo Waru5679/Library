@@ -3,6 +3,8 @@
 #include <Windows.h>
 #include <XAudio2.h>
 #include <vector>
+
+#include "Singleton.h"
 using namespace std;
 
 //チャンク情報
@@ -35,26 +37,14 @@ struct SoundData
 };
 
 //オーディオクラス
-class CAudio
+class CAudio:public CSingleton<CAudio>
 {
 private:
+	//シングルトン
+	friend CSingleton<CAudio>;
 	CAudio() {};	//コンストラクタ
 	~CAudio() {};	//デストラクタ
-
-	//インスタンス
-	static CAudio* m_pInstance;
 public:
-	//インスタンス取得
-	static CAudio* GetInstance() 
-	{
-		//インスタンス化されてなければインスタンス化
-		if (m_pInstance == nullptr)
-		{
-			m_pInstance = new CAudio();
-		}
-		return m_pInstance;
-	}
-
 	void Init();	//初期化
 	void Update();	//解放
 	void Release();	//解放

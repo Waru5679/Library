@@ -76,9 +76,6 @@ void CSceneMain::Release()
 	AUDIO->DeleteMusic();
 	g_Loader.Release();
 	g_Ray.Release();	
-
-
-
 }
 
 //‰¹Šy
@@ -101,5 +98,4 @@ void CSceneMain::LoadMesh()
 
 	//‹…
 	g_Loader.LoadMesh(ModelName::ModelSphere, "Model/Sphere/Sphere.obj");
-
 }

@@ -52,4 +52,3 @@ protected:
 
 	MY_MESH* m_pMesh;	//モデルのポインタ
 };
-

@@ -6,9 +6,8 @@
 class CDirectX :public CSingleton<CDirectX>
 {
 private:
-	//シングルトンクラスだけでインスタンス化する
+	//シングルトン
 	friend CSingleton<CDirectX>;
-
 	CDirectX() {};	//コンストラクタ
 	~CDirectX() {};	//デストラクタ
 public:

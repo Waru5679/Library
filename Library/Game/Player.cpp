@@ -44,8 +44,8 @@ void CPlayer::Init()
 	m_bHit=false;
 
 	//当たり判定
-	m_Collision = g_Hit.CollisionCreate(this);
-	g_Hit.Insert(&m_Collision);
+	m_Collision = HIT->CollisionCreate(this);
+	HIT->Insert(&m_Collision);
 	
 	//Ray登録
 	g_Ray.Insert(this);
@@ -75,10 +75,10 @@ void CPlayer::Update()
 		m_vLastMove = m_vMove;
 
 	//当たり判定データ更新
-	g_Hit.UpData(&m_Collision);
+	HIT->UpData(&m_Collision);
 
 	//ヒット確認
-	if(g_Hit.Hit()==true)
+	if(HIT->Hit()==true)
 	{
 		m_bHit = true;
 	}

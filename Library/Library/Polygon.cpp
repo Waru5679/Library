@@ -31,7 +31,7 @@ void CDraw::DrawTexture(int TexId, RECT_F* pSrc,RECT_F* pOut,ColorData* pColor,f
 {
 	//テクスチャ情報
 	MY_TEXTURE* pTex=nullptr;
-	pTex=g_Task.GetTex(TexId);
+	pTex= g_Task.GetTex(TexId);
 
 	//切り取り位置の設定
 	RECT_F Src;

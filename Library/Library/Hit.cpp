@@ -2,7 +2,8 @@
 #include "Math.h"
 #include "Release.h"
 
- CHit g_Hit;
+//インスタンス
+CHit* CHit::m_pInstance = nullptr;
  
  //登録
  void CHit::Insert(CollisionData* pData)

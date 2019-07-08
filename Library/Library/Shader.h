@@ -16,7 +16,7 @@
 class CShader:public CSingleton<CShader>
 {
 private:
-	//シングルトンクラスだけでインスタンス化
+	//シングルトン
 	friend CSingleton<CShader>;
 	CShader() {};	//コンストラクタ
 	~CShader() {};	//デストラクタ

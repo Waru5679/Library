@@ -4,12 +4,10 @@
 #include <wchar.h>
 #include <memory>
 #include <list>
+#include "Singleton.h"
 #include "Polygon.h"
 
 using namespace std;
-
-//メモリ開放用
-#define SAFE_RELEASE(p)      { if (p) { (p)->Release();    (p)=nullptr;  }	}
 
 //文字識別クラス
 class CCharClass
@@ -49,26 +47,14 @@ private:
 };
 
 //Fontクラス
-class CFont
+class CFont:public CSingleton<CFont> 
 {
 private:
-	CFont() {};	//コンストラクタ
-	~CFont() {};//デストラクタ
-
-	//インスタンス
-	static CFont* m_pInstance;
+	//シングルトン
+	friend CSingleton<CFont>;
+	CFont() {};		//コンストラクタ
+	~CFont() {};	//デストラクタ
 public:
-	//インスタンス取得
-	static CFont* GetInstance()
-	{
-		//インスタンス化されてなければインスタンス化する
-		if (m_pInstance == nullptr)
-		{
-			m_pInstance = new CFont();
-		}
-		return m_pInstance;
-	}
-
 	void Init();	//初期化
 	void Release();	//解放
 

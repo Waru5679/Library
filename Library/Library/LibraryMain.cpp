@@ -10,6 +10,7 @@
 #include "FrameRate.h"
 #include "Hit.h"
 #include "Scene.h"
+#include "Hit.h"
 
 //インスタンス
 CLibraryMain* CLibraryMain::m_pInstance = nullptr;
@@ -48,7 +49,7 @@ bool CLibraryMain::Init(HINSTANCE hInst)
 	FRAME->Init();
 
 	//当たり判定初期化
-	g_Hit.Init();
+	HIT->Init();
 	
 	//シーンロード
 	CSceneInclude::LoadScene();
@@ -76,7 +77,7 @@ void CLibraryMain::Update()
 	SCENE->Draw();
 
 	//当たり判定描画
-	g_Hit.Draw();
+	HIT->Draw();
 
 	//フレームレート計算
 	FRAME->FrameCount();
@@ -119,7 +120,7 @@ void CLibraryMain::WinInit(HINSTANCE hInst)
 //メモリの開放
 void  CLibraryMain::Release()
 {
-	g_Hit.Release();
+	HIT->Release();
 	SCENE->Release();
 	AUDIO->Release();
 	FONT->Release();

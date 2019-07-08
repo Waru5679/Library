@@ -5,6 +5,7 @@
 using namespace std;
 
 #include "Main.h"
+#include "Singleton.h"
 
 //シーンクラス(継承用)
 class CSceneBase
@@ -38,27 +39,14 @@ struct MY_SCENE
 using pMyScene=unique_ptr<MY_SCENE>;
 
 //シーンマネージャー
-class CSceneManager
+class CSceneManager:public CSingleton<CSceneManager>
 {
 private:
-	CSceneManager() {};	//コンストラクタ
+	//シングルトン
+	friend CSingleton<CSceneManager>;
+	CSceneManager() {};		//コンストラクタ
 	~CSceneManager() {};	//デストラクタ
-
-	//インスタンス
-	static CSceneManager* m_pInstance;
-
 public:
-	//インスタンス取得
-	static CSceneManager* GetInstance()
-	{
-		//インスタンス化されてなければインスタンス化
-		if (m_pInstance == nullptr)
-		{
-			m_pInstance = new CSceneManager();
-		}
-		return m_pInstance;
-	}
-
 	void Update();							//更新
 	void Draw();							//描画
 	void Release();							//解放

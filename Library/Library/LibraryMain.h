@@ -6,9 +6,8 @@
 class CLibraryMain:public CSingleton<CLibraryMain>
 {
 private:
-	//シングルトンクラスだけでインスタンス化する
+	//シングルトン
 	friend CSingleton<CLibraryMain>;	
-
 	CLibraryMain() {};	//コンストラクタ
 	~CLibraryMain() {};	//デストラクタ
 public:

@@ -25,8 +25,8 @@ void CSphere::Init()
 	m_pMesh = g_Loader.GetMesh(ModelName::ModelSphere);
 	   	
 	//“o˜^
-	m_Collision =g_Hit.CollisionCreate(this);
-	g_Hit.Insert(&m_Collision);
+	m_Collision = HIT->CollisionCreate(this);
+	HIT->Insert(&m_Collision);
 
 	//Ray“o˜^
 	g_Ray.Insert(this);
@@ -41,7 +41,7 @@ void CSphere::Update()
 	//ƒ[ƒ‹ƒhs—ñì¬
 	m_matWorld = MakeMatWorld(m_vPos, m_vAngle, m_vScale);
 
-	g_Hit.UpData(&m_Collision);
+	HIT->UpData(&m_Collision);
 }
 
 //•`‰æ

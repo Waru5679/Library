@@ -8,9 +8,8 @@ constexpr float MIN_FRAME_TIME{ 1000.0f / FRAME_RATE };
 class CFrameRate:public CSingleton<CFrameRate>
 {
 private:
-	//シングルトンだけでインスタンス化
+	//シングルトン
 	friend CSingleton<CFrameRate>;
-
 	CFrameRate() {};	//コンストラクタ
 	~CFrameRate() {};	//デストラクタ
 public:
