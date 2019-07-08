@@ -16,10 +16,10 @@ CHit* CHit::m_pInstance = nullptr;
  void CHit::Init()
  {
 	 //HitBox
-	 g_Loader.LoadObj("Model/Hit/HitBox.obj", &m_DrawObb);
+	 LOADER->LoadObj("Model/Hit/HitBox.obj", &m_DrawObb);
 
 	 //ãÖ
-	 g_Loader.LoadObj("Model/Hit/Sphere.obj", &m_DrawSphere);
+	 LOADER->LoadObj("Model/Hit/Sphere.obj", &m_DrawSphere);
 
 	 //êF
 	 m_Color = ColorData(1.0f, 1.0f, 1.0f, 0.5f);
@@ -88,10 +88,10 @@ void CHit::Draw()
 	for (unsigned int i = 0; i < m_Collision.size(); i++)
 	{	
 		//Obbï`âÊ
-		g_Loader.Draw(m_Collision[i]->m_ObbData.m_matWorld, &m_DrawObb,&m_Color);
+		LOADER->Draw(m_Collision[i]->m_ObbData.m_matWorld, &m_DrawObb,&m_Color);
 
 		//ãÖï`âÊ
-		g_Loader.Draw(m_Collision[i]->m_SphereData.m_matWorld,&m_DrawSphere, &m_Color);
+		LOADER->Draw(m_Collision[i]->m_SphereData.m_matWorld,&m_DrawSphere, &m_Color);
 	}
 }
 

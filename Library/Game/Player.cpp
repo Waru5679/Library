@@ -32,7 +32,7 @@ void CPlayer::Init()
 	D3DXMatrixIdentity(&m_matWorld);
 	
 	//モデル
-	m_pMesh = g_Loader.GetMesh(ModelName::ModelPlayer);
+	m_pMesh = LOADER->GetMesh(ModelName::ModelPlayer);
 	
 	//移動ベクトル
 	m_vMove = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
@@ -159,5 +159,5 @@ void CPlayer::Draw()
 	if(m_bHit==true)
 		FONT->DrawStr(L"Hit", 200.0f, 20.0f, 32.0f, 0.0f);
 
-	g_Loader.Draw(m_matWorld, m_pMesh,NULL);
+	LOADER->Draw(m_matWorld, m_pMesh,NULL);
 }

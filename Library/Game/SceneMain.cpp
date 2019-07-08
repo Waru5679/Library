@@ -74,7 +74,7 @@ void CSceneMain::Release()
 {
 	g_Task.Release();
 	AUDIO->DeleteMusic();
-	g_Loader.Release();
+	LOADER->Release();
 	g_Ray.Release();	
 }
 
@@ -94,8 +94,8 @@ void CSceneMain::LoadTexture()
 void CSceneMain::LoadMesh()
 {
 	//ƒvƒŒƒCƒ„[
-	g_Loader.LoadMesh(ModelName::ModelPlayer, "Model/Player/Player.obj");
+	LOADER->LoadMesh(ModelName::ModelPlayer, "Model/Player/Player.obj");
 
 	//‹…
-	g_Loader.LoadMesh(ModelName::ModelSphere, "Model/Sphere/Sphere.obj");
+	LOADER->LoadMesh(ModelName::ModelSphere, "Model/Sphere/Sphere.obj");
 }

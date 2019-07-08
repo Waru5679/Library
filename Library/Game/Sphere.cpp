@@ -22,7 +22,7 @@ void CSphere::Init()
 	D3DXMatrixIdentity(&m_matWorld);
 
 	//ƒ‚ƒfƒ‹
-	m_pMesh = g_Loader.GetMesh(ModelName::ModelSphere);
+	m_pMesh = LOADER->GetMesh(ModelName::ModelSphere);
 	   	
 	//“o˜^
 	m_Collision = HIT->CollisionCreate(this);
@@ -47,5 +47,5 @@ void CSphere::Update()
 //•`‰æ
 void CSphere::Draw()
 {
-	g_Loader.Draw(m_matWorld, m_pMesh,NULL);
+	LOADER->Draw(m_matWorld, m_pMesh,NULL);
 }

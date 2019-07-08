@@ -20,7 +20,7 @@ void CBullet::Init()
 	D3DXMatrixIdentity(&m_matTrans);
 
 	//モデル
-	m_pMesh = g_Loader.GetMesh(ModelSphere);
+	m_pMesh = LOADER->GetMesh(ModelSphere);
 
 	//プレイヤーのポインタ
 	m_pPlayer = dynamic_cast<CPlayer*> (g_Task.GetObj(ObjPlayer));
@@ -63,5 +63,5 @@ void CBullet::Update()
 //描画
 void CBullet::Draw()
 {
-	g_Loader.Draw(m_matWorld, m_pMesh, NULL);
+	LOADER->Draw(m_matWorld, m_pMesh, NULL);
 }

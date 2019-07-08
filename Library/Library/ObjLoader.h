@@ -1,11 +1,17 @@
 #pragma once
 #include "Struct.h"
 #include <vector>
+#include "Singleton.h"
 using namespace std;
 
 //OBJデータ読み込みクラス
-class CObjLoader
+class CObjLoader:public CSingleton<CObjLoader>
 {
+private:
+	//シングルトン
+	friend CSingleton<CObjLoader>;
+	CObjLoader() {};	//コンストラクタ
+	~CObjLoader() {};	//デストラクタ
 public:
 	//解放
 	void Release();
@@ -31,5 +37,3 @@ private:
 	//メッシュ
 	vector<MY_MESH>m_Mesh;
 };
-
-extern CObjLoader g_Loader;

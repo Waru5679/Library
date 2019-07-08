@@ -21,7 +21,7 @@ void CEnemy::Init()
 	D3DXMatrixIdentity(&m_matTrans);
 
 	//モデル
-	m_pMesh=g_Loader.GetMesh(ModelSphere);
+	m_pMesh= LOADER->GetMesh(ModelSphere);
 
 	//攻撃用カウント
 	m_AttackCount = 0;
@@ -70,5 +70,5 @@ void CEnemy::Update()
 //描画
 void CEnemy::Draw()
 {
-	g_Loader.Draw(m_matWorld, m_pMesh, NULL);
+	LOADER->Draw(m_matWorld, m_pMesh, NULL);
 }

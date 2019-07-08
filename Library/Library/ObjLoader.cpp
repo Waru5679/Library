@@ -5,7 +5,8 @@
 #include "Math.h"
 #include "Release.h"
 
-CObjLoader g_Loader;
+//インスタンス
+CObjLoader* CObjLoader::m_pInstance = nullptr;
 
 //モデル読み込み
 void CObjLoader::LoadMesh(int Id, const char* Name)

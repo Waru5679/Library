@@ -35,6 +35,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMsg, WPARAM wParam, LPARAM lParam);
 #define DRAW CDraw::GetInstance()
 #define HIT CHit::GetInstance()
 
+#include "ObjLoader.h"
+#define LOADER CObjLoader::GetInstance()
+
 //
 //#include "Release.h"
 //#define RELEASE CRelease::GetInstance()
