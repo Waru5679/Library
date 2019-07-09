@@ -85,6 +85,9 @@
     <Filter Include="リソース ファイル\Singleton">
       <UniqueIdentifier>{03d5bdf2-bc95-47ae-872e-9e4869b49239}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Aiming">
+      <UniqueIdentifier>{2239e455-d814-4402-b126-1b5e473a889f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Library\Camera.h">
@@ -141,9 +144,6 @@
     <ClInclude Include="Game\SceneMain.h">
       <Filter>ソース ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Game\2DPolygon.h">
-      <Filter>ソース ファイル\2D</Filter>
-    </ClInclude>
     <ClInclude Include="Game\Player.h">
       <Filter>ソース ファイル\Player</Filter>
     </ClInclude>
@@ -183,7 +183,13 @@
     <ClInclude Include="Library\LibraryHeader.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Library\GameHeader.h">
+    <ClInclude Include="Game\Aiming.h">
+      <Filter>ソース ファイル\Aiming</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\2DPolygon.h">
+      <Filter>ソース ファイル\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\GameHeader.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
@@ -242,9 +248,6 @@
     <ClCompile Include="Game\SceneMain.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Game\2DPolygon.cpp">
-      <Filter>ソース ファイル\2D</Filter>
-    </ClCompile>
     <ClCompile Include="Game\Player.cpp">
       <Filter>ソース ファイル\Player</Filter>
     </ClCompile>
@@ -268,6 +271,12 @@
     </ClCompile>
     <ClCompile Include="Library\Release.cpp">
       <Filter>リソース ファイル\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Aiming.cpp">
+      <Filter>ソース ファイル\Aiming</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\2DPolygon.cpp">
+      <Filter>ソース ファイル\2D</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

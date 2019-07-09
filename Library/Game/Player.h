@@ -19,13 +19,16 @@ public:
 
 	D3DXVECTOR3 GetPos() { return m_vPos; }
 	D3DXVECTOR3 GetAngle() { return m_vAngle; }
-	D3DXVECTOR3 GetDir() { return m_vLastMove; }
+	D3DXVECTOR3 GetDir() { return m_vDir; }
+	D3DXVECTOR3 GetLastMove() { return m_vLastMove; }
 	
 private:
 	D3DXVECTOR3 m_vMove;		//移動ベクトル
+	D3DXVECTOR3 m_vDir;			//向き
 	D3DXVECTOR3 m_vLastMove;	//最後に移動した向き
 	CollisionData m_Collision;	//当たり判定	
 	float m_fSpeed;				//移動スピード
+	float m_fAimDis;			//照準との距離
 
 	bool m_bHit;				//ヒットテスト
 };

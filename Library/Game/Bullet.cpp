@@ -1,5 +1,5 @@
 #include "../Library/LibraryHeader.h"
-#include "../Library/GameHeader.h"
+#include "GameHeader.h"
 
 #include "Bullet.h"
 

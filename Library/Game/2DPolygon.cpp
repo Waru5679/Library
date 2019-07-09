@@ -2,7 +2,7 @@
 #include "../Library/LibraryHeader.h"
 
 //ゲームファイル
-#include "../Library/GameHeader.h"
+#include "2DPolygon.h"
 
 //初期化
 void C2DPolygon::Init()

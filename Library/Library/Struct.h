@@ -37,7 +37,7 @@ struct ColorData
 		m_Blue = B;
 		m_Alpha = A;
 	}
-
+	
 	float m_Red;	//Ô
 	float m_Green;	//—Î
 	float m_Blue;	//Â

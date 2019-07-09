@@ -1,4 +1,4 @@
-#include "../Library/GameHeader.h"
+#include "GameHeader.h"
 #include <math.h>
 
 //コンストラクタ

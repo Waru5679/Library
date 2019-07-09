@@ -1,5 +1,5 @@
 #include "LibraryMain.h"
-#include "GameHeader.h"
+#include "../Game/GameHeader.h"
 
 //インスタンス
 CLibraryMain* CLibraryMain::m_pInstance = nullptr;
@@ -7,9 +7,6 @@ CLibraryMain* CLibraryMain::m_pInstance = nullptr;
 //初期化
 bool CLibraryMain::Init(HINSTANCE hInst)
 {
-	//メモリリーク検出
-	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-
 	//ウインドウハンドル
 	m_hWnd = nullptr;
 
@@ -43,14 +40,14 @@ bool CLibraryMain::Init(HINSTANCE hInst)
 	//入力情報
 	INPUT->Init();
 
-	//当たり判定
-	HIT->Init();
-	
 	//シーンロード
 	CSceneInclude::LoadScene();
 
 	//スタートシーンセット
 	SCENE->SetScene(START_SCENE);
+
+	//当たり判定
+	HIT->Init();
 	
 	return true;
 }
@@ -65,6 +62,9 @@ void CLibraryMain::Update()
 	//深度バッファクリア
 	DX->GetDevice()->ClearDepthStencilView(DX->GetDepthStencilView(), D3D10_CLEAR_DEPTH, 1.0f, 0);
 
+	//フレームレート計算
+	FRAME->FrameCount();
+
 	//更新
 	SCENE->Update();
 
@@ -73,9 +73,6 @@ void CLibraryMain::Update()
 
 	//当たり判定描画
 	HIT->Draw();
-
-	//フレームレート計算
-	FRAME->FrameCount();
 
 	//フレームレート数描画
 	FRAME->Draw();
@@ -117,6 +114,7 @@ void  CLibraryMain::Release()
 {
 	HIT->Release();
 	INPUT->Release();
+	FRAME->Release();
 	SCENE->Release();
 	AUDIO->Release();
 	FONT->Release();

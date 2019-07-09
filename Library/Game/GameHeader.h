@@ -3,13 +3,14 @@
 //初めのシーン
 #define START_SCENE SceneName::SceneMain 
 
-//ゲームで使うファイル
+//ゲームで使うオブジェクトファイル
 #include "../Game/2DPolygon.h"
 #include "../Game/Street.h"
 #include "../Game/MainCamera.h"
 #include "../Game/Enemy.h"
 #include "../Game/Bullet.h"
 #include "../Game/Player.h"
+#include "../Game/Aiming.h"
 
 //Debug
 #include "../Game/RayTest.h"
@@ -33,6 +34,7 @@ enum ObjName
 	ObjSphere,		//球
 	ObjEnemy,		//敵
 	ObjBullet,		//弾
+	ObjAiming,		//照準
 };
 
 //モデル
@@ -40,4 +42,5 @@ enum ModelName
 {
 	ModelPlayer,	//プレイヤー
 	ModelSphere,	//球
+	ModelAiming,	//照準
 };

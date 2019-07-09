@@ -3,7 +3,7 @@
 #include "../Library/LibraryHeader.h"
 
 //ゲームファイル
-#include  "../Library/GameHeader.h"
+#include  "GameHeader.h"
 
 #include <math.h>
 
@@ -30,8 +30,11 @@ void CPlayer::Init()
 	//移動ベクトル
 	m_vMove = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 
+	//向き
+	m_vDir = D3DXVECTOR3(0.0f, 0.0f, 1.0f);
+
 	//移動スピード
-	m_fSpeed=1.0f;
+	m_fSpeed=0.2f;
 		
 	//ヒットテスト
 	m_bHit=false;
@@ -42,6 +45,13 @@ void CPlayer::Init()
 	
 	//Ray登録
 	RAY->Insert(this);
+
+	//照準の距離
+	m_fAimDis = 5.0f;
+
+	//照準生成
+	CAiming* pAiming = new CAiming(m_vPos + m_vDir * m_fAimDis, m_vAngle, D3DXVECTOR3(1.0f, 1.0f, 1.0f));
+	g_Task.InsertObj(pAiming, ObjName::ObjAiming);
 }
 
 //更新
@@ -79,7 +89,6 @@ void CPlayer::Update()
 	{
 		m_bHit = false;
 	}
-
 	
 	//ワールド行列作成
 	m_matWorld = MakeMatWorld(m_vPos, m_vAngle, m_vScale);
@@ -108,41 +117,27 @@ void CPlayer::Input()
 	{
 		m_vMove += D3DXVECTOR3(-1.0f, 0.0f, 0.0f);
 	}
-	if (INPUT->GetKeyPush('Y') == true)
+	if (INPUT->GetKeyPush('E') == true)
 	{
 		m_vMove += D3DXVECTOR3(0.0f, 1.0f, 0.0f);
 	}
-	if (INPUT->GetKeyPush('H') == true)
+	if (INPUT->GetKeyPush('Q') == true)
 	{
 		m_vMove += D3DXVECTOR3(0.0f, -1.0f, 0.0f);
 	}
 
-
 	//回転
-	//移動
-	if (INPUT->GetKeyPush('J') == true)
+	//向きを更新する
+	if (INPUT->GetKeyPush(VK_LEFT) == true)
 	{
-		m_vAngle += D3DXVECTOR3(0.0f, 0.2f, 0.0f);
+		m_vAngle.y -= 0.05f;
+		//m_vDir+=
 	}
-	if (INPUT->GetKeyPush('L') == true)
+
+	if (INPUT->GetKeyPush(VK_RIGHT) == true)
 	{
-		m_vAngle += D3DXVECTOR3(0.0f, -0.2f, 0.0f);
-	}
-	if (INPUT->GetKeyPush('I') == true)
-	{
-		m_vAngle += D3DXVECTOR3(0.2f, 0.0f, 0.0f);
-	}
-	if (INPUT->GetKeyPush('K') == true)
-	{
-		m_vAngle += D3DXVECTOR3(-0.2f, 0.0f, 0.0f);
-	}
-	if (INPUT->GetKeyPush('U') == true)
-	{
-		m_vAngle += D3DXVECTOR3(0.0f, 0.0f, 0.2f);
-	}
-	if (INPUT->GetKeyPush('O') == true)
-	{
-		m_vAngle += D3DXVECTOR3(0.0f, 0.0f, -0.2f);
+		m_vAngle.y += 0.05f;
+		//m_vDir+=
 	}
 }
 

@@ -9,6 +9,9 @@
 //アプリケーションのエントリー関数
 INT WINAPI WinMain( HINSTANCE hInst,HINSTANCE hPrevInst,LPSTR szStr,INT iCmdShow)
 {
+	//メモリリーク検出
+	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+
 	//初期化
 	LIB_MAIN->Init(hInst);
 

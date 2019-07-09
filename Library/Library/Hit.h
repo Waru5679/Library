@@ -74,7 +74,7 @@ private:
 	// 分離軸に投影された軸成分から投影線分長を算出
 	float LenSegOnSeparateAxis(D3DXVECTOR3* Sep, D3DXVECTOR3* e1, D3DXVECTOR3* e2, D3DXVECTOR3* e3);
 
-	vector<CollisionData* > m_Collision;	//当たり判定データ
+	vector<CollisionData*> m_Collision;	//当たり判定データ
 
 	MY_MESH m_DrawObb;		//描画用Box
 	MY_MESH m_DrawSphere;	//描画用Sphere

@@ -1,5 +1,5 @@
 #include "../Library/LibraryHeader.h"
-#include "../Library/GameHeader.h"
+#include "GameHeader.h"
 
 //初期化
 void CSceneMain::Init()
@@ -21,17 +21,17 @@ void CSceneMain::Init()
 	CMainCamera* pCamera = new CMainCamera();
 	g_Task.InsertObj(pCamera, ObjName::ObjMainCamera);
 
-	////2DOBJ
-	//C2DPolygon* p2D=new C2DPolygon();
-	//g_Task.InsertObj(p2D, ObjName::ObjDraw2D);
+	//2DOBJ
+	C2DPolygon* p2D=new C2DPolygon();
+	g_Task.InsertObj(p2D, ObjName::ObjDraw2D);
 
-	////敵
-	//vPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	//vAngle = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	//vScale = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
+	//敵
+	vPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	vAngle = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	vScale = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
 
-	//CEnemy* pEnemy=new CEnemy(vPos, vAngle, vScale);
-	//g_Task.InsertObj(pEnemy, ObjName::ObjEnemy);
+	CEnemy* pEnemy=new CEnemy(vPos, vAngle, vScale);
+	g_Task.InsertObj(pEnemy, ObjName::ObjEnemy);
 
 	//シェーダーにカメラセット
 	SHADER->SetCamera(dynamic_cast<CameraBase*>(pCamera));
@@ -79,4 +79,7 @@ void CSceneMain::LoadMesh()
 
 	//球
 	LOADER->LoadMesh(ModelName::ModelSphere, "Model/Sphere/Sphere.obj");
+	
+	//照準
+	LOADER->LoadMesh(ModelName::ModelAiming, "Model/Aiming/Aiming.obj");
 }

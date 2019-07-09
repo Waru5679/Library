@@ -2,7 +2,7 @@
 #include "../Library/LibraryHeader.h"
 
 //ゲームファイル
-#include "../Library/GameHeader.h"
+#include "GameHeader.h"
 
 //初期化
 void CMainCamera::Init()
@@ -33,12 +33,12 @@ void CMainCamera::Update()
 	//回転
 	if (INPUT->GetKeyPush(VK_LEFT) == true)
 	{
-		m_vAngle.y -= 0.2f;
+		m_vAngle.y -= 0.05f;
 	}
 
 	if (INPUT->GetKeyPush(VK_RIGHT) == true)
 	{
-		m_vAngle.y += 0.2f;
+		m_vAngle.y += 0.05f;
 	}
 
 	//プレイヤーの位置

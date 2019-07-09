@@ -3,13 +3,6 @@
 //インスタンス
 CHit* CHit::m_pInstance = nullptr;
  
- //登録
- void CHit::Insert(CollisionData* pData)
- {
-	 // 登録
-	 m_Collision.push_back(pData);
- }
-
  //初期化
  void CHit::Init()
  {
@@ -21,8 +14,52 @@ CHit* CHit::m_pInstance = nullptr;
 
 	 //色
 	 m_Color = ColorData(1.0f, 1.0f, 1.0f, 0.5f);
-
  }
+
+//更新
+void CHit::UpData(CollisionData* pData)
+{
+	//球データ
+	SetSphereData(pData->m_pObj, &pData->m_ObbData, pData->m_pMesh, &pData->m_SphereData);
+
+	//OBBデータ
+	SetObbData(pData->m_pObj, pData->m_pMesh, &pData->m_ObbData);
+}
+
+//描画
+void CHit::Draw()
+{
+	//D3DXMATRIX matWorld;
+
+	//for (unsigned int i = 0; i < m_Collision.size(); i++)
+	//{
+	//	//Obb描画
+	//	LOADER->Draw(m_Collision[i]->m_ObbData.m_matWorld, &m_DrawObb, &m_Color);
+
+	//	//球描画
+	//	LOADER->Draw(m_Collision[i]->m_SphereData.m_matWorld, &m_DrawSphere, &m_Color);
+	//}
+}
+
+//解放
+void CHit::Release()
+{
+	m_DrawObb.~MY_MESH();
+	m_DrawSphere.~MY_MESH();
+
+	//当たり判定破棄
+	VectorRelease(m_Collision);
+
+	//インスタンス破棄
+	PointerRelease(m_pInstance);
+}
+
+//登録
+void CHit::Insert(CollisionData* pData)
+{
+    // 登録
+    m_Collision.push_back(pData);
+}
 
 //当たり判定データ登録
 CollisionData CHit::CollisionCreate(CObj3DBase* pCobj)
@@ -66,40 +103,6 @@ bool CHit::Hit()
 	}
 
 	return false;
-}
-
-//更新
-void CHit::UpData(CollisionData* pData)
-{
-	//球データ
-	SetSphereData(pData->m_pObj,&pData->m_ObbData,pData->m_pMesh, &pData->m_SphereData);
-
-	//OBBデータ
-	SetObbData(pData->m_pObj, pData->m_pMesh, &pData->m_ObbData);
-}
-
-//描画
-void CHit::Draw()
-{
-	D3DXMATRIX matWorld;
- 
-	for (unsigned int i = 0; i < m_Collision.size(); i++)
-	{	
-		//Obb描画
-		LOADER->Draw(m_Collision[i]->m_ObbData.m_matWorld, &m_DrawObb,&m_Color);
-
-		//球描画
-		LOADER->Draw(m_Collision[i]->m_SphereData.m_matWorld,&m_DrawSphere, &m_Color);
-	}
-}
-
-//解放
-void CHit::Release()
-{
-	VectorRelease(m_Collision);
-
-	//インスタンス破棄
-	PointerRelease(m_pInstance);
 }
 
 // 分離軸に投影された軸成分から投影線分長を算出

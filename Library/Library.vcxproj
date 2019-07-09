@@ -131,8 +131,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Game\2DPolygon.h" />
+    <ClInclude Include="Game\Aiming.h" />
     <ClInclude Include="Game\Bullet.h" />
     <ClInclude Include="Game\Enemy.h" />
+    <ClInclude Include="Game\GameHeader.h" />
     <ClInclude Include="Game\MainCamera.h" />
     <ClInclude Include="Game\Player.h" />
     <ClInclude Include="Game\SceneMain.h" />
@@ -144,7 +146,6 @@
     <ClInclude Include="Library\DirectX.h" />
     <ClInclude Include="Library\Font.h" />
     <ClInclude Include="Library\FrameRate.h" />
-    <ClInclude Include="Library\GameHeader.h" />
     <ClInclude Include="Library\Hit.h" />
     <ClInclude Include="Library\Input.h" />
     <ClInclude Include="Library\LibraryHeader.h" />
@@ -169,6 +170,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Game\2DPolygon.cpp" />
+    <ClCompile Include="Game\Aiming.cpp" />
     <ClCompile Include="Game\Bullet.cpp" />
     <ClCompile Include="Game\Enemy.cpp" />
     <ClCompile Include="Game\MainCamera.cpp" />

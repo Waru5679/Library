@@ -3,6 +3,7 @@
 #include <Windows.h>
 #include <XAudio2.h>
 #include <vector>
+#include <memory>
 
 #include "Singleton.h"
 #include "Release.h"
@@ -30,10 +31,11 @@ struct SoundData
 		m_bLoop = Loop;
 		m_bStart = false;
 	}
+	//デストラクタ
 	~SoundData()
 	{
 		PointerRelease(m_pResourceData);
-		PointerRelease(m_pSourceVoice);
+		m_pSourceVoice->DestroyVoice();
 	}
 
 	ChunkInfo m_Chunk;					//チャンク情報
