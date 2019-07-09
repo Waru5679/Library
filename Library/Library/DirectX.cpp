@@ -1,4 +1,5 @@
 #include "DirectX.h"
+#include "Release.h"
 
 //インスタンス
 CDirectX* CDirectX::m_pInstance = nullptr;
@@ -149,5 +150,5 @@ void CDirectX::Release()
 	m_pDevice->Release();
 
 	//インスタンス破棄
-	delete m_pInstance;
+	PointerRelease(m_pInstance);
 }

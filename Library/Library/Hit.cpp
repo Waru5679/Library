@@ -1,6 +1,4 @@
-#include "Hit.h"
-#include "Math.h"
-#include "Release.h"
+#include "LibraryHeader.h"
 
 //インスタンス
 CHit* CHit::m_pInstance = nullptr;
@@ -99,8 +97,10 @@ void CHit::Draw()
 void CHit::Release()
 {
 	VectorRelease(m_Collision);
-}
 
+	//インスタンス破棄
+	PointerRelease(m_pInstance);
+}
 
 // 分離軸に投影された軸成分から投影線分長を算出
 float CHit::LenSegOnSeparateAxis(D3DXVECTOR3* Sep, D3DXVECTOR3* e1, D3DXVECTOR3* e2, D3DXVECTOR3* e3 = 0)

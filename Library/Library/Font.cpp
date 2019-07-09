@@ -1,6 +1,4 @@
-#include "Font.h"
-#include "DirectX.h"
-#include "Math.h"
+#include "LibraryHeader.h"
 
 //インスタンス
 CFont* CFont::m_pInstance = nullptr;
@@ -192,13 +190,6 @@ void CFont::Init()
 	DeleteObject(hFont);
 }
 
-//解放
-void CFont::Release()
-{
-	m_Char->clear();
-	ReleaseDC(NULL, m_hdc);
-}
-
 //文字列をもとにテクスチャを作成
 void CFont::CreateStrTex(const wchar_t* str)
 {
@@ -260,3 +251,12 @@ void CFont::DrawStr(const wchar_t* Str, float Pos_x, float Pos_y, float FontSize
 	}	
 }
 
+//解放
+void CFont::Release()
+{
+	m_Char->clear();
+	ReleaseDC(NULL, m_hdc);
+
+	//インスタンス破棄
+	PointerRelease(m_pInstance);
+}

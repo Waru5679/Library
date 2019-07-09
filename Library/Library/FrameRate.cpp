@@ -1,5 +1,5 @@
-#include "FrameRate.h"
-#include "Font.h"
+#include "LibraryHeader.h"
+#include "Release.h"
 
 //インスタンス
 CFrameRate* CFrameRate::m_pInstance = nullptr;
@@ -92,6 +92,9 @@ void CFrameRate::Draw()
 //解放
 void CFrameRate::Release()
 {
+	//表示用文字列破棄
+	PointerRelease(m_pDrawStr);
+
 	//インスタンス破棄
-	delete m_pInstance;
+	PointerRelease(m_pInstance);
 }

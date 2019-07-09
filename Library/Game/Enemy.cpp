@@ -1,7 +1,8 @@
-#include "..//Library/Math.h"
-#include "../Library/Task.h"
-#include "Enemy.h"
-#include "Bullet.h"
+//ライブラリファイル
+#include "../Library/LibraryHeader.h"
+
+//ゲームファイル
+#include "../Library/GameHeader.h"
 
 //コンストラクタ
 CEnemy::CEnemy(D3DXVECTOR3 Pos, D3DXVECTOR3 Angle, D3DXVECTOR3 Scale)
@@ -45,7 +46,7 @@ void CEnemy::Update()
 		for (int i = 0; i <= ATTACK_NUM_Y; i++)
 		{
 			y = ATTACK_RAD_Y * i;
-			m_AttackLength_x = cos(y) * 10.0f;
+			m_AttackLength_x = cosf(y) * 10.0f;
 			for (int j = 0; j <= ATTACK_NUM_X; j++)
 			{
 				x = ATTACK_RAD_X * j;

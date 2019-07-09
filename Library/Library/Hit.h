@@ -1,8 +1,6 @@
 #pragma once
 
 #include "CObj.h"
-#include "Main.h"
-#include "ObjLoader.h"
 #include "Singleton.h"
 #include <vector>
 using namespace std;

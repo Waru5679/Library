@@ -1,14 +1,18 @@
 #include "Input.h"
+#include "Release.h"
 
-CInput g_input;
+//インスタンス
+CInput* CInput::m_pInstance = nullptr;
 
+//初期化
 void CInput::Init()
 {
-	m_mous_x = 0;
-	m_mous_y = 0;
+	m_Mous_x = 0;
+	m_Mous_y = 0;
 
-	for (int i = 0; i < ARRAY_SIZE; i++)
-		m_key[i] = false;
+	//キー情報初期化
+	for (int i = 0; i < KEY_BOARD_ARRAY_SIZE; i++)
+		m_Key[i] = false;
 }
 
 //マウス位置取得
@@ -20,8 +24,8 @@ void CInput::SetMousPos(UINT* uMsg, LPARAM* lParam)
 		{
 			POINT point = { LOWORD(*lParam),HIWORD((*lParam)) };
 
-			m_mous_x = point.x;	//カーソルのx座標
-			m_mous_y = point.y;	//カーソルのy座標
+			m_Mous_x = point.x;	//カーソルのx座標
+			m_Mous_y = point.y;	//カーソルのy座標
 		}
 		break;
 	}
@@ -33,10 +37,10 @@ bool CInput::GetKeyPush(int key)
 {
 	if (GetAsyncKeyState(key) & 0x8000)
 	{
-		m_key[key] = true;
+		m_Key[key] = true;
 		return true;
 	}
-	m_key[key] = false;
+	m_Key[key] = false;
 	return false;
 }
 
@@ -49,16 +53,23 @@ bool CInput::GetTriggerKeyPush(int key)
 	if ( (GetAsyncKeyState(key) & 0x8000) ) 
 	{
 		//キーのフラグがオフなら
-		if (m_key[key] == false)
+		if (m_Key[key] == false)
 		{
-			m_key[key] = true;
+			m_Key[key] = true;
 			return true;
 		}
 	}
 	//キーが押されていない場合
 	else
 	{
-		m_key[key] = false;
+		m_Key[key] = false;
 	}
 	return false;
+}
+
+//解放
+void CInput::Release()
+{
+	//インスタンス破棄
+	PointerRelease(m_pInstance);
 }

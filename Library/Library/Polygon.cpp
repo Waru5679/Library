@@ -1,11 +1,4 @@
-#include "Polygon.h"
-#include "DirectX.h"
-#include "Task.h"
-#include "Shader.h"
-#include "Camera.h"
-#include "Math.h"
-#include "Main.h"
-#include "Struct.h"
+#include "LibraryHeader.h"
 
 //インスタンス
 CDraw* CDraw::m_pInstance = nullptr;
@@ -172,6 +165,5 @@ void CDraw::Release()
 	m_pVertexBuffer->Release();
 	
 	//インスタンス破棄
-	delete m_pInstance;
-	m_pInstance = nullptr;
+	PointerRelease(m_pInstance);
 }

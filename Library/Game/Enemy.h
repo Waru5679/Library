@@ -1,13 +1,7 @@
 #pragma once
 
 //ライブラリファイル
-#include "../Library/Main.h"
-#include "../Library/CObj.h" 
-#include "../Library/Hit.h"
-#include "Bullet.h"
-
-#include <vector>
-using namespace std;
+#include "../Library/Header.h"
 
 constexpr int ATTACK_TIME{ 300 };	//攻撃の間隔
 constexpr int ATTACK_NUM_Y{ 10 };	//攻撃の数
@@ -41,4 +35,3 @@ private:
 
 	float m_fSpeed;				//移動スピード
 };
-

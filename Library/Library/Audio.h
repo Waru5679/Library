@@ -5,12 +5,14 @@
 #include <vector>
 
 #include "Singleton.h"
+#include "Release.h"
 using namespace std;
 
 //チャンク情報
 struct ChunkInfo
 {
 	ChunkInfo() { Size = 0, pData = nullptr; }
+	~ChunkInfo() { PointerRelease(pData); }
 	unsigned int Size;		//チャンク部のサイズ
 	unsigned char* pData;	//チャンクデータの先頭ポインタ
 };
@@ -27,6 +29,11 @@ struct SoundData
 		m_pSourceVoice = pSourceVoice;
 		m_bLoop = Loop;
 		m_bStart = false;
+	}
+	~SoundData()
+	{
+		PointerRelease(m_pResourceData);
+		PointerRelease(m_pSourceVoice);
 	}
 
 	ChunkInfo m_Chunk;					//チャンク情報

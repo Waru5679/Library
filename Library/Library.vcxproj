@@ -144,8 +144,10 @@
     <ClInclude Include="Library\DirectX.h" />
     <ClInclude Include="Library\Font.h" />
     <ClInclude Include="Library\FrameRate.h" />
+    <ClInclude Include="Library\GameHeader.h" />
     <ClInclude Include="Library\Hit.h" />
     <ClInclude Include="Library\Input.h" />
+    <ClInclude Include="Library\LibraryHeader.h" />
     <ClInclude Include="Library\LibraryMain.h" />
     <ClInclude Include="Library\Main.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>

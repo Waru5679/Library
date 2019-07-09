@@ -1,11 +1,8 @@
 #pragma once
-
+#include "Singleton.h"
 #include <vector>
 #include <memory>
 using namespace std;
-
-#include "Main.h"
-#include "Singleton.h"
 
 //シーンクラス(継承用)
 class CSceneBase

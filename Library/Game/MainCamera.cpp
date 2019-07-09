@@ -1,12 +1,8 @@
 //ライブラリファイル
-#include "../Library/Input.h"
-#include "../Library/DirectX.h"
-#include "../Library/Task.h"
-#include "../Library/Math.h"
+#include "../Library/LibraryHeader.h"
 
 //ゲームファイル
-#include "MainCamera.h"
-#include "Player.h"
+#include "../Library/GameHeader.h"
 
 //初期化
 void CMainCamera::Init()
@@ -35,12 +31,12 @@ void CMainCamera::Init()
 void CMainCamera::Update()
 {
 	//回転
-	if (g_input.GetKeyPush(VK_LEFT) == true)
+	if (INPUT->GetKeyPush(VK_LEFT) == true)
 	{
 		m_vAngle.y -= 0.2f;
 	}
 
-	if (g_input.GetKeyPush(VK_RIGHT) == true)
+	if (INPUT->GetKeyPush(VK_RIGHT) == true)
 	{
 		m_vAngle.y += 0.2f;
 	}

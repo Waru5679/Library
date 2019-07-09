@@ -1,7 +1,4 @@
-#include "../Library/Math.h"
-#include "../Library/Hit.h"
-#include "../Library/Ray.h"
-#include "Sphere.h"
+#include "../Library/GameHeader.h"
 #include <math.h>
 
 //コンストラクタ
@@ -29,7 +26,7 @@ void CSphere::Init()
 	HIT->Insert(&m_Collision);
 
 	//Ray登録
-	g_Ray.Insert(this);
+	RAY->Insert(this);
 
 	//ワールド行列作成
 	m_matWorld = MakeMatWorld(m_vPos, m_vAngle, m_vScale);

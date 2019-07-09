@@ -1,12 +1,9 @@
 #pragma once
 
 //ライブラリファイル
-#include "../Library/Main.h"
 #include "../Library/Camera.h"
 
-//ゲームファイル
-#include "Player.h"
-
+//メインカメラクラス
 class CMainCamera :public CameraBase
 {
 public:
@@ -22,5 +19,4 @@ private:
 	float m_fLookDis;	//プレイヤーと注視点の距離
 
 	D3DXMATRIX m_matRot;	//回転行列
-
 };

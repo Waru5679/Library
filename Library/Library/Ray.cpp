@@ -2,7 +2,8 @@
 #include "Math.h"
 #include "Release.h"
 
-CRay g_Ray;
+//インスタンス
+CRay* CRay::m_pInstance = nullptr;
 
 //登録
 void CRay::Insert(CObj3DBase* pObj)
@@ -297,6 +298,9 @@ bool CRay::TriangleRay(D3DXVECTOR3* OutPoint,D3DXVECTOR3* OutNorm ,D3DXVECTOR3 v
 void CRay::Release()
 {
 	VectorRelease(m_Data);
+
+	//インスタンス破棄
+	PointerRelease(m_pInstance);
 }
 
 //3角ポリゴンの重心の位置を求める

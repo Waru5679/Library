@@ -241,4 +241,7 @@ void CAudio::Release()
 
 	//XAudio2オブジェクト破棄
 	m_pXAudio2->Release();
+
+	//インスタンス破棄
+	PointerRelease(m_pInstance);
 }

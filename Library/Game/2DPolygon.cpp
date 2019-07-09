@@ -1,9 +1,8 @@
 //ライブラリファイル
-#include "../Library/Font.h"
-#include "../Library/Input.h"
+#include "../Library/LibraryHeader.h"
 
 //ゲームファイル
-#include "2DPolygon.h"
+#include "../Library/GameHeader.h"
 
 //初期化
 void C2DPolygon::Init()
@@ -27,25 +26,25 @@ void C2DPolygon::Init()
 void C2DPolygon::Update()
 {
 	//移動テスト
-	if (g_input.GetKeyPush(VK_RIGHT)==true)
+	if (INPUT->GetKeyPush(VK_RIGHT)==true)
 	{
 		m_Move.x = 1.0f;
 	}
-	if (g_input.GetKeyPush(VK_LEFT) == true)
+	if (INPUT->GetKeyPush(VK_LEFT) == true)
 	{
 		m_Move.x = -1.0f;
 	}
-	if (g_input.GetKeyPush(VK_UP) == true)
+	if (INPUT->GetKeyPush(VK_UP) == true)
 	{
 		m_Move.y = -1.0f;
 	}
-	if (g_input.GetKeyPush(VK_DOWN) == true)
+	if (INPUT->GetKeyPush(VK_DOWN) == true)
 	{
 		m_Move.y = 1.0f;
 	}
 
 	//回転テスト
-	if (g_input.GetKeyPush(VK_RETURN) == true)
+	if (INPUT->GetKeyPush(VK_RETURN) == true)
 	{
 		m_fRad += 1.0f;
 	}

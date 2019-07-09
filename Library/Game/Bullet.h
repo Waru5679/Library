@@ -1,10 +1,9 @@
 #pragma once
 
 //ライブラリファイル
-#include "../Library/Main.h"
-#include "../Library/CObj.h" 
-#include "../Library/Hit.h"
+#include "../Library/LibraryHeader.h"
 
+//ゲームファイル
 #include "Player.h"
 
 constexpr int DELETE_TIME{ 300 };
@@ -20,12 +19,11 @@ public:
 	void Init();	//初期化
 	void Update();	//更新
 	void Draw();	//描画
+	void Release();	//解放
 
 	D3DXVECTOR3 GetPos() { return m_vPos; }
 	D3DXVECTOR3 GetAngle() { return m_vAngle; }
-
 private:
-
 	int m_Count;				//カウンター
 	D3DXVECTOR3 m_vMove;		//移動ベクトル
 	CollisionData m_Collision;	//当たり判定	

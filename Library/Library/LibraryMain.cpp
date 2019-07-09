@@ -1,16 +1,5 @@
 #include "LibraryMain.h"
-
-
-#include "SceneInclude.h"
-
-#include "DirectX.h"
-#include "Font.h"
-#include "Audio.h"
-#include "Shader.h"
-#include "FrameRate.h"
-#include "Hit.h"
-#include "Scene.h"
-#include "Hit.h"
+#include "GameHeader.h"
 
 //インスタンス
 CLibraryMain* CLibraryMain::m_pInstance = nullptr;
@@ -18,6 +7,9 @@ CLibraryMain* CLibraryMain::m_pInstance = nullptr;
 //初期化
 bool CLibraryMain::Init(HINSTANCE hInst)
 {
+	//メモリリーク検出
+	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+
 	//ウインドウハンドル
 	m_hWnd = nullptr;
 
@@ -36,19 +28,22 @@ bool CLibraryMain::Init(HINSTANCE hInst)
 		return false;
 	}
 
-	//描画の初期化
+	//描画
 	DRAW->Init();
 
-	//フォント描画初期化
+	//フォント
 	FONT->Init();
 
-	//音楽初期化
+	//音楽
 	AUDIO->Init();
 
 	//フレームレート
 	FRAME->Init();
 
-	//当たり判定初期化
+	//入力情報
+	INPUT->Init();
+
+	//当たり判定
 	HIT->Init();
 	
 	//シーンロード
@@ -121,6 +116,7 @@ void CLibraryMain::WinInit(HINSTANCE hInst)
 void  CLibraryMain::Release()
 {
 	HIT->Release();
+	INPUT->Release();
 	SCENE->Release();
 	AUDIO->Release();
 	FONT->Release();
@@ -128,8 +124,9 @@ void  CLibraryMain::Release()
 	SHADER->Release();
 	DX->Release();
 	
-	//インスタンス破棄
-	delete m_pInstance;
-	m_pInstance = nullptr;
-}
+	//windowハンドル
+	m_hWnd = nullptr;
 
+	//インスタンス破棄
+	PointerRelease(m_pInstance);
+}

@@ -1,24 +1,5 @@
-//ライブラリファイル
-#include "../Library/Task.h"
-#include "../Library/ObjLoader.h"
-#include "../Library/Audio.h"
-#include "../Library/Polygon.h"
-#include "../Library/Shader.h"
-#include "../Library/Ray.h" 
-
-//ゲームファイル
-#include "2DPolygon.h"
-#include "Street.h"
-#include "MainCamera.h"
-#include "SceneMain.h"
-#include "Enemy.h"
-
-//Debug
-#include "RayTest.h"
-#include "Sphere.h"
-
-#include <memory>
-using namespace std;
+#include "../Library/LibraryHeader.h"
+#include "../Library/GameHeader.h"
 
 //初期化
 void CSceneMain::Init()
@@ -40,17 +21,17 @@ void CSceneMain::Init()
 	CMainCamera* pCamera = new CMainCamera();
 	g_Task.InsertObj(pCamera, ObjName::ObjMainCamera);
 
-	//2DOBJ
-	C2DPolygon* p2D=new C2DPolygon();
-	g_Task.InsertObj(p2D, ObjName::ObjDraw2D);
+	////2DOBJ
+	//C2DPolygon* p2D=new C2DPolygon();
+	//g_Task.InsertObj(p2D, ObjName::ObjDraw2D);
 
-	//敵
-	vPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	vAngle = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	vScale = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
+	////敵
+	//vPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	//vAngle = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	//vScale = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
 
-	CEnemy* pEnemy=new CEnemy(vPos, vAngle, vScale);
-	g_Task.InsertObj(pEnemy, ObjName::ObjEnemy);
+	//CEnemy* pEnemy=new CEnemy(vPos, vAngle, vScale);
+	//g_Task.InsertObj(pEnemy, ObjName::ObjEnemy);
 
 	//シェーダーにカメラセット
 	SHADER->SetCamera(dynamic_cast<CameraBase*>(pCamera));
@@ -75,7 +56,7 @@ void CSceneMain::Release()
 	g_Task.Release();
 	AUDIO->DeleteMusic();
 	LOADER->Release();
-	g_Ray.Release();	
+	RAY->Release();	
 }
 
 //音楽

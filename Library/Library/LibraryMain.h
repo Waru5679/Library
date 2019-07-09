@@ -1,6 +1,5 @@
 #pragma once
-#include "Main.h"
-#include "Singleton.h"
+#include "LibraryHeader.h"
 
 //ライブラリメインクラス
 class CLibraryMain:public CSingleton<CLibraryMain>

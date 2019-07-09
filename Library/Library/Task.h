@@ -12,6 +12,15 @@ using namespace std;
 //テクスチャ管理用
 struct MY_TEXTURE
 {
+	//デストラクタ
+	~MY_TEXTURE()
+	{
+		if (m_pTex != nullptr)
+		{
+			m_pTex = nullptr;
+		}
+	}
+
 	//テクスチャ
 	ID3D10ShaderResourceView* m_pTex;
 	int m_Width;	//幅

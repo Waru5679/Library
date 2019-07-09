@@ -1,18 +1,11 @@
-#include <math.h>
-
+#pragma once
 //ライブラリファイル
-#include "../Library/Math.h"
-#include "../Library/Task.h"
-#include "../Library/ObjLoader.h"
-#include "../Library/Input.h"
-#include "../Library/Camera.h"
-#include "../Library/Font.h"
-#include "../Library/Ray.h"
-#include "../Library/Hit.h"
+#include "../Library/LibraryHeader.h"
 
 //ゲームファイル
-#include "Player.h"
-#include "MainCamera.h"
+#include  "../Library/GameHeader.h"
+
+#include <math.h>
 
 //コンストラクタ
 CPlayer::CPlayer(D3DXVECTOR3 Pos, D3DXVECTOR3 Angle, D3DXVECTOR3 Scale)
@@ -48,7 +41,7 @@ void CPlayer::Init()
 	HIT->Insert(&m_Collision);
 	
 	//Ray登録
-	g_Ray.Insert(this);
+	RAY->Insert(this);
 }
 
 //更新
@@ -99,27 +92,27 @@ void CPlayer::Update()
 void CPlayer::Input()
 {
 	//移動
-	if (g_input.GetKeyPush('W') == true)
+	if (INPUT->GetKeyPush('W') == true)
 	{
 		m_vMove += D3DXVECTOR3(0.0f, 0.0f, 1.0f);
 	}
-	if (g_input.GetKeyPush('S') == true)
+	if (INPUT->GetKeyPush('S') == true)
 	{
 		m_vMove += D3DXVECTOR3(0.0f, 0.0f, -1.0f);
 	}
-	if (g_input.GetKeyPush('D') == true)
+	if (INPUT->GetKeyPush('D') == true)
 	{
 		m_vMove += D3DXVECTOR3(1.0f, 0.0f, 0.0f);
 	}
-	if (g_input.GetKeyPush('A') == true)
+	if (INPUT->GetKeyPush('A') == true)
 	{
 		m_vMove += D3DXVECTOR3(-1.0f, 0.0f, 0.0f);
 	}
-	if (g_input.GetKeyPush('Y') == true)
+	if (INPUT->GetKeyPush('Y') == true)
 	{
 		m_vMove += D3DXVECTOR3(0.0f, 1.0f, 0.0f);
 	}
-	if (g_input.GetKeyPush('H') == true)
+	if (INPUT->GetKeyPush('H') == true)
 	{
 		m_vMove += D3DXVECTOR3(0.0f, -1.0f, 0.0f);
 	}
@@ -127,27 +120,27 @@ void CPlayer::Input()
 
 	//回転
 	//移動
-	if (g_input.GetKeyPush('J') == true)
+	if (INPUT->GetKeyPush('J') == true)
 	{
 		m_vAngle += D3DXVECTOR3(0.0f, 0.2f, 0.0f);
 	}
-	if (g_input.GetKeyPush('L') == true)
+	if (INPUT->GetKeyPush('L') == true)
 	{
 		m_vAngle += D3DXVECTOR3(0.0f, -0.2f, 0.0f);
 	}
-	if (g_input.GetKeyPush('I') == true)
+	if (INPUT->GetKeyPush('I') == true)
 	{
 		m_vAngle += D3DXVECTOR3(0.2f, 0.0f, 0.0f);
 	}
-	if (g_input.GetKeyPush('K') == true)
+	if (INPUT->GetKeyPush('K') == true)
 	{
 		m_vAngle += D3DXVECTOR3(-0.2f, 0.0f, 0.0f);
 	}
-	if (g_input.GetKeyPush('U') == true)
+	if (INPUT->GetKeyPush('U') == true)
 	{
 		m_vAngle += D3DXVECTOR3(0.0f, 0.0f, 0.2f);
 	}
-	if (g_input.GetKeyPush('O') == true)
+	if (INPUT->GetKeyPush('O') == true)
 	{
 		m_vAngle += D3DXVECTOR3(0.0f, 0.0f, -0.2f);
 	}

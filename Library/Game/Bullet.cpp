@@ -1,6 +1,7 @@
-#include "../Library/Math.h"
+#include "../Library/LibraryHeader.h"
+#include "../Library/GameHeader.h"
+
 #include "Bullet.h"
-#include "../Library/Task.h"
 
 //コンストラクタ
 CBullet::CBullet(D3DXVECTOR3 Pos, D3DXVECTOR3 Angle, D3DXVECTOR3 Scale)
@@ -64,4 +65,10 @@ void CBullet::Update()
 void CBullet::Draw()
 {
 	LOADER->Draw(m_matWorld, m_pMesh, NULL);
+}
+
+//解放
+void CBullet::Release()
+{
+	PointerRelease(m_pPlayer);
 }

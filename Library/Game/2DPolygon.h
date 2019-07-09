@@ -2,7 +2,7 @@
 
 //ライブラリファイル
 #include "../Library/CObj.h"
-#include "../Library/Polygon.h"
+#include "../Library/LibraryHeader.h"
 
 //2Dポリゴンクラス
 class C2DPolygon:public CObj2DBase

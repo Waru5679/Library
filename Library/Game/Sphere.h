@@ -1,5 +1,8 @@
+#pragma once
+
+//ライブラリファイル
+#include "../Library/LibraryHeader.h"
 #include "../Library/CObj.h"
-#include "../Library/Hit.h"
 
 //球クラス
 class CSphere:public CObj3DBase
@@ -11,7 +14,6 @@ public:
 	void Init();	//初期化
 	void Update();	//更新
 	void Draw();	//描画
-
 private:
 	float m_fRadius;	//球の半径
 

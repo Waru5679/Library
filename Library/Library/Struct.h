@@ -2,6 +2,7 @@
 
 #include <d3dx10.h>
 #include <vector>
+#include "Release.h"
 
 using namespace std;
 
@@ -54,12 +55,31 @@ struct MY_VERTEX
 //面情報
 struct FACE_INFO
 {
+	//デストラクタ
+	~FACE_INFO()
+	{
+		VectorRelease(Vertex);
+	}
 	vector<MY_VERTEX> Vertex;	//頂点情報
 };
 
 //マテリアル構造体
 struct MY_MATERIAL
 {
+
+	//デストラクタ
+	~MY_MATERIAL()
+	{
+		VectorRelease(FaceInfo);
+		VectorRelease(pIndex);
+		VectorRelease(pVertex);
+
+		if (pTexture != nullptr)
+		{
+			pTexture = nullptr;
+		}
+	}
+
 	D3DXVECTOR3 Ka;//アンビエント(環境光)
 	D3DXVECTOR3 Kd;//ディフューズ(拡散光)
 	D3DXVECTOR3 Ks;//スペキュラー(鏡面反射光）
@@ -78,6 +98,11 @@ struct MY_MATERIAL
 //オリジナルメッシュ
 struct MY_MESH
 {
+	//デストラクタ
+	~MY_MESH()
+	{
+		VectorRelease(Material);
+	}
 	vector<MY_MATERIAL> Material;	//マテリアル
 
 	D3DXVECTOR3 vMin;	//頂点の最小座標

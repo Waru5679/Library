@@ -1,15 +1,16 @@
 #pragma once
 
-//入出力に必要なヘッダー
 #include <Windows.h>
+#include "Singleton.h"
 
-#define ARRAY_SIZE 256
+constexpr int KEY_BOARD_ARRAY_SIZE{ 256 };
 
 //入力クラス
-class CInput
+class CInput:public CSingleton<CInput>
 {
 public:
-	void Init();//初期化
+	void Init();	//初期化
+	void Release();	//解放
 			
 	//マウス位置取得　
 	void SetMousPos(UINT* uMsg, LPARAM* lParam);
@@ -19,12 +20,11 @@ public:
 	bool GetTriggerKeyPush(int key);	//トリガー式
 
 	//マウスの位置情報取得
-	int GetMousPosX(){return m_mous_x;}
-	int GetMousPosY(){return m_mous_y;}
+	int GetMousPosX(){return m_Mous_x;}
+	int GetMousPosY(){return m_Mous_y;}
 private:
-	int m_mous_x;	//マウスの位置X
-	int m_mous_y;	//マウスの位置Y
-	bool m_key[ARRAY_SIZE];//キーの状態を保存する
-};
+	int m_Mous_x;	//マウスの位置X
+	int m_Mous_y;	//マウスの位置Y
 
-extern CInput g_input;
+	bool m_Key[KEY_BOARD_ARRAY_SIZE];//キーの状態を保存する
+};

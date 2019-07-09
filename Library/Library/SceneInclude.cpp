@@ -1,9 +1,8 @@
 //ライブラリファイル
-#include "SceneInclude.h"
-#include "Task.h"
+#include "LibraryHeader.h"
 
 //ゲームで使うシーンファイル
-#include "../Game/SceneMain.h"
+#include "GameHeader.h"
 
 //シーンの作成
 void CSceneInclude::LoadScene()

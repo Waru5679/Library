@@ -1,16 +1,7 @@
 #pragma once
-#include <Windows.h>
-#include <stdio.h>
-#include <d3dx10.h>
-
-//必要なライブラリファイルのロード
-#pragma comment(lib,"d3d10.lib")
-#pragma comment(lib,"d3dx10.lib")
-
-#include "ObjLoader.h"
+#include "Main.h"
 #include "Camera.h"
-#include "Polygon.h"
-#include "Singleton.h"
+#include "LibraryHeader.h"
 
 //シェーダクラス
 class CShader:public CSingleton<CShader>
@@ -47,4 +38,3 @@ private:
 	
 	CameraBase* m_pCamera;	//カメラポインタ
 };
-

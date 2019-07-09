@@ -1,7 +1,8 @@
 #pragma once
+
 #include "Struct.h"
-#include <vector>
 #include "Singleton.h"
+#include <vector>
 using namespace std;
 
 //OBJデータ読み込みクラス

@@ -91,6 +91,9 @@ void CShader::Release()
 	m_pVertexLayout->Release();
 	m_pEffect->Release();
 
+	//カメラ破棄
+	PointerRelease(m_pCamera);
+
 	//インスタンス破棄
-	delete m_pInstance;
+	PointerRelease(m_pInstance);
 }

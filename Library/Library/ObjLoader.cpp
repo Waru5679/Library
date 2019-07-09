@@ -1,9 +1,4 @@
-#include "ObjLoader.h"
-#include "DirectX.h"
-#include "Shader.h"
-#include "Task.h"
-#include "Math.h"
-#include "Release.h"
+#include "LibraryHeader.h"
 
 //インスタンス
 CObjLoader* CObjLoader::m_pInstance = nullptr;
@@ -457,4 +452,7 @@ MY_MESH* CObjLoader::GetMesh(int Id)
 void CObjLoader::Release()
 {
 	VectorRelease(m_Mesh);
+
+	//インスタンス破棄
+	PointerRelease(m_pInstance);
 }

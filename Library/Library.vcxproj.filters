@@ -180,6 +180,12 @@
     <ClInclude Include="Library\Singleton.h">
       <Filter>リソース ファイル\Singleton</Filter>
     </ClInclude>
+    <ClInclude Include="Library\LibraryHeader.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Library\GameHeader.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Library\Audio.cpp">

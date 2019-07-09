@@ -3,7 +3,7 @@
 //ライブラリファイル
 #include "Main.h"
 #include "CObj.h"
-#include "Hit.h"
+#include "Singleton.h"
 #include <vector>
 using namespace std;
 
@@ -19,8 +19,12 @@ struct OutData
 };
 
 //レイの判定用クラス
-class CRay
+class CRay:public CSingleton<CRay>
 {
+private:
+	friend CSingleton<CRay>;
+	CRay() {}	//コンストラクタ
+	~CRay() {}	//デストラクタ
 public:
 	void Release();	//解放
 
@@ -51,5 +55,3 @@ private:
 
 	vector<CObj3DBase*> m_Data;//Ray判定を行うリスト
 };
-
-extern CRay g_Ray;

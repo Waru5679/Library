@@ -1,9 +1,8 @@
 #pragma once
 
 //ライブラリファイル
-#include "../Library/Main.h"
-#include "../Library/CObj.h" 
-#include "../Library/Hit.h"
+#include "../Library/CObj.h"
+#include "../Library/LibraryHeader.h"
 
 //プレイヤークラス
 class CPlayer:public CObj3DBase
@@ -30,4 +29,3 @@ private:
 
 	bool m_bHit;				//ヒットテスト
 };
-

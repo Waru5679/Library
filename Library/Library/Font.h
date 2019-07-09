@@ -1,12 +1,9 @@
 #pragma once 
-#include "Main.h"
+
 #include <locale.h>
 #include <wchar.h>
 #include <memory>
 #include <list>
-#include "Singleton.h"
-#include "Polygon.h"
-
 using namespace std;
 
 //•¶š¯•ÊƒNƒ‰ƒX

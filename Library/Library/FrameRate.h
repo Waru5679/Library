@@ -1,5 +1,4 @@
 #pragma once
-#include "Main.h"
 #include "Singleton.h"
 
 constexpr float MIN_FRAME_TIME{ 1000.0f / FRAME_RATE };
@@ -25,6 +24,5 @@ private:
 	int m_FrameRate;	//フレームレート
 	int m_Count;		//カウンタ
 		
-	//変換
-	wchar_t* m_pDrawStr;
+	wchar_t* m_pDrawStr;//表示用文字列
 };
