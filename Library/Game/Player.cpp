@@ -47,10 +47,10 @@ void CPlayer::Init()
 	RAY->Insert(this);
 
 	//照準の距離
-	m_fAimDis = 5.0f;
+	m_fAimDis = 10.0f;
 
 	//照準生成
-	CAiming* pAiming = new CAiming(m_vPos + m_vDir * m_fAimDis, m_vAngle, D3DXVECTOR3(1.0f, 1.0f, 1.0f));
+	CAiming* pAiming = new CAiming(m_vPos + m_vDir * m_fAimDis, m_vAngle, D3DXVECTOR3(3.0f, 3.0f, 3.0f));
 	g_Task.InsertObj(pAiming, ObjName::ObjAiming);
 }
 
@@ -64,10 +64,10 @@ void CPlayer::Update()
 	D3DXVec3Normalize(&m_vMove, &m_vMove);
 
 	//カメラ取得
-	CMainCamera* m_pCamera=dynamic_cast<CMainCamera*> (g_Task.GetObj(ObjName::ObjMainCamera));
+	CMainCamera* pCamera=dynamic_cast<CMainCamera*> (g_Task.GetObj(ObjName::ObjMainCamera));
 
 	//カメラの向きから移動ベクトルを変換
-	m_matRot = MakeMatRot(m_pCamera->GetAngle());
+	m_matRot = MakeMatRot(pCamera->GetAngle());
 	D3DXVec3TransformCoord(&m_vMove, &m_vMove, &m_matRot);
 
 	//移動
@@ -127,17 +127,14 @@ void CPlayer::Input()
 	}
 
 	//回転
-	//向きを更新する
 	if (INPUT->GetKeyPush(VK_LEFT) == true)
 	{
 		m_vAngle.y -= 0.05f;
-		//m_vDir+=
 	}
 
 	if (INPUT->GetKeyPush(VK_RIGHT) == true)
 	{
 		m_vAngle.y += 0.05f;
-		//m_vDir+=
 	}
 }
 

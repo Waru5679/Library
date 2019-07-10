@@ -21,6 +21,7 @@ public:
 	D3DXVECTOR3 GetAngle() { return m_vAngle; }
 	D3DXVECTOR3 GetDir() { return m_vDir; }
 	D3DXVECTOR3 GetLastMove() { return m_vLastMove; }
+	float GetAimDis() { return m_fAimDis; }
 	
 private:
 	D3DXVECTOR3 m_vMove;		//ˆÚ“®ƒxƒNƒgƒ‹

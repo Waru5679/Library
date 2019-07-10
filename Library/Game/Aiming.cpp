@@ -26,6 +26,12 @@ void CAiming::Init()
 
 	//プレイヤーのポインタを取得
 	m_pPlayer = dynamic_cast<CPlayer*>(g_Task.GetObj(ObjName::ObjPlayer));
+
+	//カメラのポインタ
+	m_pCamera = dynamic_cast<CMainCamera*>(g_Task.GetObj(ObjName::ObjMainCamera));
+
+	//移動ベクトル
+	m_vMove = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 }
 
 //更新
@@ -37,8 +43,25 @@ void CAiming::Update()
 		m_pPlayer = dynamic_cast<CPlayer*>(g_Task.GetObj(ObjName::ObjPlayer));
 	}
 
-	//プレイヤーの向き	
-	m_vAngle = m_pPlayer->GetDir();
+	//カメラのポインタ取得
+	if (m_pCamera == nullptr)
+	{
+		m_pCamera = dynamic_cast<CMainCamera*>(g_Task.GetObj(ObjName::ObjMainCamera));
+	}
+
+	//カメラ→プレイヤーのベクトル
+	D3DXVECTOR3 vDir;
+	vDir = m_pPlayer->GetPos()- m_pCamera->GetEye();
+	D3DXVec3Normalize(&vDir, &vDir);
+
+	//カメラの回転
+	m_vAngle.y = m_pCamera->GetAngle().y;
+
+	//カメラの向きから位置を更新
+	m_vMove = vDir * m_pPlayer->GetAimDis();
+	m_vMove.y = 0.0f;
+
+	m_vPos = m_pPlayer->GetPos() + m_vMove;
 
 	//ワールド行列
 	m_matWorld = MakeMatWorld(m_vPos, m_vAngle, m_vScale);

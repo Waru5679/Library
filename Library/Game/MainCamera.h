@@ -2,6 +2,7 @@
 
 //ライブラリファイル
 #include "../Library/Camera.h"
+#include "Player.h"
 
 //メインカメラクラス
 class CMainCamera :public CameraBase
@@ -19,4 +20,6 @@ private:
 	float m_fLookDis;	//プレイヤーと注視点の距離
 
 	D3DXMATRIX m_matRot;	//回転行列
+
+	CPlayer* m_pPlayer;	//プレイヤーのポインタ
 };
