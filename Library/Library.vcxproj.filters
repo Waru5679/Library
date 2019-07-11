@@ -73,9 +73,6 @@
     <Filter Include="ソース ファイル\Enemy">
       <UniqueIdentifier>{d4d6d514-aead-4462-bebe-ca98e4195e7d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\Bullet">
-      <UniqueIdentifier>{318c806b-44b0-4a9c-8651-e182b8ed2808}</UniqueIdentifier>
-    </Filter>
     <Filter Include="リソース ファイル\FrameRate">
       <UniqueIdentifier>{5c43d44d-2b30-4c08-a1f6-ac262a44af2d}</UniqueIdentifier>
     </Filter>
@@ -87,6 +84,12 @@
     </Filter>
     <Filter Include="ソース ファイル\Aiming">
       <UniqueIdentifier>{2239e455-d814-4402-b126-1b5e473a889f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\EnemyBullet">
+      <UniqueIdentifier>{318c806b-44b0-4a9c-8651-e182b8ed2808}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Bullet">
+      <UniqueIdentifier>{58faef8b-9e74-4ee5-80df-749434fd28dd}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -165,9 +168,6 @@
     <ClInclude Include="Game\Enemy.h">
       <Filter>ソース ファイル\Enemy</Filter>
     </ClInclude>
-    <ClInclude Include="Game\Bullet.h">
-      <Filter>ソース ファイル\Bullet</Filter>
-    </ClInclude>
     <ClInclude Include="Library\FrameRate.h">
       <Filter>リソース ファイル\FrameRate</Filter>
     </ClInclude>
@@ -191,6 +191,12 @@
     </ClInclude>
     <ClInclude Include="Game\GameHeader.h">
       <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\EnemyBullet.h">
+      <Filter>ソース ファイル\EnemyBullet</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Bullet.h">
+      <Filter>ソース ファイル\Bullet</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -260,9 +266,6 @@
     <ClCompile Include="Game\Enemy.cpp">
       <Filter>ソース ファイル\Enemy</Filter>
     </ClCompile>
-    <ClCompile Include="Game\Bullet.cpp">
-      <Filter>ソース ファイル\Bullet</Filter>
-    </ClCompile>
     <ClCompile Include="Library\FrameRate.cpp">
       <Filter>リソース ファイル\FrameRate</Filter>
     </ClCompile>
@@ -277,6 +280,12 @@
     </ClCompile>
     <ClCompile Include="Game\2DPolygon.cpp">
       <Filter>ソース ファイル\2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\EnemyBullet.cpp">
+      <Filter>ソース ファイル\EnemyBullet</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Bullet.cpp">
+      <Filter>ソース ファイル\Bullet</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

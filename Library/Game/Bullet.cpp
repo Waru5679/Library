@@ -4,11 +4,12 @@
 #include "Bullet.h"
 
 //コンストラクタ
-CBullet::CBullet(D3DXVECTOR3 Pos, D3DXVECTOR3 Angle, D3DXVECTOR3 Scale)
+CBullet::CBullet(D3DXVECTOR3 Pos, D3DXVECTOR3 Angle, D3DXVECTOR3 Scale,D3DXVECTOR3 Dir)
 {
 	m_vPos = Pos;
 	m_vAngle = Angle;
 	m_vScale = Scale;
+	m_vMove = Dir;
 }
 
 //初期化
@@ -22,38 +23,14 @@ void CBullet::Init()
 
 	//モデル
 	m_pMesh = LOADER->GetMesh(ModelSphere);
-
-	//プレイヤーのポインタ
-	m_pPlayer = dynamic_cast<CPlayer*> (g_Task.GetObj(ObjPlayer));
-
-	//プレイヤーの位置
-	if (m_pPlayer != nullptr)
-	{
-		m_vPlayerPos = m_pPlayer->GetPos();
-	}
-
-	//カウンタ
-	m_Count = 0;
-
+	
 	//移動スピード
 	m_fSpeed = 0.5f;
-
-	D3DXVec3Normalize( &m_vMove,&(m_vPlayerPos - m_vPos));
 }
 
 //更新
 void CBullet::Update()
 {
-	//カウンタ更新
-	m_Count++;
-
-	//削除
-	if (m_Count > DELETE_TIME)
-	{
-		this->SetDelete(true);
-		return;
-	}
-
 	//移動
 	m_vPos += m_vMove * m_fSpeed;
 
@@ -65,10 +42,4 @@ void CBullet::Update()
 void CBullet::Draw()
 {
 	LOADER->Draw(m_matWorld, m_pMesh, NULL);
-}
-
-//解放
-void CBullet::Release()
-{
-	PointerRelease(m_pPlayer);
 }

@@ -55,8 +55,8 @@ void CEnemy::Update()
 				D3DXVECTOR3 CreatePos(cosf(x) * m_AttackLength_x, sinf(y) * m_AttackLength_y, sinf(x) * m_AttackLength_x);
 
 				//ê∂ê¨
-				CBullet* pBullet = new CBullet(m_vPos + CreatePos, m_vAngle, D3DXVECTOR3(0.1f, 0.1f, 0.1f));
-				g_Task.InsertObj(pBullet, ObjBullet);
+				CEnemyBullet* pBullet = new CEnemyBullet(m_vPos + CreatePos, m_vAngle, D3DXVECTOR3(0.1f, 0.1f, 0.1f));
+				g_Task.InsertObj(pBullet, ObjEnemyBullet);
 			}
 		}
 

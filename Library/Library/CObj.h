@@ -25,6 +25,13 @@ class CObj2DBase :public CObjBase
 protected:
 	D3DXVECTOR2 m_ScreenPos;	//描画位置(左上)
 	D3DXVECTOR2 m_Move;			//移動ベクトル
+	float		m_fRad;			//回転
+
+	ColorData m_Color;	//描画色
+
+	//テクスチャ
+	RECT_F	m_Src;//切り取り
+	RECT_F	m_Dst;//描画
 };
 
 //3Dモデルを使用するもの　継承用クラス

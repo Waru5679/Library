@@ -8,6 +8,7 @@
 #include "../Game/Street.h"
 #include "../Game/MainCamera.h"
 #include "../Game/Enemy.h"
+#include "../Game/EnemyBullet.h"
 #include "../Game/Bullet.h"
 #include "../Game/Player.h"
 #include "../Game/Aiming.h"
@@ -33,6 +34,7 @@ enum ObjName
 	ObjDraw2D,		//2Dï`âÊ
 	ObjSphere,		//ãÖ
 	ObjEnemy,		//ìG
+	ObjEnemyBullet,	//ìGÇÃíe
 	ObjBullet,		//íe
 	ObjAiming,		//è∆èÄ
 };
