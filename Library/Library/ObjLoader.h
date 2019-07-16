@@ -2,7 +2,7 @@
 
 #include "Struct.h"
 #include "Singleton.h"
-#include <vector>
+#include <list>
 using namespace std;
 
 //OBJデータ読み込みクラス
@@ -36,5 +36,5 @@ private:
 	void MinAndMax(D3DXVECTOR3 Pos,MY_MESH* pMesh);
 
 	//メッシュ
-	vector<MY_MESH>m_Mesh;
+	list<MY_MESH>m_Mesh;
 };

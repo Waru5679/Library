@@ -46,7 +46,10 @@ struct ColorData
 
 //頂点構造体
 struct MY_VERTEX
-{
+{	
+	//開放
+	void Release() {};
+
 	D3DXVECTOR3 vPos;
 	D3DXVECTOR3 vNorm;
 	D3DXVECTOR2 vTex;
@@ -55,8 +58,9 @@ struct MY_VERTEX
 //面情報
 struct FACE_INFO
 {
-	//デストラクタ
-	~FACE_INFO()
+public:
+	//開放
+	void Release()
 	{
 		VectorRelease(Vertex);
 	}
@@ -66,9 +70,8 @@ struct FACE_INFO
 //マテリアル構造体
 struct MY_MATERIAL
 {
-
-	//デストラクタ
-	~MY_MATERIAL()
+	//開放
+	void Release()
 	{
 		VectorRelease(FaceInfo);
 		VectorRelease(pIndex);
@@ -95,11 +98,11 @@ struct MY_MATERIAL
 	vector<ID3D10Buffer*> pVertex;
 };
 
-//オリジナルメッシュ
+//メッシュデータ
 struct MY_MESH
 {
-	//デストラクタ
-	~MY_MESH()
+	//開放
+	void Release()
 	{
 		VectorRelease(Material);
 	}

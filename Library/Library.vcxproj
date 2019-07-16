@@ -157,6 +157,7 @@
     </ClInclude>
     <ClInclude Include="Library\Math.h" />
     <ClInclude Include="Library\ObjLoader.h" />
+    <ClInclude Include="Library\ModelManager.h" />
     <ClInclude Include="Library\Polygon.h" />
     <ClInclude Include="Library\Ray.h" />
     <ClInclude Include="Library\Release.h" />
@@ -167,6 +168,7 @@
     <ClInclude Include="Library\Singleton.h" />
     <ClInclude Include="Library\Struct.h" />
     <ClInclude Include="Library\Task.h" />
+    <ClInclude Include="Library\TextureManager.h" />
     <ClInclude Include="Library\Trace.h" />
   </ItemGroup>
   <ItemGroup>
@@ -190,6 +192,7 @@
     <ClCompile Include="Library\Main.cpp" />
     <ClCompile Include="Library\Math.cpp" />
     <ClCompile Include="Library\ObjLoader.cpp" />
+    <ClCompile Include="Library\Model.cpp" />
     <ClCompile Include="Library\Polygon.cpp" />
     <ClCompile Include="Library\Ray.cpp" />
     <ClCompile Include="Library\Release.cpp" />
@@ -198,6 +201,7 @@
     <ClCompile Include="Library\SceneInclude.cpp" />
     <ClCompile Include="Library\Shader.cpp" />
     <ClCompile Include="Library\Task.cpp" />
+    <ClCompile Include="Library\TextureManager.cpp" />
     <ClCompile Include="Library\Trace.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -23,17 +23,17 @@ void CDraw::Init()
 void CDraw::DrawTexture(int TexId, RECT_F* pSrc,RECT_F* pOut,ColorData* pColor,float fRad)
 {
 	//テクスチャ情報
-	MY_TEXTURE* pTex=nullptr;
-	pTex= g_Task.GetTex(TexId);
+	CTextureData* pData=nullptr;
+	pData = TEXTURE->GetTexData(TexId);
 
 	//切り取り位置の設定
 	RECT_F Src;
-	Src.m_Top	= pSrc->m_Left	/ pTex->m_Width;
-	Src.m_Left	= pSrc->m_Top	/ pTex->m_Height;
-	Src.m_Right = pSrc->m_Right	/ pTex->m_Width;
-	Src.m_Bottom= pSrc->m_Bottom/ pTex->m_Height;
+	Src.m_Top	= pSrc->m_Left	/ pData->GetWidth();
+	Src.m_Left	= pSrc->m_Top	/ pData->GetHeight();
+	Src.m_Right = pSrc->m_Right	/ pData->GetWidth();
+	Src.m_Bottom= pSrc->m_Bottom/ pData->GetHeight();
 
-	DrawTexture(pTex->m_pTex, &Src, pOut, pColor, fRad);
+	DrawTexture(pData->GetTexture(), &Src, pOut, pColor, fRad);
 }
 
 //2D描画
@@ -146,17 +146,6 @@ void CDraw::DrawPolygon(int VerNum, ID3D10Buffer* VertexBuffer, ID3D10Buffer* In
 		SHADER->GetTechnique()->GetPassByIndex(p)->Apply(0);
 		DX->GetDevice()->Draw(VerNum, 0);
 	}
-}
-
-//テクスチャ読み込み
-void CDraw::LoadTexture(int Id,const char* Name,int Width,int Height)
-{
-	ID3D10ShaderResourceView* pTex;
-	//テクスチャーを作成
-	D3DX10CreateShaderResourceViewFromFileA(DX->GetDevice(), Name, NULL, NULL, &pTex, NULL);
-
-	//登録
-	g_Task.Insert(pTex, Id,Width,Height);
 }
 
 //解放

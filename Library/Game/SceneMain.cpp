@@ -57,6 +57,7 @@ void CSceneMain::Release()
 	AUDIO->DeleteMusic();
 	LOADER->Release();
 	RAY->Release();	
+	TEXTURE->Release();
 }
 
 //音楽
@@ -68,7 +69,7 @@ void CSceneMain::LoadAudio()
 //テクスチャ
 void CSceneMain::LoadTexture()
 {
-	DRAW->LoadTexture(0, "Texture/Test.png",512,512);
+	TEXTURE->Load(0, "Texture/Test.png",512,512);
 }
 
 //メッシュ

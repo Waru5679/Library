@@ -26,9 +26,6 @@ public:
 	//2D描画
 	void DrawTexture(ID3D10ShaderResourceView* pTex, RECT_F* pSrc, RECT_F* pOut, ColorData* pColor, float fRad);
 	
-	//テクスチャ読み込み
-	void LoadTexture(int Id, const char* Name,int Width, int Height);
-
 	//カメラセット
 	void SetCamera(CameraBase* pCamera) { m_pCamera = pCamera; }
 

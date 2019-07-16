@@ -91,6 +91,12 @@
     <Filter Include="ソース ファイル\Bullet">
       <UniqueIdentifier>{58faef8b-9e74-4ee5-80df-749434fd28dd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="リソース ファイル\TextureManager">
+      <UniqueIdentifier>{07eb26ea-e5dd-4fff-87a8-7f6fa9d08c7d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="リソース ファイル\ObjManager">
+      <UniqueIdentifier>{49f03b20-bc7b-4674-ab80-72ca870664b0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Library\Camera.h">
@@ -168,9 +174,6 @@
     <ClInclude Include="Game\Enemy.h">
       <Filter>ソース ファイル\Enemy</Filter>
     </ClInclude>
-    <ClInclude Include="Library\FrameRate.h">
-      <Filter>リソース ファイル\FrameRate</Filter>
-    </ClInclude>
     <ClInclude Include="Library\LibraryMain.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
@@ -197,6 +200,15 @@
     </ClInclude>
     <ClInclude Include="Game\Bullet.h">
       <Filter>ソース ファイル\Bullet</Filter>
+    </ClInclude>
+    <ClInclude Include="Library\TextureManager.h">
+      <Filter>リソース ファイル\TextureManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Library\FrameRate.h">
+      <Filter>リソース ファイル\FrameRate</Filter>
+    </ClInclude>
+    <ClInclude Include="Library\ModelManager.h">
+      <Filter>リソース ファイル\ObjManager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -232,9 +244,6 @@
     </ClCompile>
     <ClCompile Include="Library\Trace.cpp">
       <Filter>リソース ファイル\Trace</Filter>
-    </ClCompile>
-    <ClCompile Include="Library\Ray.cpp">
-      <Filter>リソース ファイル\Ray</Filter>
     </ClCompile>
     <ClCompile Include="Library\Route.cpp">
       <Filter>リソース ファイル\Route</Filter>
@@ -286,6 +295,15 @@
     </ClCompile>
     <ClCompile Include="Game\Bullet.cpp">
       <Filter>ソース ファイル\Bullet</Filter>
+    </ClCompile>
+    <ClCompile Include="Library\TextureManager.cpp">
+      <Filter>リソース ファイル\TextureManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Library\Model.cpp">
+      <Filter>リソース ファイル\ObjManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Library\Ray.cpp">
+      <Filter>リソース ファイル\Release</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

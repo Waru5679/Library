@@ -438,11 +438,11 @@ void CObjLoader::Draw(D3DMATRIX matWorld, MY_MESH* pMesh,ColorData* pColor)
 //Mesh取得
 MY_MESH* CObjLoader::GetMesh(int Id)
 {
-	for (unsigned int i = 0; i < m_Mesh.size(); i++)
+	for (auto itr = m_Mesh.begin(); itr != m_Mesh.end(); itr++)
 	{
-		if (m_Mesh[i].Id == Id)
+		if ((*itr).Id == Id)
 		{
-			return &m_Mesh[i];
+			return &(*itr);
 		}
 	}
 	return nullptr;
@@ -451,7 +451,11 @@ MY_MESH* CObjLoader::GetMesh(int Id)
 //解放
 void CObjLoader::Release()
 {
-	VectorRelease(m_Mesh);
+	//モデルデータ
+	for (auto itr = m_Mesh.begin(); itr != m_Mesh.end(); itr++)
+		(*itr).Release();
+	
+	m_Mesh.clear();
 
 	//インスタンス破棄
 	PointerRelease(m_pInstance);

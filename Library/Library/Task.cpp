@@ -3,18 +3,6 @@
 
 CTask g_Task;
 
-//テクスチャ登録
-void CTask::Insert(ID3D10ShaderResourceView* pTex, int Id,int Width,int Height)
-{
-	MY_TEXTURE tex;
-	tex.m_pTex = pTex;
-	tex.m_Id = Id;
-	tex.m_Width = Width;
-	tex.m_Height = Height;
-
-	m_Tex.push_back(tex);
-}
-
 //オブジェクト登録
 void CTask::InsertObj(CObjBase* pObj, int Id)
 {
@@ -28,15 +16,15 @@ void CTask::InsertObj(CObjBase* pObj, int Id)
 void CTask::Update()
 {
 	//OBJ更新
-	for (unsigned int i = 0; i < m_Obj.size(); i++)
+	for (auto itr = m_Obj.begin();itr!=m_Obj.end(); itr++)
 	{
-		m_Obj[i]->Update();
+		(*itr)->Update();
 
 		//削除
-		if (m_Obj[i]->GetDelete() == true)
+		if ((*itr)->GetDelete() == true)
 		{
-			m_Obj.erase(m_Obj.begin()+i);
-			i--;
+			m_Obj.erase(itr);
+			itr--;
 		}
 	}
 }
@@ -45,31 +33,31 @@ void CTask::Update()
 void CTask::Draw()
 {
 	//OBJ描画
-	for (unsigned int i = 0; i < m_Obj.size(); i++)
+	for (auto itr = m_Obj.begin(); itr != m_Obj.end(); itr++)
 	{
-		m_Obj[i]->Draw();
+		(*itr)->Draw();
 	}
 }
 
 
-//テクスチャを取得
-MY_TEXTURE* CTask::GetTex(int Id)
-{
-	for (unsigned int i = 0; i < m_Tex.size(); i++)
-	{
-		if (m_Tex[i].m_Id == Id)
-			return &m_Tex[i];
-	}
-	return nullptr;
-}
+////テクスチャを取得
+//MY_TEXTURE* CTask::GetTex(int Id)
+//{
+//	for (auto itr = m_Tex.begin(); itr != m_Tex.end(); itr++)
+//	{
+//		if ((*itr).m_Id == Id)
+//			return &(*itr);
+//	}
+//	return nullptr;
+//}
 
 //オブジェクト取得
 CObjBase* CTask::GetObj(int Id)
 {
-	for (unsigned int i = 0; i < m_Obj.size(); i++)
+	for(auto itr = m_Obj.begin(); itr != m_Obj.end(); itr++)
 	{
-		if (m_Obj[i]->GetId() == Id)
-			return m_Obj[i];
+		if ((*itr)->GetId() == Id)
+			return (*itr);
 	}
 	return nullptr;
 }
@@ -77,6 +65,6 @@ CObjBase* CTask::GetObj(int Id)
 //メモリの開放
 void CTask::Release()
 {
-	VectorRelease(m_Tex);
-	VectorRelease(m_Obj);
+	m_Tex.clear();
+	m_Obj.clear();
 }
