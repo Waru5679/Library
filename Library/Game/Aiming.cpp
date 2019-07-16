@@ -65,7 +65,6 @@ void CAiming::Update()
 
 	//ƒ[ƒ‹ƒhs—ñ
 	m_matWorld = MakeMatWorld(m_vPos, m_vAngle, m_vScale);
-
 }
 
 //•`‰æ

@@ -44,8 +44,8 @@ void CHit::Draw()
 //解放
 void CHit::Release()
 {
-	m_DrawObb.~MY_MESH();
-	m_DrawSphere.~MY_MESH();
+	m_DrawObb.Release();
+	m_DrawSphere.Release();
 
 	//当たり判定破棄
 	VectorRelease(m_Collision);
@@ -268,7 +268,7 @@ bool CHit::SphereAndSphre(SphereData* data1, SphereData* data2)
 }
 
 //球情報セット
-void CHit::SetSphereData(CObj3DBase* pCobj,ObbData* pObb, MY_MESH* pMesh,SphereData* pSphere)
+void CHit::SetSphereData(CObj3DBase* pCobj,ObbData* pObb, CModelData* pMesh,SphereData* pSphere)
 {
 	//中心点から面の長さ
 	float x, y, z;
@@ -304,7 +304,7 @@ void CHit::SetSphereData(CObj3DBase* pCobj,ObbData* pObb, MY_MESH* pMesh,SphereD
 }
 
 //OBBに数値セット
-void CHit::SetObbData(CObj3DBase* pCobj, MY_MESH* pMesh, ObbData* pObb)
+void CHit::SetObbData(CObj3DBase* pCobj, CModelData* pMesh, ObbData* pObb)
 {
 	D3DXVECTOR3 vPos, vAngle, vScale;
 	vPos	= pCobj->GetPos();
@@ -317,8 +317,8 @@ void CHit::SetObbData(CObj3DBase* pCobj, MY_MESH* pMesh, ObbData* pObb)
 
 	//スケールから最大・最小を求める
 	D3DXVECTOR3 vMin, vMax;
-	D3DXVec3TransformCoord(&vMax, &pMesh->vMax, &matScale);
-	D3DXVec3TransformCoord(&vMin, &pMesh->vMin, &matScale);
+	D3DXVec3TransformCoord(&vMax, &pMesh->m_vMax, &matScale);
+	D3DXVec3TransformCoord(&vMin, &pMesh->m_vMin, &matScale);
 
 	//中心点
 	D3DXVECTOR3 vCenterPos = (vMin + vMax) / 2.0f + vPos;

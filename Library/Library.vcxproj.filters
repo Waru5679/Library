@@ -299,11 +299,11 @@
     <ClCompile Include="Library\TextureManager.cpp">
       <Filter>リソース ファイル\TextureManager</Filter>
     </ClCompile>
-    <ClCompile Include="Library\Model.cpp">
-      <Filter>リソース ファイル\ObjManager</Filter>
-    </ClCompile>
     <ClCompile Include="Library\Ray.cpp">
-      <Filter>リソース ファイル\Release</Filter>
+      <Filter>リソース ファイル\Ray</Filter>
+    </ClCompile>
+    <ClCompile Include="Library\ModelManager.cpp">
+      <Filter>リソース ファイル\ObjManager</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

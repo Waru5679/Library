@@ -6,18 +6,18 @@ CObjLoader* CObjLoader::m_pInstance = nullptr;
 //モデル読み込み
 void CObjLoader::LoadMesh(int Id, const char* Name)
 {
-	MY_MESH Mesh;
-	Mesh.Id = Id;
-	
-	//読み込み
-	LoadObj(Name, &Mesh);
+	//CModelData* Mesh;
+	//Mesh.Id = Id;
+	//
+	////読み込み
+	//LoadObj(Name, &Mesh);
 
-	//ベクター登録
-	m_Mesh.push_back(Mesh);
+	////ベクター登録
+	//m_Mesh.push_back(Mesh);
 }
 
 //OBJファイルの読み込み
-HRESULT CObjLoader::LoadObj(const char* FileName, MY_MESH* pMesh)
+HRESULT CObjLoader::LoadObj(const char* FileName, CModelData* pMesh)
 {
 	//ファイルオープン
 	FILE* fp=NULL;
@@ -40,12 +40,12 @@ HRESULT CObjLoader::LoadObj(const char* FileName, MY_MESH* pMesh)
 	vector<D3DXVECTOR3> Pos;
 	vector<D3DXVECTOR3> Nor;
 	vector<D3DXVECTOR2> Tex;
-	vector<MY_VERTEX> Vertex;
+	vector<CVertex> Vertex;
 	
 	int index_count = 0;
 	
-	pMesh->vMax = D3DXVECTOR3(-999.0f, -999.0f, -999.0f);
-	pMesh->vMin	= D3DXVECTOR3(999.0f, 999.0f, 999.0f);
+	pMesh->m_vMax = D3DXVECTOR3(-999.0f, -999.0f, -999.0f);
+	pMesh->m_vMin	= D3DXVECTOR3(999.0f, 999.0f, 999.0f);
 	
 	int iFaceCount = -1;
 	
@@ -56,8 +56,8 @@ HRESULT CObjLoader::LoadObj(const char* FileName, MY_MESH* pMesh)
 	while (!feof(fp))
 	{
 		//一時保存用
-		MY_MATERIAL Material;
-		Material.pTexture = NULL;
+		CMaterialData Material;
+		Material.m_pTexture = NULL;
 
 		//面の頂点数保存用
 		vector<int> FaceOfVer;
@@ -149,7 +149,7 @@ HRESULT CObjLoader::LoadObj(const char* FileName, MY_MESH* pMesh)
 						}
 
 						//一時保存
-						MY_VERTEX vertex;
+						CVertex vertex;
 
 						//頂点構造体に代入
 						vertex.vPos = Pos[v - 1];
@@ -196,7 +196,7 @@ HRESULT CObjLoader::LoadObj(const char* FileName, MY_MESH* pMesh)
 				}
 			} while (strcmp(key, "o") !=  0&& !feof(fp));
 
-			MY_VERTEX*	pVertex = NULL;	//頂点情報のポインタ
+			CVertex*	pVertex = NULL;	//頂点情報のポインタ
 			int*		pIndex	= NULL;	//インデックス情報のポインタ
 
 			ID3D10Buffer* IndexBuffer	= NULL;	//インデックスバッファのポインタ
@@ -206,7 +206,7 @@ HRESULT CObjLoader::LoadObj(const char* FileName, MY_MESH* pMesh)
 			for (int i = 0; i <iFaceCount; i++)
 			{				
 				//頂点定義
-				pVertex = new MY_VERTEX[FaceOfVer[i]];
+				pVertex = new CVertex[FaceOfVer[i]];
 				for (int j = 0; j < FaceOfVer[i]; j++)
 				{ 
 					pVertex[j]=Vertex[index_count + j];
@@ -221,7 +221,7 @@ HRESULT CObjLoader::LoadObj(const char* FileName, MY_MESH* pMesh)
 				if (FaceOfVer[i] == 4)
 				{
 					//N字を描くように順番を入れ替える
-					MY_VERTEX tmp = pVertex[2];
+					CVertex tmp = pVertex[2];
 					pVertex[0] = pVertex[0];
 					pVertex[1] = pVertex[1];
 					pVertex[2] = pVertex[3];
@@ -229,18 +229,18 @@ HRESULT CObjLoader::LoadObj(const char* FileName, MY_MESH* pMesh)
 				}
 				
 				//面の情報を保存
-				FACE_INFO info;
+				CFaceData info;
 				for (int VerNum = 0; VerNum < FaceOfVer[i]; VerNum++)
 				{
-					info.Vertex.push_back(pVertex[VerNum]);
+					info.m_Vertex.push_back(pVertex[VerNum]);
 				}
-				Material.FaceInfo.push_back(info);
+				Material.m_Face.push_back(info);
 
 				//バーテックスバッファーを作成
-				VertexBuffer = DRAW->BufferCreate(pVertex,sizeof(MY_VERTEX)*FaceOfVer[i], D3D10_BIND_VERTEX_BUFFER);
+				VertexBuffer = DRAW->BufferCreate(pVertex,sizeof(CVertex)*FaceOfVer[i], D3D10_BIND_VERTEX_BUFFER);
 
 				//バーテックスバッファ情報登録
-				Material.pVertex.insert(Material.pVertex.begin() + i, VertexBuffer);
+				Material.m_pVertex.insert(Material.m_pVertex.begin() + i, VertexBuffer);
 
 				//index情報
 				pIndex = new int[FaceOfVer[i]];
@@ -253,7 +253,7 @@ HRESULT CObjLoader::LoadObj(const char* FileName, MY_MESH* pMesh)
 				IndexBuffer = DRAW->BufferCreate(pIndex, sizeof(int)*FaceOfVer[i],D3D10_BIND_INDEX_BUFFER);
 		
 				//インデックスバッファ登録
-				Material.pIndex.insert(Material.pIndex.begin() + i, IndexBuffer);
+				Material.m_pIndex.insert(Material.m_pIndex.begin() + i, IndexBuffer);
 
 				//使った数だけずらす
 				index_count += FaceOfVer[i];
@@ -264,7 +264,7 @@ HRESULT CObjLoader::LoadObj(const char* FileName, MY_MESH* pMesh)
 			}
 
 			//マテリアル情報を登録
-			pMesh->Material.push_back(Material);
+			pMesh->m_Material.push_back(Material);
 			
 			iFaceCount = 0;
 		}
@@ -313,7 +313,7 @@ HRESULT CObjLoader::LoadObj(const char* FileName, MY_MESH* pMesh)
 }
 
 //マテリアルファイルの読み込み
-HRESULT CObjLoader::LoadMaterial(char* FileName,MY_MESH* pMesh)
+HRESULT CObjLoader::LoadMaterial(char* FileName, CModelData* pMesh)
 {
 	//マテリアルファイルを開いて内容を読み込む
 	FILE* fp = NULL;
@@ -351,19 +351,19 @@ HRESULT CObjLoader::LoadMaterial(char* FileName,MY_MESH* pMesh)
 				if (strcmp(key, "Ka") == 0)
 				{
 					fscanf_s(fp, "%f %f %f", &v.x, &v.y, &v.z);
-					pMesh->Material[mate_count].Ka = v;
+					pMesh->m_Material[mate_count].Ka = v;
 				}
 				//Kd　ディフューズ
 				if (strcmp(key, "Kd") == 0)
 				{
 					fscanf_s(fp, "%f %f %f", &v.x, &v.y, &v.z);
-					pMesh->Material[mate_count].Kd = v;
+					pMesh->m_Material[mate_count].Kd = v;
 				}
 				//Ks　スペキュラー
 				if (strcmp(key, "Ks") == 0)
 				{
 					fscanf_s(fp, "%f %f %f", &v.x, &v.y, &v.z);
-					pMesh->Material[mate_count].Ks = v;
+					pMesh->m_Material[mate_count].Ks = v;
 				}
 				//map_Kd　テクスチャー
 				if (strcmp(key, "map_Kd") == 0)
@@ -371,7 +371,7 @@ HRESULT CObjLoader::LoadMaterial(char* FileName,MY_MESH* pMesh)
 					char texName[ARRAY_SIZE];
 					fscanf_s(fp, "%s", texName, sizeof(texName));
 					//テクスチャーを作成
-					if (FAILED(D3DX10CreateShaderResourceViewFromFileA(DX->GetDevice(), texName, NULL, NULL, &pMesh->Material[mate_count].pTexture, NULL)))
+					if (FAILED(D3DX10CreateShaderResourceViewFromFileA(DX->GetDevice(), texName, NULL, NULL, &pMesh->m_Material[mate_count].m_pTexture, NULL)))
 					{
 						return E_FAIL;
 					}
@@ -392,71 +392,65 @@ HRESULT CObjLoader::LoadMaterial(char* FileName,MY_MESH* pMesh)
 }
 
 //最大と最小のチェック
-void CObjLoader::MinAndMax(D3DXVECTOR3 Pos,MY_MESH* pMesh)
+void CObjLoader::MinAndMax(D3DXVECTOR3 Pos, CModelData* pMesh)
 {
 	//最大値
-	if (Pos.x > (pMesh->vMax.x))
-		pMesh->vMax.x = Pos.x;
+	if (Pos.x > (pMesh->m_vMax.x))
+		pMesh->m_vMax.x = Pos.x;
 
-	if (Pos.y > (pMesh->vMax.y))
-		pMesh->vMax.y = Pos.y;
+	if (Pos.y > (pMesh->m_vMax.y))
+		pMesh->m_vMax.y = Pos.y;
 
-	if (Pos.z > (pMesh->vMax.z))
-		pMesh->vMax.z = Pos.z;
+	if (Pos.z > (pMesh->m_vMax.z))
+		pMesh->m_vMax.z = Pos.z;
 
 	//最小値
-	if (Pos.x < (pMesh->vMin.x))
-		pMesh->vMin.x = Pos.x;
+	if (Pos.x < (pMesh->m_vMin.x))
+		pMesh->m_vMin.x = Pos.x;
 
-	if (Pos.y < (pMesh->vMin.y))
-		pMesh->vMin.y = Pos.y;
+	if (Pos.y < (pMesh->m_vMin.y))
+		pMesh->m_vMin.y = Pos.y;
 
-	if (Pos.z < (pMesh->vMin.z))
-		pMesh->vMin.z = Pos.z;
+	if (Pos.z < (pMesh->m_vMin.z))
+		pMesh->m_vMin.z = Pos.z;
 }
 
 
 //メッシュ描画
-void CObjLoader::Draw(D3DMATRIX matWorld, MY_MESH* pMesh,ColorData* pColor)
+void CObjLoader::Draw(D3DMATRIX matWorld, CModelData* pMesh,ColorData* pColor)
 {
 	//マテリアルの数毎に描画
-	for (unsigned int i = 0; i < pMesh->Material.size(); i++)
+	for (unsigned int i = 0; i < pMesh->m_Material.size(); i++)
 	{
-		int size = pMesh->Material[i].pVertex.size();
+		int size = pMesh->m_Material[i].m_pVertex.size();
 
 		//シェーダーのセット
-		SHADER->SetShader(pMesh->Material[i].pTexture, NULL, pColor, matWorld);
+		SHADER->SetShader(pMesh->m_Material[i].m_pTexture, NULL, pColor, matWorld);
 
 		for (int j = 0; j < size; j++)
 		{
 			//ポリゴン描画
-			DRAW->DrawPolygon(pMesh->Material[i].FaceInfo[j].Vertex.size(), pMesh->Material[i].pVertex[j], pMesh->Material[i].pIndex[j]);
+			DRAW->DrawPolygon(pMesh->m_Material[i].m_Face[j].m_Vertex.size(), pMesh->m_Material[i].m_pVertex[j], pMesh->m_Material[i].m_pIndex[j]);
 		}
 	}
 }
-
-//Mesh取得
-MY_MESH* CObjLoader::GetMesh(int Id)
-{
-	for (auto itr = m_Mesh.begin(); itr != m_Mesh.end(); itr++)
-	{
-		if ((*itr).Id == Id)
-		{
-			return &(*itr);
-		}
-	}
-	return nullptr;
-}
+//
+////Mesh取得
+//CModelData* CObjLoader::GetMesh(int Id)
+//{
+//	for (auto itr = m_Mesh.begin(); itr != m_Mesh.end(); itr++)
+//	{
+//		if ((*itr).Id == Id)
+//		{
+//			return &(*itr);
+//		}
+//	}
+//	return nullptr;
+//}
 
 //解放
 void CObjLoader::Release()
 {
-	//モデルデータ
-	for (auto itr = m_Mesh.begin(); itr != m_Mesh.end(); itr++)
-		(*itr).Release();
-	
-	m_Mesh.clear();
-
 	//インスタンス破棄
 	PointerRelease(m_pInstance);
 }

@@ -192,7 +192,7 @@
     <ClCompile Include="Library\Main.cpp" />
     <ClCompile Include="Library\Math.cpp" />
     <ClCompile Include="Library\ObjLoader.cpp" />
-    <ClCompile Include="Library\Model.cpp" />
+    <ClCompile Include="Library\ModelManager.cpp" />
     <ClCompile Include="Library\Polygon.cpp" />
     <ClCompile Include="Library\Ray.cpp" />
     <ClCompile Include="Library\Release.cpp" />

@@ -1,6 +1,7 @@
 #include "Ray.h"
 #include "Math.h"
 #include "Release.h"
+#include "ModelManager.h"
 
 //インスタンス
 CRay* CRay::m_pInstance = nullptr;
@@ -21,26 +22,26 @@ bool CRay::RayHit(OutData* pOut, CObj3DBase* pOrigin, D3DXVECTOR3 vDir)
 bool CRay::OriginSet(OutData* pOut,CObj3DBase* pOrigin,D3DXVECTOR3 vDir)
 {
 	//Rayを飛ばす側
-	MY_MESH* pOrigineMesh = pOrigin->GetMesh();
+	CModelData* pOrigineMesh = pOrigin->GetMesh();
 	D3DXVECTOR3 vOrigin;
 	D3DXMATRIX matOrigin = pOrigin->GetWorld();
 
 	//マテリアルの数回す
-	for (unsigned int OriginMaterial = 0; OriginMaterial < pOrigineMesh->Material.size(); OriginMaterial++)
+	for (unsigned int OriginMaterial = 0; OriginMaterial < pOrigineMesh->m_Material.size(); OriginMaterial++)
 	{
 		//面の数回す
-		for (unsigned int OriginFace = 0; OriginFace < pOrigineMesh->Material[OriginMaterial].FaceInfo.size(); OriginFace++)
+		for (unsigned int OriginFace = 0; OriginFace < pOrigineMesh->m_Material[OriginMaterial].m_Face.size(); OriginFace++)
 		{
 			//面情報
-			FACE_INFO face = pOrigineMesh->Material[OriginMaterial].FaceInfo[OriginFace];
+			CFaceData face = pOrigineMesh->m_Material[OriginMaterial].m_Face[OriginFace];
 			
 			//面の重心をしらべる
-			int OriginVerNum = face.Vertex.size();
+			int OriginVerNum = face.m_Vertex.size();
 		
 			D3DXVECTOR3 v1, v2, v3;
-			D3DXVec3TransformCoord(&v1, &face.Vertex[0].vPos, &matOrigin);
-			D3DXVec3TransformCoord(&v2, &face.Vertex[1].vPos, &matOrigin);
-			D3DXVec3TransformCoord(&v3, &face.Vertex[2].vPos, &matOrigin);
+			D3DXVec3TransformCoord(&v1, &face.m_Vertex[0].vPos, &matOrigin);
+			D3DXVec3TransformCoord(&v2, &face.m_Vertex[1].vPos, &matOrigin);
+			D3DXVec3TransformCoord(&v3, &face.m_Vertex[2].vPos, &matOrigin);
 				
 			//重心の位置を求める
 			D3DXVECTOR3 Center=CenterOfGravity(v1, v2, v3);
@@ -59,7 +60,7 @@ bool CRay::OriginSet(OutData* pOut,CObj3DBase* pOrigin,D3DXVECTOR3 vDir)
 			{
 				//各頂点をワールドで変換
 				D3DXVECTOR3 v4;
-				D3DXVec3TransformCoord(&v4, &face.Vertex[3].vPos, &matOrigin);
+				D3DXVec3TransformCoord(&v4, &face.m_Vertex[3].vPos, &matOrigin);
 
 				//重心の位置を求める
 				D3DXVECTOR3 Center = CenterOfGravity(v2, v4, v3);
@@ -75,10 +76,10 @@ bool CRay::OriginSet(OutData* pOut,CObj3DBase* pOrigin,D3DXVECTOR3 vDir)
 			}
 			
 			//頂点ごとに調べる
-			for (unsigned int OriginVer = 0; OriginVer < face.Vertex.size(); OriginVer++)
+			for (unsigned int OriginVer = 0; OriginVer < face.m_Vertex.size(); OriginVer++)
 			{
 				//頂点の位置
-				vOrigin = face.Vertex[OriginVer].vPos;
+				vOrigin = face.m_Vertex[OriginVer].vPos;
 
 				//頂点をワールド行列で変換
 				D3DXVec3TransformCoord(&vOrigin, &vOrigin, &matOrigin);
@@ -100,19 +101,19 @@ bool CRay::TargetSet(OutData* pOut,D3DXVECTOR3 vOrigin, D3DXVECTOR3 vDir)
 	//登録されてるデータの数回す
 	for (unsigned int DataNum = 0; DataNum < m_Data.size(); DataNum++)
 	{
-		MY_MESH* pMesh = m_Data[DataNum]->GetMesh();
+		CModelData* pMesh = m_Data[DataNum]->GetMesh();
 		D3DXMATRIX matWorld = m_Data[DataNum]->GetWorld();
 
 		//マテリアル分回す
-		for (unsigned int MaterialNum = 0; MaterialNum < pMesh->Material.size(); MaterialNum++)
+		for (unsigned int MaterialNum = 0; MaterialNum < pMesh->m_Material.size(); MaterialNum++)
 		{
 			//面の数
-			for (unsigned int FaceNum = 0; FaceNum < pMesh->Material[MaterialNum].FaceInfo.size(); FaceNum++)
+			for (unsigned int FaceNum = 0; FaceNum < pMesh->m_Material[MaterialNum].m_Face.size(); FaceNum++)
 			{
-				FACE_INFO face_info = pMesh->Material[MaterialNum].FaceInfo[FaceNum];
+				CFaceData face_info = pMesh->m_Material[MaterialNum].m_Face[FaceNum];
 
 				//面の頂点の数
-				int FaceOfVer = face_info.Vertex.size();
+				int FaceOfVer = face_info.m_Vertex.size();
 
 				//法線
 				D3DXVECTOR3 vNorm;
@@ -122,9 +123,9 @@ bool CRay::TargetSet(OutData* pOut,D3DXVECTOR3 vOrigin, D3DXVECTOR3 vDir)
 								
 				//各頂点をワールドで変換
 				D3DXVECTOR3 v1, v2, v3;
-				D3DXVec3TransformCoord(&v1, &face_info.Vertex[0].vPos, &matWorld);
-				D3DXVec3TransformCoord(&v2, &face_info.Vertex[1].vPos, &matWorld);
-				D3DXVec3TransformCoord(&v3, &face_info.Vertex[2].vPos, &matWorld);
+				D3DXVec3TransformCoord(&v1, &face_info.m_Vertex[0].vPos, &matWorld);
+				D3DXVec3TransformCoord(&v2, &face_info.m_Vertex[1].vPos, &matWorld);
+				D3DXVec3TransformCoord(&v3, &face_info.m_Vertex[2].vPos, &matWorld);
 
 				//Ray判定
 				if (TriangleRay(&vInter, &vNorm, vOrigin, vDir, v1, v2, v3) == true)
@@ -156,7 +157,7 @@ bool CRay::TargetSet(OutData* pOut,D3DXVECTOR3 vOrigin, D3DXVECTOR3 vDir)
 				{
 					//各頂点をワールドで変換
 					D3DXVECTOR3 v4;
-					D3DXVec3TransformCoord(&v4, &face_info.Vertex[3].vPos, &matWorld);
+					D3DXVec3TransformCoord(&v4, &face_info.m_Vertex[3].vPos, &matWorld);
 					
 					//Ray判定
 					if (TriangleRay(&vInter, &vNorm, vOrigin, vDir, v2, v4, v3) == true)

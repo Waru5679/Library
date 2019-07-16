@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Struct.h"
+#include "ModelManager.h"
 #include "Singleton.h"
 #include <list>
 using namespace std;
@@ -17,24 +17,18 @@ public:
 	//解放
 	void Release();
 
-	//Mesh取得
-	MY_MESH* GetMesh(int Id);
-
 	//Meshの読み込み
 	void LoadMesh(int Id,const char* Name);
 
 	//メッシュ描画
-	void Draw( D3DMATRIX matWorld, MY_MESH* pMesh, ColorData* pColor);
+	void Draw( D3DMATRIX matWorld, CModelData* pMesh, ColorData* pColor);
 
 	//OBJの読み込み
-	HRESULT LoadObj(const char* FileName, MY_MESH* pMesh);
+	HRESULT LoadObj(const char* FileName, CModelData* pMesh);
 private:
 	//マテリアルの読み込み
-	HRESULT LoadMaterial(char* FileName, MY_MESH* pMesh);
+	HRESULT LoadMaterial(char* FileName, CModelData* pMesh);
 
 	//最大と最小のチェック
-	void MinAndMax(D3DXVECTOR3 Pos,MY_MESH* pMesh);
-
-	//メッシュ
-	list<MY_MESH>m_Mesh;
+	void MinAndMax(D3DXVECTOR3 Pos, CModelData* pMesh);
 };

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CObj.h"
+#include "ModelManager.h"
 #include "Singleton.h"
 #include <vector>
 using namespace std;
@@ -28,7 +29,7 @@ struct ObbData
 struct CollisionData
 {
 	CObj3DBase* m_pObj;	//オブジェクトのポインタ
-	MY_MESH* m_pMesh;	//メッシュポインタ
+	CModelData* m_pMesh;	//メッシュポインタ
 	int m_Id;			//オブジェクトID
 
 	SphereData	m_SphereData;	//球データ
@@ -63,10 +64,10 @@ private:
 	bool SphereAndSphre(SphereData* data1, SphereData* data2);
 
 	//OBBにセット
-	void SetObbData(CObj3DBase* pCobj, MY_MESH* pMesh, ObbData* pObb);
+	void SetObbData(CObj3DBase* pCobj, CModelData* pMesh, ObbData* pObb);
 
 	//球情報セット
-	void SetSphereData(CObj3DBase* pCobj,ObbData* pObb, MY_MESH* pMesh,SphereData* pSphere);
+	void SetSphereData(CObj3DBase* pCobj,ObbData* pObb, CModelData* pMesh,SphereData* pSphere);
 	
 	//衝突判定
 	bool ObbAndObb(ObbData* obb1, ObbData* obb2);
@@ -76,7 +77,7 @@ private:
 
 	vector<CollisionData*> m_Collision;	//当たり判定データ
 
-	MY_MESH m_DrawObb;		//描画用Box
-	MY_MESH m_DrawSphere;	//描画用Sphere
+	CModelData m_DrawObb;		//描画用Box
+	CModelData m_DrawSphere;	//描画用Sphere
 	ColorData m_Color;		//描画色
 };

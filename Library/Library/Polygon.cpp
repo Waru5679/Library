@@ -1,4 +1,5 @@
 #include "LibraryHeader.h"
+#include "ModelManager.h"
 
 //インスタンス
 CDraw* CDraw::m_pInstance = nullptr;
@@ -7,7 +8,7 @@ CDraw* CDraw::m_pInstance = nullptr;
 void CDraw::Init()
 {
 	//頂点情報
-	MY_VERTEX ver[]=
+	CVertex ver[]=
 	{
 		D3DXVECTOR3(-1.0f,  1.0f, 0.0f),D3DXVECTOR3(0.0f,1.0f,0.0f),D3DXVECTOR2(0.0f,0.0f),	//左上
 		D3DXVECTOR3( 1.0f,  1.0f, 0.0f),D3DXVECTOR3(0.0f,1.0f,0.0f),D3DXVECTOR2(1.0f,0.0f),	//右上
@@ -16,7 +17,7 @@ void CDraw::Init()
 	};
 	
 	//バーテックスバッファ作成
-	m_pVertexBuffer= BufferCreate(ver,sizeof(MY_VERTEX)*4, D3D10_BIND_VERTEX_BUFFER);
+	m_pVertexBuffer= BufferCreate(ver,sizeof(CVertex)*4, D3D10_BIND_VERTEX_BUFFER);
 }
 
 //2D描画(テクスチャのサイズから切り取り位置の設定がいるもの用中継)
@@ -114,7 +115,7 @@ ID3D10Buffer* CDraw::BufferCreate(void* pHead, unsigned int Size, int BufferType
 void CDraw::DrawPolygon(int VerNum, ID3D10Buffer* VertexBuffer, ID3D10Buffer* IndexBuffer)
 {
 	//バーテックスバッファーをセット
-	UINT stride = sizeof(MY_VERTEX);
+	UINT stride = sizeof(CVertex);
 	UINT offset = 0;
 	DX->GetDevice()->IASetVertexBuffers(0, 1, &VertexBuffer, &stride, &offset);
 

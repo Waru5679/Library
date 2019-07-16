@@ -1,6 +1,7 @@
 #pragma once
 #include "Main.h"
 #include "Struct.h"
+#include "ModelManager.h"
 
 //オブジェクト　継承用クラス(ゲームオブジェクト全てに継承させる)
 class CObjBase
@@ -43,7 +44,7 @@ public :
 	D3DXVECTOR3 GetScale()	{ return m_vScale;	}
 	D3DXMATRIX  GetWorld()	{ return m_matWorld;}
 
-	MY_MESH* GetMesh() { return m_pMesh; }
+	CModelData* GetMesh() { return m_pMesh; }
 protected:
 
 	//ベクトル
@@ -57,5 +58,5 @@ protected:
 	D3DXMATRIX m_matRot;	//回転
 	D3DXMATRIX m_matScale;	//拡大・縮小
 
-	MY_MESH* m_pMesh;	//モデルのポインタ
+	CModelData* m_pMesh;	//モデルのポインタ
 };
