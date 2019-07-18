@@ -3,18 +3,18 @@
 //インスタンス
 CObjLoader* CObjLoader::m_pInstance = nullptr;
 
-//モデル読み込み
-void CObjLoader::LoadMesh(int Id, const char* Name)
-{
-	//CModelData* Mesh;
-	//Mesh.Id = Id;
-	//
-	////読み込み
-	//LoadObj(Name, &Mesh);
-
-	////ベクター登録
-	//m_Mesh.push_back(Mesh);
-}
+////モデル読み込み
+//void CObjLoader::LoadMesh(int Id, const char* Name)
+//{
+//	CModelData* Mesh;
+//	Mesh.Id = Id;
+//	
+//	//読み込み
+//	LoadObj(Name, &Mesh);
+//
+//	//ベクター登録
+//	m_Mesh.push_back(Mesh);
+//}
 
 //OBJファイルの読み込み
 HRESULT CObjLoader::LoadObj(const char* FileName, CModelData* pMesh)
@@ -304,6 +304,11 @@ HRESULT CObjLoader::LoadObj(const char* FileName, CModelData* pMesh)
 	VectorRelease(Pos);
 	VectorRelease(Nor);
 	VectorRelease(Tex);
+
+	for (unsigned int i = 0; i < Vertex.size(); i++)
+	{
+		Vertex[i].Release();
+	}
 	VectorRelease(Vertex);
 		
 	//ファイル終わり
@@ -414,7 +419,6 @@ void CObjLoader::MinAndMax(D3DXVECTOR3 Pos, CModelData* pMesh)
 	if (Pos.z < (pMesh->m_vMin.z))
 		pMesh->m_vMin.z = Pos.z;
 }
-
 
 //メッシュ描画
 void CObjLoader::Draw(D3DMATRIX matWorld, CModelData* pMesh,ColorData* pColor)

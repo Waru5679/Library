@@ -19,7 +19,7 @@ void CAiming::Init()
 	D3DXMatrixIdentity(&m_matTrans);
 
 	//モデル
-	m_pMesh = LOADER->GetMesh(ModelAiming);
+	m_pMesh = MODEL->GetModelData(ModelAiming);
 
 	//ワールド行列
 	m_matWorld=MakeMatWorld(m_vPos, m_vAngle, m_vScale);

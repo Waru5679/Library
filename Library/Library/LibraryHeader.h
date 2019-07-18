@@ -22,6 +22,7 @@
 #include "Math.h"
 #include "Task.h"
 #include "TextureManager.h"
+#include "ModelManager.h"
 
 //ライブラリで使用する定数マクロ
 #define DX CDirectX::GetInstance()
@@ -37,3 +38,4 @@
 #define INPUT CInput::GetInstance()
 #define RAY CRay::GetInstance()
 #define TEXTURE CTextureManager::GetInstance()
+#define MODEL CModelManager::GetInstance()

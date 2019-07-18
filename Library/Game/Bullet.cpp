@@ -22,7 +22,7 @@ void CBullet::Init()
 	D3DXMatrixIdentity(&m_matTrans);
 
 	//モデル
-	m_pMesh = LOADER->GetMesh(ModelSphere);
+	m_pMesh = MODEL->GetModelData(ModelSphere);
 	
 	//移動スピード
 	m_fSpeed = 0.5f;

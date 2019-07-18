@@ -19,7 +19,7 @@ void CSphere::Init()
 	D3DXMatrixIdentity(&m_matWorld);
 
 	//ƒ‚ƒfƒ‹
-	m_pMesh = LOADER->GetMesh(ModelName::ModelSphere);
+	m_pMesh = MODEL->GetModelData(ModelName::ModelSphere);
 	   	
 	//“o˜^
 	m_Collision = HIT->CollisionCreate(this);

@@ -6,7 +6,6 @@
 #include "Singleton.h"
 using namespace std;
 
-
 //頂点構造体
 class CVertex
 {
@@ -24,14 +23,7 @@ class CFaceData
 {
 public:
 	//開放
-	void Release()
-	{
-		for (unsigned int i = 0; i < m_Vertex.size(); i++)
-		{
-			m_Vertex[i].Release();
-		}
-		VectorRelease(m_Vertex);
-	}
+	void Release();
 
 	vector<CVertex> m_Vertex;	//頂点情報
 };
@@ -41,36 +33,7 @@ class CMaterialData
 {
 public:
 	//開放
-	void Release()
-	{
-		//面情報
-		for (unsigned int i = 0; i < m_Face.size(); i++)
-		{
-			m_Face[i].Release();
-		}
-		VectorRelease(m_Face);
-
-		//インデックスバッファー
-		for (unsigned int i = 0; i < m_pIndex.size(); i++)
-		{
-			m_pIndex[i]->Release();
-		}
-		VectorRelease(m_pIndex);
-
-		//バーテックスバッファー
-		for (unsigned int i = 0; i < m_pVertex.size(); i++)
-		{
-			m_pVertex[i]->Release();
-		}
-		VectorRelease(m_pVertex);
-
-		//テクスチャ
-		if (m_pTexture != nullptr)
-		{
-			m_pTexture->Release();
-			m_pTexture = nullptr;
-		}
-	}
+	void Release();
 
 	D3DXVECTOR3 Ka;//アンビエント(環境光)
 	D3DXVECTOR3 Kd;//ディフューズ(拡散光)
@@ -92,13 +55,7 @@ class CModelData
 {
 public:
 	//開放
-	void Release()
-	{
-		for (unsigned int i = 0; i < m_Material.size(); i++)
-			m_Material[i].Release();
-		
-		VectorRelease(m_Material);
-	}
+	void Release();
 
 	vector<CMaterialData> m_Material;	//マテリアル
 
@@ -117,6 +74,9 @@ private:
 	CModelManager() {};	//コンストラクタ
 	~CModelManager() {};//デストラクタ
 public:
+	//モデル読み込み
+	void LoadModel(int Id, const char* Name);
+
 	//モデル取得
 	CModelData* GetModelData(int id);
 private:

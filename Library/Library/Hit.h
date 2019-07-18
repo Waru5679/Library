@@ -29,7 +29,7 @@ struct ObbData
 struct CollisionData
 {
 	CObj3DBase* m_pObj;	//オブジェクトのポインタ
-	CModelData* m_pMesh;	//メッシュポインタ
+	CModelData* m_pMesh;//メッシュポインタ
 	int m_Id;			//オブジェクトID
 
 	SphereData	m_SphereData;	//球データ

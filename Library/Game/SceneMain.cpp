@@ -76,11 +76,11 @@ void CSceneMain::LoadTexture()
 void CSceneMain::LoadMesh()
 {
 	//ƒvƒŒƒCƒ„[
-	LOADER->LoadMesh(ModelName::ModelPlayer, "Model/Player/Player.obj");
+	MODEL->LoadModel(ModelName::ModelPlayer, "Model/Player/Player.obj");
 
 	//‹…
-	LOADER->LoadMesh(ModelName::ModelSphere, "Model/Sphere/Sphere.obj");
+	MODEL->LoadModel(ModelName::ModelSphere, "Model/Sphere/Sphere.obj");
 	
 	//Æ€
-	LOADER->LoadMesh(ModelName::ModelAiming, "Model/Aiming/Aiming.obj");
+	MODEL->LoadModel(ModelName::ModelAiming, "Model/Aiming/Aiming.obj");
 }

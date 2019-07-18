@@ -21,7 +21,7 @@ void CEnemyBullet::Init()
 	D3DXMatrixIdentity(&m_matTrans);
 
 	//モデル
-	m_pMesh = LOADER->GetMesh(ModelSphere);
+	m_pMesh = MODEL->GetModelData(ModelSphere);
 
 	//プレイヤーのポインタ
 	m_pPlayer = dynamic_cast<CPlayer*> (g_Task.GetObj(ObjPlayer));

@@ -11,7 +11,6 @@
 
 using namespace std;
 
-
 //管理用　クラス
 class CTask
 {
@@ -22,14 +21,12 @@ public:
 		
 	//登録
 	void InsertObj(CObjBase* pObj, int Id);
-	//void Insert(ID3D10ShaderResourceView* pTex, int Id, int Width, int Height);
 	
 	//取得	
 	CObjBase* GetObj(int Id);
 	
 private:
-	list<CObjBase*> m_Obj;	//オブジェクト
-	list<CTextureManager*> m_Tex;	//テクスチャ
+	list<CObjBase*> m_Obj;			//オブジェクト
 };
 
 extern CTask g_Task;

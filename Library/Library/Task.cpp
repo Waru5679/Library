@@ -16,15 +16,18 @@ void CTask::InsertObj(CObjBase* pObj, int Id)
 void CTask::Update()
 {
 	//OBJ更新
-	for (auto itr = m_Obj.begin();itr!=m_Obj.end(); itr++)
+	for (auto itr = m_Obj.begin();itr!=m_Obj.end(); )
 	{
 		(*itr)->Update();
 
 		//削除
 		if ((*itr)->GetDelete() == true)
 		{
-			m_Obj.erase(itr);
-			itr--;
+			m_Obj.erase(itr++);
+		}
+		else
+		{
+			itr++;
 		}
 	}
 }
@@ -38,18 +41,6 @@ void CTask::Draw()
 		(*itr)->Draw();
 	}
 }
-
-
-////テクスチャを取得
-//MY_TEXTURE* CTask::GetTex(int Id)
-//{
-//	for (auto itr = m_Tex.begin(); itr != m_Tex.end(); itr++)
-//	{
-//		if ((*itr).m_Id == Id)
-//			return &(*itr);
-//	}
-//	return nullptr;
-//}
 
 //オブジェクト取得
 CObjBase* CTask::GetObj(int Id)
@@ -65,6 +56,5 @@ CObjBase* CTask::GetObj(int Id)
 //メモリの開放
 void CTask::Release()
 {
-	m_Tex.clear();
 	m_Obj.clear();
 }

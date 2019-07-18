@@ -1,11 +1,5 @@
 #pragma once
 
-#include <d3dx10.h>
-#include <vector>
-#include "Release.h"
-
-using namespace std;
-
 //RECT構造体
 struct RECT_F
 {
@@ -43,73 +37,3 @@ struct ColorData
 	float m_Blue;	//青
 	float m_Alpha;	//透過
 };
-//
-////頂点構造体
-//struct MY_VERTEX
-//{	
-//	//開放
-//	void Release() {};
-//
-//	D3DXVECTOR3 vPos;
-//	D3DXVECTOR3 vNorm;
-//	D3DXVECTOR2 vTex;
-//};
-//
-////面情報
-//struct FACE_INFO
-//{
-//public:
-//	//開放
-//	void Release()
-//	{
-//		VectorRelease(Vertex);
-//	}
-//	vector<MY_VERTEX> Vertex;	//頂点情報
-//};
-
-//マテリアル構造体
-//struct MY_MATERIAL
-//{
-//	//開放
-//	void Release()
-//	{
-//		VectorRelease(FaceInfo);
-//		VectorRelease(pIndex);
-//		VectorRelease(pVertex);
-//
-//		if (pTexture != nullptr)
-//		{
-//			pTexture = nullptr;
-//		}
-//	}
-//
-//	D3DXVECTOR3 Ka;//アンビエント(環境光)
-//	D3DXVECTOR3 Kd;//ディフューズ(拡散光)
-//	D3DXVECTOR3 Ks;//スペキュラー(鏡面反射光）
-//
-//	//面情報
-//	vector<FACE_INFO> FaceInfo;
-//
-//	//テクスチャ
-//	ID3D10ShaderResourceView* pTexture;
-//
-//	//バッファー
-//	vector<ID3D10Buffer*> pIndex;
-//	vector<ID3D10Buffer*> pVertex;
-//};
-//
-////メッシュデータ
-//struct MY_MESH
-//{
-//	//開放
-//	void Release()
-//	{
-//		VectorRelease(Material);
-//	}
-//	vector<MY_MATERIAL> Material;	//マテリアル
-//
-//	D3DXVECTOR3 vMin;	//頂点の最小座標
-//	D3DXVECTOR3 vMax;	//頂点の最大座標
-//
-//	int Id;//管理用のID
-//};
