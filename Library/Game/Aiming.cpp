@@ -70,7 +70,7 @@ void CAiming::Update()
 //•`‰æ
 void CAiming::Draw()
 {
-	LOADER->Draw(m_matWorld, m_pMesh, nullptr);
+	MODEL->Draw(m_matWorld, m_pMesh, nullptr);
 }
 
 //ŠJ•ú

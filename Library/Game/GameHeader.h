@@ -46,3 +46,9 @@ enum ModelName
 	ModelSphere,	//球
 	ModelAiming,	//照準
 };
+
+//テクスチャ
+enum TexName
+{
+	TexTest	,	//描画テスト
+};

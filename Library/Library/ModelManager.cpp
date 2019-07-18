@@ -28,6 +28,25 @@ CModelData* CModelManager::GetModelData(int id)
 	return nullptr;
 }
 
+//モデル描画
+void CModelManager::Draw(D3DMATRIX matWorld, CModelData* pMesh, ColorData* pColor)
+{
+	//マテリアルの数毎に描画
+	for (unsigned int i = 0; i < pMesh->m_Material.size(); i++)
+	{
+		int size = pMesh->m_Material[i].m_pVertex.size();
+
+		//シェーダーのセット
+		SHADER->SetShader(pMesh->m_Material[i].m_pTexture, NULL, pColor, matWorld);
+
+		for (int j = 0; j < size; j++)
+		{
+			//ポリゴン描画
+			DRAW->DrawPolygon(pMesh->m_Material[i].m_Face[j].m_Vertex.size(), pMesh->m_Material[i].m_pVertex[j], pMesh->m_Material[i].m_pIndex[j]);
+		}
+	}
+}
+
 //面データ解放
 void CFaceData::Release()
 {

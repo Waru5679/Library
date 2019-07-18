@@ -64,7 +64,7 @@ void CEnemyBullet::Update()
 //•`‰æ
 void CEnemyBullet::Draw()
 {
-	LOADER->Draw(m_matWorld, m_pMesh, NULL);
+	MODEL->Draw(m_matWorld, m_pMesh, NULL);
 }
 
 //‰ð•ú

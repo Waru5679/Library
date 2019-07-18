@@ -71,5 +71,5 @@ void CEnemy::Update()
 //•`‰æ
 void CEnemy::Draw()
 {
-	LOADER->Draw(m_matWorld, m_pMesh, NULL);
+	MODEL->Draw(m_matWorld, m_pMesh, NULL);
 }

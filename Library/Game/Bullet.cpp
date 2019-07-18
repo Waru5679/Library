@@ -41,5 +41,5 @@ void CBullet::Update()
 //•`‰æ
 void CBullet::Draw()
 {
-	LOADER->Draw(m_matWorld, m_pMesh, NULL);
+	MODEL->Draw(m_matWorld, m_pMesh, NULL);
 }

@@ -3,19 +3,6 @@
 //インスタンス
 CObjLoader* CObjLoader::m_pInstance = nullptr;
 
-////モデル読み込み
-//void CObjLoader::LoadMesh(int Id, const char* Name)
-//{
-//	CModelData* Mesh;
-//	Mesh.Id = Id;
-//	
-//	//読み込み
-//	LoadObj(Name, &Mesh);
-//
-//	//ベクター登録
-//	m_Mesh.push_back(Mesh);
-//}
-
 //OBJファイルの読み込み
 HRESULT CObjLoader::LoadObj(const char* FileName, CModelData* pMesh)
 {
@@ -419,38 +406,6 @@ void CObjLoader::MinAndMax(D3DXVECTOR3 Pos, CModelData* pMesh)
 	if (Pos.z < (pMesh->m_vMin.z))
 		pMesh->m_vMin.z = Pos.z;
 }
-
-//メッシュ描画
-void CObjLoader::Draw(D3DMATRIX matWorld, CModelData* pMesh,ColorData* pColor)
-{
-	//マテリアルの数毎に描画
-	for (unsigned int i = 0; i < pMesh->m_Material.size(); i++)
-	{
-		int size = pMesh->m_Material[i].m_pVertex.size();
-
-		//シェーダーのセット
-		SHADER->SetShader(pMesh->m_Material[i].m_pTexture, NULL, pColor, matWorld);
-
-		for (int j = 0; j < size; j++)
-		{
-			//ポリゴン描画
-			DRAW->DrawPolygon(pMesh->m_Material[i].m_Face[j].m_Vertex.size(), pMesh->m_Material[i].m_pVertex[j], pMesh->m_Material[i].m_pIndex[j]);
-		}
-	}
-}
-//
-////Mesh取得
-//CModelData* CObjLoader::GetMesh(int Id)
-//{
-//	for (auto itr = m_Mesh.begin(); itr != m_Mesh.end(); itr++)
-//	{
-//		if ((*itr).Id == Id)
-//		{
-//			return &(*itr);
-//		}
-//	}
-//	return nullptr;
-//}
 
 //解放
 void CObjLoader::Release()

@@ -4,6 +4,8 @@
 #include <vector>
 #include "Release.h"
 #include "Singleton.h"
+#include "Struct.h"
+
 using namespace std;
 
 //頂点構造体
@@ -79,6 +81,10 @@ public:
 
 	//モデル取得
 	CModelData* GetModelData(int id);
+
+	//モデル描画
+	void Draw(D3DMATRIX matWorld, CModelData* pMesh, ColorData* pColor);
+
 private:
 	list<CModelData> m_List;//モデルリスト
 };

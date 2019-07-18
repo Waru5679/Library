@@ -195,7 +195,6 @@
     <ClCompile Include="Library\ModelManager.cpp" />
     <ClCompile Include="Library\Polygon.cpp" />
     <ClCompile Include="Library\Ray.cpp" />
-    <ClCompile Include="Library\Release.cpp" />
     <ClCompile Include="Library\Route.cpp" />
     <ClCompile Include="Library\Scene.cpp" />
     <ClCompile Include="Library\SceneInclude.cpp" />

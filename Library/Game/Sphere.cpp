@@ -44,5 +44,5 @@ void CSphere::Update()
 //•`‰æ
 void CSphere::Draw()
 {
-	LOADER->Draw(m_matWorld, m_pMesh,NULL);
+	MODEL->Draw(m_matWorld, m_pMesh,NULL);
 }

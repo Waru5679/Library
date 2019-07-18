@@ -144,5 +144,5 @@ void CPlayer::Draw()
 	if(m_bHit==true)
 		FONT->DrawStr(L"Hit", 200.0f, 20.0f, 32.0f, 0.0f);
 
-	LOADER->Draw(m_matWorld, m_pMesh,NULL);
+	MODEL->Draw(m_matWorld, m_pMesh,NULL);
 }

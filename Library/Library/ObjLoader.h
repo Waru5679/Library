@@ -17,9 +17,6 @@ public:
 	//‰ğ•ú
 	void Release();
 
-	//ƒƒbƒVƒ…•`‰æ
-	void Draw( D3DMATRIX matWorld, CModelData* pMesh, ColorData* pColor);
-
 	//OBJ‚Ì“Ç‚İ‚İ
 	HRESULT LoadObj(const char* FileName, CModelData* pMesh);
 private:

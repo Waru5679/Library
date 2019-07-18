@@ -91,11 +91,14 @@
     <Filter Include="ソース ファイル\Bullet">
       <UniqueIdentifier>{58faef8b-9e74-4ee5-80df-749434fd28dd}</UniqueIdentifier>
     </Filter>
-    <Filter Include="リソース ファイル\TextureManager">
-      <UniqueIdentifier>{07eb26ea-e5dd-4fff-87a8-7f6fa9d08c7d}</UniqueIdentifier>
+    <Filter Include="リソース ファイル\Manager">
+      <UniqueIdentifier>{ee763742-e844-4f88-992c-5f4324f5393b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="リソース ファイル\ObjManager">
+    <Filter Include="リソース ファイル\Manager\ModelManager">
       <UniqueIdentifier>{49f03b20-bc7b-4674-ab80-72ca870664b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="リソース ファイル\Manager\TextureManager">
+      <UniqueIdentifier>{07eb26ea-e5dd-4fff-87a8-7f6fa9d08c7d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -202,13 +205,13 @@
       <Filter>ソース ファイル\Bullet</Filter>
     </ClInclude>
     <ClInclude Include="Library\TextureManager.h">
-      <Filter>リソース ファイル\TextureManager</Filter>
+      <Filter>リソース ファイル\Manager\TextureManager</Filter>
     </ClInclude>
     <ClInclude Include="Library\FrameRate.h">
       <Filter>リソース ファイル\FrameRate</Filter>
     </ClInclude>
     <ClInclude Include="Library\ModelManager.h">
-      <Filter>リソース ファイル\ObjManager</Filter>
+      <Filter>リソース ファイル\Manager\ModelManager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -281,9 +284,6 @@
     <ClCompile Include="Library\LibraryMain.cpp">
       <Filter>ヘッダー ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Library\Release.cpp">
-      <Filter>リソース ファイル\Release</Filter>
-    </ClCompile>
     <ClCompile Include="Game\Aiming.cpp">
       <Filter>ソース ファイル\Aiming</Filter>
     </ClCompile>
@@ -297,13 +297,13 @@
       <Filter>ソース ファイル\Bullet</Filter>
     </ClCompile>
     <ClCompile Include="Library\TextureManager.cpp">
-      <Filter>リソース ファイル\TextureManager</Filter>
+      <Filter>リソース ファイル\Manager\TextureManager</Filter>
     </ClCompile>
     <ClCompile Include="Library\Ray.cpp">
       <Filter>リソース ファイル\Ray</Filter>
     </ClCompile>
     <ClCompile Include="Library\ModelManager.cpp">
-      <Filter>リソース ファイル\ObjManager</Filter>
+      <Filter>リソース ファイル\Manager\ModelManager</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
