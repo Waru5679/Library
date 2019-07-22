@@ -66,5 +66,5 @@ CObjBase* CTask::GetObj(int Id)
 void CTask::Release()
 {
 	m_Obj.clear();
-	PointerRelease(m_pCamera);
+	m_pCamera = nullptr;
 }
