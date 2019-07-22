@@ -16,7 +16,7 @@ public:
 	void Release();						//解放
 
 	//カメラセット
-	void SetCamera(CameraBase* pCamera) { m_pCamera = pCamera; }
+	void SetCamera(CCameraBase* pCamera) { m_pCamera = pCamera; }
 
 	//シェーダーセット
 	void SetShader(ID3D10ShaderResourceView* pTexture, RECT_F* pSrc, ColorData* pColor, D3DXMATRIX matWorld);
@@ -36,5 +36,5 @@ private:
 	ID3D10EffectVectorVariable* m_pShaderSrc;					//切り取り位置
 	ID3D10EffectVectorVariable* m_pShaderColor;					//描画色
 	
-	CameraBase* m_pCamera;	//カメラポインタ
+	CCameraBase* m_pCamera;	//カメラポインタ
 };

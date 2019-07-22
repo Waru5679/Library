@@ -29,7 +29,6 @@ enum SceneName
 //オブジェクト
 enum ObjName
 {
-	ObjMainCamera,	//メインカメラ
 	ObjPlayer,		//プレイヤー
 	ObjDraw2D,		//2D描画
 	ObjSphere,		//球

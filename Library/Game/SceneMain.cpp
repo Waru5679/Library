@@ -19,7 +19,8 @@ void CSceneMain::Init()
 
 	//カメラ
 	CMainCamera* pCamera = new CMainCamera();
-	g_Task.InsertObj(pCamera, ObjName::ObjMainCamera);
+	pCamera->Init();
+	g_Task.SetCamera(dynamic_cast<CCameraBase*>(pCamera));
 
 	//2DOBJ
 	C2DPolygon* p2D=new C2DPolygon();
@@ -34,8 +35,8 @@ void CSceneMain::Init()
 	g_Task.InsertObj(pEnemy, ObjName::ObjEnemy);
 
 	//シェーダーにカメラセット
-	SHADER->SetCamera(dynamic_cast<CameraBase*>(pCamera));
-	DRAW->SetCamera(dynamic_cast<CameraBase*>(pCamera));
+	SHADER->SetCamera(dynamic_cast<CCameraBase*>(pCamera));
+	DRAW->SetCamera(dynamic_cast<CCameraBase*>(pCamera));
 }
 
 //更新

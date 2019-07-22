@@ -27,7 +27,7 @@ public:
 	void DrawTexture(ID3D10ShaderResourceView* pTex, RECT_F* pSrc, RECT_F* pOut, ColorData* pColor, float fRad);
 	
 	//カメラセット
-	void SetCamera(CameraBase* pCamera) { m_pCamera = pCamera; }
+	void SetCamera(CCameraBase* pCamera) { m_pCamera = pCamera; }
 
 	//ポリゴン描画
 	void DrawPolygon(int VerNum, ID3D10Buffer* VertexBuffer, ID3D10Buffer* IndexBuffer);
@@ -35,5 +35,5 @@ private:
 	
 	ID3D10Buffer* m_pVertexBuffer;//バーテックスバッファ
 	  	
-	CameraBase* m_pCamera;	//カメラポインタ
+	CCameraBase* m_pCamera;	//カメラポインタ
 };

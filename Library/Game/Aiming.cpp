@@ -28,7 +28,7 @@ void CAiming::Init()
 	m_pPlayer = dynamic_cast<CPlayer*>(g_Task.GetObj(ObjName::ObjPlayer));
 
 	//カメラのポインタ
-	m_pCamera = dynamic_cast<CMainCamera*>(g_Task.GetObj(ObjName::ObjMainCamera));
+	m_pCamera = dynamic_cast<CMainCamera*>(g_Task.GetCamera());
 
 	//移動ベクトル
 	m_vMove = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
@@ -46,7 +46,7 @@ void CAiming::Update()
 	//カメラのポインタ取得
 	if (m_pCamera == nullptr)
 	{
-		m_pCamera = dynamic_cast<CMainCamera*>(g_Task.GetObj(ObjName::ObjMainCamera));
+		m_pCamera = dynamic_cast<CMainCamera*>(g_Task.GetCamera());
 	}
 
 	//カメラ→プレイヤーのベクトル

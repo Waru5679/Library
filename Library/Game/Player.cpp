@@ -64,7 +64,7 @@ void CPlayer::Update()
 	D3DXVec3Normalize(&m_vMove, &m_vMove);
 
 	//カメラ取得
-	CMainCamera* pCamera=dynamic_cast<CMainCamera*> (g_Task.GetObj(ObjName::ObjMainCamera));
+	CMainCamera* pCamera=dynamic_cast<CMainCamera*> (g_Task.GetCamera());
 
 	//カメラの向きから移動ベクトルを変換
 	m_matRot = MakeMatRot(pCamera->GetAngle());

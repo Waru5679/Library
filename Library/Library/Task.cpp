@@ -12,9 +12,18 @@ void CTask::InsertObj(CObjBase* pObj, int Id)
 	pObj->Init();
 }
 
+//カメラセット
+void CTask::SetCamera(CCameraBase* pCamera)
+{
+	m_pCamera = pCamera;
+}
+
 //更新
 void CTask::Update()
 {
+	//カメラ更新
+	m_pCamera->Update();
+
 	//OBJ更新
 	for (auto itr = m_Obj.begin();itr!=m_Obj.end(); )
 	{
@@ -57,4 +66,5 @@ CObjBase* CTask::GetObj(int Id)
 void CTask::Release()
 {
 	m_Obj.clear();
+	PointerRelease(m_pCamera);
 }

@@ -21,12 +21,15 @@ public:
 		
 	//登録
 	void InsertObj(CObjBase* pObj, int Id);
-	
+	void SetCamera(CCameraBase* pCamera);
+
 	//取得	
 	CObjBase* GetObj(int Id);
+	CCameraBase* GetCamera() { return m_pCamera; }
 	
 private:
 	list<CObjBase*> m_Obj;			//オブジェクト
+	CCameraBase* m_pCamera;
 };
 
 extern CTask g_Task;

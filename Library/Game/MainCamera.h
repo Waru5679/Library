@@ -5,7 +5,7 @@
 #include "Player.h"
 
 //メインカメラクラス
-class CMainCamera :public CameraBase
+class CMainCamera :public CCameraBase
 {
 public:
 	void Init();	//初期化
