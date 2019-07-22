@@ -3,6 +3,8 @@
 //ライブラリファイル
 #include "../Library/Scene.h"
 
+#include "MainCamera.h"
+
 //シーンメイン
 class CSceneMain :public CSceneBase
 {
@@ -16,4 +18,5 @@ private:
 	void LoadAudio();		//音楽
 	void LoadTexture();		//テクスチャ
 	void LoadMesh();		//メッシュ
+
 };

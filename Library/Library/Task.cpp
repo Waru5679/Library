@@ -12,31 +12,22 @@ void CTask::InsertObj(CObjBase* pObj, int Id)
 	pObj->Init();
 }
 
-//カメラセット
-void CTask::SetCamera(CCameraBase* pCamera)
-{
-	m_pCamera = pCamera;
-}
-
 //更新
 void CTask::Update()
 {
-	//カメラ更新
-	m_pCamera->Update();
+	//処理順にソート
+	void Sort();
 
-	//OBJ更新
-	for (auto itr = m_Obj.begin();itr!=m_Obj.end(); )
+	//オブジェクト更新
+	for (unsigned int i=0;i < m_Obj.size(); i++)
 	{
-		(*itr)->Update();
+		m_Obj[i]->Update();
 
 		//削除
-		if ((*itr)->GetDelete() == true)
+		if (m_Obj[i]->GetDelete() == true)
 		{
-			m_Obj.erase(itr++);
-		}
-		else
-		{
-			itr++;
+			m_Obj.erase(m_Obj.begin()+i);
+			i--;
 		}
 	}
 }
@@ -62,9 +53,28 @@ CObjBase* CTask::GetObj(int Id)
 	return nullptr;
 }
 
+//処理順にソートする
+void CTask::Sort()
+{
+	for (unsigned int i = 0; i < m_Obj.size() - 1; i++)
+	{
+		for (unsigned int j = i + 1; j < m_Obj.size(); j++)
+		{
+			//順番が違うとき入れ替え
+			if (m_Obj[i]->GetId() > m_Obj[j]->GetId())
+			{
+				CObjBase* tmp = m_Obj[i];
+				m_Obj[i] = m_Obj[j];
+				m_Obj[j] = tmp;
+			
+				tmp = nullptr;
+			}
+		}
+	}
+}
+
 //メモリの開放
 void CTask::Release()
 {
-	m_Obj.clear();
-	m_pCamera = nullptr;
+	VectorRelease(m_Obj);
 }

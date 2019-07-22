@@ -2,7 +2,7 @@
 #include "CObj.h"
 
 //継承用　カメラクラス
-class CCameraBase
+class CCameraBase:public CObjBase
 {
 public:
 	virtual void Init()=0;		//初期化

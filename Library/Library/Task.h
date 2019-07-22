@@ -1,7 +1,7 @@
 #pragma once
 #include <d3dx10.h>
 #include <D3D10.h>
-#include <list>
+#include <vector>
 #include <windef.h>
 
 #include "CObj.h"
@@ -21,15 +21,15 @@ public:
 		
 	//登録
 	void InsertObj(CObjBase* pObj, int Id);
-	void SetCamera(CCameraBase* pCamera);
-
+	
 	//取得	
 	CObjBase* GetObj(int Id);
-	CCameraBase* GetCamera() { return m_pCamera; }
 	
 private:
-	list<CObjBase*> m_Obj;			//オブジェクト
-	CCameraBase* m_pCamera;
+	//ソート
+	void Sort();
+
+	vector<CObjBase*> m_Obj;			//オブジェクト
 };
 
 extern CTask g_Task;

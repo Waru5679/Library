@@ -9,6 +9,11 @@ void CSceneMain::Init()
 	LoadAudio();
 	LoadMesh();
 	
+
+	//カメラ
+	CMainCamera* pCamera = new CMainCamera();
+	g_Task.InsertObj(pCamera, ObjName::ObjMainCamera);
+
 	//プレイヤー
 	D3DXVECTOR3 vPos(0.0f, 0.0f, -20.0f);
 	D3DXVECTOR3 vAngle(0.0f, 0.0f, 0.0f);
@@ -16,11 +21,6 @@ void CSceneMain::Init()
 
 	CPlayer* pPlayer=new CPlayer(vPos, vAngle, vScale);
 	g_Task.InsertObj(pPlayer,ObjName::ObjPlayer);
-
-	//カメラ
-	CMainCamera* pCamera = new CMainCamera();
-	pCamera->Init();
-	g_Task.SetCamera(dynamic_cast<CCameraBase*>(pCamera));
 
 	//2DOBJ
 	C2DPolygon* p2D=new C2DPolygon();

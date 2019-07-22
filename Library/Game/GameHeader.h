@@ -26,10 +26,11 @@ enum SceneName
 	SceneMain,	//メイン
 };
 
-//オブジェクト
+//オブジェクトID(処理順)
 enum ObjName
 {
 	ObjPlayer,		//プレイヤー
+	ObjMainCamera,	//メインカメラ
 	ObjDraw2D,		//2D描画
 	ObjSphere,		//球
 	ObjEnemy,		//敵
