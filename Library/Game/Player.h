@@ -27,7 +27,7 @@ private:
 	D3DXVECTOR3 m_vMove;		//移動ベクトル
 	D3DXVECTOR3 m_vDir;			//向き
 	D3DXVECTOR3 m_vLastMove;	//最後に移動した向き
-	CollisionData m_Collision;	//当たり判定	
+	CCollisionData m_Collision;	//当たり判定	
 	float m_fSpeed;				//移動スピード
 	float m_fAimDis;			//照準との距離
 

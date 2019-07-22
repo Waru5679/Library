@@ -19,7 +19,7 @@ public:
 	void SetCamera(CCameraBase* pCamera) { m_pCamera = pCamera; }
 
 	//シェーダーセット
-	void SetShader(ID3D10ShaderResourceView* pTexture, RECT_F* pSrc, ColorData* pColor, D3DXMATRIX matWorld);
+	void SetShader(ID3D10ShaderResourceView* pTexture, RECT_F* pSrc, CColorData* pColor, D3DXMATRIX matWorld);
 
 	//アクセサ
 	ID3D10Effect*			GetEffect()			{ return m_pEffect; }

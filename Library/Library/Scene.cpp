@@ -55,8 +55,11 @@ void CSceneManager::Draw()
 void CSceneManager::Release()
 {
 	//現在のシーン破棄
-	m_pNowScene->Release();
-	PointerRelease(m_pNowScene);
+	if (m_pNowScene != nullptr)
+	{
+		m_pNowScene->Release();
+		PointerRelease(m_pNowScene);
+	}
 
 	//シーンリスト破棄
 	VectorRelease(m_Scene);

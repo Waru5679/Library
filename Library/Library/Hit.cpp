@@ -13,11 +13,11 @@ CHit* CHit::m_pInstance = nullptr;
 	 LOADER->LoadObj("Model/Hit/Sphere.obj", &m_DrawSphere);
 
 	 //F
-	 m_Color = ColorData(1.0f, 1.0f, 1.0f, 0.5f);
+	 m_Color = CColorData(1.0f, 1.0f, 1.0f, 0.5f);
  }
 
 //XV
-void CHit::UpData(CollisionData* pData)
+void CHit::UpData(CCollisionData* pData)
 {
 	//‹…ƒf[ƒ^
 	SetSphereData(pData->m_pObj, &pData->m_ObbData, pData->m_pMesh, &pData->m_SphereData);
@@ -29,16 +29,16 @@ void CHit::UpData(CollisionData* pData)
 //•`‰æ
 void CHit::Draw()
 {
-	//D3DXMATRIX matWorld;
+	D3DXMATRIX matWorld;
 
-	//for (unsigned int i = 0; i < m_Collision.size(); i++)
-	//{
-	//	//Obb•`‰æ
-	//	LOADER->Draw(m_Collision[i]->m_ObbData.m_matWorld, &m_DrawObb, &m_Color);
+	for (unsigned int i = 0; i < m_Collision.size(); i++)
+	{
+		//Obb•`‰æ
+		MODEL->Draw(m_Collision[i]->m_ObbData.m_matWorld, &m_DrawObb, &m_Color);
 
-	//	//‹…•`‰æ
-	//	LOADER->Draw(m_Collision[i]->m_SphereData.m_matWorld, &m_DrawSphere, &m_Color);
-	//}
+		//‹…•`‰æ
+		MODEL->Draw(m_Collision[i]->m_SphereData.m_matWorld, &m_DrawSphere, &m_Color);
+	}
 }
 
 //‰ğ•ú
@@ -46,8 +46,13 @@ void CHit::Release()
 {
 	m_DrawObb.Release();
 	m_DrawSphere.Release();
+	m_Color.Release();
 
 	//“–‚½‚è”»’è”jŠü
+	for (unsigned int i = 0; i < m_Collision.size(); i++)
+	{
+		m_Collision[i]->Release();
+	}
 	VectorRelease(m_Collision);
 
 	//ƒCƒ“ƒXƒ^ƒ“ƒX”jŠü
@@ -55,17 +60,17 @@ void CHit::Release()
 }
 
 //“o˜^
-void CHit::Insert(CollisionData* pData)
+void CHit::Insert(CCollisionData* pData)
 {
     // “o˜^
     m_Collision.push_back(pData);
 }
 
 //“–‚½‚è”»’èƒf[ƒ^“o˜^
-CollisionData CHit::CollisionCreate(CObj3DBase* pCobj)
+CCollisionData CHit::CollisionCreate(CObj3DBase* pCobj)
 {
 	//“–‚½‚è”»’èî•ñ
-	CollisionData coll_data;
+	CCollisionData coll_data;
 	coll_data.m_pObj = pCobj;
 	coll_data.m_pMesh = pCobj->GetMesh();
 	coll_data.m_Id = pCobj->GetId();
@@ -76,7 +81,7 @@ CollisionData CHit::CollisionCreate(CObj3DBase* pCobj)
 	coll_data.m_ObbData = obb_data;
 
 	//‹…î•ñ
-	SphereData sphere_data;
+	CSphereData sphere_data;
 	SetSphereData(pCobj,&coll_data.m_ObbData, coll_data.m_pMesh, &sphere_data);
 	coll_data.m_SphereData = sphere_data;
 		
@@ -101,7 +106,6 @@ bool CHit::Hit()
 			}
 		}
 	}
-
 	return false;
 }
 
@@ -248,7 +252,7 @@ bool CHit::ObbAndObb(ObbData* obb1, ObbData* obb2)
 }
 
 //‹…‚Æ‹…‚ÌÕ“Ë”»’è
-bool CHit::SphereAndSphre(SphereData* data1, SphereData* data2)
+bool CHit::SphereAndSphre(CSphereData* data1, CSphereData* data2)
 {
 	//2“_ŠÔ‚Ì‹——£
 	float PosLength;	
@@ -268,7 +272,7 @@ bool CHit::SphereAndSphre(SphereData* data1, SphereData* data2)
 }
 
 //‹…î•ñƒZƒbƒg
-void CHit::SetSphereData(CObj3DBase* pCobj,ObbData* pObb, CModelData* pMesh,SphereData* pSphere)
+void CHit::SetSphereData(CObj3DBase* pCobj,ObbData* pObb, CModelData* pMesh,CSphereData* pSphere)
 {
 	//’†S“_‚©‚ç–Ê‚Ì’·‚³
 	float x, y, z;

@@ -21,10 +21,10 @@ public:
 	ID3D10Buffer* BufferCreate(void* pHead, unsigned int Size, int BufferType);
 
 	//2D描画(テクスチャのサイズから切り取り位置の設定がいるもの用中継)
-	void DrawTexture(int TexId, RECT_F* pSrc, RECT_F* pOut, ColorData* pColor, float fRad);
+	void DrawTexture(int TexId, RECT_F* pSrc, RECT_F* pOut, CColorData* pColor, float fRad);
 
 	//2D描画
-	void DrawTexture(ID3D10ShaderResourceView* pTex, RECT_F* pSrc, RECT_F* pOut, ColorData* pColor, float fRad);
+	void DrawTexture(ID3D10ShaderResourceView* pTex, RECT_F* pSrc, RECT_F* pOut, CColorData* pColor, float fRad);
 	
 	//カメラセット
 	void SetCamera(CCameraBase* pCamera) { m_pCamera = pCamera; }

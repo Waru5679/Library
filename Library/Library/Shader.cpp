@@ -46,7 +46,7 @@ bool CShader::Init(ID3D10Device* pDevice)
 }
 
 //シェーダーセット
-void CShader::SetShader(ID3D10ShaderResourceView* pTexture, RECT_F* pSrc,ColorData* pColor, D3DXMATRIX matWorld)
+void CShader::SetShader(ID3D10ShaderResourceView* pTexture, RECT_F* pSrc,CColorData* pColor, D3DXMATRIX matWorld)
 {	
 	//ワールド＊ビュー*プロジェクション
 	D3DXMATRIX objWVP = matWorld *m_pCamera->GetViewMatrix() *m_pCamera->GetProjMatrix();

@@ -17,5 +17,5 @@ public:
 private:
 	float m_fRadius;	//‹…‚Ì”¼Œa
 
-	CollisionData m_Collision;//“–‚½‚è”»’è—p
+	CCollisionData m_Collision;//“–‚½‚è”»’è—p
 };

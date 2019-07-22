@@ -27,7 +27,7 @@ public:
 
 private:
 	D3DXVECTOR3 m_vMove;		//移動ベクトル
-	CollisionData m_Collision;	//当たり判定	
+	CCollisionData m_Collision;	//当たり判定	
 	
 	int m_AttackCount;			//攻撃のカウント
 	float m_AttackLength_x;		//攻撃距離

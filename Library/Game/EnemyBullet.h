@@ -26,7 +26,7 @@ public:
 private:
 	int m_Count;				//カウンター
 	D3DXVECTOR3 m_vMove;		//移動ベクトル
-	CollisionData m_Collision;	//当たり判定	
+	CCollisionData m_Collision;	//当たり判定	
 	float m_fSpeed;				//移動スピード
 	CPlayer* m_pPlayer;			//プレイヤーのポインタ
 	D3DXVECTOR3 m_vPlayerPos;	//プレイヤーの位置

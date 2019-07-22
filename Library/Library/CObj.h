@@ -28,7 +28,7 @@ protected:
 	D3DXVECTOR2 m_Move;			//移動ベクトル
 	float		m_fRad;			//回転
 
-	ColorData m_Color;	//描画色
+	CColorData m_Color;	//描画色
 
 	//テクスチャ
 	RECT_F	m_Src;//切り取り

@@ -21,7 +21,7 @@ void CDraw::Init()
 }
 
 //2D描画(テクスチャのサイズから切り取り位置の設定がいるもの用中継)
-void CDraw::DrawTexture(int TexId, RECT_F* pSrc,RECT_F* pOut,ColorData* pColor,float fRad)
+void CDraw::DrawTexture(int TexId, RECT_F* pSrc,RECT_F* pOut,CColorData* pColor,float fRad)
 {
 	//テクスチャ情報
 	CTextureData* pData=nullptr;
@@ -38,7 +38,7 @@ void CDraw::DrawTexture(int TexId, RECT_F* pSrc,RECT_F* pOut,ColorData* pColor,f
 }
 
 //2D描画
-void CDraw::DrawTexture(ID3D10ShaderResourceView* pTex, RECT_F* pSrc, RECT_F* pOut, ColorData* pColor, float fRad)
+void CDraw::DrawTexture(ID3D10ShaderResourceView* pTex, RECT_F* pSrc, RECT_F* pOut, CColorData* pColor, float fRad)
 {
 	//逆ビュー行列
 	D3DXMATRIX matInvView;

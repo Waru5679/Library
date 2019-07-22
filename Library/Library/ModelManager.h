@@ -83,7 +83,7 @@ public:
 	CModelData* GetModelData(int id);
 
 	//モデル描画
-	void Draw(D3DMATRIX matWorld, CModelData* pMesh, ColorData* pColor);
+	void Draw(D3DMATRIX matWorld, CModelData* pMesh, CColorData* pColor);
 
 private:
 	list<CModelData> m_List;//モデルリスト

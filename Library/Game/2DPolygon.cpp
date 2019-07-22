@@ -20,7 +20,7 @@ void C2DPolygon::Init()
 	m_fRad = 0.0f;
 
 	//•`‰æF
-	m_Color = ColorData(1.0f, 1.0f, 1.0f, 0.5f);
+	m_Color = CColorData(1.0f, 1.0f, 1.0f, 0.5f);
 }
 
 //XV

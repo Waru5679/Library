@@ -20,17 +20,21 @@ struct RECT_F
 };
 
 //色データ
-struct ColorData
+class CColorData
 {
+public:
 	//コンストラクタ
-	ColorData() {}
-	ColorData(float R, float G, float B, float A)
+	CColorData() {}
+	CColorData(float R, float G, float B, float A)
 	{
 		m_Red = R;
 		m_Green = G;
 		m_Blue = B;
 		m_Alpha = A;
 	}
+
+	//開放
+	void Release() {};
 	
 	float m_Red;	//赤
 	float m_Green;	//緑

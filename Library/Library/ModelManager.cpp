@@ -29,7 +29,7 @@ CModelData* CModelManager::GetModelData(int id)
 }
 
 //モデル描画
-void CModelManager::Draw(D3DMATRIX matWorld, CModelData* pMesh, ColorData* pColor)
+void CModelManager::Draw(D3DMATRIX matWorld, CModelData* pMesh, CColorData* pColor)
 {
 	//マテリアルの数毎に描画
 	for (unsigned int i = 0; i < pMesh->m_Material.size(); i++)
