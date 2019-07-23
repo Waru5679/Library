@@ -48,7 +48,7 @@ void CEnemyBullet::Update()
 	m_Count++;
 
 	//íœ
-	if (m_Count > DELETE_TIME)
+	if (m_Count > BULLET_DELETE_TIME)
 	{
 		this->SetDelete(true);
 		return;

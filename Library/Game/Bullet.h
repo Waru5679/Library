@@ -13,4 +13,5 @@ public:
 private:
 	float m_fSpeed;			//移動速度
 	D3DXVECTOR3 m_vMove;	//移動ベクトル
+	int m_Count;			//カウンター
 };

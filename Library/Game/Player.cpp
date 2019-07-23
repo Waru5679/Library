@@ -139,6 +139,25 @@ void CPlayer::Input()
 	{
 		m_vAngle.y += 0.05f;
 	}
+
+	//攻撃
+	if (INPUT->GetTriggerKeyPush(VK_SPACE))
+	{
+		//エイムポインタ
+		CAiming* pAiming = dynamic_cast<CAiming*>(g_Task.GetObj(ObjName::ObjAiming));
+		
+		//弾の移動方向
+		D3DXVECTOR3 vDir;
+		if (pAiming != nullptr)
+		{
+			vDir = pAiming->GetPos() - m_vPos;
+			D3DXVec3Normalize(&vDir, &vDir);
+		}
+
+		//生成
+		CBullet* pBullet = new CBullet(m_vPos, D3DXVECTOR3(1.0f, 1.0f, 1.0f), D3DXVECTOR3(1.0f, 1.0f, 1.0f), vDir);
+		g_Task.InsertObj(pBullet, ObjName::ObjBullet);
+	}
 }
 
 //描画

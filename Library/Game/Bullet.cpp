@@ -26,13 +26,26 @@ void CBullet::Init()
 	
 	//移動スピード
 	m_fSpeed = 0.5f;
+
+	//カウンタ初期化
+	m_Count = 0;
 }
 
 //更新
 void CBullet::Update()
 {
+	//カウンタ更新
+	m_Count++;
+
 	//移動
 	m_vPos += m_vMove * m_fSpeed;
+
+	//削除
+	if (m_Count > BULLET_DELETE_TIME)
+	{
+		this->SetDelete(true);
+		return;
+	}
 
 	//ワールド行列作成
 	m_matWorld = MakeMatWorld(m_vPos, m_vAngle, m_vScale);

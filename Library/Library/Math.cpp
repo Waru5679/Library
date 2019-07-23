@@ -125,6 +125,6 @@ void CreateVSMatrix(D3DXVECTOR3* vEye, D3DXVECTOR3* vLook, D3DXVECTOR3* vUp, D3D
 	//ビュー行列を作成する。逆方向回転
 	D3DXMatrixLookAtLH(matView, vEye, vLook, vUp);
 
-	//パースペクティブ射影行列を作成する。 拡大・縮小　視野角　60度　アスペクト比　横幅/縦高さ　ニアPlane　ファーPlane　z=10000
+	//パースペクティブ射影行列を作成する。視野角　60度　アスペクト比　ニアPlane　ファーPlane
 	D3DXMatrixPerspectiveFovLH(matProj, (float)D3DX_PI * 0.5f, (float)width / (float)height, 0.1f, 10000.0f);
 }

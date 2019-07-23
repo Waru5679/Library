@@ -6,8 +6,6 @@
 //ゲームファイル
 #include "Player.h"
 
-constexpr int DELETE_TIME{ 300 };
-
 //敵の弾クラス
 class CEnemyBullet :public CObj3DBase
 {

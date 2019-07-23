@@ -52,3 +52,6 @@ enum TexName
 {
 	TexTest	,	//描画テスト
 };
+
+//定数
+constexpr int BULLET_DELETE_TIME{ 300 };	//弾の削除タイム
