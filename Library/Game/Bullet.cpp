@@ -40,6 +40,7 @@ void CBullet::Update()
 	//ˆÚ“®
 	m_vPos += m_vMove * m_fSpeed;
 
+
 	//íœ
 	if (m_Count > BULLET_DELETE_TIME)
 	{

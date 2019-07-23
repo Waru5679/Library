@@ -25,7 +25,6 @@ void CMainCamera::Init()
 
 	//角度
 	m_vAngle = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-
 }
 
 //更新関数
@@ -42,13 +41,10 @@ void CMainCamera::Update()
 		m_vAngle.y += 0.05f;
 	}
 
-
 	//プレイヤーポインタ
 	CPlayer* pPlayer = dynamic_cast<CPlayer*>(g_Task.GetObj(ObjName::ObjPlayer));
-
-
 	m_vPlayerPos = pPlayer->GetPos();
-
+	
 	//プレイヤーの方向
 	m_matRot = MakeMatRot(m_vAngle);
 	D3DXVec3TransformCoord(&m_vPlayerFront, & D3DXVECTOR3(0.0f, 0.0f, 1.0f), &m_matRot);
@@ -61,9 +57,4 @@ void CMainCamera::Update()
 
 	//頂点シェーダ用のマトリックス作成
 	CreateVSMatrix(&m_vEye, &m_vLook, &m_vUp, &m_matView, &m_matProj, WINDOW_WIDTH, WINDOW_HEIGHT);
-}
-
-//開放
-void CMainCamera::Release()
-{
 }

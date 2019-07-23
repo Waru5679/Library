@@ -40,6 +40,9 @@ void CDraw::DrawTexture(int TexId, RECT_F* pSrc,RECT_F* pOut,CColorData* pColor,
 //2Dï`âÊ
 void CDraw::DrawTexture(ID3D10ShaderResourceView* pTex, RECT_F* pSrc, RECT_F* pOut, CColorData* pColor, float fRad)
 {
+	if (m_pCamera == nullptr)
+		return;
+
 	//ãtÉrÉÖÅ[çsóÒ
 	D3DXMATRIX matInvView;
 	D3DXMatrixIdentity(&matInvView);

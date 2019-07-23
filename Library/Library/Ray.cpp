@@ -298,6 +298,10 @@ bool CRay::TriangleRay(D3DXVECTOR3* OutPoint,D3DXVECTOR3* OutNorm ,D3DXVECTOR3 v
 //解放
 void CRay::Release()
 {
+	for (unsigned int i = 0; i < m_Data.size(); i++)
+	{
+		m_Data[i] = nullptr;
+	}
 	VectorRelease(m_Data);
 
 	//インスタンス破棄

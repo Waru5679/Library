@@ -21,17 +21,17 @@ void CSceneMain::Init()
 	CPlayer* pPlayer=new CPlayer(vPos, vAngle, vScale);
 	g_Task.InsertObj(pPlayer,ObjName::ObjPlayer);
 
-	////2DOBJ
-	//C2DPolygon* p2D=new C2DPolygon();
-	//g_Task.InsertObj(p2D, ObjName::ObjDraw2D);
+	//2DOBJ
+	C2DPolygon* p2D=new C2DPolygon();
+	g_Task.InsertObj(p2D, ObjName::ObjDraw2D);
 
-	////敵
-	//vPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	//vAngle = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	//vScale = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
+	//敵
+	vPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	vAngle = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	vScale = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
 
-	//CEnemy* pEnemy=new CEnemy(vPos, vAngle, vScale);
-	//g_Task.InsertObj(pEnemy, ObjName::ObjEnemy);
+	CEnemy* pEnemy=new CEnemy(vPos, vAngle, vScale);
+	g_Task.InsertObj(pEnemy, ObjName::ObjEnemy);
 
 	//シェーダーにカメラセット
 	SHADER->SetCamera(dynamic_cast<CCameraBase*>(pCamera));

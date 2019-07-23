@@ -70,5 +70,5 @@ void CEnemyBullet::Draw()
 //‰ð•ú
 void CEnemyBullet::Release()
 {
-	PointerRelease(m_pPlayer);
+	m_pPlayer = nullptr;
 }

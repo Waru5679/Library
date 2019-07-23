@@ -76,4 +76,7 @@ void CAiming::Draw()
 //ŠJ•ú
 void CAiming::Release()
 {
+	m_pCamera = nullptr;
+	m_pPlayer = nullptr;
+	m_pMesh = nullptr;
 }

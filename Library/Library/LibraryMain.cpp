@@ -46,7 +46,7 @@ bool CLibraryMain::Init(HINSTANCE hInst)
 	//スタートシーンセット
 	SCENE->SetScene(START_SCENE);
 
-	////当たり判定
+	//当たり判定
 	HIT->Init();
 	
 	return true;

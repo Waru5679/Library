@@ -48,6 +48,10 @@ bool CShader::Init(ID3D10Device* pDevice)
 //シェーダーセット
 void CShader::SetShader(ID3D10ShaderResourceView* pTexture, RECT_F* pSrc,CColorData* pColor, D3DXMATRIX matWorld)
 {	
+	//カメラがないとき
+	if (m_pCamera == nullptr)
+		return;
+
 	//ワールド＊ビュー*プロジェクション
 	D3DXMATRIX objWVP = matWorld *m_pCamera->GetViewMatrix() *m_pCamera->GetProjMatrix();
 	m_pShaderWorldViewProjection->SetMatrix((float*)&(objWVP));
@@ -92,7 +96,8 @@ void CShader::Release()
 	m_pEffect->Release();
 
 	//カメラ破棄
-	PointerRelease(m_pCamera);
+	if(m_pCamera!=nullptr)
+		PointerRelease(m_pCamera);
 
 	//インスタンス破棄
 	PointerRelease(m_pInstance);

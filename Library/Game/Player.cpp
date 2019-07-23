@@ -3,8 +3,7 @@
 #include "../Library/LibraryHeader.h"
 
 //ゲームファイル
-#include  "GameHeader.h"
-
+#include "GameHeader.h"
 #include <math.h>
 
 //コンストラクタ
@@ -61,7 +60,7 @@ void CPlayer::Update()
 	//入力
 	Input();
 
-	//正規化
+	//移動の正規化
 	D3DXVec3Normalize(&m_vMove, &m_vMove);
 
 	//カメラ取得
@@ -177,6 +176,10 @@ void CPlayer::Draw()
 //開放
 void CPlayer::Release()
 {
+	//メッシュデータ解放
+	m_pMesh->Release();
+	m_pMesh = nullptr;
+
 	//当たり判定解放
 	m_Collision.Release();
 }
