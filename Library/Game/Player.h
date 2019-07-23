@@ -4,6 +4,9 @@
 #include "../Library/CObj.h"
 #include "../Library/LibraryHeader.h"
 
+//ゲームファイル
+#include "MainCamera.h"
+
 //プレイヤークラス
 class CPlayer:public CObj3DBase
 {
@@ -16,6 +19,7 @@ public:
 	void Update();	//更新
 	void Draw();	//描画
 	void Input();	//入力
+	void Release();	//開放
 
 	D3DXVECTOR3 GetPos() { return m_vPos; }
 	D3DXVECTOR3 GetAngle() { return m_vAngle; }
@@ -30,6 +34,5 @@ private:
 	CCollisionData m_Collision;	//当たり判定	
 	float m_fSpeed;				//移動スピード
 	float m_fAimDis;			//照準との距離
-
 	bool m_bHit;				//ヒットテスト
 };

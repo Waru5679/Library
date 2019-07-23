@@ -2,6 +2,8 @@
 
 //ライブラリファイル
 #include "../Library/Camera.h"
+
+//ゲームファイル
 #include "Player.h"
 
 //メインカメラクラス
@@ -11,6 +13,7 @@ public:
 	void Init();	//初期化
 	void Update();	//更新
 	void Draw() {};	//描画
+	void Release();	//開放
 
 private:
 	D3DXVECTOR3 m_vPlayerPos;	//プレイヤーの位置
@@ -20,6 +23,4 @@ private:
 	float m_fLookDis;	//プレイヤーと注視点の距離
 
 	D3DXMATRIX m_matRot;	//回転行列
-
-	CPlayer* m_pPlayer;	//プレイヤーのポインタ
 };

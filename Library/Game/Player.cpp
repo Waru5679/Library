@@ -52,6 +52,7 @@ void CPlayer::Init()
 	//照準生成
 	CAiming* pAiming = new CAiming(m_vPos + m_vDir * m_fAimDis, m_vAngle, D3DXVECTOR3(3.0f, 3.0f, 3.0f));
 	g_Task.InsertObj(pAiming, ObjName::ObjAiming);
+	pAiming = nullptr;
 }
 
 //更新
@@ -64,7 +65,7 @@ void CPlayer::Update()
 	D3DXVec3Normalize(&m_vMove, &m_vMove);
 
 	//カメラ取得
-	CMainCamera* pCamera=dynamic_cast<CMainCamera*> (g_Task.GetObj(ObjName::ObjMainCamera));
+	CMainCamera*pCamera = dynamic_cast<CMainCamera*> (g_Task.GetObj(ObjName::ObjMainCamera));
 
 	//カメラの向きから移動ベクトルを変換
 	m_matRot = MakeMatRot(pCamera->GetAngle());
@@ -98,6 +99,9 @@ void CPlayer::Update()
 
 	//カメラ更新
 	pCamera->Update();
+
+	//カメラポインタ解放
+	pCamera = nullptr;
 }
 
 //入力
@@ -157,6 +161,10 @@ void CPlayer::Input()
 		//生成
 		CBullet* pBullet = new CBullet(m_vPos, D3DXVECTOR3(1.0f, 1.0f, 1.0f), D3DXVECTOR3(1.0f, 1.0f, 1.0f), vDir);
 		g_Task.InsertObj(pBullet, ObjName::ObjBullet);
+
+		//ポインタ解放
+		pAiming = nullptr;
+		pBullet = nullptr;
 	}
 }
 
@@ -164,4 +172,11 @@ void CPlayer::Input()
 void CPlayer::Draw()
 {
 	MODEL->Draw(m_matWorld, m_pMesh,NULL);
+}
+
+//開放
+void CPlayer::Release()
+{
+	//当たり判定解放
+	m_Collision.Release();
 }

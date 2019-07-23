@@ -11,5 +11,6 @@ public:
 	void Init();	//‰Šú‰»
 	void Update();	//XV
 	void Draw();	//•`‰æ
+	void Release() {};	//ŠJ•ú
 private:
 };

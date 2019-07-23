@@ -85,6 +85,9 @@ public:
 	//モデル描画
 	void Draw(D3DMATRIX matWorld, CModelData* pMesh, CColorData* pColor);
 
+	//開放
+	void Release();
+
 private:
 	list<CModelData> m_List;//モデルリスト
 };

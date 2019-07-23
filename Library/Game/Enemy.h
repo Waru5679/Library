@@ -21,6 +21,7 @@ public:
 	void Init();	//‰Šú‰»
 	void Update();	//XV
 	void Draw();	//•`‰æ
+	void Release() {};	//ŠJ•ú
 
 	D3DXVECTOR3 GetPos() { return m_vPos; }
 	D3DXVECTOR3 GetAngle() { return m_vAngle; }

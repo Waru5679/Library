@@ -71,3 +71,4 @@ void C2DPolygon::Draw()
 	//•`‰æ
 	DRAW->DrawTexture(TexName::TexTest, &m_Src, &m_Dst, &m_Color, m_fRad);
 }
+	

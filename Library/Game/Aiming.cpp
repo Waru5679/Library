@@ -76,5 +76,4 @@ void CAiming::Draw()
 //ŠJ•ú
 void CAiming::Release()
 {
-	PointerRelease(m_pPlayer);
 }

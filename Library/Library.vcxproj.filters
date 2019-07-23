@@ -61,9 +61,6 @@
     <Filter Include="ソース ファイル\Player">
       <UniqueIdentifier>{49799f6e-c1b9-4513-9d25-d7aad45464a4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\Sphere">
-      <UniqueIdentifier>{8f830aeb-b78e-45ff-a692-8a83fa2721e3}</UniqueIdentifier>
-    </Filter>
     <Filter Include="リソース ファイル\Struct">
       <UniqueIdentifier>{8e1d718e-4a9c-45cf-9c2f-8d97a756b1c0}</UniqueIdentifier>
     </Filter>
@@ -158,9 +155,6 @@
     </ClInclude>
     <ClInclude Include="Game\Player.h">
       <Filter>ソース ファイル\Player</Filter>
-    </ClInclude>
-    <ClInclude Include="Game\Sphere.h">
-      <Filter>ソース ファイル\Sphere</Filter>
     </ClInclude>
     <ClInclude Include="Library\Struct.h">
       <Filter>リソース ファイル\Struct</Filter>
@@ -268,9 +262,6 @@
     </ClCompile>
     <ClCompile Include="Game\Player.cpp">
       <Filter>ソース ファイル\Player</Filter>
-    </ClCompile>
-    <ClCompile Include="Game\Sphere.cpp">
-      <Filter>ソース ファイル\Sphere</Filter>
     </ClCompile>
     <ClCompile Include="Library\Hit.cpp">
       <Filter>リソース ファイル\Hit</Filter>

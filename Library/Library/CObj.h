@@ -10,6 +10,7 @@ public:
 	virtual void Init() = 0;	//‰Šú‰»
 	virtual void Update() = 0;	//XV
 	virtual void Draw() = 0;	//•`‰æ
+	virtual void Release() = 0;	//ŠJ•ú
 
 	void SetId(int Id)				{ m_Id = Id; }
 	void SetDelete(bool isDelete)	{ m_bDelete = isDelete; }

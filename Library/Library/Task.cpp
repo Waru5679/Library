@@ -26,6 +26,9 @@ void CTask::Update()
 		//íœ
 		if (m_Obj[i]->GetDelete() == true)
 		{
+			//ŠJ•úˆ—
+			m_Obj[i]->Release();
+
 			m_Obj.erase(m_Obj.begin()+i);
 			i--;
 		}
@@ -76,5 +79,9 @@ void CTask::Sort()
 //ƒƒ‚ƒŠ‚ÌŠJ•ú
 void CTask::Release()
 {
+	for (unsigned int i = 0; i < m_Obj.size(); i++)
+	{
+		m_Obj[i]->Release();
+	}
 	VectorRelease(m_Obj);
 }

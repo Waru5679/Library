@@ -47,6 +47,20 @@ void CModelManager::Draw(D3DMATRIX matWorld, CModelData* pMesh, CColorData* pCol
 	}
 }
 
+//開放
+void CModelManager::Release()
+{
+	//モデルデータ破棄
+	for (auto itr = m_List.begin(); itr != m_List.end(); itr++)
+	{
+		(*itr).Release();
+	}
+	m_List.clear();
+
+	//インスタンス破棄
+	PointerRelease(m_pInstance);
+}
+
 //面データ解放
 void CFaceData::Release()
 {

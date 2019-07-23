@@ -139,7 +139,6 @@
     <ClInclude Include="Game\MainCamera.h" />
     <ClInclude Include="Game\Player.h" />
     <ClInclude Include="Game\SceneMain.h" />
-    <ClInclude Include="Game\Sphere.h" />
     <ClInclude Include="Library\Audio.h" />
     <ClInclude Include="Library\Camera.h" />
     <ClInclude Include="Library\CObj.h" />
@@ -180,7 +179,6 @@
     <ClCompile Include="Game\MainCamera.cpp" />
     <ClCompile Include="Game\Player.cpp" />
     <ClCompile Include="Game\SceneMain.cpp" />
-    <ClCompile Include="Game\Sphere.cpp" />
     <ClCompile Include="Library\Audio.cpp" />
     <ClCompile Include="Library\Csv.cpp" />
     <ClCompile Include="Library\DirectX.cpp" />
