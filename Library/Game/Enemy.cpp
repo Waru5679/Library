@@ -22,7 +22,7 @@ void CEnemy::Init()
 	D3DXMatrixIdentity(&m_matTrans);
 
 	//モデル
-	m_pMesh= MODEL->GetModelData(ModelSphere);
+	m_pMesh= MODEL->GetModelData(ModelTarget);
 
 	//攻撃用カウント
 	m_AttackCount = 0;

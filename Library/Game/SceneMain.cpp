@@ -85,4 +85,7 @@ void CSceneMain::LoadMesh()
 	
 	//Æ€
 	MODEL->LoadModel(ModelName::ModelAiming, "Model/Aiming/Aiming.obj");
+
+	//“I
+	MODEL->LoadModel(ModelName::ModelTarget, "Model/Target/Target.obj");
 }

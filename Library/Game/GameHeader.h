@@ -45,6 +45,7 @@ enum ModelName
 	ModelPlayer,	//プレイヤー
 	ModelSphere,	//球
 	ModelAiming,	//照準
+	ModelTarget,	//的
 };
 
 //テクスチャ
