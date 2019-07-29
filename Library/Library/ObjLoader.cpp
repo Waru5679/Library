@@ -20,8 +20,8 @@ HRESULT CObjLoader::LoadObj(const char* FileName, CModelData* pMesh)
 	constexpr int ARRAY_SIZE{ 100 };
 	char key[ARRAY_SIZE];
 
-	float uv_x[4] = { 0.0f,1.0f,1.0f,0.0f };	
-	float uv_y[4] = { 0.0f,0.0f,1.0f,1.0f };
+	float uv_x[4] = { 1.0f,1.0f,0.0f,0.0f };	
+	float uv_y[4] = { 0.0f,1.0f,1.0f,0.0f };
 
 	//’¸“_î•ñ
 	vector<D3DXVECTOR3> Pos;
@@ -207,6 +207,7 @@ HRESULT CObjLoader::LoadObj(const char* FileName, CModelData* pMesh)
 				//lŠpƒ|ƒŠƒSƒ“
 				if (FaceOfVer[i] == 4)
 				{
+				
 					//Nš‚ğ•`‚­‚æ‚¤‚É‡”Ô‚ğ“ü‚ê‘Ö‚¦‚é
 					CVertex tmp = pVertex[2];
 					pVertex[0] = pVertex[0];
