@@ -1,6 +1,8 @@
 #include "../Library/LibraryHeader.h"
 #include "GameHeader.h"
 
+#include "Test.h"
+
 //初期化
 void CSceneMain::Init()
 {
@@ -33,9 +35,20 @@ void CSceneMain::Init()
 	CEnemy* pEnemy=new CEnemy(vPos, vAngle, vScale);
 	g_Task.InsertObj(pEnemy, ObjName::ObjEnemy);
 
+	//テスト
+
+	vPos = D3DXVECTOR3(10.0f, 0.0f, 0.0f);
+	vScale = D3DXVECTOR3(10.0f, 10.0f, 10.0f);
+
+	CTest* pTest = new CTest(vPos, vAngle, vScale);
+	g_Task.InsertObj(pTest, ObjName::ObjTest);
+
+
 	//シェーダーにカメラセット
 	SHADER->SetCamera(dynamic_cast<CCameraBase*>(pCamera));
 	DRAW->SetCamera(dynamic_cast<CCameraBase*>(pCamera));
+
+	AUDIO->StartMusic(0);
 }
 
 //更新
@@ -65,7 +78,7 @@ void CSceneMain::Release()
 //音楽
 void CSceneMain::LoadAudio()
 {
-
+	AUDIO->Load(0, "Audio/King.wav", true);
 }
 
 //テクスチャ
@@ -88,4 +101,5 @@ void CSceneMain::LoadMesh()
 
 	//的
 	MODEL->LoadModel(ModelName::ModelTarget, "Model/Target/Target.obj");
+
 }

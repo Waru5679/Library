@@ -13,7 +13,7 @@ using namespace std;
 struct ChunkInfo
 {
 	ChunkInfo() { Size = 0, pData = nullptr; }
-	~ChunkInfo() { PointerRelease(pData); }
+	~ChunkInfo() { pData = nullptr; }
 	unsigned int Size;		//チャンク部のサイズ
 	unsigned char* pData;	//チャンクデータの先頭ポインタ
 };
@@ -34,8 +34,6 @@ struct SoundData
 	//デストラクタ
 	~SoundData()
 	{
-		PointerRelease(m_pResourceData);
-		m_pSourceVoice->DestroyVoice();
 	}
 
 	ChunkInfo m_Chunk;					//チャンク情報

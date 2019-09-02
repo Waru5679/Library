@@ -1,6 +1,8 @@
 #include "ModelManager.h"
 #include "LibraryHeader.h"
 
+#include "XLoader.h"
+
 //インスタンス
 CModelManager* CModelManager::m_pInstance = nullptr;
 
@@ -43,6 +45,44 @@ void CModelManager::Draw(D3DMATRIX matWorld, CModelData* pMesh, CColorData* pCol
 		{
 			//ポリゴン描画
 			DRAW->DrawPolygon(pMesh->m_Material[i].m_Face[j].m_Vertex.size(), pMesh->m_Material[i].m_pVertex[j], pMesh->m_Material[i].m_pIndex[j]);
+		}
+	}
+}
+
+//モデル描画
+void CModelManager::Draw(D3DMATRIX matWorld, MY_MESH* pMesh, CColorData* pColor)
+{
+	//バーテックスバッファーをセット（バーテックスバッファーは一つでいい）
+	UINT stride = sizeof(MY_VERTEX);
+	UINT offset = 0;
+	DX->GetDevice()->IASetVertexBuffers(0, 1, &pMesh->pVertexBuffer, &stride, &offset);
+
+	//マテリアルの数だけ、それぞれのマテリアルのインデックスバッファ－を描画
+	for (DWORD i = 0; i < pMesh->dwNumMaterial; i++)
+	{
+		//使用されていないマテリアル対策
+		if (pMesh->pMaterial[i].dwNumFace == 0)
+		{
+			continue;
+		}
+		//インデックスバッファーをセット
+		stride = sizeof(int);
+		offset = 0;
+		DX->GetDevice()->IASetIndexBuffer(pMesh->ppIndexBuffer[i], DXGI_FORMAT_R32_UINT, 0);
+
+		//プリミティブ・トポロジーをセット
+		DX->GetDevice()->IASetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+		//シェーダセット
+		SHADER->SetShader(pMesh->pMaterial[i].pTexture, NULL, pColor, matWorld);
+
+		D3D10_TECHNIQUE_DESC dc;
+		SHADER->GetTechnique()->GetDesc(&dc);
+
+		for (UINT p = 0; p < dc.Passes; ++p)
+		{
+			SHADER->GetTechnique()->GetPassByIndex(p)->Apply(0);
+			DX->GetDevice()->DrawIndexed(pMesh->pMaterial[i].dwNumFace * 3, 0, 0);
 		}
 	}
 }

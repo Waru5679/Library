@@ -64,7 +64,7 @@ void CAudio::StartMusic(int Id)
 		SoundBuffer.LoopCount = 0;
 	
 		//サウンドバッファセット
-		HRESULT hr= m_SoundData[Id].m_pSourceVoice->SubmitSourceBuffer(&SoundBuffer);
+		m_SoundData[Id].m_pSourceVoice->SubmitSourceBuffer(&SoundBuffer);
 
 		//サウンドスタート
 		m_SoundData[Id].m_pSourceVoice->Start();

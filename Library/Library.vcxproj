@@ -139,6 +139,7 @@
     <ClInclude Include="Game\MainCamera.h" />
     <ClInclude Include="Game\Player.h" />
     <ClInclude Include="Game\SceneMain.h" />
+    <ClInclude Include="Game\Test.h" />
     <ClInclude Include="Library\Audio.h" />
     <ClInclude Include="Library\Camera.h" />
     <ClInclude Include="Library\CObj.h" />
@@ -169,6 +170,7 @@
     <ClInclude Include="Library\Task.h" />
     <ClInclude Include="Library\TextureManager.h" />
     <ClInclude Include="Library\Trace.h" />
+    <ClInclude Include="Library\XLoader.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Game\2DPolygon.cpp" />
@@ -179,6 +181,7 @@
     <ClCompile Include="Game\MainCamera.cpp" />
     <ClCompile Include="Game\Player.cpp" />
     <ClCompile Include="Game\SceneMain.cpp" />
+    <ClCompile Include="Game\Test.cpp" />
     <ClCompile Include="Library\Audio.cpp" />
     <ClCompile Include="Library\Csv.cpp" />
     <ClCompile Include="Library\DirectX.cpp" />
@@ -200,6 +203,7 @@
     <ClCompile Include="Library\Task.cpp" />
     <ClCompile Include="Library\TextureManager.cpp" />
     <ClCompile Include="Library\Trace.cpp" />
+    <ClCompile Include="Library\XLoader.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

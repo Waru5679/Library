@@ -37,6 +37,8 @@ enum ObjName
 	ObjEnemyBullet,	//敵の弾
 	ObjBullet,		//弾
 	ObjAiming,		//照準
+
+	ObjTest,		//テスト
 };
 
 //モデル
