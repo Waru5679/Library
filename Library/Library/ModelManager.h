@@ -8,9 +8,6 @@
 
 using namespace std;
 
-//テスト
-#include "XLoader.h"
-
 //頂点構造体
 class CVertex
 {
@@ -79,6 +76,7 @@ private:
 	CModelManager() {};	//コンストラクタ
 	~CModelManager() {};//デストラクタ
 public:
+
 	//モデル読み込み
 	void LoadModel(int Id, const char* Name);
 
@@ -87,10 +85,6 @@ public:
 
 	//モデル描画
 	void Draw(D3DMATRIX matWorld, CModelData* pMesh, CColorData* pColor);
-
-	//X描画
-	void Draw(D3DMATRIX matWorld, MY_MESH* pMesh, CColorData* pColor);
-
 
 	//開放
 	void Release();

@@ -2,7 +2,7 @@
 #include "LibraryHeader.h"
 
 //Xファイルを読み込む関数
-HRESULT CXLoader::LoadMeshFromX(const char* FileName, MY_MESH* pMesh)
+HRESULT CXLoader::LoadMesh(const char* FileName, MY_MESH* pMesh)
 {
 	//デバイス取得
 	ID3D10Device* pDevice = DX->GetDevice();
@@ -279,4 +279,42 @@ HRESULT CXLoader::LoadMeshFromX(const char* FileName, MY_MESH* pMesh)
 	delete[] pvVertexBuffer;
 
 	return S_OK;
+}
+
+//モデル描画
+void CXLoader::Draw(D3DMATRIX matWorld, MY_MESH* pMesh, CColorData* pColor)
+{
+	//バーテックスバッファーをセット（バーテックスバッファーは一つでいい）
+	UINT stride = sizeof(MY_VERTEX);
+	UINT offset = 0;
+	DX->GetDevice()->IASetVertexBuffers(0, 1, &pMesh->pVertexBuffer, &stride, &offset);
+
+	//マテリアルの数だけ、それぞれのマテリアルのインデックスバッファ－を描画
+	for (DWORD i = 0; i < pMesh->dwNumMaterial; i++)
+	{
+		//使用されていないマテリアル対策
+		if (pMesh->pMaterial[i].dwNumFace == 0)
+		{
+			continue;
+		}
+		//インデックスバッファーをセット
+		stride = sizeof(int);
+		offset = 0;
+		DX->GetDevice()->IASetIndexBuffer(pMesh->ppIndexBuffer[i], DXGI_FORMAT_R32_UINT, 0);
+
+		//プリミティブ・トポロジーをセット
+		DX->GetDevice()->IASetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+		//シェーダセット
+		SHADER->SetShader(pMesh->pMaterial[i].pTexture, NULL, pColor, matWorld);
+
+		D3D10_TECHNIQUE_DESC dc;
+		SHADER->GetTechnique()->GetDesc(&dc);
+
+		for (UINT p = 0; p < dc.Passes; ++p)
+		{
+			SHADER->GetTechnique()->GetPassByIndex(p)->Apply(0);
+			DX->GetDevice()->DrawIndexed(pMesh->pMaterial[i].dwNumFace * 3, 0, 0);
+		}
+	}
 }

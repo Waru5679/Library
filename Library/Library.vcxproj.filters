@@ -97,6 +97,9 @@
     <Filter Include="リソース ファイル\Manager\TextureManager">
       <UniqueIdentifier>{07eb26ea-e5dd-4fff-87a8-7f6fa9d08c7d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="リソース ファイル\XLoader">
+      <UniqueIdentifier>{72ec159b-0852-41f6-866e-469bcf7e7c54}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Library\Camera.h">
@@ -207,11 +210,14 @@
     <ClInclude Include="Library\ModelManager.h">
       <Filter>リソース ファイル\Manager\ModelManager</Filter>
     </ClInclude>
-    <ClInclude Include="Library\XLoader.h">
-      <Filter>リソース ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Game\Test.h">
       <Filter>ソース ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Library\XLoader.h">
+      <Filter>リソース ファイル\XLoader</Filter>
+    </ClInclude>
+    <ClInclude Include="XLoader_Skin.h">
+      <Filter>リソース ファイル\XLoader</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -302,11 +308,14 @@
     <ClCompile Include="Library\ModelManager.cpp">
       <Filter>リソース ファイル\Manager\ModelManager</Filter>
     </ClCompile>
-    <ClCompile Include="Library\XLoader.cpp">
-      <Filter>リソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="Game\Test.cpp">
       <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Library\XLoader.cpp">
+      <Filter>リソース ファイル\XLoader</Filter>
+    </ClCompile>
+    <ClCompile Include="XLoader_Skin.cpp">
+      <Filter>リソース ファイル\XLoader</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

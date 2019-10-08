@@ -17,8 +17,12 @@ public:
 	//解放
 	void Release();
 
-	//OBJの読み込み
-	HRESULT LoadObj(const char* FileName, CModelData* pMesh);
+	//読み込み
+	HRESULT LoadMesh(const char* FileName, CModelData* pMesh);
+	
+	//モデル描画
+	void Draw(D3DMATRIX matWorld, CModelData* pMesh, CColorData* pColor);
+
 private:
 	//マテリアルの読み込み
 	HRESULT LoadMaterial(char* FileName, CModelData* pMesh);

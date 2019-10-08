@@ -7,10 +7,10 @@ CHit* CHit::m_pInstance = nullptr;
  void CHit::Init()
  {
 	 //HitBox
-	 LOADER->LoadObj("Model/Hit/HitBox.obj", &m_DrawObb);
+	 LOADER->LoadMesh("Model/Hit/HitBox.obj", &m_DrawObb);
 
 	 //ãÖ
-	 LOADER->LoadObj("Model/Hit/Sphere.obj", &m_DrawSphere);
+	 LOADER->LoadMesh("Model/Hit/Sphere.obj", &m_DrawSphere);
 
 	 //êF
 	 m_Color = CColorData(1.0f, 1.0f, 1.0f, 0.5f);

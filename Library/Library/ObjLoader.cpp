@@ -4,7 +4,7 @@
 CObjLoader* CObjLoader::m_pInstance = nullptr;
 
 //OBJファイルの読み込み
-HRESULT CObjLoader::LoadObj(const char* FileName, CModelData* pMesh)
+HRESULT CObjLoader::LoadMesh(const char* FileName, CModelData* pMesh)
 {
 	//ファイルオープン
 	FILE* fp=NULL;
@@ -382,6 +382,25 @@ HRESULT CObjLoader::LoadMaterial(char* FileName, CModelData* pMesh)
 	fclose(fp);
 
 	return S_OK;
+}
+
+//モデル描画
+void CObjLoader::Draw(D3DMATRIX matWorld, CModelData* pMesh, CColorData* pColor)
+{
+	//マテリアルの数毎に描画
+	for (unsigned int i = 0; i < pMesh->m_Material.size(); i++)
+	{
+		int size = pMesh->m_Material[i].m_pVertex.size();
+
+		//シェーダーのセット
+		SHADER->SetShader(pMesh->m_Material[i].m_pTexture, NULL, pColor, matWorld);
+
+		for (int j = 0; j < size; j++)
+		{
+			//ポリゴン描画
+			DRAW->DrawPolygon(pMesh->m_Material[i].m_Face[j].m_Vertex.size(), pMesh->m_Material[i].m_pVertex[j], pMesh->m_Material[i].m_pIndex[j]);
+		}
+	}
 }
 
 //最大と最小のチェック
