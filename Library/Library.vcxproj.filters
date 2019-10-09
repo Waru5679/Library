@@ -216,7 +216,7 @@
     <ClInclude Include="Library\XLoader.h">
       <Filter>リソース ファイル\XLoader</Filter>
     </ClInclude>
-    <ClInclude Include="XLoader_Skin.h">
+    <ClInclude Include="Library\XLoader_Skin.h">
       <Filter>リソース ファイル\XLoader</Filter>
     </ClInclude>
   </ItemGroup>
@@ -314,7 +314,7 @@
     <ClCompile Include="Library\XLoader.cpp">
       <Filter>リソース ファイル\XLoader</Filter>
     </ClCompile>
-    <ClCompile Include="XLoader_Skin.cpp">
+    <ClCompile Include="Library\XLoader_Skin.cpp">
       <Filter>リソース ファイル\XLoader</Filter>
     </ClCompile>
   </ItemGroup>

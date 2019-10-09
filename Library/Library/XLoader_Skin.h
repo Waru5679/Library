@@ -1,10 +1,8 @@
 #pragma once
 
-#include <D3D10.h>
-#include <d3dx10.h>
-
-#pragma comment(lib,"d3d10.lib")
-#pragma comment(lib,"d3dx10.lib")
+#include "Main.h"
+#include "Singleton.h"
+#include "Struct.h"
 
 //頂点構造体
 struct VERTEX
@@ -17,7 +15,8 @@ struct VERTEX
 //ポリゴン
 struct FACE
 {
-	int m_Index[3];	//構成する頂点のインデックス
+	int m_FaceOfVer;	//構成する頂点の数
+	int* m_pIndex;	//構成する頂点のインデックス
 };
 
 //マテリアル構造体
@@ -54,6 +53,25 @@ struct SKIN_WEIGHT
 	D3DXMATRIX	m_matOffset;	//オフセット行列
 };
 
+//アニメーションのキー
+struct Key
+{
+	int		m_Time;		//コマ
+	int		m_ValueNum;	//値の数
+	float* m_pValue;	//値のリスト
+};
+
+//アニメーション構造体
+struct ANIMATION
+{
+	char	m_Name[100];			//アニメーション名
+	char	m_AffectBoneName[100];	//影響を受けるボーン名
+	int		m_KeyType;				//キータイプ
+	int		m_KeyNum;				//キーの数
+	Key* m_pKey;					//キーリスト
+};
+
+
 //スキンメッシュ
 struct SKIN_MESH
 {
@@ -68,22 +86,27 @@ struct SKIN_MESH
 	ID3D10Buffer*	m_pVertexBuffer;//頂点バッファ
 	ID3D10Buffer**	m_ppIndexBuffer;//インデックスバッファ
 	D3DXMATRIX		m_mFinalWorld;	//最終的なワールド行列（この姿勢でレンダリングする）
+	int				m_WeightNum;	//ウェイト数
+	SKIN_WEIGHT*	m_pSkinWeight;	//スキンウェイト
+	int				m_AnimeNum;		//アニメーション数
+	ANIMATION*		m_pAnimation;	//アニメーション
 };
 
-//アニメーションのキー
-struct Key
+//Xファイル関連のクラス
+class CX_Skin : public CSingleton<CX_Skin>
 {
-	int		m_Time;		//コマ
-	int		m_ValueNum;	//値の数
-	float*	m_pValue;	//値のリスト
-};
+private:
+	//シングルトン
+	friend CSingleton<CX_Skin>;
+	CX_Skin() {};	//コンストラクタ
+	~CX_Skin() {};	//デストラクタ
+public:
+	void Release();//開放
+	bool LoadSkinMesh(const char* FileName, SKIN_MESH* pSkinMesh);	//スキンメッシュの読み込み
 
-//アニメーション構造体
-struct ANIMATION
-{
-	char	m_Name[100];			//アニメーション名
-	char	m_AffectBoneName[100];	//影響を受けるボーン名
-	int		m_KeyType;				//キータイプ
-	int		m_KeyNum;				//キーの数
-	Key*	m_pKey;					//キーリスト
+	//メッシュ描画(テスト用)
+	void DrawMesh(D3DMATRIX matWorld, SKIN_MESH* pMesh, CColorData* pColor);
+	
+private:
+	SKIN_MESH	m_SkinMesh;		//スキンメッシュ
 };

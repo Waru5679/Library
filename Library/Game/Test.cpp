@@ -1,7 +1,8 @@
 #include "Test.h"
-#include "..//Library/XLoader.h"
+#include "../Library/XLoader.h"
+#include "../Library/XLoader_Skin.h"
 
-CXLoader* g_pInstance = new CXLoader();
+#define SKIN CX_Skin::GetInstance()
 
 CTest::CTest(D3DXVECTOR3 vPos, D3DXVECTOR3 vAngle, D3DXVECTOR3 vScale)
 {
@@ -14,7 +15,7 @@ void CTest::Init()
 {
 
 	//X“Ç‚Ýž‚Ý—p
-	g_pInstance->LoadMesh("Model/hand_tex_static.x",&m_Mesh);
+	SKIN->LoadSkinMesh("Model/Hand/hand_tex_static.x",&m_SkinMesh);
 	
 	m_matWorld=MakeMatWorld(m_vPos, m_vAngle, m_vScale);
 }
@@ -26,12 +27,10 @@ void CTest::Update()
 
 void CTest::Draw()
 {
-	g_pInstance->Draw(m_matWorld, &m_Mesh, nullptr);
+	SKIN->DrawMesh(m_matWorld, &m_SkinMesh, nullptr);
 	
 }
 
 void CTest::Release()
 {
-	delete g_pInstance;
-	g_pInstance = nullptr;
 }

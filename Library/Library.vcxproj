@@ -171,9 +171,9 @@
     <ClInclude Include="Library\TextureManager.h" />
     <ClInclude Include="Library\Trace.h" />
     <ClInclude Include="Library\XLoader.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClInclude>
-    <ClInclude Include="XLoader_Skin.h" />
+    <ClInclude Include="Library\XLoader_Skin.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Game\2DPolygon.cpp" />
@@ -207,9 +207,9 @@
     <ClCompile Include="Library\TextureManager.cpp" />
     <ClCompile Include="Library\Trace.cpp" />
     <ClCompile Include="Library\XLoader.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="XLoader_Skin.cpp" />
+    <ClCompile Include="Library\XLoader_Skin.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

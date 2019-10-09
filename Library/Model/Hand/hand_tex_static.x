@@ -6124,7 +6124,7 @@ Frame Frame_SCENE_ROOT {
      0.270000;0.270000;0.270000;;
      0.370000;0.370000;0.370000;;
      TextureFilename {
-      "Hand_ColorMap.bmp";
+      "Model/Hand/Hand_ColorMap.bmp";
      }
     }
    }

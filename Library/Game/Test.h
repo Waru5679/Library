@@ -5,6 +5,7 @@
 #include "../Library/LibraryHeader.h"
 
 #include "../Library/XLoader.h"
+#include "../Library/XLoader_Skin.h"
 
 //テストクラス
 class CTest :public CObj3DBase
@@ -18,5 +19,6 @@ public:
 
 private:
 
+	SKIN_MESH m_SkinMesh;
 	MY_MESH m_Mesh;
 };
