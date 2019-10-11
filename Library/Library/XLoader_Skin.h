@@ -16,20 +16,20 @@ struct VERTEX
 struct FACE
 {
 	int m_FaceOfVer;	//構成する頂点の数
-	int* m_pIndex;	//構成する頂点のインデックス
+	int* m_pIndex;		//構成する頂点のインデックス
 };
 
 //マテリアル構造体
 struct MATERIAL
 {
-	char						m_Name[100];	//マテリアル名
-	D3DXVECTOR3					m_vKa;			//アンビエント
-	D3DXVECTOR3					m_vKd;			//ディフューズ
+	D3DXVECTOR4					m_vFaceColor;	//面の色
 	D3DXVECTOR3					m_vKs;			//スペキュラー
-	int							m_FaceNum;		//そのマテリアルであるポリゴン数
-	int*						m_pIndex;		//面のインデックスリスト
+	float						m_fPower;		//スペキュラーのパワー
+	D3DXVECTOR3					m_vKe;			//エミッシブ
 	char						m_TexName[100];	//ファイル名
-	ID3D10ShaderResourceView*	pTexture;		//テクスチャポインタ	
+	ID3D10ShaderResourceView*	m_pTexture;		//テクスチャポインタ	
+	int							m_FaceNum;		//このマテリアルを使用する面の数
+	ID3D10Buffer**				m_ppIndexBuffer;//インデックスバッファ
 };
 
 //ボーン構造体
@@ -68,7 +68,7 @@ struct ANIMATION
 	char	m_AffectBoneName[100];	//影響を受けるボーン名
 	int		m_KeyType;				//キータイプ
 	int		m_KeyNum;				//キーの数
-	Key* m_pKey;					//キーリスト
+	Key*	m_pKey;					//キーリスト
 };
 
 

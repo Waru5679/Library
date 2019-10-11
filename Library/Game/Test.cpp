@@ -15,7 +15,7 @@ void CTest::Init()
 {
 
 	//X“Ç‚Ýž‚Ý—p
-	SKIN->LoadSkinMesh("Model/Hand/hand_tex_static.x",&m_SkinMesh);
+	SKIN->LoadSkinMesh("Model/Hand/hand_tex.x",&m_SkinMesh);
 	
 	m_matWorld=MakeMatWorld(m_vPos, m_vAngle, m_vScale);
 }
