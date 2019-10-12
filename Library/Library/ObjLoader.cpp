@@ -267,7 +267,7 @@ HRESULT CObjLoader::LoadMesh(const char* FileName, CModelData* pMesh)
 	}
 
 	//ファイルポインタを先頭に戻す
-	fseek(fp, SEEK_SET, 0);
+	fseek(fp,0,SEEK_SET);
 
 	//マテリアルファイルを読み込む
 	while (!feof(fp))

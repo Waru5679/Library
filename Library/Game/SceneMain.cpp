@@ -37,7 +37,7 @@ void CSceneMain::Init()
 
 	//ƒeƒXƒg
 
-	vPos = D3DXVECTOR3(10.0f, 0.0f, 0.0f);
+	vPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	vScale = D3DXVECTOR3(10.0f, 10.0f, 10.0f);
 
 	CTest* pTest = new CTest(vPos, vAngle, vScale);

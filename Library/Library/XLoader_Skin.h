@@ -4,6 +4,9 @@
 #include "Singleton.h"
 #include "Struct.h"
 
+#include <vector>
+using namespace std;
+
 //頂点構造体
 struct VERTEX
 {
@@ -29,7 +32,7 @@ struct MATERIAL
 	char						m_TexName[100];	//ファイル名
 	ID3D10ShaderResourceView*	m_pTexture;		//テクスチャポインタ	
 	int							m_FaceNum;		//このマテリアルを使用する面の数
-	ID3D10Buffer**				m_ppIndexBuffer;//インデックスバッファ
+	ID3D10Buffer*				m_pIndexBuffer;//インデックスバッファ
 };
 
 //ボーン構造体
@@ -84,7 +87,6 @@ struct SKIN_MESH
 	int				m_MaterialNum;	//マテリアルの数
 	MATERIAL*		m_pMaterial;	//マテリアルリスト
 	ID3D10Buffer*	m_pVertexBuffer;//頂点バッファ
-	ID3D10Buffer**	m_ppIndexBuffer;//インデックスバッファ
 	D3DXMATRIX		m_mFinalWorld;	//最終的なワールド行列（この姿勢でレンダリングする）
 	int				m_WeightNum;	//ウェイト数
 	SKIN_WEIGHT*	m_pSkinWeight;	//スキンウェイト

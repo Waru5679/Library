@@ -2,6 +2,8 @@
 #include "Release.h"
 #include "LibraryHeader.h"
 
+
+
 //インスタンス
 CX_Skin* CX_Skin::m_pInstance = nullptr;
 
@@ -23,17 +25,19 @@ bool CX_Skin::LoadSkinMesh(const char* FileName, SKIN_MESH* pSkinMesh)
 	int uvNum	=0;//UV数
 	int mateNum	=0;//マテリアルの数
 
-	FACE*		 pFace		= nullptr;//面のリスト
+	//読み込み用（読み込み後破棄）
 	int*		 pFaceOfMate= nullptr;//面の対応マテリアルのインデックス
 	D3DXVECTOR3* pvPos		= nullptr;//頂点座標
 	D3DXVECTOR3* pvNormal	= nullptr;//法線
 	D3DXVECTOR2* pvTex		= nullptr;//テクスチャ座標
-	MATERIAL*	 pMateial	= nullptr;//マテリアル
 	VERTEX*		 pVertex	= nullptr;//頂点リスト
+
+	//読み込み後そのまま使うもの
+	FACE*		pFace	 = pSkinMesh->m_pFace;		//面のリスト
+	MATERIAL*	pMateial = pSkinMesh->m_pMaterial;	//マテリアルのリスト
 
 	//読み込み用
 	float x, y, z, w;
-
 	int v1, v2, v3, v4;
 	v1 = v2 = v3 = v4 = 0;
 
@@ -82,27 +86,28 @@ bool CX_Skin::LoadSkinMesh(const char* FileName, SKIN_MESH* pSkinMesh)
 			{
 				//面を構成する頂点の数
 				fscanf_s(fp, "%d;", &faceOfVer);
-				pFace->m_FaceOfVer = faceOfVer;
+				pFace[i].m_FaceOfVer = faceOfVer;
 
 				//面構成のインデックスリストのメモリ確保
-				pFace->m_pIndex = new int[faceOfVer];
+				pFace[i].m_pIndex = new int[faceOfVer];
 
 				//三角ポリゴン
 				if (faceOfVer == 3)
 				{
 					fscanf_s(fp, "%d,%d,%d;,", &v1, &v2, &v3);
-					pFace->m_pIndex[0] = v1;
-					pFace->m_pIndex[1] = v2;
-					pFace->m_pIndex[2] = v3;
+					pFace[i].m_pIndex[0] = v1;
+					pFace[i].m_pIndex[1] = v2;
+					pFace[i].m_pIndex[2] = v3;
 				}
 				//四角ポリゴン
 				if (faceOfVer == 4)
 				{
 					fscanf_s(fp, "%d,%d,%d,%d;,", &v1, &v2, &v3, &v4);
-					pFace->m_pIndex[0] = v1;
-					pFace->m_pIndex[1] = v2;
-					pFace->m_pIndex[2] = v3;
-					pFace->m_pIndex[3] = v4;
+					pFace[i].m_pIndex[0] = v1;
+					pFace[i].m_pIndex[1] = v2;
+					pFace[i].m_pIndex[2] = v3;
+					pFace[i].m_pIndex[3] = v4;
+
 				}
 			}
 		}
@@ -178,7 +183,17 @@ bool CX_Skin::LoadSkinMesh(const char* FileName, SKIN_MESH* pSkinMesh)
 				fgets(str, sizeof(str), fp);
 			}
 		}
-		//マテリアル読み込み(マテリアルリストを読むまでは通らない)
+	}
+
+	//ファイルの先頭に戻る
+	fseek(fp, 0, SEEK_SET);
+
+	while (!feof(fp))
+	{
+		//キーワード 読み込み
+		fscanf_s(fp, "%s ", str, sizeof(str));
+
+		//マテリアル読み込み
 		for (int i = 0; i < mateNum; i++)
 		{
 			if (strcmp(str, "Material") == 0)
@@ -212,13 +227,13 @@ bool CX_Skin::LoadSkinMesh(const char* FileName, SKIN_MESH* pSkinMesh)
 				if (strcmp(str, "TextureFilename") == 0)
 				{
 					fgets(str, sizeof(str), fp);//{除去
-					
+
 					//読み込み最大サイズ
 					int size = sizeof(pMateial[i].m_TexName);
-					
+
 					//テクスチャ名
-					fscanf_s(fp, "%s", pMateial[i].m_TexName,size);
-		
+					fscanf_s(fp, "%s", pMateial[i].m_TexName, size);
+
 					//"と;を除去する
 					int count = 0;//除去カウント
 					for (int j = 0; j < size; j++)
@@ -239,37 +254,85 @@ bool CX_Skin::LoadSkinMesh(const char* FileName, SKIN_MESH* pSkinMesh)
 					if (FAILED(D3DX10CreateShaderResourceViewFromFileA(DX->GetDevice(), pMateial[i].m_TexName, NULL, NULL, &pMateial[i].m_pTexture, NULL)))
 					{
 						//テクスチャ作成失敗
-						return E_FAIL;
+						return false;
 					}
 				}
 			}
 		}
-
-		////頂点構造体メモリ確保
-		//pVertex = new VERTEX[verNum];
-
-		////頂点構造体にまとめる
-		//for (int i = 0; i < verNum; i++)
-		//{
-		//	pVertex[i].m_vPos	= pvPos[i];
-		//	pVertex[i].m_vNorm	= pvNormal[i];
-		//	pVertex[i].m_vTex	= pvTex[i];
-		//}
-
-		////バーテックスバッファーを作成
-		//pSkinMesh->m_pVertexBuffer = DRAW->BufferCreate(pVertex, sizeof(VERTEX) * verNum, D3D10_BIND_VERTEX_BUFFER);
-
-		//
-		////マテリアルの数だけインデックスバッファ作成
-		//for (int i = 0; i < mateNum; i++)
-		//{
-		//	pFace[i].
-		//}
 	}
+
+	//頂点構造体メモリ確保
+	pVertex = new VERTEX[verNum];
+
+	//頂点構造体にまとめる
+	for (int i = 0; i < verNum; i++)
+	{
+		pVertex[i].m_vPos = pvPos[i];
+		pVertex[i].m_vNorm = pvNormal[i];
+		pVertex[i].m_vTex = pvTex[i];
+	}
+
+	//バーテックスバッファーを作成
+	pSkinMesh->m_pVertexBuffer = DRAW->BufferCreate(pVertex, sizeof(VERTEX) * verNum, D3D10_BIND_VERTEX_BUFFER);
+
+	//マテリアル毎にインデックスバッファを作成
+	for (int i = 0; i < mateNum;i++)
+	{
+		int* pIndex = nullptr;		//インデックスリスト
+
+		int MateOfFace = 0;			//このマテリアルを使用する面の数
+
+		//そのマテリアルを使用する面の数を数える
+		for (int j = 0; j < faceNum; j++)
+		{
+			if (pFaceOfMate[j] == i)
+			{
+				MateOfFace++;
+			}
+		}
+
+		//インデックスリストメモリ確保
+		pIndex = new int[MateOfFace * 3];
+				
+		//インデックスるリストを作成
+		int count = 0; 
+		for (int j = 0; j < faceNum; j++)
+		{
+			if (pFaceOfMate[j] == i)
+			{
+				pIndex[count + 0] = pFace[j].m_pIndex[0];
+				pIndex[count + 1] = pFace[j].m_pIndex[1];
+				pIndex[count + 2] = pFace[j].m_pIndex[2];
+				count += 3;
+			}
+		}	
+
+		//インデックスバッファ作成
+		pMateial[i].m_pIndexBuffer = DRAW->BufferCreate(pIndex,sizeof(int)* MateOfFace*3 , D3D10_BIND_INDEX_BUFFER);
+		
+		//このマテリアルを使用する面の数保存
+		pMateial[i].m_FaceNum = MateOfFace;
+
+		//インデックスリスト破棄
+		delete[] pIndex;
+		pIndex = nullptr;
+	}	
+
+	//一時保存からメッシュポインタへデータを移す
+	pSkinMesh->m_MaterialNum = mateNum;
+	pSkinMesh->m_pMaterial = pMateial;
+	pSkinMesh->m_FaceNum = faceNum;
+	pSkinMesh->m_pFace = pFace;
+
+	//一時保存は破棄
+	PointerRelease(pvPos);
+	PointerRelease(pvNormal);
+	PointerRelease(pvTex);
+	PointerRelease(pVertex);
+	PointerRelease(pFaceOfMate);
 
 	return true;
 }
-
 //メッシュ描画
 void CX_Skin::DrawMesh(D3DMATRIX matWorld, SKIN_MESH* pMesh, CColorData* pColor)
 {
@@ -279,7 +342,7 @@ void CX_Skin::DrawMesh(D3DMATRIX matWorld, SKIN_MESH* pMesh, CColorData* pColor)
 	DX->GetDevice()->IASetVertexBuffers(0, 1, &pMesh->m_pVertexBuffer, &stride, &offset);
 
 	//マテリアルの数だけ、それぞれのマテリアルのインデックスバッファ－を描画
-	for (int i = 0; i < pMesh->m_MaterialNum; i++)
+	for (DWORD i = 0; i < pMesh->m_MaterialNum; i++)
 	{
 		//使用されていないマテリアル対策
 		if (pMesh->m_pMaterial[i].m_FaceNum == 0)
@@ -289,7 +352,7 @@ void CX_Skin::DrawMesh(D3DMATRIX matWorld, SKIN_MESH* pMesh, CColorData* pColor)
 		//インデックスバッファーをセット
 		stride = sizeof(int);
 		offset = 0;
-		DX->GetDevice()->IASetIndexBuffer(pMesh->m_ppIndexBuffer[i], DXGI_FORMAT_R32_UINT, 0);
+		DX->GetDevice()->IASetIndexBuffer(pMesh->m_pMaterial[i].m_pIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
 
 		//プリミティブ・トポロジーをセット
 		DX->GetDevice()->IASetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
