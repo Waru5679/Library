@@ -4,9 +4,6 @@
 #include "Singleton.h"
 #include "Struct.h"
 
-#include <vector>
-using namespace std;
-
 //頂点構造体
 struct VERTEX
 {
@@ -32,7 +29,8 @@ struct MATERIAL
 	char						m_TexName[100];	//ファイル名
 	ID3D10ShaderResourceView*	m_pTexture;		//テクスチャポインタ	
 	int							m_FaceNum;		//このマテリアルを使用する面の数
-	ID3D10Buffer*				m_pIndexBuffer;//インデックスバッファ
+	int*						m_pVerNum;		//頂点数のリスト
+	ID3D10Buffer**				m_ppIndexBuffer;//インデックスバッファ
 };
 
 //ボーン構造体
