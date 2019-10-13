@@ -4,6 +4,8 @@
 #include "Singleton.h"
 #include "Struct.h"
 
+#include <stdio.h>
+
 //頂点構造体
 struct VERTEX
 {
@@ -72,24 +74,29 @@ struct ANIMATION
 	Key*	m_pKey;					//キーリスト
 };
 
+//メッシュ
+struct MESH
+{
+	int				m_VerNum;		//頂点数
+	int				m_UvNum;		//UVの数(頂点数と同じ)
+	int				m_FaceNum;		//面(ポリゴン)数
+	FACE*			m_pFace;		//面リスト
+	int				m_MaterialNum;	//マテリアルの数
+	MATERIAL*		m_pMaterial;	//マテリアルリスト
+	ID3D10Buffer*	m_pVertexBuffer;//頂点バッファ
+};
 
 //スキンメッシュ
 struct SKIN_MESH
 {
-	int				m_VerNum;		//頂点数
-	int				m_UVNum;		//UVの数(頂点数と同じ)
-	int				m_FaceNum;		//面(ポリゴン)数
-	FACE*			m_pFace;		//面リスト
-	int				m_BoneNum;		//ボーン数
-	BONE*			m_pBone;		//ボーンリスト
-	int				m_MaterialNum;	//マテリアルの数
-	MATERIAL*		m_pMaterial;	//マテリアルリスト
-	ID3D10Buffer*	m_pVertexBuffer;//頂点バッファ
-	D3DXMATRIX		m_mFinalWorld;	//最終的なワールド行列（この姿勢でレンダリングする）
-	int				m_WeightNum;	//ウェイト数
-	SKIN_WEIGHT*	m_pSkinWeight;	//スキンウェイト
-	int				m_AnimeNum;		//アニメーション数
-	ANIMATION*		m_pAnimation;	//アニメーション
+	MESH		m_Mesh;			//メッシュ
+	int			m_BoneNum;		//ボーン数
+	BONE*		m_pBone;		//ボーンリスト
+	D3DXMATRIX	m_mFinalWorld;	//最終的なワールド行列（この姿勢でレンダリングする）
+	int			m_WeightNum;	//ウェイト数
+	SKIN_WEIGHT*m_pSkinWeight;	//スキンウェイト
+	int			m_AnimeNum;		//アニメーション数
+	ANIMATION*	m_pAnimation;	//アニメーション
 };
 
 //Xファイル関連のクラス
@@ -103,9 +110,10 @@ private:
 public:
 	void Release();//開放
 	bool LoadSkinMesh(const char* FileName, SKIN_MESH* pSkinMesh);	//スキンメッシュの読み込み
-
+	bool LoadMesh(FILE* fp, MESH* pMesh);	//メッシュ情報の読み込み
+		
 	//メッシュ描画(テスト用)
-	void DrawMesh(D3DMATRIX matWorld, SKIN_MESH* pMesh, CColorData* pColor);
+	void DrawMesh(D3DMATRIX matWorld, SKIN_MESH* pSkinMesh, CColorData* pColor);
 	
 private:
 	SKIN_MESH	m_SkinMesh;		//スキンメッシュ
