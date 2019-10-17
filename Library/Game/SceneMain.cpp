@@ -38,7 +38,7 @@ void CSceneMain::Init()
 	//ƒeƒXƒg
 
 	vPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	vScale = D3DXVECTOR3(10.0f, 10.0f, 10.0f);
+	vScale = D3DXVECTOR3(5.0f, 5.0f, 5.0f);
 
 	CTest* pTest = new CTest(vPos, vAngle, vScale);
 	g_Task.InsertObj(pTest, ObjName::ObjTest);

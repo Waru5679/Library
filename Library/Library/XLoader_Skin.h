@@ -39,7 +39,7 @@ struct MATERIAL
 struct BONE
 {
 	char		m_Name[100];	//ボーン名
-	int			m_index;		//自信のインデックス
+	int			m_index;		//自身のインデックス
 	int			m_ChildNum;		//子の数
 	int*		m_pChildIndex;	//自分の子のインデックスリスト
 	D3DXMATRIX	m_matBindPose;	//初期ポーズ（ずっと変わらない）
@@ -91,7 +91,7 @@ struct SKIN_MESH
 {
 	MESH		m_Mesh;			//メッシュ
 	int			m_BoneNum;		//ボーン数
-	BONE*		m_pBone;		//ボーンリスト
+	BONE*		m_pBone;		//ボーンリスト	
 	D3DXMATRIX	m_mFinalWorld;	//最終的なワールド行列（この姿勢でレンダリングする）
 	int			m_WeightNum;	//ウェイト数
 	SKIN_WEIGHT*m_pSkinWeight;	//スキンウェイト
@@ -111,10 +111,13 @@ public:
 	void Release();//開放
 	bool LoadSkinMesh(const char* FileName, SKIN_MESH* pSkinMesh);	//スキンメッシュの読み込み
 	bool LoadMesh(FILE* fp, MESH* pMesh);	//メッシュ情報の読み込み
-		
+	
+	bool LoadBone(FILE* fp, SKIN_MESH* pSkinMesh);	//ボーン読み込み
+	BONE LoadBoneInfo(FILE* fp, int* pBoneIndex, SKIN_MESH* pSkinMesh);//ボーン情報の読み込み
 	//メッシュ描画(テスト用)
 	void DrawMesh(D3DMATRIX matWorld, SKIN_MESH* pSkinMesh, CColorData* pColor);
 	
 private:
+
 	SKIN_MESH	m_SkinMesh;		//スキンメッシュ
 };

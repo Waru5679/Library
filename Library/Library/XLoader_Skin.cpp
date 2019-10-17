@@ -24,6 +24,13 @@ bool CX_Skin::LoadSkinMesh(const char* FileName, SKIN_MESH* pSkinMesh)
 		return false;
 	}
 
+	//ボーン読み込み
+	if (LoadBone(fp, pSkinMesh) == false)
+	{
+		//ボーン読み込み失敗
+		return false;
+	}
+
 	return true;
 }
 
@@ -55,6 +62,9 @@ bool CX_Skin::LoadMesh(FILE* fp, MESH* pMesh)
 	//キーワード読み込み
 	char str[200];
 	
+	//ファイルの先頭にセット
+	fseek(fp, 0, SEEK_SET);
+
 	while (!feof(fp))
 	{
 		//キーワード 読み込み
@@ -335,6 +345,138 @@ bool CX_Skin::LoadMesh(FILE* fp, MESH* pMesh)
 
 	return true;
 }
+
+//ボーン読み込み
+bool CX_Skin::LoadBone(FILE* fp, SKIN_MESH* pSkinMesh)
+{
+	int boneNum=0;	//ボーンの数
+
+	//ファイルの先頭にセット
+	fseek(fp, 0, SEEK_SET);
+	
+	//キーワード読み込み用
+	char str[200];
+
+	//ボーンの数を数える
+	while (!feof(fp))
+	{
+		fscanf_s(fp, "%s ", str, sizeof(str));
+	
+		if (strcmp(str, "Frame") == 0)
+		{
+			boneNum++;
+		}
+	}
+	//ボーン数保存
+	pSkinMesh->m_BoneNum = boneNum;
+
+	if (boneNum == 0)
+	{
+		//ボーンなし
+		return false;
+	}
+	
+	//ファイルの先頭にセット
+	fseek(fp, 0, SEEK_SET);
+
+	BONE* pRoot=nullptr;//ルートボーン
+	
+	int start_count = 0;//{を数える
+	int end_count	= 0;//}を数える
+
+	
+	//ボーンリストメモリ確保
+	pSkinMesh->m_pBone = new BONE[boneNum];
+	int boneIndex = 0;//インデックスカウンター
+
+
+	//ボーン読み込み
+	while (!feof(fp))
+	{
+		fscanf_s(fp, "%s ", str, sizeof(str));
+
+		//ボーン
+		if (strcmp(str, "Frame") == 0)
+		{
+			//ボーンをリストに保存
+			pSkinMesh->m_pBone[boneIndex] = LoadBoneInfo(fp, &boneIndex,pSkinMesh);
+		}
+	}
+
+	return true;
+}
+
+//ボーン情報の読み込み
+BONE CX_Skin::LoadBoneInfo(FILE* fp, int* pBoneIndex,SKIN_MESH* pSkinMesh)
+{
+	//ボーン読み込み用
+	BONE bone;
+	bone.m_index = *(pBoneIndex);
+
+	//ボーン名
+	fscanf_s(fp, "%s", bone.m_Name, sizeof(bone.m_Name));
+
+	int start_count=0;	//{カウント
+	int end_count=0;	//}カウント
+
+	//読み込み用
+	char str[200];
+	do
+	{
+		fscanf_s(fp, "%s ", str, sizeof(str));
+
+		//{カウント
+		if (strcmp(str, "{") == 0)
+		{
+			start_count++;
+		}
+
+		//}カウント
+		if (strcmp(str, "}") == 0)
+		{
+			end_count++;
+		}
+
+		//初期ポーズ
+		if (strcmp(str, "FrameTransformMatrix") == 0)
+		{
+			fgets(str, sizeof(str), fp);//{除去
+
+			//行列読み込み
+			D3DXMATRIX mat;
+			fgets(str, sizeof(str), fp);
+			sscanf_s(str, "%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f;;",
+				&mat._11, &mat._12, &mat._13, &mat._14,
+				&mat._21, &mat._22, &mat._23, &mat._24,
+				&mat._31, &mat._32, &mat._33, &mat._34,
+				&mat._41, &mat._42, &mat._43, &mat._44);
+
+			//保存
+			bone.m_matBindPose = mat;
+
+			fgets(str, sizeof(str), fp);//}除去
+		}
+
+		//子ボーン
+		if (strcmp(str, "Frame") == 0)
+		{
+		//ポインタの使い方が何かおかしいっぽい
+		//	//カウンター更新
+		//	*(pBoneIndex) = *(pBoneIndex)++;
+		//	int a = *(pBoneIndex);
+
+		//	//ボーンをリストに保存
+		//	pSkinMesh->m_pBone[*(pBoneIndex)] = LoadBoneInfo(fp, pBoneIndex,pSkinMesh);
+		//
+		//	int b = *(pBoneIndex);
+		}
+
+	} while (start_count!=end_count);
+
+	return bone;
+}
+
+
 //メッシュ描画
 void CX_Skin::DrawMesh(D3DMATRIX matWorld, SKIN_MESH* pSkinMesh, CColorData* pColor)
 {
