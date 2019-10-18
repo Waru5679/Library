@@ -399,7 +399,8 @@ bool CX_Skin::LoadBone(FILE* fp, SKIN_MESH* pSkinMesh)
 		if (strcmp(str, "Frame") == 0)
 		{
 			//ボーンをリストに保存
-			pSkinMesh->m_pBone[boneIndex] = LoadBoneInfo(fp, &boneIndex,pSkinMesh);
+			BONE bone= LoadBoneInfo(fp, &boneIndex,pSkinMesh);
+			pSkinMesh->m_pBone[bone.m_index]=bone; 
 		}
 	}
 
@@ -409,19 +410,72 @@ bool CX_Skin::LoadBone(FILE* fp, SKIN_MESH* pSkinMesh)
 //ボーン情報の読み込み
 BONE CX_Skin::LoadBoneInfo(FILE* fp, int* pBoneIndex,SKIN_MESH* pSkinMesh)
 {
+	//関数呼び出し時のファイルの位置を保存
+	long ReadStartPos = ftell(fp);
+
+	int start_count = 0;	//{カウント
+	int end_count = 0;		//}カウント
+	int childNum = 0;		//子ボーンの数
+
+	//読み込み用
+	char str[200];
+
 	//ボーン読み込み用
 	BONE bone;
+
+	//自身のインデックス
 	bone.m_index = *(pBoneIndex);
+	
+	//先に子ボーンの数を数える
+	while (start_count != end_count || start_count == 0 || end_count == 0)
+	{
+		fscanf_s(fp, "%s ", str, sizeof(str));
+
+		//{カウント
+		if (strcmp(str, "{") == 0)
+		{
+			start_count++;
+		}
+
+		//}カウント
+		if (strcmp(str, "}") == 0)
+		{
+			end_count++;
+		}
+		//子ボーン
+		if (strcmp(str, "Frame") == 0)
+		{
+			//このボーンの直属の子
+			if (start_count - end_count == 1)
+			{
+				childNum++;
+			}
+			else
+			{
+				;//孫ボーンなどはカウントしない
+			}
+		}
+	}
+
+	//この関数が呼ばれたと時の位置に戻す
+	fseek(fp, ReadStartPos, SEEK_SET);
+
+	//子の数を保存
+	bone.m_ChildNum = childNum;
+
+	//子ボーンのインデックスリストメモリ確保
+	bone.m_pChildIndex = new int[childNum];
+
+	//カウンタを初期化
+	start_count = 0;
+	end_count = 0;
+	childNum = 0;
 
 	//ボーン名
 	fscanf_s(fp, "%s", bone.m_Name, sizeof(bone.m_Name));
 
-	int start_count=0;	//{カウント
-	int end_count=0;	//}カウント
-
-	//読み込み用
-	char str[200];
-	do
+	//本読み込み
+	while (start_count != end_count || start_count == 0 || end_count == 0)
 	{
 		fscanf_s(fp, "%s ", str, sizeof(str));
 
@@ -460,18 +514,17 @@ BONE CX_Skin::LoadBoneInfo(FILE* fp, int* pBoneIndex,SKIN_MESH* pSkinMesh)
 		//子ボーン
 		if (strcmp(str, "Frame") == 0)
 		{
-		//ポインタの使い方が何かおかしいっぽい
-		//	//カウンター更新
-		//	*(pBoneIndex) = *(pBoneIndex)++;
-		//	int a = *(pBoneIndex);
+			//ボーンのインデックス更新
+			*pBoneIndex = *(pBoneIndex)+1;
 
-		//	//ボーンをリストに保存
-		//	pSkinMesh->m_pBone[*(pBoneIndex)] = LoadBoneInfo(fp, pBoneIndex,pSkinMesh);
-		//
-		//	int b = *(pBoneIndex);
+			//子ボーンのインデックスを保存
+			bone.m_pChildIndex[childNum++] = *pBoneIndex;
+
+			//ボーンをリストに保存
+			BONE bone = LoadBoneInfo(fp, pBoneIndex, pSkinMesh);
+			pSkinMesh->m_pBone[bone.m_index] = bone;
 		}
-
-	} while (start_count!=end_count);
+	}
 
 	return bone;
 }

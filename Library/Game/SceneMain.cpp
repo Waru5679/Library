@@ -38,11 +38,10 @@ void CSceneMain::Init()
 	//テスト
 
 	vPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	vScale = D3DXVECTOR3(5.0f, 5.0f, 5.0f);
+	vScale = D3DXVECTOR3(2.0f, 2.0f, 2.0f);
 
 	CTest* pTest = new CTest(vPos, vAngle, vScale);
 	g_Task.InsertObj(pTest, ObjName::ObjTest);
-
 
 	//シェーダーにカメラセット
 	SHADER->SetCamera(dynamic_cast<CCameraBase*>(pCamera));
