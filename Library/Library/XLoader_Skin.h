@@ -113,7 +113,12 @@ public:
 	bool LoadMesh(FILE* fp, MESH* pMesh);	//メッシュ情報の読み込み
 	
 	bool LoadBone(FILE* fp, SKIN_MESH* pSkinMesh);	//ボーン読み込み
-	BONE LoadBoneInfo(FILE* fp, int* pBoneIndex, SKIN_MESH* pSkinMesh);//ボーン情報の読み込み
+	BONE LoadBoneInfo(FILE* fp, int* pBoneIndex, SKIN_MESH* pSkinMesh);//ボーン情報の読み込み(再起関数))
+
+	bool LoadSkin(FILE* fp, SKIN_MESH* pSkinMesh);	//スキン情報の読み込み
+
+	void ErasCharFromString(char* pSource,int Size, char Erace);//指定文字を文字列から消す
+
 	//メッシュ描画(テスト用)
 	void DrawMesh(D3DMATRIX matWorld, SKIN_MESH* pSkinMesh, CColorData* pColor);
 	

@@ -30,6 +30,13 @@ bool CX_Skin::LoadSkinMesh(const char* FileName, SKIN_MESH* pSkinMesh)
 		//ボーン読み込み失敗
 		return false;
 	}
+	
+	//スキン情報の読み込み
+	if (LoadSkin(fp, pSkinMesh) == false)
+	{
+		//スキン情報読み込み失敗
+		return false;
+	}
 
 	return true;
 }
@@ -37,6 +44,9 @@ bool CX_Skin::LoadSkinMesh(const char* FileName, SKIN_MESH* pSkinMesh)
 //メッシュ情報の読み込み
 bool CX_Skin::LoadMesh(FILE* fp, MESH* pMesh)
 {
+	//ファイルの先頭にセット
+	fseek(fp, 0, SEEK_SET);
+
 	int verNum	=0;//頂点数
 	int faceNum	=0;//面の数
 	int normNum	=0;//法線数
@@ -61,9 +71,6 @@ bool CX_Skin::LoadMesh(FILE* fp, MESH* pMesh)
 
 	//キーワード読み込み
 	char str[200];
-	
-	//ファイルの先頭にセット
-	fseek(fp, 0, SEEK_SET);
 
 	while (!feof(fp))
 	{
@@ -255,20 +262,8 @@ bool CX_Skin::LoadMesh(FILE* fp, MESH* pMesh)
 					fscanf_s(fp, "%s", pMaterial[i].m_TexName, size);
 
 					//"と;を除去する
-					int count = 0;//除去カウント
-					for (int j = 0; j < size; j++)
-					{
-						if (pMaterial[i].m_TexName[j] == '\"' || pMaterial[i].m_TexName[j] == ';')
-						{
-							//除去数をカウント
-							count++;
-						}
-						else
-						{
-							//カウント分を詰めてコピー
-							pMaterial[i].m_TexName[j - count] = pMaterial[i].m_TexName[j];
-						}
-					}
+					ErasCharFromString(pMaterial->m_TexName,size, '\"');
+					ErasCharFromString(pMaterial->m_TexName,size, ';');
 
 					//テクスチャーを作成
 					if (FAILED(D3DX10CreateShaderResourceViewFromFileA(DX->GetDevice(), pMaterial[i].m_TexName, NULL, NULL, &pMaterial[i].m_pTexture, NULL)))
@@ -346,14 +341,34 @@ bool CX_Skin::LoadMesh(FILE* fp, MESH* pMesh)
 	return true;
 }
 
+//指定文字を文字列から消す
+void CX_Skin::ErasCharFromString(char* pSource,int Size, char Erace)
+{
+	int count = 0;//除去カウント
+
+	for (int i = 0; i < Size; i++)
+	{
+		if (pSource[i] == Erace)
+		{
+			//除去数をカウント
+			count++;
+		}
+		else
+		{
+			//カウント分を詰めてコピー
+			pSource[i - count] = pSource[i];
+		}
+	}
+}
+
 //ボーン読み込み
 bool CX_Skin::LoadBone(FILE* fp, SKIN_MESH* pSkinMesh)
 {
-	int boneNum=0;	//ボーンの数
-
 	//ファイルの先頭にセット
 	fseek(fp, 0, SEEK_SET);
-	
+
+	int boneNum=0;	//ボーンの数
+		
 	//キーワード読み込み用
 	char str[200];
 
@@ -379,16 +394,12 @@ bool CX_Skin::LoadBone(FILE* fp, SKIN_MESH* pSkinMesh)
 	//ファイルの先頭にセット
 	fseek(fp, 0, SEEK_SET);
 
-	BONE* pRoot=nullptr;//ルートボーン
-	
 	int start_count = 0;//{を数える
 	int end_count	= 0;//}を数える
-
-	
+		
 	//ボーンリストメモリ確保
 	pSkinMesh->m_pBone = new BONE[boneNum];
 	int boneIndex = 0;//インデックスカウンター
-
 
 	//ボーン読み込み
 	while (!feof(fp))
@@ -521,14 +532,61 @@ BONE CX_Skin::LoadBoneInfo(FILE* fp, int* pBoneIndex,SKIN_MESH* pSkinMesh)
 			bone.m_pChildIndex[childNum++] = *pBoneIndex;
 
 			//ボーンをリストに保存
-			BONE bone = LoadBoneInfo(fp, pBoneIndex, pSkinMesh);
-			pSkinMesh->m_pBone[bone.m_index] = bone;
+			BONE read = LoadBoneInfo(fp, pBoneIndex, pSkinMesh);
+			pSkinMesh->m_pBone[read.m_index] = read;
 		}
 	}
 
 	return bone;
 }
 
+//スキン情報の読み込み
+bool CX_Skin::LoadSkin(FILE* fp, SKIN_MESH* pSkinMesh)
+{
+	//ファイルの先頭に戻る
+	fseek(fp, 0, SEEK_SET);
+
+	//スキンウェイトの数
+	int SkinWeightNum = 0;
+
+	//キーワード読み込み用
+	char str[200];
+
+	//スキンウェイトの数をカウントする
+	while (!feof(fp))
+	{
+		fscanf_s(fp, "%s ", str, sizeof(str));
+
+		if (strcmp(str, "SkinWeights") == 0)
+		{
+			SkinWeightNum++;
+		}
+	}
+
+	if (SkinWeightNum == 0)
+	{
+		//スキンウェイトなし
+		return false;
+	}
+
+	//ファイルの先頭に戻る
+	fseek(fp, 0, SEEK_SET);
+
+	//スキンウェイトメモリ確保
+	pSkinMesh->m_pSkinWeight = new SKIN_WEIGHT[SkinWeightNum];
+
+	////読み込み
+	//while (!feof(fp))
+	//{
+	//	fscanf_s(fp, "%s ", str, sizeof(str));
+	//	if (strcmp(str, "SkinWeights") == 0)
+	//	{
+	//		fgets(str, sizeof(str), fp);//{除去
+	//	}
+	//}
+
+	return true;
+}
 
 //メッシュ描画
 void CX_Skin::DrawMesh(D3DMATRIX matWorld, SKIN_MESH* pSkinMesh, CColorData* pColor)
