@@ -11,28 +11,33 @@ bool CX_Skin::LoadSkinMesh(const char* FileName, SKIN_MESH* pSkinMesh)
 	//ファイル読み込み
 	FILE* fp = nullptr;
 	fopen_s(&fp, FileName, "rt");
+	
 	if (fp == nullptr)
 	{
 		//ファイルオープン失敗
 		return false;
 	}
 
+
+	//templateを省いたファイルの読み込み開始位置を保存
+	long ReadStartPos = GetTemplateSkipStartPos(fp);
+
 	//メッシュの読み込み
-	if (LoadMesh(fp, &pSkinMesh->m_Mesh) == false)
+	if (LoadMesh(fp, &pSkinMesh->m_Mesh,ReadStartPos) == false)
 	{
 		//メッシュ読み込み失敗
 		return false;
 	}
 
 	//ボーン読み込み
-	if (LoadBone(fp, pSkinMesh) == false)
+	if (LoadBone(fp, pSkinMesh, ReadStartPos) == false)
 	{
 		//ボーン読み込み失敗
 		return false;
 	}
 	
 	//スキン情報の読み込み
-	if (LoadSkin(fp, pSkinMesh) == false)
+	if (LoadSkin(fp, pSkinMesh, ReadStartPos) == false)
 	{
 		//スキン情報読み込み失敗
 		return false;
@@ -41,11 +46,39 @@ bool CX_Skin::LoadSkinMesh(const char* FileName, SKIN_MESH* pSkinMesh)
 	return true;
 }
 
-//メッシュ情報の読み込み
-bool CX_Skin::LoadMesh(FILE* fp, MESH* pMesh)
+//templateを飛ばした読み込み開始位置を取得する
+long CX_Skin::GetTemplateSkipStartPos(FILE* fp)
 {
 	//ファイルの先頭にセット
 	fseek(fp, 0, SEEK_SET);
+
+	long pos;//ファイルの現在位置
+	
+	//キーワード読み込み
+	char str[200];
+
+	while (!feof(fp))
+	{
+		//ファイルの現在位置保存
+		pos = ftell(fp);
+
+		//キーワード 読み込み
+		fscanf_s(fp, "%s ", str, sizeof(str));
+
+		//Frameが出るまで飛ばす
+		if (strcmp(str, "Frame") == 0)
+		{
+			return pos;
+		}
+	}
+
+}
+
+//メッシュ情報の読み込み
+bool CX_Skin::LoadMesh(FILE* fp, MESH* pMesh,long lStartPos)
+{
+	//読み込みの開始位置にセット
+	fseek(fp, lStartPos, SEEK_SET);
 
 	int verNum	=0;//頂点数
 	int faceNum	=0;//面の数
@@ -212,8 +245,8 @@ bool CX_Skin::LoadMesh(FILE* fp, MESH* pMesh)
 		}
 	}
 
-	//ファイルの先頭に戻る
-	fseek(fp, 0, SEEK_SET);
+	//読み込みの開始位置に戻る
+	fseek(fp, lStartPos, SEEK_SET);
 
 	while (!feof(fp))
 	{
@@ -362,10 +395,10 @@ void CX_Skin::ErasCharFromString(char* pSource,int Size, char Erace)
 }
 
 //ボーン読み込み
-bool CX_Skin::LoadBone(FILE* fp, SKIN_MESH* pSkinMesh)
+bool CX_Skin::LoadBone(FILE* fp, SKIN_MESH* pSkinMesh,long lStartPos)
 {
 	//ファイルの先頭にセット
-	fseek(fp, 0, SEEK_SET);
+	fseek(fp, lStartPos, SEEK_SET);
 
 	int boneNum=0;	//ボーンの数
 		
@@ -541,10 +574,10 @@ BONE CX_Skin::LoadBoneInfo(FILE* fp, int* pBoneIndex,SKIN_MESH* pSkinMesh)
 }
 
 //スキン情報の読み込み
-bool CX_Skin::LoadSkin(FILE* fp, SKIN_MESH* pSkinMesh)
+bool CX_Skin::LoadSkin(FILE* fp, SKIN_MESH* pSkinMesh,long lStartPos)
 {
-	//ファイルの先頭に戻る
-	fseek(fp, 0, SEEK_SET);
+	//読み込み開始位置にセットする
+	fseek(fp, lStartPos, SEEK_SET);
 
 	//スキンウェイトの数
 	int SkinWeightNum = 0;
@@ -569,22 +602,72 @@ bool CX_Skin::LoadSkin(FILE* fp, SKIN_MESH* pSkinMesh)
 		return false;
 	}
 
-	//ファイルの先頭に戻る
-	fseek(fp, 0, SEEK_SET);
+	//読み込み開始位置まで戻る
+	fseek(fp, lStartPos, SEEK_SET);
 
 	//スキンウェイトメモリ確保
 	pSkinMesh->m_pSkinWeight = new SKIN_WEIGHT[SkinWeightNum];
 
-	////読み込み
-	//while (!feof(fp))
-	//{
-	//	fscanf_s(fp, "%s ", str, sizeof(str));
-	//	if (strcmp(str, "SkinWeights") == 0)
-	//	{
-	//		fgets(str, sizeof(str), fp);//{除去
-	//	}
-	//}
+	//読み込み用
+	int count		= 0;//カウンター		
+	int weightNum	= 0;//ウェイト数
+	char boneName[100];	//ボーン名
+	D3DXMATRIX mat;		//行列
 
+	//読み込み
+	while (!feof(fp))
+	{
+		fscanf_s(fp, "%s ", str, sizeof(str));
+
+		//スキンウェイト
+		if (strcmp(str, "SkinWeights") == 0)
+		{
+			fgets(str, sizeof(str), fp);//{除去
+			
+			//ボーン名
+			fscanf_s(fp, "%s", boneName,sizeof(boneName));
+
+			//"と;を除去する
+			ErasCharFromString(boneName, sizeof(boneName), '\"');
+			ErasCharFromString(boneName, sizeof(boneName), ';');
+
+			//保存
+			strcpy_s(pSkinMesh->m_pSkinWeight[count].m_BoneName, boneName);
+						
+			//ウェイトの数
+			fscanf_s(fp, "%d;", &weightNum);		
+			pSkinMesh->m_pSkinWeight[count].m_WeightNum = weightNum;
+
+			//インデックスとウェイトのメモリ確保
+			pSkinMesh->m_pSkinWeight[count].m_pIndex = new int[weightNum];
+			pSkinMesh->m_pSkinWeight[count].m_pWeight = new float[weightNum];
+
+			//インデックス読み込み
+			for (int i = 0; i < weightNum; i++)
+			{
+				fscanf_s(fp, "%d", &pSkinMesh->m_pSkinWeight[count].m_pIndex[i]);
+
+				//,または;の除去
+				fgets(str, sizeof(str), fp);
+			}
+
+			//ウェイト読み込み
+			for (int i = 0; i < weightNum; i++)
+			{
+				fscanf_s(fp, "%f" ,&pSkinMesh->m_pSkinWeight[count].m_pWeight[i]);
+
+				//,または;の除去
+				fgets(str, sizeof(str), fp);
+			}
+			//オフセット行列
+			fscanf_s(fp,"%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f;;",
+				&mat._11, &mat._12, &mat._13, &mat._14,
+				&mat._21, &mat._22, &mat._23, &mat._24,
+				&mat._31, &mat._32, &mat._33, &mat._34,
+				&mat._41, &mat._42, &mat._43, &mat._44);
+			pSkinMesh->m_pSkinWeight[count].m_matOffset = mat;
+		}
+	}
 	return true;
 }
 
