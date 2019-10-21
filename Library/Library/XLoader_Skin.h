@@ -6,6 +6,11 @@
 
 #include <stdio.h>
 
+constexpr int TRIANGLE_POLYGON{ 3 };	//三角ポリゴン
+constexpr int QUAD_POLYGON{ 4 };		//四角ポリゴン
+constexpr int READ_ARRAY_SIZE{ 200 };	//読み込み用キー配列のサイズ
+constexpr int NAME_ARRAY_SIZE{ 100 };	//名前配列のサイズ
+
 //頂点構造体
 struct VERTEX
 {
@@ -24,40 +29,41 @@ struct FACE
 //マテリアル構造体
 struct MATERIAL
 {
-	D3DXVECTOR4					m_vFaceColor;	//面の色
-	D3DXVECTOR3					m_vKs;			//スペキュラー
-	float						m_fPower;		//スペキュラーのパワー
-	D3DXVECTOR3					m_vKe;			//エミッシブ
-	char						m_TexName[100];	//ファイル名
-	ID3D10ShaderResourceView*	m_pTexture;		//テクスチャポインタ	
-	int							m_FaceNum;		//このマテリアルを使用する面の数
-	int*						m_pVerNum;		//頂点数のリスト
-	ID3D10Buffer**				m_ppIndexBuffer;//インデックスバッファ
+
+	char						m_TexName[NAME_ARRAY_SIZE];	//ファイル名
+	D3DXVECTOR4					m_vFaceColor;				//面の色
+	D3DXVECTOR3					m_vKs;						//スペキュラー
+	float						m_fPower;					//スペキュラーのパワー
+	D3DXVECTOR3					m_vKe;						//エミッシブ
+	ID3D10ShaderResourceView*	m_pTexture;					//テクスチャポインタ	
+	int							m_FaceNum;					//このマテリアルを使用する面の数
+	int*						m_pVerNum;					//頂点数のリスト
+	ID3D10Buffer**				m_ppIndexBuffer;			//インデックスバッファ
 };
 
 //ボーン構造体
 struct BONE
 {
-	char		m_Name[100];	//ボーン名
-	int			m_index;		//自身のインデックス
-	int			m_ChildNum;		//子の数
-	int*		m_pChildIndex;	//自分の子のインデックスリスト
-	D3DXMATRIX	m_matBindPose;	//初期ポーズ（ずっと変わらない）
-	D3DXMATRIX	m_matNewPose;	//現在のポーズ（その都度変わる）
+	char		m_Name[NAME_ARRAY_SIZE];	//ボーン名
+	int			m_index;					//自身のインデックス
+	int			m_ChildNum;					//子の数
+	int*		m_pChildIndex;				//自分の子のインデックスリスト
+	D3DXMATRIX	m_matBindPose;				//初期ポーズ（ずっと変わらない）
+	D3DXMATRIX	m_matNewPose;				//現在のポーズ（その都度変わる）
 };
 
 //どのボーンがどのボーンにどれだけの影響を与えるか
 struct SKIN_WEIGHT
 {
-	char		m_BoneName[100];//ボーン名
-	int			m_WeightNum;	//ウェイトの数
-	int*		m_pIndex;		//影響を受ける頂点のインデックスリスト
-	float*		m_pWeight;		//ウェイトリスト
-	D3DXMATRIX	m_matOffset;	//オフセット行列
+	char		m_BoneName[NAME_ARRAY_SIZE];//ボーン名
+	int			m_WeightNum;				//ウェイトの数
+	int*		m_pIndex;					//影響を受ける頂点のインデックスリスト
+	float*		m_pWeight;					//ウェイトリスト
+	D3DXMATRIX	m_matOffset;				//オフセット行列
 };
 
 //アニメーションのキー
-struct Key
+struct KEY
 {
 	int		m_Time;		//コマ
 	int		m_ValueNum;	//値の数
@@ -67,11 +73,11 @@ struct Key
 //アニメーション構造体
 struct ANIMATION
 {
-	char	m_Name[100];			//アニメーション名
-	char	m_AffectBoneName[100];	//影響を受けるボーン名
-	int		m_KeyType;				//キータイプ
-	int		m_KeyNum;				//キーの数
-	Key*	m_pKey;					//キーリスト
+	char	m_Name[NAME_ARRAY_SIZE];			//アニメーション名
+	char	m_AffectBoneName[NAME_ARRAY_SIZE];	//影響を受けるボーン名
+	int		m_KeyType;							//キータイプ
+	int		m_KeyNum;							//キーの数
+	KEY*	m_pKey;								//キーリスト
 };
 
 //メッシュ
@@ -121,6 +127,8 @@ public:
 	void ErasCharFromString(char* pSource,int Size, char Erace);//指定文字を文字列から消す
 
 	long GetTemplateSkipStartPos(FILE* fp);	//templateを飛ばした読み込み開始位置を取得する
+
+	bool LoadAnimation(FILE* fp, SKIN_MESH* pSkinMesh, long lStartPos);//アニメーション読み込み
 
 	//メッシュ描画(テスト用)
 	void DrawMesh(D3DMATRIX matWorld, SKIN_MESH* pSkinMesh, CColorData* pColor);
