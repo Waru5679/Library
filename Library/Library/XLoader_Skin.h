@@ -50,7 +50,7 @@ struct BONE
 	D3DXMATRIX	m_matNewPose;				//現在のポーズ（その都度変わる）
 };
 
-//どのボーンがどの頂点にどれだけの影響を与えるか
+//どのボーンが度の頂点にどれだけの影響を与えるか
 struct SKIN_WEIGHT
 {
 	char		m_BoneName[NAME_ARRAY_SIZE];//ボーン名
@@ -115,11 +115,10 @@ struct SKIN_MESH
 	D3DXMATRIX	m_mFinalWorld;	//最終的なワールド行列（この姿勢でレンダリングする）
 	int			m_WeightNum;	//ウェイト数
 	SKIN_WEIGHT*m_pSkinWeight;	//スキンウェイト
-	
 	int			m_AnimeNum;		//アニメーション数
 	ANIMATION*	m_pAnimation;	//アニメーション
 
-	SKIN_BONE*	m_pSkinBone;	//スキン情報を持たせたボーン
+	SKIN_BONE* m_pSkinBone;	//スキン情報を持たせたボーン
 };
 
 //Xファイル関連のクラス

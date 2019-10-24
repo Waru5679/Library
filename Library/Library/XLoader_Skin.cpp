@@ -28,6 +28,10 @@ bool CX_Skin::LoadSkinMesh(const char* FileName, SKIN_MESH* pSkinMesh)
 		return false;
 	}
 
+	//ボーンとスキンウェイトはポインタを渡してそのポインタに格納するように変更する。
+	//BONE* m_pBone;				//ボーンリスト
+	//SKIN_WEIGHT* m_pSkinWeight;	//スキンウェイトリスト
+
 	//ボーン読み込み
 	if (LoadBone(fp, pSkinMesh, ReadStartPos) == false)
 	{
