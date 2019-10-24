@@ -48,6 +48,10 @@ bool CX_Skin::LoadSkinMesh(const char* FileName, SKIN_MESH* pSkinMesh)
 		//アニメーション読み込み失敗
 		return false;
 	}
+
+	//ボーン情報とスキン情報をまとめる
+	BoneWithSkin(pSkinMesh);
+
 	return true;
 }
 
@@ -618,9 +622,12 @@ bool CX_Skin::LoadSkin(FILE* fp, SKIN_MESH* pSkinMesh,long lStartPos)
 	//読み込み開始位置まで戻る
 	fseek(fp, lStartPos, SEEK_SET);
 
+	//ウェイト数
+	pSkinMesh->m_WeightNum = SkinWeightNum;
+
 	//スキンウェイトメモリ確保
 	pSkinMesh->m_pSkinWeight = new SKIN_WEIGHT[SkinWeightNum];
-
+		
 	//読み込み用
 	char boneName[NAME_ARRAY_SIZE];	//ボーン名
 	int count		= 0;			//カウンター		
@@ -679,6 +686,9 @@ bool CX_Skin::LoadSkin(FILE* fp, SKIN_MESH* pSkinMesh,long lStartPos)
 				&mat._31, &mat._32, &mat._33, &mat._34,
 				&mat._41, &mat._42, &mat._43, &mat._44);
 			pSkinMesh->m_pSkinWeight[count].m_matOffset = mat;
+
+			//カウンター更新
+			count++;
 		}
 	}
 	return true;
@@ -801,6 +811,55 @@ bool CX_Skin::LoadAnimation(FILE* fp, SKIN_MESH* pSkinMesh, long lStartPos)
 			animeCount++;
 		}
 	}
+}
+
+//ボーンとスキン情報をまとめる
+void CX_Skin::BoneWithSkin(SKIN_MESH* pSkinMesh)
+{
+	//ウェイト数
+	int weightNum = pSkinMesh->m_WeightNum;	
+
+	//ボーン数
+	int boneNum = pSkinMesh->m_BoneNum;
+
+	//メモリ確保
+	pSkinMesh->m_pSkinBone = new SKIN_BONE[weightNum];
+
+	//スキン情報から対応ボーンを探す
+	for (int i = 0; i < weightNum; i++)
+	{
+		//スキン情報を持つべきボーン名
+		char HaveBoneName[NAME_ARRAY_SIZE];
+		strcpy_s(HaveBoneName, pSkinMesh->m_pSkinWeight[i].m_BoneName);
+
+		bool bFind = false;
+		for (int j = 0; j < boneNum && bFind == false; j++)
+		{
+			//対応ボーンを発見
+			if (strcmp(HaveBoneName, pSkinMesh->m_pBone[j].m_Name) == 0)
+			{
+				bFind=true;
+				BONE bone = pSkinMesh->m_pBone[j];								
+				SKIN_WEIGHT skin_weight = pSkinMesh->m_pSkinWeight[i];
+
+				//ボーン情報とスキン情報の統合を行う
+				SKIN_BONE skin_bone;
+				strcpy_s(skin_bone.m_Name, bone.m_Name);		//ボーン名
+				skin_bone.m_index = bone.m_index;				//ボーン自身のインデックス
+				skin_bone.m_ChildNum = bone.m_ChildNum;			//子の数
+				skin_bone.m_pChildIndex = bone.m_pChildIndex;	//このインデックスリスト
+				skin_bone.m_matBindPose = bone.m_matBindPose;	//初期ポーズ
+				skin_bone.m_WeightNum = skin_weight.m_WeightNum;//ウェイト数
+				skin_bone.m_pIndex = skin_weight.m_pIndex;		//ウェイトリスト
+				skin_bone.m_pWeight = skin_weight.m_pWeight;	//影響する頂点のインデックスリスト
+				skin_bone.m_matOffset = skin_weight.m_matOffset;//オフセット
+
+				//保存する
+				pSkinMesh->m_pSkinBone[i] = skin_bone;
+				int a = 0;
+			}
+		}
+	}	
 }
 
 //メッシュ描画

@@ -3,7 +3,6 @@
 #include "Main.h"
 #include "Singleton.h"
 #include "Struct.h"
-
 #include <stdio.h>
 
 constexpr int TRIANGLE_POLYGON{ 3 };	//三角ポリゴン
@@ -29,7 +28,6 @@ struct FACE
 //マテリアル構造体
 struct MATERIAL
 {
-
 	char						m_TexName[NAME_ARRAY_SIZE];	//ファイル名
 	D3DXVECTOR4					m_vFaceColor;				//面の色
 	D3DXVECTOR3					m_vKs;						//スペキュラー
@@ -52,7 +50,7 @@ struct BONE
 	D3DXMATRIX	m_matNewPose;				//現在のポーズ（その都度変わる）
 };
 
-//どのボーンがどのボーンにどれだけの影響を与えるか
+//どのボーンがどの頂点にどれだけの影響を与えるか
 struct SKIN_WEIGHT
 {
 	char		m_BoneName[NAME_ARRAY_SIZE];//ボーン名
@@ -62,12 +60,27 @@ struct SKIN_WEIGHT
 	D3DXMATRIX	m_matOffset;				//オフセット行列
 };
 
+//スキンウェイト情報を持ったボーン
+struct SKIN_BONE
+{
+	char		m_Name[NAME_ARRAY_SIZE];//ボーン名
+	int			m_index;				//自身のインデックス
+	int			m_ChildNum;				//子の数
+	int*		m_pChildIndex;			//自分の子のインデックスリスト
+	int			m_WeightNum;			//ウェイトの数
+	int*		m_pIndex;				//影響を与える頂点インデックスリスト
+	float*		m_pWeight;				//ウェイトリスト
+	D3DXMATRIX	m_matOffset;			//オフセット行列
+	D3DXMATRIX	m_matBindPose;			//初期ポーズ（ずっと変わらない）
+	D3DXMATRIX	m_matNewPose;			//現在のポーズ（その都度変わる）
+};
+
 //アニメーションのキー
 struct KEY
 {
 	int		m_Time;		//コマ
 	int		m_ValueNum;	//値の数
-	float* m_pValue;	//値のリスト
+	float*	m_pValue;	//値のリスト
 };
 
 //アニメーション構造体
@@ -97,12 +110,16 @@ struct SKIN_MESH
 {
 	MESH		m_Mesh;			//メッシュ
 	int			m_BoneNum;		//ボーン数
+
 	BONE*		m_pBone;		//ボーンリスト	
 	D3DXMATRIX	m_mFinalWorld;	//最終的なワールド行列（この姿勢でレンダリングする）
 	int			m_WeightNum;	//ウェイト数
 	SKIN_WEIGHT*m_pSkinWeight;	//スキンウェイト
+	
 	int			m_AnimeNum;		//アニメーション数
 	ANIMATION*	m_pAnimation;	//アニメーション
+
+	SKIN_BONE*	m_pSkinBone;	//スキン情報を持たせたボーン
 };
 
 //Xファイル関連のクラス
@@ -129,6 +146,10 @@ public:
 	long GetTemplateSkipStartPos(FILE* fp);	//templateを飛ばした読み込み開始位置を取得する
 
 	bool LoadAnimation(FILE* fp, SKIN_MESH* pSkinMesh, long lStartPos);//アニメーション読み込み
+
+	
+	void BoneWithSkin(SKIN_MESH* pSkinMesh);//ボーンとスキン情報をまとめる
+
 
 	//メッシュ描画(テスト用)
 	void DrawMesh(D3DMATRIX matWorld, SKIN_MESH* pSkinMesh, CColorData* pColor);
