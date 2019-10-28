@@ -110,15 +110,10 @@ struct SKIN_MESH
 {
 	MESH		m_Mesh;			//メッシュ
 	int			m_BoneNum;		//ボーン数
-
-	BONE*		m_pBone;		//ボーンリスト	
-	D3DXMATRIX	m_mFinalWorld;	//最終的なワールド行列（この姿勢でレンダリングする）
-	int			m_WeightNum;	//ウェイト数
-	SKIN_WEIGHT*m_pSkinWeight;	//スキンウェイト
+	SKIN_BONE* m_pSkinBone;		//スキン情報を持たせたボーン
 	int			m_AnimeNum;		//アニメーション数
 	ANIMATION*	m_pAnimation;	//アニメーション
-
-	SKIN_BONE* m_pSkinBone;	//スキン情報を持たせたボーン
+	D3DXMATRIX	m_mFinalWorld;	//最終的なワールド行列（この姿勢でレンダリングする）
 };
 
 //Xファイル関連のクラス
@@ -131,29 +126,43 @@ private:
 	~CX_Skin() {};	//デストラクタ
 public:
 	void Release();//開放
-	bool LoadSkinMesh(const char* FileName, SKIN_MESH* pSkinMesh);	//スキンメッシュの読み込み
-	
-	bool LoadMesh(FILE* fp, MESH* pMesh,long lStartPos);	//メッシュ情報の読み込み
-	
-	bool LoadBone(FILE* fp, SKIN_MESH* pSkinMesh,long lStartPos);	//ボーン読み込み
-	BONE LoadBoneInfo(FILE* fp, int* pBoneIndex, SKIN_MESH* pSkinMesh);//ボーン情報の読み込み(再起関数))
 
-	bool LoadSkin(FILE* fp, SKIN_MESH* pSkinMesh, long lStartPos);	//スキン情報の読み込み
-
-	void ErasCharFromString(char* pSource,int Size, char Erace);//指定文字を文字列から消す
-
-	long GetTemplateSkipStartPos(FILE* fp);	//templateを飛ばした読み込み開始位置を取得する
-
-	bool LoadAnimation(FILE* fp, SKIN_MESH* pSkinMesh, long lStartPos);//アニメーション読み込み
-
-	
-	void BoneWithSkin(SKIN_MESH* pSkinMesh);//ボーンとスキン情報をまとめる
-
+	//スキンメッシュの読み込み
+	bool LoadSkinMesh(const char* FileName, SKIN_MESH* pSkinMesh);	
 
 	//メッシュ描画(テスト用)
 	void DrawMesh(D3DMATRIX matWorld, SKIN_MESH* pSkinMesh, CColorData* pColor);
-	
 private:
+	int GetBoneNum(FILE* fp, long lStartPos);		//ボーン数の取得
+	int GetSkinWeightNum(FILE* fp, long lStartPos);	//スキンウェイトの数を取得
+	int GetAnimeNum(FILE* fp, long lStartPos);		//アニメーションの数を取得
+
+	//templateを飛ばした読み込み開始位置を取得する
+	long GetTemplateSkipStartPos(FILE* fp);
+
+	//メッシュ情報の読み込み
+	bool LoadMesh(FILE* fp, MESH* pMesh, long lStartPos);
+	
+	//ボーン読み込み
+	bool LoadBone(FILE* fp, BONE* pBone, long lStartPos);
+
+	//ボーン情報の読み込み(再起関数))
+	BONE LoadBoneInfo(FILE* fp, int* pBoneIndex, BONE* pBone);
+	
+	//スキンウェイトの読み込み
+	bool LoadSkinWeight(FILE* fp, SKIN_WEIGHT* pSkinWeight, long lStartPos);
+
+	//アニメーション読み込み
+	bool LoadAnimation(FILE* fp, ANIMATION* pAnime, long lStartPos);
+
+	//指定文字を文字列から消す
+	void ErasCharFromString(char* pSource, int Size, char Erace);
+
+	//ボーンとスキン情報をまとめる
+	void BoneWithSkin(BONE* pBone, int BoneNum, SKIN_WEIGHT* pSkinWeight, int SkinWeightNum, SKIN_BONE* pSkinBone);
+
+	//スキンメッシュにまとめる
+	void SkinMeshPutTogether(MESH Mesh, SKIN_BONE* pSkinBone, int BoneNum, ANIMATION* pAnimation, int AnimeNum, SKIN_MESH* pSkinMesh);
 
 	SKIN_MESH	m_SkinMesh;		//スキンメッシュ
 };
