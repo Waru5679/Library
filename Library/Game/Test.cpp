@@ -18,15 +18,25 @@ void CTest::Init()
 	SKIN->LoadSkinMesh("Model/Hand/hand_tex.x",&m_SkinMesh);
 	
 	m_matWorld=MakeMatWorld(m_vPos, m_vAngle, m_vScale);
+	
+	m_Frame=0;
+
 }
 
 void CTest::Update()
 {
-
 }
 
 void CTest::Draw()
 {
+	m_Frame++;
+	if (m_Frame >= 9000)
+		m_Frame = 0;
+
+	for (int i = 0; i < m_SkinMesh.m_AnimeNum; i++)
+	{
+		SKIN->Animation(i, m_Frame, &m_SkinMesh);
+	}
 	SKIN->DrawMesh(m_matWorld, &m_SkinMesh, nullptr);
 	
 }

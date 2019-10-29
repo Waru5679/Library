@@ -21,4 +21,5 @@ private:
 
 	SKIN_MESH m_SkinMesh;
 	MY_MESH m_Mesh;
+	int m_Frame;
 };

@@ -80,7 +80,7 @@ struct KEY
 {
 	int		m_Time;		//コマ
 	int		m_ValueNum;	//値の数
-	float*	m_pValue;	//値のリスト
+	float*	m_pfValue;	//値のリスト
 };
 
 //アニメーション構造体
@@ -103,6 +103,7 @@ struct MESH
 	int				m_MaterialNum;	//マテリアルの数
 	MATERIAL*		m_pMaterial;	//マテリアルリスト
 	ID3D10Buffer*	m_pVertexBuffer;//頂点バッファ
+	VERTEX*			m_pVertex;		//頂点情報のリスト
 };
 
 //スキンメッシュ
@@ -128,7 +129,10 @@ public:
 	void Release();//開放
 
 	//スキンメッシュの読み込み
-	bool LoadSkinMesh(const char* FileName, SKIN_MESH* pSkinMesh);	
+	bool LoadSkinMesh(const char* FileName, SKIN_MESH* pSkinMesh);
+
+	//アニメーション
+	void Animation(int AnimeId, int NowFrame, SKIN_MESH* pSkinMesh);
 
 	//メッシュ描画(テスト用)
 	void DrawMesh(D3DMATRIX matWorld, SKIN_MESH* pSkinMesh, CColorData* pColor);
@@ -163,6 +167,9 @@ private:
 
 	//スキンメッシュにまとめる
 	void SkinMeshPutTogether(MESH Mesh, SKIN_BONE* pSkinBone, int BoneNum, ANIMATION* pAnimation, int AnimeNum, SKIN_MESH* pSkinMesh);
+
+	//フレーム補完
+	KEY FrameComplement(int NowFrame, ANIMATION anime);
 
 	SKIN_MESH	m_SkinMesh;		//スキンメッシュ
 };
