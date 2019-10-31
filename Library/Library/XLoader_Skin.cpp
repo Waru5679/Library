@@ -29,7 +29,7 @@ bool CX_Skin::LoadSkinMesh(const char* FileName, SKIN_MESH* pSkinMesh)
 	BONE*			pBone		= nullptr;	//ボーンリスト
 	SKIN_WEIGHT*	pSkinWeight	= nullptr;	//スキンウェイトリスト
 	ANIMATION*		pAnime		= nullptr;	//アニメションリスト
-	SKIN_BONE*		pSkinBone	= nullptr;	//スキンボーンリスト
+	//SKIN_BONE*		pSkinBone	= nullptr;	//スキンボーンリスト
 
 	//メッシュの読み込み
 	if (LoadMesh(fp, &Mesh,ReadStartPos) == false)
@@ -89,18 +89,21 @@ bool CX_Skin::LoadSkinMesh(const char* FileName, SKIN_MESH* pSkinMesh)
 		}
 	}
 
-	//スキンボーンメモリ確保
-	pSkinBone = new SKIN_BONE[BoneNum];
-	
-	//ボーン情報とスキン情報をまとめる
-	BoneWithSkin(pBone,BoneNum,pSkinWeight,SkinWeightNum,pSkinBone);
+	////スキンボーンメモリ確保
+	//pSkinBone = new SKIN_BONE[BoneNum];
+	//
+	////ボーン情報とスキン情報をまとめる
+	//BoneWithSkin(pBone,BoneNum,pSkinWeight,SkinWeightNum,pSkinBone);
+
+	////スキンメッシュにまとめる
+	//SkinMeshPutTogether(Mesh, pSkinBone, BoneNum, pAnime, AnimeNum, pSkinMesh);
 
 	//スキンメッシュにまとめる
-	SkinMeshPutTogether(Mesh, pSkinBone, BoneNum, pAnime, AnimeNum, pSkinMesh);
-
-	//メモリの開放
-	delete[] pBone;
-	delete[] pSkinWeight;
+	SkinMeshPutTogether(Mesh, pBone, BoneNum,pSkinWeight, SkinWeightNum, pAnime,AnimeNum, pSkinMesh);
+	//
+	////メモリの開放
+	//delete[] pBone;
+	//delete[] pSkinWeight;
 
 	return true;
 }
@@ -752,18 +755,97 @@ int CX_Skin::GetAnimeNum(FILE* fp, long lStartPos)
 
 	//キーワード読み込み用
 	char str[READ_ARRAY_SIZE];
-	
+
 	//アニメーションの数を数える
 	while (!feof(fp))
 	{
 		fscanf_s(fp, "%s ", str, sizeof(str));
 
-		if (strcmp(str, "Animation") == 0)
+		if (strcmp(str, "AnimationSet") == 0)
 		{
 			animeNum++;
 		}
 	}
 	return animeNum;
+}
+
+//ボーン毎のキー情報の読み込み
+BONE_KEY CX_Skin::LoadBoneKey(FILE* fp)
+{
+	
+	BONE_KEY Out;
+
+	//キーワード読み込み用
+	char str[READ_ARRAY_SIZE];
+
+	//対応ボーン名
+	char boneName[NAME_ARRAY_SIZE];	
+
+	//読み込み用初期化
+	int keyNum = 0;
+	int keyCount = 0;
+	int valueNum = 0;
+
+	//AnimationX 
+	fscanf_s(fp, "%s ", str, sizeof(str));
+
+	//{除去
+	fgets(str, sizeof(str), fp);
+
+	//対応ボーン名
+	fgets(boneName, sizeof(boneName), fp);
+
+	//{と}、空白、\nを除去
+	ErasCharFromString(boneName, sizeof(boneName), '{');
+	ErasCharFromString(boneName, sizeof(boneName), '}');
+	ErasCharFromString(boneName, sizeof(boneName), ' ');
+	ErasCharFromString(boneName, sizeof(boneName), '\n');
+
+	//保存
+	strcpy_s(Out.m_AffectBoneName, boneName);
+
+	//1行飛ばす
+	fgets(str, sizeof(str), fp);//AnimationKey{
+
+	//キータイプ
+	fscanf_s(fp, "%d;", &Out.m_KeyType);
+
+	//キーの数
+	fscanf_s(fp, "%d;", &keyNum);
+	Out.m_KeyNum = keyNum;
+
+	//キーのメモリ確保
+	Out.m_pKey = new KEY[keyNum];
+
+	//キーの読み込み
+	for (int i = 0; i < keyNum; i++)
+	{
+		//コマ
+		fscanf_s(fp, "%d;", &Out.m_pKey[i].m_Time);
+
+		//データの数
+		fscanf_s(fp, "%d;", &valueNum);
+		Out.m_pKey[i].m_ValueNum = valueNum;
+
+		//データのメモリ確保
+		Out.m_pKey[i].m_pfValue = new float[valueNum];
+
+		//カウンター初期化
+		keyCount = 0;
+
+		//最初の一つ
+		fscanf_s(fp, "%f", &Out.m_pKey[i].m_pfValue[keyCount++]);
+
+		//2つ目以降は,も含めて読む
+		while (keyCount < Out.m_pKey[i].m_ValueNum)
+		{
+			fscanf_s(fp, ",%f",&Out.m_pKey[i].m_pfValue[keyCount++]);
+		}
+
+		//;;,を除去
+		fgets(str, sizeof(str), fp);
+	}	
+	return Out;
 }
 
 //アニメーション読み込み
@@ -778,79 +860,68 @@ bool CX_Skin::LoadAnimation(FILE* fp, ANIMATION* pAnime, long lStartPos)
 	//読み込み用
 	char animeName[NAME_ARRAY_SIZE];	//アニメーション名
 	char boneName[NAME_ARRAY_SIZE];		//対応ボーン名
-	int keyNum		= 0;				//キーの数
-	int animeCount	= 0;				//アニメーションカウンター
-	int keyCount	= 0;				//キーカウンター
-	KEY key;							//キー
+	int animeCount = 0;					//アニメーションカウンター
 	
 	while (!feof(fp))
 	{
 		fscanf_s(fp, "%s ", str, sizeof(str));
 
 		//アニメーション
-		if (strcmp(str, "Animation") == 0)
+		if (strcmp(str, "AnimationSet") == 0)
 		{
 			//アニメーション名
 			fscanf_s(fp, "%s ", animeName, sizeof(animeName));
 			strcpy_s(pAnime[animeCount].m_Name, animeName);
 
-			//{除去
-			fgets(str, sizeof(str), fp);
-			
-			//対応ボーン名
-			fgets(boneName, sizeof(boneName), fp);
+			//ファイルの位置を保存
+			long ReadStartPos = ftell(fp);
 
-			//{と}、空白、\nを除去
-			ErasCharFromString(boneName, sizeof(boneName), '{');
-			ErasCharFromString(boneName, sizeof(boneName), '}');
-			ErasCharFromString(boneName, sizeof(boneName), ' ');
-			ErasCharFromString(boneName, sizeof(boneName), '\n');
-						
-			//保存
-			strcpy_s(pAnime[animeCount].m_AffectBoneName,boneName);
+			int boneNum = 0;
+			int start_count = 0;
+			int end_count = 0;
 
-			//1行飛ばす
-			fgets(str, sizeof(str), fp);//AnimationKey{
-			
-			//キータイプ
-			fscanf_s(fp, "%d;", &pAnime[animeCount].m_KeyType);
-
-			//キーの数
-			fscanf_s(fp, "%d;", &keyNum);
-			pAnime[animeCount].m_KeyNum = keyNum;
-
-			//キーのメモリ確保
-			pAnime[animeCount].m_pKey = new KEY[keyNum];
-
-			//キーの読み込み
-			for (int i = 0; i < keyNum; i++)
+			//先に対応ボーンの数を数える
+			while (start_count != end_count || start_count == 0 || end_count == 0)
 			{
-				//コマ
-				fscanf_s(fp, "%d;", &key.m_Time);
-				
-				//データの数
-				fscanf_s(fp, "%d;", &key.m_ValueNum);
-				
-				//データのメモリ確保
-				key.m_pfValue = new float[key.m_ValueNum];
+				fscanf_s(fp, "%s ", str, sizeof(str));
 
-				//カウンター初期化
-				keyCount = 0;
-
-				//最初の一つ
-				fscanf_s(fp, "%f", &key.m_pfValue[keyCount++]);
-				
-				//2つ目以降は,も含めて読む
-				while(keyCount<key.m_ValueNum)
+				//{カウント
+				if (strcmp(str, "{") == 0)
 				{
-					fscanf_s(fp, ",%f", &key.m_pfValue[keyCount++]);
+					start_count++;
 				}
 
-				//;;,を除去
-				fgets(str, sizeof(str), fp);
+				//}カウント
+				if (strcmp(str, "}") == 0)
+				{
+					end_count++;
+				}
 
-				//キーの保存
-				pAnime[animeCount].m_pKey[i] = key;
+				//対応ボーン
+				if (strcmp(str, "Animation") == 0)
+				{
+					boneNum++;
+				}
+			}
+
+			//メモリ確保
+			pAnime[animeCount].m_pBoneKey = new BONE_KEY[boneNum];
+
+			//アニメーション読み込み位置にセットする
+			fseek(fp, ReadStartPos, SEEK_SET);
+
+			//対応ボーン分読み込み
+			int boneCount = 0;
+			while(!feof(fp)&&(boneCount<boneNum))
+			{
+				fscanf_s(fp, "%s ", str, sizeof(str));
+
+				if (strcmp(str, "Animation") == 0)
+				{
+					//ボーン毎のキー読み込み
+					pAnime[animeCount].m_pBoneKey[boneCount] = LoadBoneKey(fp);
+					boneCount++;
+				}
 			}
 			//カウンター更新
 			animeCount++;
@@ -859,150 +930,165 @@ bool CX_Skin::LoadAnimation(FILE* fp, ANIMATION* pAnime, long lStartPos)
 	return true;
 }
 
-//ボーンとスキン情報をまとめる
-void CX_Skin::BoneWithSkin(BONE* pBone, int BoneNum, SKIN_WEIGHT* pSkinWeight, int SkinWeightNum, SKIN_BONE* pSkinBone)
-{
-	//スキン情報から対応ボーンを探す
-	for (int i = 0; i < SkinWeightNum; i++)
-	{
-		//スキン情報を持つべきボーン名
-		char HaveBoneName[NAME_ARRAY_SIZE];
-		strcpy_s(HaveBoneName, pSkinWeight[i].m_BoneName);
-
-		bool bFind = false;
-		for (int j = 0; j < BoneNum && bFind == false; j++)
-		{
-			//対応ボーンを発見
-			if (strcmp(HaveBoneName, pBone[j].m_Name) == 0)
-			{
-				bFind=true;
-				BONE bone = pBone[j];								
-				SKIN_WEIGHT skin_weight = pSkinWeight[i];
-
-				//ボーン情報とスキン情報の統合を行う
-				SKIN_BONE skin_bone;
-				strcpy_s(skin_bone.m_Name, bone.m_Name);		//ボーン名
-				skin_bone.m_index = bone.m_index;				//ボーン自身のインデックス
-				skin_bone.m_ChildNum = bone.m_ChildNum;			//子の数
-				skin_bone.m_pChildIndex = bone.m_pChildIndex;	//このインデックスリスト
-				skin_bone.m_matBindPose = bone.m_matBindPose;	//初期ポーズ
-				skin_bone.m_WeightNum = skin_weight.m_WeightNum;//ウェイト数
-				skin_bone.m_pIndex = skin_weight.m_pIndex;		//ウェイトリスト
-				skin_bone.m_pWeight = skin_weight.m_pWeight;	//影響する頂点のインデックスリスト
-				skin_bone.m_matOffset = skin_weight.m_matOffset;//オフセット
-
-				//保存する
-				pSkinBone[i] = skin_bone;
-			}
-		}
-	}	
-}
+//
+////ボーンとスキン情報をまとめる
+//void CX_Skin::BoneWithSkin(BONE* pBone, int BoneNum, SKIN_WEIGHT* pSkinWeight, int SkinWeightNum, SKIN_BONE* pSkinBone)
+//{
+//	//スキン情報から対応ボーンを探す
+//	for (int i = 0; i < SkinWeightNum; i++)
+//	{
+//		//スキン情報を持つべきボーン名
+//		char HaveBoneName[NAME_ARRAY_SIZE];
+//		strcpy_s(HaveBoneName, pSkinWeight[i].m_BoneName);
+//
+//		bool bFind = false;
+//		for (int j = 0; j < BoneNum && bFind == false; j++)
+//		{
+//			//対応ボーンを発見
+//			if (strcmp(HaveBoneName, pBone[j].m_Name) == 0)
+//			{
+//				bFind=true;
+//				BONE bone = pBone[j];								
+//				SKIN_WEIGHT skin_weight = pSkinWeight[i];
+//
+//				//ボーン情報とスキン情報の統合を行う
+//				SKIN_BONE skin_bone;
+//				strcpy_s(skin_bone.m_Name, bone.m_Name);		//ボーン名
+//				skin_bone.m_index = bone.m_index;				//ボーン自身のインデックス
+//				skin_bone.m_ChildNum = bone.m_ChildNum;			//子の数
+//				skin_bone.m_pChildIndex = bone.m_pChildIndex;	//このインデックスリスト
+//				skin_bone.m_matBindPose = bone.m_matBindPose;	//初期ポーズ
+//				skin_bone.m_WeightNum = skin_weight.m_WeightNum;//ウェイト数
+//				skin_bone.m_pIndex = skin_weight.m_pIndex;		//ウェイトリスト
+//				skin_bone.m_pWeight = skin_weight.m_pWeight;	//影響する頂点のインデックスリスト
+//				skin_bone.m_matOffset = skin_weight.m_matOffset;//オフセット
+//
+//				//保存する
+//				pSkinBone[i] = skin_bone;
+//			}
+//		}
+//	}	
+//}
+//
+////スキンメッシュにまとめる
+//void CX_Skin::SkinMeshPutTogether(MESH Mesh, SKIN_BONE* pSkinBone, int BoneNum, ANIMATION* pAnimation, int AnimeNum, SKIN_MESH* pSkinMesh)
+//{
+//	pSkinMesh->m_Mesh		= Mesh;			//メッシュ
+//	pSkinMesh->m_BoneNum	= BoneNum;		//ボーン数
+//	pSkinMesh->m_pSkinBone	= pSkinBone;	//スキンボーン
+//	pSkinMesh->m_AnimeNum	= AnimeNum;		//アニメーションの数
+//	pSkinMesh->m_pAnimation	= pAnimation;	//アニメーション
+//}
 
 //スキンメッシュにまとめる
-void CX_Skin::SkinMeshPutTogether(MESH Mesh, SKIN_BONE* pSkinBone, int BoneNum, ANIMATION* pAnimation, int AnimeNum, SKIN_MESH* pSkinMesh)
+void CX_Skin::SkinMeshPutTogether(MESH Mesh, BONE* pBone, int BoneNum, SKIN_WEIGHT* pSkinWeight,int WeightNum ,ANIMATION* pAnimation, int AnimeNum, SKIN_MESH* pSkinMesh)
 {
 	pSkinMesh->m_Mesh		= Mesh;			//メッシュ
 	pSkinMesh->m_BoneNum	= BoneNum;		//ボーン数
-	pSkinMesh->m_pSkinBone	= pSkinBone;	//スキンボーン
+	pSkinMesh->m_pBone		= pBone;		//ボーン
+	pSkinMesh->m_WeightNum	= WeightNum;	//ウェイト数	
+	pSkinMesh->m_pWeight	= pSkinWeight;	//ウェイトリスト
 	pSkinMesh->m_AnimeNum	= AnimeNum;		//アニメーションの数
 	pSkinMesh->m_pAnimation	= pAnimation;	//アニメーション
 }
 
-
-//フレーム補完
-KEY CX_Skin::FrameComplement(int NowFrame, ANIMATION anime)
-{
-	KEY out;
-
-	int keyNum = anime.m_KeyNum;
-	int* pFrameDiff = new int[keyNum];
-
-	bool bKey = false;
-
-	//フレームの間隔差を保存
-	for (int i = 0; i <keyNum; i++)
-	{
-		pFrameDiff[i] = anime.m_pKey[i].m_Time - NowFrame;
-
-		//現在のフレームがキーフレームの場合
-		if (pFrameDiff[i] == 0)
-		{
-			bKey = true;
-			out = anime.m_pKey[i];
-		}
-	}
-
-	//キーフレーム以外なら補完する
-	if(bKey==false)
-	{
-		KEY before=anime.m_pKey[0];
-		KEY after=anime.m_pKey[keyNum-1];
-		
-		//前フレームを探す
-		for (int i = 0; i < keyNum; i++)
-		{
-			//差がマイナスの場合前フレーム
-			if (pFrameDiff[i] < 0)
-				before = anime.m_pKey[i];
-		}
-
-		//後フレームを探す
-		for (int i = keyNum - 1; i >= 0; i--)
-		{
-			//差がプラスなら後フレーム
-			if (pFrameDiff[i] > 0)
-				after = anime.m_pKey[i];
-		}
-
-		//フレーム差を求める
-		int FrameDiff = after.m_Time - before.m_Time;
-
-		//変化の割合を求める
-		float fPercent=	(float)(NowFrame - before.m_Time) / FrameDiff;
-
-		//差分ポーズのメモリ確保
-		float* pfPoseDiff = new float[before.m_ValueNum];
-
-		//前後フレームでのポーズ差(前後フレームのデータ数は同じと仮定する)
-		for (int i = 0; i < before.m_ValueNum; i++)
-		{			
-			//ポーズの差分を求める
-			pfPoseDiff[i] = after.m_pfValue[i] - before.m_pfValue[i];
-		}
-
-		//値の数保存
-		out.m_ValueNum = before.m_ValueNum;
-
-		//メモリの確保
-		out.m_pfValue = new float[out.m_ValueNum];
-
-		//現在のポーズを求める
-		for (int i = 0; i < out.m_ValueNum ; i++)
-		{
-			out.m_pfValue[i] = before.m_pfValue[i] + (pfPoseDiff[i] * fPercent);
-			int a = 0;
-		}
-
-		//ポーズの差分破棄
-		delete[] pfPoseDiff;
-	}
-
-	//現在フレーム保存
-	out.m_Time = NowFrame;
-
-	//フレーム差分破棄
-	delete[] pFrameDiff;
-
-	return out;
-}
+//
+////フレーム補完
+//KEY CX_Skin::FrameComplement(int NowFrame, ANIMATION anime)
+//{
+//	KEY out;
+//
+//	int keyNum = anime.m_KeyNum;
+//	int* pFrameDiff = new int[keyNum];
+//
+//	bool bKey = false;
+//
+//	//フレームの間隔差を保存
+//	for (int i = 0; i <keyNum; i++)
+//	{
+//		pFrameDiff[i] = anime.m_pKey[i].m_Time - NowFrame;
+//
+//		//現在のフレームがキーフレームの場合
+//		if (pFrameDiff[i] == 0)
+//		{
+//			bKey = true;
+//			out = anime.m_pKey[i];
+//		}
+//	}
+//
+//	//キーフレーム以外なら補完する
+//	if(bKey==false)
+//	{
+//		KEY before=anime.m_pKey[0];
+//		KEY after=anime.m_pKey[keyNum-1];
+//		
+//		//前フレームを探す
+//		for (int i = 0; i < keyNum; i++)
+//		{
+//			//差がマイナスの場合前フレーム
+//			if (pFrameDiff[i] < 0)
+//				before = anime.m_pKey[i];
+//		}
+//
+//		//後フレームを探す
+//		for (int i = keyNum - 1; i >= 0; i--)
+//		{
+//			//差がプラスなら後フレーム
+//			if (pFrameDiff[i] > 0)
+//				after = anime.m_pKey[i];
+//		}
+//
+//		//フレーム差を求める
+//		int FrameDiff = after.m_Time - before.m_Time;
+//
+//		//変化の割合を求める
+//		float fPercent=	(float)(NowFrame - before.m_Time) / FrameDiff;
+//
+//		//差分ポーズのメモリ確保
+//		float* pfPoseDiff = new float[before.m_ValueNum];
+//
+//		//前後フレームでのポーズ差(前後フレームのデータ数は同じと仮定する)
+//		for (int i = 0; i < before.m_ValueNum; i++)
+//		{			
+//			//ポーズの差分を求める
+//			pfPoseDiff[i] = after.m_pfValue[i] - before.m_pfValue[i];
+//		}
+//
+//		//値の数保存
+//		out.m_ValueNum = before.m_ValueNum;
+//
+//		//メモリの確保
+//		out.m_pfValue = new float[out.m_ValueNum];
+//
+//		//現在のポーズを求める
+//		for (int i = 0; i < out.m_ValueNum ; i++)
+//		{
+//			out.m_pfValue[i] = before.m_pfValue[i] + (pfPoseDiff[i] * fPercent);
+//			int a = 0;
+//		}
+//
+//		//ポーズの差分破棄
+//		delete[] pfPoseDiff;
+//	}
+//
+//	//現在フレーム保存
+//	out.m_Time = NowFrame;
+//
+//	//フレーム差分破棄
+//	delete[] pFrameDiff;
+//
+//	return out;
+//}
 
 //アニメーション
 void CX_Skin::Animation(int AnimeId,int NowFrame,SKIN_MESH* pSkinMesh)
 {
 	ANIMATION anime = pSkinMesh->m_pAnimation[AnimeId];
 
-	//フレーム補完
-	KEY NowPose = FrameComplement(NowFrame, anime);
+
+
+	////フレーム補完
+	//KEY NowPose = FrameComplement(NowFrame, anime);
 
 	////ポーズを行列にする
 	//D3DXMATRIX matNowPose(NowPose.m_pfValue);
