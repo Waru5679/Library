@@ -187,7 +187,7 @@ private:
 	BONE_KEY LoadBoneKey(FILE* fp);
 
 	//フレーム補完
-	//KEY FrameComplement(int NowFrame, ANIMATION anime);
+	KEY FrameComplement(int NowFrame, BONE_KEY BoneKey);
 	
 	SKIN_MESH	m_SkinMesh;		//スキンメッシュ
 };
