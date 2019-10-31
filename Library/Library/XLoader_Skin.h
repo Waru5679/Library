@@ -60,21 +60,6 @@ struct SKIN_WEIGHT
 	D3DXMATRIX	m_matOffset;				//オフセット行列
 };
 
-////スキンウェイト情報を持ったボーン
-//struct SKIN_BONE
-//{
-//	char		m_Name[NAME_ARRAY_SIZE];//ボーン名
-//	int			m_index;				//自身のインデックス
-//	int			m_ChildNum;				//子の数
-//	int*		m_pChildIndex;			//自分の子のインデックスリスト
-//	int			m_WeightNum;			//ウェイトの数
-//	int*		m_pIndex;				//影響を与える頂点インデックスリスト
-//	float*		m_pWeight;				//ウェイトリスト
-//	D3DXMATRIX	m_matOffset;			//オフセット行列
-//	D3DXMATRIX	m_matBindPose;			//初期ポーズ（ずっと変わらない）
-//	D3DXMATRIX	m_matNewPose;			//現在のポーズ（その都度変わる）
-//};
-
 //アニメーションのキー
 struct KEY
 {
@@ -113,20 +98,27 @@ struct MESH
 	VERTEX*			m_pVertex;		//頂点情報のリスト
 };
 
+//スキンメッシュヘッダー
+struct SKIN_MESH_HEADER
+{
+	int	m_MaxVertex;//頂点の最大ウェイト数
+	int m_MaxFace;	//面の最大ウェイト数
+	int m_BoneNum;	//ボーン数
+};
+
 //スキンメッシュ
 struct SKIN_MESH
 {
-	MESH		m_Mesh;			//メッシュ
-	int			m_BoneNum;		//ボーン数
-	BONE*		m_pBone;		//ボーンリスト
-	int			m_WeightNum;	//ウェイト数
-	SKIN_WEIGHT*m_pWeight;		//スキンウェイト
-	int			m_AnimeNum;		//アニメーション数
-	ANIMATION*	m_pAnimation;	//アニメーション
-	D3DXMATRIX	m_mFinalWorld;	//最終的なワールド行列（この姿勢でレンダリングする）
-
-
-	//SKIN_BONE* m_pSkinBone;		//スキン情報を持たせたボーン
+	MESH				m_Mesh;			//メッシュ
+	int					m_BoneNum;		//ボーン数
+	BONE*				m_pBone;		//ボーンリスト
+	SKIN_MESH_HEADER	m_SkinHeader;	//スキンメッシュヘッダー
+	int					m_WeightNum;	//ウェイト数
+	SKIN_WEIGHT*		m_pWeight;		//スキンウェイト
+	int					m_AnimeNum;		//アニメーション数
+	ANIMATION*			m_pAnimation;	//アニメーション
+	D3DXMATRIX			m_mFinalWorld;	//最終的なワールド行列（この姿勢でレンダリングする）
+	
 };
 
 //Xファイル関連のクラス
@@ -158,6 +150,9 @@ private:
 
 	//メッシュ情報の読み込み
 	bool LoadMesh(FILE* fp, MESH* pMesh, long lStartPos);
+
+	//スキンメッシュヘッダー読み込み
+	void LoadSkinMeshHeader(FILE* fp, SKIN_MESH_HEADER* pSkinHeader, long lStartPos);
 	
 	//ボーン読み込み
 	bool LoadBone(FILE* fp, BONE* pBone, long lStartPos);
@@ -173,12 +168,6 @@ private:
 
 	//指定文字を文字列から消す
 	void ErasCharFromString(char* pSource, int Size, char Erace);
-
-	////ボーンとスキン情報をまとめる
-	//void BoneWithSkin(BONE* pBone, int BoneNum, SKIN_WEIGHT* pSkinWeight, int SkinWeightNum, SKIN_BONE* pSkinBone);
-
-	////スキンメッシュにまとめる
-	//void SkinMeshPutTogether(MESH Mesh, SKIN_BONE* pSkinBone, int BoneNum, ANIMATION* pAnimation, int AnimeNum, SKIN_MESH* pSkinMesh);
 
 	//スキンメッシュにまとめる
 	void SkinMeshPutTogether(MESH Mesh, BONE* pBone, int BoneNum,SKIN_WEIGHT* pSkinWeight,int WeightNum,ANIMATION* pAnimation, int AnimeNum, SKIN_MESH* pSkinMesh);
