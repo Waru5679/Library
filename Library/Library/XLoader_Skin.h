@@ -74,7 +74,7 @@ struct BONE_KEY
 	char	m_AffectBoneName[NAME_ARRAY_SIZE];	//影響を受けるボーン名
 	int		m_KeyType;							//キータイプ
 	int		m_KeyNum;							//キーの数
-	KEY* m_pKey;								//キーリスト
+	KEY*	m_pKey;								//キーリスト
 };
 
 //アニメーション構造体
@@ -170,7 +170,7 @@ private:
 	void ErasCharFromString(char* pSource, int Size, char Erace);
 
 	//スキンメッシュにまとめる
-	void SkinMeshPutTogether(MESH Mesh, BONE* pBone, int BoneNum,SKIN_WEIGHT* pSkinWeight,int WeightNum,ANIMATION* pAnimation, int AnimeNum, SKIN_MESH* pSkinMesh);
+	void SkinMeshPutTogether(MESH Mesh, BONE* pBone, int BoneNum,SKIN_WEIGHT* pSkinWeight,int WeightNum,ANIMATION* pAnimation, int AnimeNum, SKIN_MESH* pSkinMesh,SKIN_MESH_HEADER SkinHeader);
 
 	//ボーン毎のキー情報読み込み
 	BONE_KEY LoadBoneKey(FILE* fp);

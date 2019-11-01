@@ -94,7 +94,7 @@ bool CX_Skin::LoadSkinMesh(const char* FileName, SKIN_MESH* pSkinMesh)
 	}
 
 	//スキンメッシュにまとめる
-	SkinMeshPutTogether(Mesh, pBone, BoneNum,pSkinWeight, SkinWeightNum, pAnime,AnimeNum, pSkinMesh);
+	SkinMeshPutTogether(Mesh, pBone, BoneNum,pSkinWeight, SkinWeightNum, pAnime,AnimeNum, pSkinMesh,SkinHeader);
 	
 	return true;
 }
@@ -960,7 +960,7 @@ bool CX_Skin::LoadAnimation(FILE* fp, ANIMATION* pAnime, long lStartPos)
 }
 
 //スキンメッシュにまとめる
-void CX_Skin::SkinMeshPutTogether(MESH Mesh, BONE* pBone, int BoneNum, SKIN_WEIGHT* pSkinWeight,int WeightNum ,ANIMATION* pAnimation, int AnimeNum, SKIN_MESH* pSkinMesh)
+void CX_Skin::SkinMeshPutTogether(MESH Mesh, BONE* pBone, int BoneNum, SKIN_WEIGHT* pSkinWeight,int WeightNum ,ANIMATION* pAnimation, int AnimeNum, SKIN_MESH* pSkinMesh,SKIN_MESH_HEADER SkinHeader)
 {
 	pSkinMesh->m_Mesh		= Mesh;			//メッシュ
 	pSkinMesh->m_BoneNum	= BoneNum;		//ボーン数
@@ -969,6 +969,7 @@ void CX_Skin::SkinMeshPutTogether(MESH Mesh, BONE* pBone, int BoneNum, SKIN_WEIG
 	pSkinMesh->m_pWeight	= pSkinWeight;	//ウェイトリスト
 	pSkinMesh->m_AnimeNum	= AnimeNum;		//アニメーションの数
 	pSkinMesh->m_pAnimation	= pAnimation;	//アニメーション
+	pSkinMesh->m_SkinHeader = SkinHeader;	//スキンヘッダー
 }
 
 //フレーム補完
