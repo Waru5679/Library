@@ -32,8 +32,11 @@ bool CX_Skin::LoadSkinMesh(const char* FileName, SKIN_MESH* pSkinMesh)
 
 	SKIN_MESH_HEADER SkinHeader;	//スキンメッシュヘッダー
 
+	//スキンメッシュヘッダー読み込み
+	LoadSkinMeshHeader(fp, &SkinHeader, ReadStartPos);
+
 	//メッシュの読み込み
-	if (LoadMesh(fp, &Mesh,ReadStartPos) == false)
+	if (LoadMesh(fp, &Mesh, &SkinHeader,ReadStartPos) == false)
 	{
 		//メッシュ読み込み失敗
 		return false;
@@ -42,8 +45,6 @@ bool CX_Skin::LoadSkinMesh(const char* FileName, SKIN_MESH* pSkinMesh)
 	//ボーン数取得
 	BoneNum = GetBoneNum(fp, ReadStartPos);
 
-	//スキンメッシュヘッダー読み込み
-	LoadSkinMeshHeader(fp, &SkinHeader, ReadStartPos);
 
 	//ボーンがあるときのみ
 	if (BoneNum != 0)
@@ -96,6 +97,9 @@ bool CX_Skin::LoadSkinMesh(const char* FileName, SKIN_MESH* pSkinMesh)
 	//スキンメッシュにまとめる
 	SkinMeshPutTogether(Mesh, pBone, BoneNum,pSkinWeight, SkinWeightNum, pAnime,AnimeNum, pSkinMesh,SkinHeader);
 
+	//スキンウェイトの情報をもとに各頂点に対応ボーンとウェイトの情報を持たせる
+	VertexMatchBone(pSkinMesh);
+
 	//バーテックスバッファーを作成
 	pSkinMesh->m_Mesh.m_pVertexBuffer = DRAW->BufferCreate(pSkinMesh->m_Mesh.m_pVertex, sizeof(VERTEX) * pSkinMesh->m_Mesh.m_VerNum, D3D10_BIND_VERTEX_BUFFER);
 
@@ -130,7 +134,7 @@ long CX_Skin::GetTemplateSkipStartPos(FILE* fp)
 }
 
 //メッシュ情報の読み込み
-bool CX_Skin::LoadMesh(FILE* fp, MESH* pMesh, long lStartPos)
+bool CX_Skin::LoadMesh(FILE* fp, MESH* pMesh, SKIN_MESH_HEADER* pSkinHeader, long lStartPos)
 {
 	//読み込みの開始位置にセット
 	fseek(fp, lStartPos, SEEK_SET);
@@ -375,6 +379,10 @@ bool CX_Skin::LoadMesh(FILE* fp, MESH* pMesh, long lStartPos)
 		pVertex[i].m_vPos = pvPos[i];
 		pVertex[i].m_vNorm = pvNormal[i];
 		pVertex[i].m_vTex = pvTex[i];
+
+		//ウェイト分のメモリ確保
+		pVertex[i].m_pfWeight = new float[pSkinHeader->m_MaxVertex];
+		pVertex[i].m_pBoneIndex = new int[pSkinHeader->m_MaxVertex];
 	}
 
 	//マテリアル毎に情報を整理する
@@ -799,10 +807,53 @@ int CX_Skin::GetAnimeNum(FILE* fp, long lStartPos)
 	return animeNum;
 }
 
+//スキンウェイトの情報をもとに各頂点に対応ボーンとウェイトの情報を持たせる
+void CX_Skin::VertexMatchBone(SKIN_MESH* pSkin)
+{
+	//対応ボーン名
+	char boneName[NAME_ARRAY_SIZE];
+
+	for (int i = 0; i < pSkin->m_WeightNum; i++)
+	{
+		//対応ボーン名
+		strcpy_s(boneName, pSkin->m_pWeight[i].m_BoneName);
+
+		//対応ボーンを探す
+		bool bFind = false;
+		int boneID = -1;
+		for (int i = 0; i < pSkin->m_BoneNum && bFind == false; i++)
+		{
+			//対応ボーン発見
+			if (strcmp(pSkin->m_pBone[i].m_Name, boneName) == 0)
+			{
+				bFind = true;
+				boneID = i;
+			}
+		}
+		
+		//対応頂点にボーンIDとウェイトを渡す
+		for (int j = 0; j < pSkin->m_pWeight[i].m_WeightNum; j++)
+		{
+			VERTEX ver = pSkin->m_Mesh.m_pVertex[pSkin->m_pWeight[i].m_pIndex[j]];
+
+			//ボーンID
+			ver.m_pBoneIndex[ver.m_WeightNum] = boneID;
+
+			//ウェイト
+			ver.m_pfWeight[ver.m_WeightNum] = pSkin->m_pWeight[i].m_pWeight[j];
+
+			//ウェイト数更新
+			ver.m_WeightNum++;
+
+			//保存
+			pSkin->m_Mesh.m_pVertex[pSkin->m_pWeight[i].m_pIndex[j]] = ver;
+		}
+	}
+}
+
 //ボーン毎のキー情報の読み込み
 BONE_KEY CX_Skin::LoadBoneKey(FILE* fp)
 {
-	
 	BONE_KEY Out;
 
 	//キーワード読み込み用
@@ -877,6 +928,7 @@ BONE_KEY CX_Skin::LoadBoneKey(FILE* fp)
 	}	
 	return Out;
 }
+
 
 //アニメーション読み込み
 bool CX_Skin::LoadAnimation(FILE* fp, ANIMATION* pAnime, long lStartPos)
@@ -966,14 +1018,15 @@ bool CX_Skin::LoadAnimation(FILE* fp, ANIMATION* pAnime, long lStartPos)
 //スキンメッシュにまとめる
 void CX_Skin::SkinMeshPutTogether(MESH Mesh, BONE* pBone, int BoneNum, SKIN_WEIGHT* pSkinWeight,int WeightNum ,ANIMATION* pAnimation, int AnimeNum, SKIN_MESH* pSkinMesh,SKIN_MESH_HEADER SkinHeader)
 {
-	pSkinMesh->m_Mesh		= Mesh;			//メッシュ
-	pSkinMesh->m_BoneNum	= BoneNum;		//ボーン数
-	pSkinMesh->m_pBone		= pBone;		//ボーン
-	pSkinMesh->m_WeightNum	= WeightNum;	//ウェイト数	
-	pSkinMesh->m_pWeight	= pSkinWeight;	//ウェイトリスト
-	pSkinMesh->m_AnimeNum	= AnimeNum;		//アニメーションの数
-	pSkinMesh->m_pAnimation	= pAnimation;	//アニメーション
-	pSkinMesh->m_SkinHeader = SkinHeader;	//スキンヘッダー
+	pSkinMesh->m_Mesh		= Mesh;						//メッシュ
+	pSkinMesh->m_BoneNum	= BoneNum;					//ボーン数
+	pSkinMesh->m_pBone		= pBone;					//ボーン
+	pSkinMesh->m_WeightNum	= WeightNum;				//ウェイト数	
+	pSkinMesh->m_pWeight	= pSkinWeight;				//ウェイトリスト
+	pSkinMesh->m_AnimeNum	= AnimeNum;					//アニメーションの数
+	pSkinMesh->m_pAnimation	= pAnimation;				//アニメーション
+	pSkinMesh->m_SkinHeader	= SkinHeader;				//スキンヘッダー
+	pSkinMesh->m_pRoot		= &pSkinMesh->m_pBone[0];	//ルートボーン
 }
 
 //フレーム補完
@@ -1061,6 +1114,23 @@ KEY CX_Skin::FrameComplement(int NowFrame, BONE_KEY BoneKey)
 
 	return out;
 }
+//
+////ボーンの更新
+//void CX_Skin::BoneUpdate(SKIN_MESH* pSkin, int AnimeId, int NowFrame)
+//{
+//	for (int i = 0; i < pSkin->m_BoneNum; i++)
+//	{
+//		ANIMATION anime = pSkin->m_pAnimation[AnimeId];
+//		pSkin->m_pBone[i].m_matNewPose=	GetPose(pSkin->m_pRoot,anime,NowFrame, i);
+//	}
+//}
+//
+////ポーズを取得する
+//D3DXMATRIX CX_Skin::GetPose(BONE* pBone, ANIMATION Anime, int NowFrame, int BoneID)
+//{
+//
+//
+//}
 
 //アニメーション
 void CX_Skin::Animation(int AnimeId,int NowFrame,SKIN_MESH* pSkinMesh)
@@ -1146,8 +1216,6 @@ void CX_Skin::DrawMesh(D3DMATRIX matWorld, SKIN_MESH* pSkinMesh, CColorData* pCo
 			{
 				SHADER->GetTechnique()->GetPassByIndex(p)->Apply(0);
 				DX->GetDevice()->DrawIndexed(face.m_FaceOfVer, 0, 0);
-
-				//DX->GetDevice()->DrawIndexed(pSkinMesh->m_Mesh.m_pMaterial[i].m_pVerNum[j], 0, 0);
 			}
 		}
 	}

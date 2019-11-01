@@ -13,12 +13,20 @@ constexpr int NAME_ARRAY_SIZE{ 100 };	//名前配列のサイズ
 //頂点構造体
 struct VERTEX
 {
+	VERTEX()
+	{
+		m_pBoneIndex = nullptr;
+		m_pfWeight = nullptr;
+		m_WeightNum = 0;
+	}
+
 	D3DXVECTOR3 m_vPos;	//頂点位置
 	D3DXVECTOR3 m_vNorm;//頂点法線
 	D3DXVECTOR2 m_vTex;	//UV座標
 
 	int* m_pBoneIndex;	//影響を受けるボーンのインデックス
 	float* m_pfWeight;	//ウェイト
+	int m_WeightNum;	//ウェイトの数
 };
 
 //ポリゴン
@@ -113,6 +121,7 @@ struct SKIN_MESH_HEADER
 //スキンメッシュ
 struct SKIN_MESH
 {
+
 	MESH				m_Mesh;			//メッシュ
 	int					m_BoneNum;		//ボーン数
 	BONE*				m_pBone;		//ボーンリスト
@@ -121,6 +130,7 @@ struct SKIN_MESH
 	SKIN_WEIGHT*		m_pWeight;		//スキンウェイト
 	int					m_AnimeNum;		//アニメーション数
 	ANIMATION*			m_pAnimation;	//アニメーション
+	BONE*				m_pRoot;		//ルートボーン
 	D3DXMATRIX			m_mFinalWorld;	//最終的なワールド行列（この姿勢でレンダリングする）
 	
 };
@@ -153,7 +163,7 @@ private:
 	long GetTemplateSkipStartPos(FILE* fp);
 
 	//メッシュ情報の読み込み
-	bool LoadMesh(FILE* fp, MESH* pMesh, long lStartPos);
+	bool LoadMesh(FILE* fp, MESH* pMesh, SKIN_MESH_HEADER* pSkinHeader, long lStartPos);
 
 	//スキンメッシュヘッダー読み込み
 	void LoadSkinMeshHeader(FILE* fp, SKIN_MESH_HEADER* pSkinHeader, long lStartPos);
@@ -179,8 +189,14 @@ private:
 	//ボーン毎のキー情報読み込み
 	BONE_KEY LoadBoneKey(FILE* fp);
 	
-	////スキンウェイトの情報をもとに各頂点に対応ボーンとウェイトの情報を持たせる
-	//void VertexMatchBone(SKIN_WEIGHT SkinWeight,)
+	//スキンウェイトの情報をもとに各頂点に対応ボーンとウェイトの情報を持たせる
+	void VertexMatchBone(SKIN_MESH* pSkin);
+
+	////ボーンの更新
+	//void BoneUpdate(SKIN_MESH* pSkin, int AnimeId, int NowFrame);
+
+	////ポーズを取得する
+	//D3DXMATRIX GetPose(BONE* pBone, ANIMATION Anime, int NowFrame, int BoneID);
 
 	//フレーム補完
 	KEY FrameComplement(int NowFrame, BONE_KEY BoneKey);
