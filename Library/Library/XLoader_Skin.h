@@ -16,6 +16,9 @@ struct VERTEX
 	D3DXVECTOR3 m_vPos;	//頂点位置
 	D3DXVECTOR3 m_vNorm;//頂点法線
 	D3DXVECTOR2 m_vTex;	//UV座標
+
+	int* m_pBoneIndex;	//影響を受けるボーンのインデックス
+	float* m_pfWeight;	//ウェイト
 };
 
 //ポリゴン
@@ -23,6 +26,7 @@ struct FACE
 {
 	int m_FaceOfVer;	//構成する頂点の数
 	int* m_pIndex;		//構成する頂点のインデックス
+	int m_UseMaterial;	//使用するマテリアル
 };
 
 //マテリアル構造体
@@ -33,9 +37,9 @@ struct MATERIAL
 	D3DXVECTOR3					m_vKs;						//スペキュラー
 	float						m_fPower;					//スペキュラーのパワー
 	D3DXVECTOR3					m_vKe;						//エミッシブ
-	ID3D10ShaderResourceView*	m_pTexture;					//テクスチャポインタ	
+	ID3D10ShaderResourceView* m_pTexture;					//テクスチャポインタ	
 	int							m_FaceNum;					//このマテリアルを使用する面の数
-	int*						m_pVerNum;					//頂点数のリスト
+	int*						m_pFaceIndex;				//このマテリアルで使用する面のインデックスリスト
 	ID3D10Buffer**				m_ppIndexBuffer;			//インデックスバッファ
 };
 
@@ -174,6 +178,9 @@ private:
 
 	//ボーン毎のキー情報読み込み
 	BONE_KEY LoadBoneKey(FILE* fp);
+	
+	////スキンウェイトの情報をもとに各頂点に対応ボーンとウェイトの情報を持たせる
+	//void VertexMatchBone(SKIN_WEIGHT SkinWeight,)
 
 	//フレーム補完
 	KEY FrameComplement(int NowFrame, BONE_KEY BoneKey);

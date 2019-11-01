@@ -95,7 +95,10 @@ bool CX_Skin::LoadSkinMesh(const char* FileName, SKIN_MESH* pSkinMesh)
 
 	//スキンメッシュにまとめる
 	SkinMeshPutTogether(Mesh, pBone, BoneNum,pSkinWeight, SkinWeightNum, pAnime,AnimeNum, pSkinMesh,SkinHeader);
-	
+
+	//バーテックスバッファーを作成
+	pSkinMesh->m_Mesh.m_pVertexBuffer = DRAW->BufferCreate(pSkinMesh->m_Mesh.m_pVertex, sizeof(VERTEX) * pSkinMesh->m_Mesh.m_VerNum, D3D10_BIND_VERTEX_BUFFER);
+
 	return true;
 }
 
@@ -127,27 +130,26 @@ long CX_Skin::GetTemplateSkipStartPos(FILE* fp)
 }
 
 //メッシュ情報の読み込み
-bool CX_Skin::LoadMesh(FILE* fp, MESH* pMesh,long lStartPos)
+bool CX_Skin::LoadMesh(FILE* fp, MESH* pMesh, long lStartPos)
 {
 	//読み込みの開始位置にセット
 	fseek(fp, lStartPos, SEEK_SET);
 
-	int verNum	=0;//頂点数
-	int faceNum	=0;//面の数
-	int normNum	=0;//法線数
-	int uvNum	=0;//UV数
-	int mateNum	=0;//マテリアルの数
-		
+	int verNum = 0;//頂点数
+	int faceNum = 0;//面の数
+	int normNum = 0;//法線数
+	int uvNum = 0;//UV数
+	int mateNum = 0;//マテリアルの数
+
 	//読み込み用（読み込み後破棄）
-	int*		 pFaceOfMate= nullptr;//面の対応マテリアルのインデックス
-	D3DXVECTOR3* pvPos		= nullptr;//頂点座標
-	D3DXVECTOR3* pvNormal	= nullptr;//法線
-	D3DXVECTOR2* pvTex		= nullptr;//テクスチャ座標
-	
+	D3DXVECTOR3* pvPos = nullptr;//頂点座標
+	D3DXVECTOR3* pvNormal = nullptr;//法線
+	D3DXVECTOR2* pvTex = nullptr;//テクスチャ座標
+
 	//読み込み後そのまま使うもの
-	FACE*		pFace		= nullptr;//面のリスト
-	MATERIAL*	pMaterial	= nullptr;//マテリアルのリスト
-	VERTEX*		pVertex		= nullptr;//頂点リスト
+	FACE* pFace = nullptr;//面のリスト
+	MATERIAL* pMaterial = nullptr;//マテリアルのリスト
+	VERTEX* pVertex = nullptr;//頂点リスト
 
 	//読み込み用
 	float x, y, z, w;
@@ -171,7 +173,7 @@ bool CX_Skin::LoadMesh(FILE* fp, MESH* pMesh,long lStartPos)
 			//頂点数
 			fgets(str, sizeof(str), fp);
 			verNum = atoi(str);
-			
+
 			//頂点座標メモリ確保
 			pvPos = new D3DXVECTOR3[verNum];
 
@@ -190,10 +192,10 @@ bool CX_Skin::LoadMesh(FILE* fp, MESH* pMesh,long lStartPos)
 			//面の数
 			fgets(str, sizeof(str), fp);
 			faceNum = atoi(str);
-						
+
 			//面のメモリ確保
 			pFace = new FACE[faceNum];
-		
+
 			int faceOfVer = 0;//面を構成する頂点数
 
 			//面読み込み
@@ -237,7 +239,7 @@ bool CX_Skin::LoadMesh(FILE* fp, MESH* pMesh,long lStartPos)
 
 			//法線メモリ確保
 			pvNormal = new D3DXVECTOR3[normNum];
-			
+
 			//法線読み込み
 			for (int i = 0; i < normNum; i++)
 			{
@@ -287,14 +289,11 @@ bool CX_Skin::LoadMesh(FILE* fp, MESH* pMesh,long lStartPos)
 			fgets(str, sizeof(str), fp);
 			faceNum = atoi(str);
 
-			//面の対応マテリアルメモリ確保
-			pFaceOfMate = new int[faceNum];
-			
 			//面に何番のマテリアルを使うか
 			for (int i = 0; i < faceNum; i++)
 			{
 				//読み込み
-				fscanf_s(fp, "%d", &pFaceOfMate[i]);
+				fscanf_s(fp, "%d", &pFace[i].m_UseMaterial);
 
 				//,または;の除去
 				fgets(str, sizeof(str), fp);
@@ -353,8 +352,8 @@ bool CX_Skin::LoadMesh(FILE* fp, MESH* pMesh,long lStartPos)
 					fscanf_s(fp, "%s", pMaterial[i].m_TexName, size);
 
 					//"と;を除去する
-					ErasCharFromString(pMaterial->m_TexName,size, '\"');
-					ErasCharFromString(pMaterial->m_TexName,size, ';');
+					ErasCharFromString(pMaterial->m_TexName, size, '\"');
+					ErasCharFromString(pMaterial->m_TexName, size, ';');
 
 					//テクスチャーを作成
 					if (FAILED(D3DX10CreateShaderResourceViewFromFileA(DX->GetDevice(), pMaterial[i].m_TexName, NULL, NULL, &pMaterial[i].m_pTexture, NULL)))
@@ -378,17 +377,14 @@ bool CX_Skin::LoadMesh(FILE* fp, MESH* pMesh,long lStartPos)
 		pVertex[i].m_vTex = pvTex[i];
 	}
 
-	//バーテックスバッファーを作成
-	pMesh->m_pVertexBuffer = DRAW->BufferCreate(pVertex, sizeof(VERTEX) * verNum, D3D10_BIND_VERTEX_BUFFER);
-
-	//マテリアル毎にインデックスバッファを作成
-	for (int i = 0; i < mateNum;i++)
+	//マテリアル毎に情報を整理する
+	for (int i = 0; i < mateNum; i++)
 	{
 		//そのマテリアルを使用する面の数を数える
-		int UseFaceNum=0;
+		int UseFaceNum = 0;
 		for (int j = 0; j < faceNum; j++)
 		{
-			if (pFaceOfMate[j] == i)
+			if (pFace[j].m_UseMaterial == i)
 			{
 				UseFaceNum++;
 			}
@@ -397,37 +393,47 @@ bool CX_Skin::LoadMesh(FILE* fp, MESH* pMesh,long lStartPos)
 		//面の数
 		pMaterial[i].m_FaceNum = UseFaceNum;
 
-		//面の数だけメモリ確保
-		pMaterial[i].m_ppIndexBuffer = new ID3D10Buffer * [UseFaceNum];
-		pMaterial[i].m_pVerNum = new int[UseFaceNum];
+		//面のリストメモリ確保
+		pMaterial[i].m_pFaceIndex = new int[UseFaceNum];
 
-		//面ごとにインデックスバッファを作成
+		//面のインデックスを保存
+		int face_count = 0;
 		for (int j = 0; j < faceNum; j++)
 		{
 			//このマテリアルを使用する面のみ
-			if (pFaceOfMate[j] == i)
+			if (pFace[j].m_UseMaterial == i)
 			{
-				//インデックスバッファ作成
-				pMaterial[i].m_ppIndexBuffer[j] = DRAW->BufferCreate(pFace[j].m_pIndex, sizeof(int) * pFace[j].m_FaceOfVer, D3D10_BIND_INDEX_BUFFER);
-
-				//頂点数を保存
-				pMaterial[i].m_pVerNum[j] = pFace[j].m_FaceOfVer;
+				pMaterial[i].m_pFaceIndex[face_count] = j;
+				face_count++;
 			}
 		}
+
+		//面の数だけメモリ確保
+		pMaterial[i].m_ppIndexBuffer = new ID3D10Buffer * [pMaterial[i].m_FaceNum];
+
+		//面の数だけインデックスバッファ作成
+		for (int j = 0; j < pMaterial[i].m_FaceNum; j++)
+		{
+			FACE face = pFace[pMaterial[i].m_pFaceIndex[j]];
+
+			//インデックスバッファ作成
+			pMaterial[i].m_ppIndexBuffer[j] = DRAW->BufferCreate(face.m_pIndex, sizeof(int) * face.m_FaceOfVer, D3D10_BIND_INDEX_BUFFER);
+		}
 	}
-		
+
 	//一時保存からメッシュポインタへデータを移す
 	pMesh->m_MaterialNum = mateNum;
 	pMesh->m_pMaterial = pMaterial;
 	pMesh->m_FaceNum = faceNum;
 	pMesh->m_pFace = pFace;
 	pMesh->m_pVertex = pVertex;
+	pMesh->m_VerNum = verNum;
+	pMesh->m_UvNum = uvNum;
 
 	//一時保存は破棄
 	PointerRelease(pvPos);
 	PointerRelease(pvNormal);
 	PointerRelease(pvTex);
-	PointerRelease(pFaceOfMate);
 
 	return true;
 }
@@ -486,7 +492,6 @@ void CX_Skin::LoadSkinMeshHeader(FILE* fp, SKIN_MESH_HEADER* pSkinHeader, long l
 	}
 }
 
-
 //ボーン数の取得
 int CX_Skin::GetBoneNum(FILE* fp, long lStartPos)
 {
@@ -541,7 +546,6 @@ bool CX_Skin::LoadBone(FILE* fp, BONE* pBone, long lStartPos)
 			pBone[bone.m_index]=bone;
 		}
 	}
-
 	return true;
 }
 
@@ -1114,18 +1118,20 @@ void CX_Skin::DrawMesh(D3DMATRIX matWorld, SKIN_MESH* pSkinMesh, CColorData* pCo
 		//面ごとに描画
 		for (int j = 0; j < pSkinMesh->m_Mesh.m_pMaterial[i].m_FaceNum; j++)
 		{
+			FACE face = pSkinMesh->m_Mesh.m_pFace[pSkinMesh->m_Mesh.m_pMaterial[i].m_pFaceIndex[j]];
+
 			//インデックスバッファーをセット
 			stride = sizeof(int);
 			offset = 0;
 			DX->GetDevice()->IASetIndexBuffer(pSkinMesh->m_Mesh.m_pMaterial[i].m_ppIndexBuffer[j], DXGI_FORMAT_R32_UINT, 0);
 
 			//プリミティブ・トポロジーをセット
-			if (pSkinMesh->m_Mesh.m_pMaterial[i].m_pVerNum[j] == TRIANGLE_POLYGON)
+			if (face.m_FaceOfVer == TRIANGLE_POLYGON)
 			{
 				//三角ポリゴン
 				DX->GetDevice()->IASetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 			}
-			if (pSkinMesh->m_Mesh.m_pMaterial[i].m_pVerNum[j] == QUAD_POLYGON)
+			if (face.m_FaceOfVer == QUAD_POLYGON)
 			{
 				//四角ポリゴン
 				DX->GetDevice()->IASetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
@@ -1139,7 +1145,9 @@ void CX_Skin::DrawMesh(D3DMATRIX matWorld, SKIN_MESH* pSkinMesh, CColorData* pCo
 			for (UINT p = 0; p < dc.Passes; ++p)
 			{
 				SHADER->GetTechnique()->GetPassByIndex(p)->Apply(0);
-				DX->GetDevice()->DrawIndexed(pSkinMesh->m_Mesh.m_pMaterial[i].m_pVerNum[j], 0, 0);
+				DX->GetDevice()->DrawIndexed(face.m_FaceOfVer, 0, 0);
+
+				//DX->GetDevice()->DrawIndexed(pSkinMesh->m_Mesh.m_pMaterial[i].m_pVerNum[j], 0, 0);
 			}
 		}
 	}
