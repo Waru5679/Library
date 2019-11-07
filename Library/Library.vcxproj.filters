@@ -318,4 +318,9 @@
       <Filter>リソース ファイル\XLoader</Filter>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Geometry_Texture.fx">
+      <Filter>リソース ファイル\Shader</Filter>
+    </FxCompile>
+  </ItemGroup>
 </Project>

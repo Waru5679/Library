@@ -192,11 +192,14 @@ private:
 	//スキンウェイトの情報をもとに各頂点に対応ボーンとウェイトの情報を持たせる
 	void VertexMatchBone(SKIN_MESH* pSkin);
 
-	////ボーンの更新
-	//void BoneUpdate(SKIN_MESH* pSkin, int AnimeId, int NowFrame);
+	//ボーンの更新
+	void BoneUpdate(SKIN_MESH* pSkin, int AnimeId, int NowFrame);
 
-	////ポーズを取得する
-	//D3DXMATRIX GetPose(BONE* pBone, ANIMATION Anime, int NowFrame, int BoneID);
+	//ポーズを取得する
+	//D3DXMATRIX GetPose(SKIN_MESH* pSkin, BONE* pBone, ANIMATION Anime, int NowFrame, int BoneID);
+
+	void GetPose(SKIN_MESH* pSkin, BONE* pBone, ANIMATION Anime, int NowFrame);
+
 
 	//フレーム補完
 	KEY FrameComplement(int NowFrame, BONE_KEY BoneKey);

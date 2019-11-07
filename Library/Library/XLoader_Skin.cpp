@@ -1114,64 +1114,47 @@ KEY CX_Skin::FrameComplement(int NowFrame, BONE_KEY BoneKey)
 
 	return out;
 }
-//
-////ボーンの更新
-//void CX_Skin::BoneUpdate(SKIN_MESH* pSkin, int AnimeId, int NowFrame)
-//{
-//	for (int i = 0; i < pSkin->m_BoneNum; i++)
-//	{
-//		ANIMATION anime = pSkin->m_pAnimation[AnimeId];
-//		pSkin->m_pBone[i].m_matNewPose=	GetPose(pSkin->m_pRoot,anime,NowFrame, i);
-//	}
-//}
-//
-////ポーズを取得する
-//D3DXMATRIX CX_Skin::GetPose(BONE* pBone, ANIMATION Anime, int NowFrame, int BoneID)
-//{
-//
-//
-//}
+
+//ボーンの更新
+void CX_Skin::BoneUpdate(SKIN_MESH* pSkin, int AnimeId, int NowFrame)
+{
+	ANIMATION anime = pSkin->m_pAnimation[AnimeId];
+	GetPose(pSkin,pSkin->m_pRoot,anime,NowFrame);
+}
+
+//ポーズを取得する
+void CX_Skin::GetPose(SKIN_MESH* pSkin, BONE* pBone, ANIMATION Anime, int NowFrame)
+{
+	//ボーン名と一致するアニメーションデータを探す
+	bool bFind = false;
+	for (int i = 0; i < Anime.m_BoneKeyNum && bFind==false; i++)
+	{
+		//ボーン名と一致するアニメーションデータ発見
+		if (strcmp(pBone->m_Name, Anime.m_pBoneKey[i].m_AffectBoneName) == 0)
+		{
+			bFind = true;
+
+			//フレーム補完
+			KEY newPose = FrameComplement(NowFrame, Anime.m_pBoneKey[i]);
+
+			//ボーンのポーズ更新
+			pBone->m_matNewPose = D3DXMATRIX(newPose.m_pfValue);
+		}
+	}
+	
+	//子ボーンのポーズを求める
+	for (int i = 0; i < pBone->m_ChildNum; i++)
+	{
+		GetPose(pSkin, &pSkin->m_pBone[pBone->m_pChildIndex[i]], Anime, NowFrame);
+	}
+}
 
 //アニメーション
 void CX_Skin::Animation(int AnimeId,int NowFrame,SKIN_MESH* pSkinMesh)
 {
-	ANIMATION anime = pSkinMesh->m_pAnimation[AnimeId];
+	//ボーン更新
+	BoneUpdate(pSkinMesh, AnimeId, NowFrame);
 
-	//対応ボーン名保存用
-	char affectName[NAME_ARRAY_SIZE];
-	
-	//そのフレームのポーズ
-	KEY NowPose;
-	D3DXMATRIX matNowPose;
-	
-	//対応ボーンごとボーンのポーズを求める
-	for (int i = 0; i < anime.m_BoneKeyNum; i++)
-	{
-		//対応ボーン名
-		strcpy_s(affectName, anime.m_pBoneKey[i].m_AffectBoneName);
-
-		//フレーム補完
-		NowPose = FrameComplement(NowFrame, anime.m_pBoneKey[i]);
-
-		//ポーズを行列にする
-		matNowPose = D3DXMATRIX(NowPose.m_pfValue);
-
-		//対応ボーンを探す
-		bool bFind = false;
-		int boneID = -1;
-		for (int i = 0; i < pSkinMesh->m_BoneNum && bFind == false; i++)
-		{
-			//対応ボーン発見
-			if (strcmp(pSkinMesh->m_pBone[i].m_Name, affectName) == 0)
-			{
-				bFind = true;
-				boneID = i;
-			}
-		}
-
-		//ボーンにポーズを保存
-		pSkinMesh->m_pBone[boneID].m_matNewPose = matNowPose;
-	}
 }
 
 //メッシュ描画

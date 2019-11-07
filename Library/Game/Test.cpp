@@ -37,6 +37,7 @@ void CTest::Draw()
 	{
 		SKIN->Animation(i, m_Frame, &m_SkinMesh);
 	}
+
 	SKIN->DrawMesh(m_matWorld, &m_SkinMesh, nullptr);
 	
 }
