@@ -25,10 +25,6 @@ void CTest::Init()
 
 void CTest::Update()
 {
-}
-
-void CTest::Draw()
-{
 	m_Frame++;
 	if (m_Frame >= 9000)
 		m_Frame = 0;
@@ -38,6 +34,11 @@ void CTest::Draw()
 		SKIN->Animation(i, m_Frame, &m_SkinMesh);
 	}
 
+}
+
+void CTest::Draw()
+{
+	
 	SKIN->DrawMesh(m_matWorld, &m_SkinMesh, nullptr);
 	
 }

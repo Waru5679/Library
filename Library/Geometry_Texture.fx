@@ -1,9 +1,13 @@
+#define MAX_BONE 255
+
 //グローバル
 matrix g_mWVP;		
 Texture2D g_texDecal;
 
 float4 g_UvSrc;	//切り取り位置
 float4 g_Color;	//描画色
+
+matrix g_matBone[MAX_BONE];	//ボーンのポーズ行列
 
 SamplerState samLinear
 {
@@ -16,6 +20,9 @@ struct VS_IN
 {
 	float4 Pos : POSITION;
 	float2 Tex : TEXCOORD;
+	float3 Norm:NORMAL;
+	uint4 Bone:BONE_INDEX;
+	float4 Weight:BONE_WEIGHT;
 };
 
 //バーテックスバッファー出力構造体
@@ -23,6 +30,8 @@ struct VS_OUTPUT
 {	
     float4 Pos : SV_POSITION;
 	float2 Tex : TEXCOORD;
+	float3 Norm : NORMAL;
+	float4 Color : COLOR;
 };
 
 //
@@ -31,9 +40,43 @@ struct VS_OUTPUT
 VS_OUTPUT VS( VS_IN Input)
 {
     VS_OUTPUT output = (VS_OUTPUT)0;
-		
+
+	float4 Pos = Input.Pos;
+	float3 Norm = Input.Norm;
+
+	//ボーン1
+	uint Bone = Input.Bone.x;
+	float Weight = Input.Weight.x;
+	matrix matPose = g_matBone[Bone];
+	Pos += Weight * mul(Pos, matPose);
+	Norm += Weight * mul(Norm, (float3x3)matPose);
+
+	//ボーン2
+	Bone = Input.Bone.y;
+	Weight = Input.Weight.y;
+	matPose = g_matBone[Bone];
+	Pos += Weight * mul(Pos, matPose);
+	Norm += Weight * mul(Norm, (float3x3)matPose);
+
+	//ボーン3
+	Bone = Input.Bone.z;
+	Weight = Input.Weight.z;
+	matPose = g_matBone[Bone];
+	Pos += Weight * mul(Pos, matPose);
+	Norm += Weight * mul(Norm, (float3x3)matPose);
+
+	//ボーン4
+	Bone = Input.Bone.w;
+	Weight = Input.Weight.w;
+	matPose = g_matBone[Bone];
+	Pos += Weight * mul(Pos, matPose);
+	Norm += Weight * mul(Norm, (float3x3)matPose);
+
 	//位置
-	output.Pos=mul(Input.Pos,g_mWVP);
+	//output.Pos=mul(Input.Pos,g_mWVP);
+	output.Pos = mul(Pos, g_mWVP);
+	output.Norm = mul(Pos, g_mWVP);
+
 
 	//テクスチャー座標
 	//幅と高さでスケーリング→左上の点の差分ずらす

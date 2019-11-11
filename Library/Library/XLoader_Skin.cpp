@@ -100,6 +100,9 @@ bool CX_Skin::LoadSkinMesh(const char* FileName, SKIN_MESH* pSkinMesh)
 	//スキンウェイトの情報をもとに各頂点に対応ボーンとウェイトの情報を持たせる
 	VertexMatchBone(pSkinMesh);
 
+	//ウェイト順に各頂点のボーンインデックスをソートする
+	WeightSort(pSkinMesh);
+
 	//バーテックスバッファーを作成
 	pSkinMesh->m_Mesh.m_pVertexBuffer = DRAW->BufferCreate(pSkinMesh->m_Mesh.m_pVertex, sizeof(VERTEX) * pSkinMesh->m_Mesh.m_VerNum, D3D10_BIND_VERTEX_BUFFER);
 
@@ -851,6 +854,34 @@ void CX_Skin::VertexMatchBone(SKIN_MESH* pSkin)
 	}
 }
 
+
+//ウェイトが大きい順にソートする
+void CX_Skin::WeightSort(SKIN_MESH* pSkin)
+{
+	//頂点分回す
+	for (int i=0;i<pSkin->m_Mesh.m_VerNum; i++)
+	{
+		//ウェイトが大きい順にソート
+		for (int j = 0; j<pSkin->m_Mesh.m_pVertex[i].m_WeightNum; j++)
+		{
+			for (int k = j + 1; k < pSkin->m_Mesh.m_pVertex[i].m_WeightNum; k++)
+			{
+				if (pSkin->m_Mesh.m_pVertex[i].m_pfWeight[j] < pSkin->m_Mesh.m_pVertex[i].m_pfWeight[k])
+				{
+					float fTmp = pSkin->m_Mesh.m_pVertex[i].m_pfWeight[j];
+					int iTmp = pSkin->m_Mesh.m_pVertex[i].m_pBoneIndex[j];
+
+					pSkin->m_Mesh.m_pVertex[i].m_pfWeight[j]= pSkin->m_Mesh.m_pVertex[i].m_pfWeight[k];
+					pSkin->m_Mesh.m_pVertex[i].m_pBoneIndex[j] = pSkin->m_Mesh.m_pVertex[i].m_pBoneIndex[k];
+
+					pSkin->m_Mesh.m_pVertex[i].m_pfWeight[k] = fTmp;
+					pSkin->m_Mesh.m_pVertex[i].m_pBoneIndex[k] = iTmp;
+				}
+			}
+		}
+	}
+}
+
 //ボーン毎のキー情報の読み込み
 BONE_KEY CX_Skin::LoadBoneKey(FILE* fp)
 {
@@ -1119,11 +1150,11 @@ KEY CX_Skin::FrameComplement(int NowFrame, BONE_KEY BoneKey)
 void CX_Skin::BoneUpdate(SKIN_MESH* pSkin, int AnimeId, int NowFrame)
 {
 	ANIMATION anime = pSkin->m_pAnimation[AnimeId];
-	GetPose(pSkin,pSkin->m_pRoot,anime,NowFrame);
+	GetPose(pSkin,pSkin->m_pRoot, pSkin->m_pRoot->m_matNewPose,anime,NowFrame);
 }
 
 //ポーズを取得する
-void CX_Skin::GetPose(SKIN_MESH* pSkin, BONE* pBone, ANIMATION Anime, int NowFrame)
+void CX_Skin::GetPose(SKIN_MESH* pSkin, BONE* pBone, D3DXMATRIX matParentPose, ANIMATION Anime, int NowFrame)
 {
 	//ボーン名と一致するアニメーションデータを探す
 	bool bFind = false;
@@ -1138,14 +1169,14 @@ void CX_Skin::GetPose(SKIN_MESH* pSkin, BONE* pBone, ANIMATION Anime, int NowFra
 			KEY newPose = FrameComplement(NowFrame, Anime.m_pBoneKey[i]);
 
 			//ボーンのポーズ更新
-			pBone->m_matNewPose = D3DXMATRIX(newPose.m_pfValue);
+			pBone->m_matNewPose = D3DXMATRIX(newPose.m_pfValue)*matParentPose;
 		}
 	}
 	
 	//子ボーンのポーズを求める
 	for (int i = 0; i < pBone->m_ChildNum; i++)
 	{
-		GetPose(pSkin, &pSkin->m_pBone[pBone->m_pChildIndex[i]], Anime, NowFrame);
+		GetPose(pSkin, &pSkin->m_pBone[pBone->m_pChildIndex[i]], pBone->m_matNewPose,Anime, NowFrame);
 	}
 }
 
@@ -1191,7 +1222,7 @@ void CX_Skin::DrawMesh(D3DMATRIX matWorld, SKIN_MESH* pSkinMesh, CColorData* pCo
 			}
 
 			//シェーダセット
-			SHADER->SetShader(pSkinMesh->m_Mesh.m_pMaterial[i].m_pTexture, NULL, pColor, matWorld);
+			SHADER->SetShader(pSkinMesh->m_Mesh.m_pMaterial[i].m_pTexture, NULL, pColor, matWorld,pSkinMesh);
 
 			D3D10_TECHNIQUE_DESC dc;
 			SHADER->GetTechnique()->GetDesc(&dc);
