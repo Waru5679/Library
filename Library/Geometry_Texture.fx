@@ -44,26 +44,26 @@ VS_OUTPUT VS( VS_IN Input)
 	float4 Pos = float4(Input.Pos,1);
 	float3 Norm = Input.Norm;
 
-	//ボーン1
 	uint Bone;
 	float Weight;
 	matrix matPose;
 	
+	//ボーン1
 	Weight = Input.Weight.x;
 	
+	//ウェイト0は処理しない
 	if (Weight != 0.0f)
 	{
 		Bone = Input.Bone.x;
 		matPose = g_matBone[Bone];
-		
 		Pos += Weight * mul(Pos, matPose);
 		Norm += Weight * mul(Norm, (float3x3)matPose);
 	}
 
 	//ボーン2
-	
 	Weight = Input.Weight.y;
 	
+	//ウェイト0は処理しない
 	if (Weight != 0.0f)
 	{
 		Bone = Input.Bone.y;
@@ -75,6 +75,7 @@ VS_OUTPUT VS( VS_IN Input)
 	//ボーン3
 	Weight = Input.Weight.z;
 	
+	//ウェイト0は処理しない
 	if (Weight != 0.0f)
 	{
 		Bone = Input.Bone.z;
@@ -86,6 +87,7 @@ VS_OUTPUT VS( VS_IN Input)
 	//ボーン4
 	Weight = Input.Weight.w;
 
+	//ウェイト0は処理しない
 	if (Weight != 0.0f)
 	{
 		Bone = Input.Bone.w;

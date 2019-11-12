@@ -10,13 +10,18 @@ constexpr int QUAD_POLYGON{ 4 };		//四角ポリゴン
 constexpr int READ_ARRAY_SIZE{ 200 };	//読み込み用キー配列のサイズ
 constexpr int NAME_ARRAY_SIZE{ 100 };	//名前配列のサイズ
 
+constexpr int MAX_VER_WEIGH{ 4 };		//頂点の最大ウェイト
+
 //頂点構造体
 struct VERTEX
 {
 	VERTEX()
 	{
-		m_pBoneIndex = nullptr;
-		m_pfWeight = nullptr;
+		for (int i = 0; i < MAX_VER_WEIGH; i++)
+		{
+			m_BoneIndex[i] = -1;
+			m_fWeight[i] = 0.0f;
+		}
 		m_WeightNum = 0;
 	}
 
@@ -24,9 +29,9 @@ struct VERTEX
 	D3DXVECTOR3 m_vNorm;//頂点法線
 	D3DXVECTOR2 m_vTex;	//UV座標
 
-	int* m_pBoneIndex;	//影響を受けるボーンのインデックス
-	float* m_pfWeight;	//ウェイト
-	int m_WeightNum;	//ウェイトの数
+	int m_BoneIndex[MAX_VER_WEIGH];	//影響を受けるボーンのインデックス
+	float m_fWeight[MAX_VER_WEIGH];	//ウェイト
+	int m_WeightNum;				//ウェイト数
 };
 
 //ポリゴン
@@ -59,6 +64,7 @@ struct BONE
 		m_pChildIndex = nullptr;
 		D3DXMatrixIdentity(&m_matBindPose);
 		D3DXMatrixIdentity(&m_matNewPose);
+		D3DXMatrixIdentity(&m_matOffset);
 	}
 	char		m_Name[NAME_ARRAY_SIZE];	//ボーン名
 	int			m_index;					//自身のインデックス
@@ -66,6 +72,7 @@ struct BONE
 	int*		m_pChildIndex;				//自分の子のインデックスリスト
 	D3DXMATRIX	m_matBindPose;				//初期ポーズ（ずっと変わらない）
 	D3DXMATRIX	m_matNewPose;				//現在のポーズ（その都度変わる）
+	D3DXMATRIX  m_matOffset;				//オフセット行列
 };
 
 //どのボーンが度の頂点にどれだけの影響を与えるか
@@ -204,7 +211,7 @@ private:
 	//ポーズを取得する
 	//D3DXMATRIX GetPose(SKIN_MESH* pSkin, BONE* pBone, ANIMATION Anime, int NowFrame, int BoneID);
 
-	void GetPose(SKIN_MESH* pSkin, BONE* pBone,D3DXMATRIX matParentPose, ANIMATION Anime, int NowFrame);
+	D3DXMATRIX GetPose(bool* bFind, SKIN_MESH* pSkin, BONE* pBone, ANIMATION Anime, int NowFrame, int BoneID);
 
 	//ウェイトが大きい順にソートする
 	void WeightSort(SKIN_MESH* pSkin);

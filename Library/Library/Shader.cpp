@@ -116,17 +116,13 @@ void CShader::SetShader(ID3D10ShaderResourceView* pTexture, RECT_F* pSrc, CColor
 	D3DXMATRIX objWVP = matWorld * m_pCamera->GetViewMatrix() * m_pCamera->GetProjMatrix();
 	m_pShaderWorldViewProjection->SetMatrix((float*) & (objWVP));
 
-	//ボーン行列をまとめる
-	D3DXMATRIX* pmatBonePose = nullptr;
-	pmatBonePose = new D3DXMATRIX[pSkin->m_BoneNum];
+	//ボーンのポーズ行列をシェーダ渡す
+	D3DXMATRIX mat;
 	for (int i = 0; i < pSkin->m_BoneNum; i++)
 	{
-		pmatBonePose[i] = pSkin->m_pBone[i].m_matBindPose*pSkin->m_pBone[i].m_matNewPose;
-		int a = 0;
+		mat = pSkin->m_pBone[i].m_matNewPose;
+		m_pBone->SetMatrixArray((float*)&mat, i, 1);
 	}
-
-	//ボーン行列を渡す
-	m_pBone->SetMatrixArray((float*)pmatBonePose, 0,pSkin->m_BoneNum);
 
 	//切り取り位置
 	D3DXVECTOR4 vSrc;
@@ -160,7 +156,6 @@ void CShader::SetShader(ID3D10ShaderResourceView* pTexture, RECT_F* pSrc, CColor
 		m_pShaderTexture->SetResource(pTexture);
 	}
 
-	delete[] pmatBonePose;
 }
 
 //解放

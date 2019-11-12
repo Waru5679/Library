@@ -45,8 +45,7 @@ bool CX_Skin::LoadSkinMesh(const char* FileName, SKIN_MESH* pSkinMesh)
 	
 	//ボーン数取得
 	BoneNum = GetBoneNum(fp, ReadStartPos);
-
-
+	
 	//ボーンがあるときのみ
 	if (BoneNum != 0)
 	{
@@ -383,16 +382,6 @@ bool CX_Skin::LoadMesh(FILE* fp, MESH* pMesh, SKIN_MESH_HEADER* pSkinHeader, lon
 		pVertex[i].m_vPos = pvPos[i];
 		pVertex[i].m_vNorm = pvNormal[i];
 		pVertex[i].m_vTex = pvTex[i];
-
-		//ウェイト分のメモリ確保
-		pVertex[i].m_pfWeight = new float[pSkinHeader->m_MaxVertex];
-		pVertex[i].m_pBoneIndex = new int[pSkinHeader->m_MaxVertex];
-
-		for (int j = 0; j < pSkinHeader->m_MaxVertex; j++)
-		{
-			pVertex[i].m_pfWeight[j] = 0.0f;
-			pVertex[i].m_pBoneIndex[j] = -1;
-		}
 	}
 
 	//マテリアル毎に情報を整理する
@@ -830,15 +819,18 @@ void CX_Skin::VertexMatchBone(SKIN_MESH* pSkin)
 		//対応ボーンを探す
 		bool bFind = false;
 		int boneID = -1;
-		for (int i = 0; i < pSkin->m_BoneNum && bFind == false; i++)
+		for (int j = 0; j < pSkin->m_BoneNum && bFind == false; j++)
 		{
 			//対応ボーン発見
-			if (strcmp(pSkin->m_pBone[i].m_Name, boneName) == 0)
+			if (strcmp(pSkin->m_pBone[j].m_Name, boneName) == 0)
 			{
 				bFind = true;
-				boneID = i;
+				boneID = j;
 			}
 		}
+
+		//対応ボーンにオフセット行列を渡す
+		pSkin->m_pBone[boneID].m_matOffset = pSkin->m_pWeight[i].m_matOffset;
 		
 		//対応頂点にボーンIDとウェイトを渡す
 		for (int j = 0; j < pSkin->m_pWeight[i].m_WeightNum; j++)
@@ -846,10 +838,10 @@ void CX_Skin::VertexMatchBone(SKIN_MESH* pSkin)
 			VERTEX ver = pSkin->m_Mesh.m_pVertex[pSkin->m_pWeight[i].m_pIndex[j]];
 
 			//ボーンID
-			ver.m_pBoneIndex[ver.m_WeightNum] = boneID;
+			ver.m_BoneIndex[ver.m_WeightNum] = boneID;
 
 			//ウェイト
-			ver.m_pfWeight[ver.m_WeightNum] = pSkin->m_pWeight[i].m_pWeight[j];
+			ver.m_fWeight[ver.m_WeightNum] = pSkin->m_pWeight[i].m_pWeight[j];
 
 			//ウェイト数更新
 			ver.m_WeightNum++;
@@ -868,20 +860,20 @@ void CX_Skin::WeightSort(SKIN_MESH* pSkin)
 	for (int i=0;i<pSkin->m_Mesh.m_VerNum; i++)
 	{
 		//ウェイトが大きい順にソート
-		for (int j = 0; j<pSkin->m_Mesh.m_pVertex[i].m_WeightNum; j++)
+		for (int j = 0; j<MAX_VER_WEIGH-1; j++)
 		{
-			for (int k = j + 1; k < pSkin->m_Mesh.m_pVertex[i].m_WeightNum; k++)
+			for (int k = j + 1; k < MAX_VER_WEIGH; k++)
 			{
-				if (pSkin->m_Mesh.m_pVertex[i].m_pfWeight[j] < pSkin->m_Mesh.m_pVertex[i].m_pfWeight[k])
+				if (pSkin->m_Mesh.m_pVertex[i].m_fWeight[j] < pSkin->m_Mesh.m_pVertex[i].m_fWeight[k])
 				{
-					float fTmp = pSkin->m_Mesh.m_pVertex[i].m_pfWeight[j];
-					int iTmp = pSkin->m_Mesh.m_pVertex[i].m_pBoneIndex[j];
+					float fTmp = pSkin->m_Mesh.m_pVertex[i].m_fWeight[j];
+					int iTmp = pSkin->m_Mesh.m_pVertex[i].m_BoneIndex[j];
 
-					pSkin->m_Mesh.m_pVertex[i].m_pfWeight[j]= pSkin->m_Mesh.m_pVertex[i].m_pfWeight[k];
-					pSkin->m_Mesh.m_pVertex[i].m_pBoneIndex[j] = pSkin->m_Mesh.m_pVertex[i].m_pBoneIndex[k];
+					pSkin->m_Mesh.m_pVertex[i].m_fWeight[j]= pSkin->m_Mesh.m_pVertex[i].m_fWeight[k];
+					pSkin->m_Mesh.m_pVertex[i].m_BoneIndex[j] = pSkin->m_Mesh.m_pVertex[i].m_BoneIndex[k];
 
-					pSkin->m_Mesh.m_pVertex[i].m_pfWeight[k] = fTmp;
-					pSkin->m_Mesh.m_pVertex[i].m_pBoneIndex[k] = iTmp;
+					pSkin->m_Mesh.m_pVertex[i].m_fWeight[k] = fTmp;
+					pSkin->m_Mesh.m_pVertex[i].m_BoneIndex[k] = iTmp;
 				}
 			}
 		}
@@ -1156,37 +1148,66 @@ KEY CX_Skin::FrameComplement(int NowFrame, BONE_KEY BoneKey)
 void CX_Skin::BoneUpdate(SKIN_MESH* pSkin, int AnimeId, int NowFrame)
 {
 	ANIMATION anime = pSkin->m_pAnimation[AnimeId];
-	GetPose(pSkin, pSkin->m_pRoot, pSkin->m_pRoot->m_matNewPose, anime, NowFrame);
-	
+	for (int i = 0; i < pSkin->m_BoneNum; i++)
+	{
+		bool bBoneFind = false;
+		pSkin->m_pBone[i].m_matNewPose=GetPose(&bBoneFind,pSkin, pSkin->m_pRoot, anime, NowFrame,i);
+
+		int a = 0;
+	}
 }
 
 //ポーズを取得する
-void CX_Skin::GetPose(SKIN_MESH* pSkin, BONE* pBone, D3DXMATRIX matParentPose, ANIMATION Anime, int NowFrame)
+D3DXMATRIX CX_Skin::GetPose(bool* bBoneFind,SKIN_MESH* pSkin, BONE* pBone, ANIMATION Anime, int NowFrame, int BoneID)
 {
+	D3DXMATRIX matOut;
+	D3DXMatrixIdentity(&matOut);
+
+	D3DXMATRIX matNewPose;
+	D3DXMatrixIdentity(&matNewPose);
+
 	//ボーン名と一致するアニメーションデータを探す
-	bool bFind = false;
-	for (int i = 0; i < Anime.m_BoneKeyNum && bFind==false; i++)
+	bool bAnimFind = false;
+	for (int i = 0; i < Anime.m_BoneKeyNum && bAnimFind ==false; i++)
 	{
 		//ボーン名と一致するアニメーションデータ発見
 		if (strcmp(pBone->m_Name, Anime.m_pBoneKey[i].m_AffectBoneName) == 0)
 		{
-			bFind = true;
+			bAnimFind = true;
 
 			//フレーム補完
 			KEY newPose = FrameComplement(NowFrame, Anime.m_pBoneKey[i]);
 
-			//ボーンのポーズ更新
-			pBone->m_matNewPose = D3DXMATRIX(newPose.m_pfValue)*matParentPose;
+			//補完したポーズを行列にする
+			matNewPose = D3DXMATRIX(newPose.m_pfValue);
+
+			//ほしいボーンIDのボーンなら
+			if (pBone->m_index == BoneID)
+			{
+				//ボーンのポーズ更新
+				*bBoneFind = true;
+				matOut = pBone->m_matOffset * matNewPose;
+				return matOut;
+			}
 		}
 	}
-	if (bFind == false)
-		pBone->m_matNewPose = pBone->m_matBindPose;
-	
+
 	//子ボーンのポーズを求める
-	for (int i = 0; i < pBone->m_ChildNum; i++)
+	bool bFind = false;
+	for (int i = 0; i < pBone->m_ChildNum && bFind == false; i++)
 	{
-		GetPose(pSkin, &pSkin->m_pBone[pBone->m_pChildIndex[i]], pBone->m_matNewPose,Anime, NowFrame);
+	
+		matOut=GetPose(&bFind,pSkin, &pSkin->m_pBone[pBone->m_pChildIndex[i]], Anime, NowFrame,BoneID)*matNewPose;
+		
+		if (bFind == true)
+		{
+			*bBoneFind = true;
+			return matOut;
+		}
 	}
+
+	D3DXMatrixIdentity(&matOut);
+	return matOut;
 }
 
 //アニメーション
