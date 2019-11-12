@@ -126,7 +126,7 @@ void CShader::SetShader(ID3D10ShaderResourceView* pTexture, RECT_F* pSrc, CColor
 	}
 
 	//ボーン行列を渡す
-	m_pBone->SetMatrixArray((float*)pmatBonePose, 0, pSkin->m_BoneNum);
+	m_pBone->SetMatrixArray((float*)pmatBonePose, 0,pSkin->m_BoneNum);
 
 	//切り取り位置
 	D3DXVECTOR4 vSrc;

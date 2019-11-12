@@ -1,6 +1,7 @@
 #include "XLoader_Skin.h"
 #include "Release.h"
 #include "LibraryHeader.h"
+#include <math.h>
 
 //インスタンス
 CX_Skin* CX_Skin::m_pInstance = nullptr;
@@ -386,6 +387,12 @@ bool CX_Skin::LoadMesh(FILE* fp, MESH* pMesh, SKIN_MESH_HEADER* pSkinHeader, lon
 		//ウェイト分のメモリ確保
 		pVertex[i].m_pfWeight = new float[pSkinHeader->m_MaxVertex];
 		pVertex[i].m_pBoneIndex = new int[pSkinHeader->m_MaxVertex];
+
+		for (int j = 0; j < pSkinHeader->m_MaxVertex; j++)
+		{
+			pVertex[i].m_pfWeight[j] = 0.0f;
+			pVertex[i].m_pBoneIndex[j] = -1;
+		}
 	}
 
 	//マテリアル毎に情報を整理する
@@ -765,8 +772,7 @@ bool CX_Skin::LoadSkinWeight(FILE* fp, SKIN_WEIGHT* pSkinWeight, long lStartPos)
 			//ウェイト読み込み
 			for (int i = 0; i < weightNum; i++)
 			{
-				fscanf_s(fp, "%f" ,&pSkinWeight[count].m_pWeight[i]);
-
+				fscanf_s(fp, "%f", &pSkinWeight[count].m_pWeight[i]);
 				//,または;の除去
 				fgets(str, sizeof(str), fp);
 			}
@@ -1150,7 +1156,8 @@ KEY CX_Skin::FrameComplement(int NowFrame, BONE_KEY BoneKey)
 void CX_Skin::BoneUpdate(SKIN_MESH* pSkin, int AnimeId, int NowFrame)
 {
 	ANIMATION anime = pSkin->m_pAnimation[AnimeId];
-	GetPose(pSkin,pSkin->m_pRoot, pSkin->m_pRoot->m_matNewPose,anime,NowFrame);
+	GetPose(pSkin, pSkin->m_pRoot, pSkin->m_pRoot->m_matNewPose, anime, NowFrame);
+	
 }
 
 //ポーズを取得する
@@ -1172,6 +1179,8 @@ void CX_Skin::GetPose(SKIN_MESH* pSkin, BONE* pBone, D3DXMATRIX matParentPose, A
 			pBone->m_matNewPose = D3DXMATRIX(newPose.m_pfValue)*matParentPose;
 		}
 	}
+	if (bFind == false)
+		pBone->m_matNewPose = pBone->m_matBindPose;
 	
 	//子ボーンのポーズを求める
 	for (int i = 0; i < pBone->m_ChildNum; i++)
@@ -1185,7 +1194,6 @@ void CX_Skin::Animation(int AnimeId,int NowFrame,SKIN_MESH* pSkinMesh)
 {
 	//ボーン更新
 	BoneUpdate(pSkinMesh, AnimeId, NowFrame);
-
 }
 
 //メッシュ描画

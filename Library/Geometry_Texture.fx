@@ -18,7 +18,7 @@ SamplerState samLinear
 
 struct VS_IN
 {
-	float4 Pos : POSITION;
+	float3 Pos : POSITION;
 	float2 Tex : TEXCOORD;
 	float3 Norm:NORMAL;
 	uint4 Bone:BONE_INDEX;
@@ -41,41 +41,63 @@ VS_OUTPUT VS( VS_IN Input)
 {
     VS_OUTPUT output = (VS_OUTPUT)0;
 
-	float4 Pos = Input.Pos;
+	float4 Pos = float4(Input.Pos,1);
 	float3 Norm = Input.Norm;
 
 	//ボーン1
-	uint Bone = Input.Bone.x;
-	float Weight = Input.Weight.x;
-	matrix matPose = g_matBone[Bone];
-	Pos += Weight * mul(Pos, matPose);
-	Norm += Weight * mul(Norm, (float3x3)matPose);
+	uint Bone;
+	float Weight;
+	matrix matPose;
+	
+	Weight = Input.Weight.x;
+	
+	if (Weight != 0.0f)
+	{
+		Bone = Input.Bone.x;
+		matPose = g_matBone[Bone];
+		
+		Pos += Weight * mul(Pos, matPose);
+		Norm += Weight * mul(Norm, (float3x3)matPose);
+	}
 
 	//ボーン2
-	Bone = Input.Bone.y;
+	
 	Weight = Input.Weight.y;
-	matPose = g_matBone[Bone];
-	Pos += Weight * mul(Pos, matPose);
-	Norm += Weight * mul(Norm, (float3x3)matPose);
+	
+	if (Weight != 0.0f)
+	{
+		Bone = Input.Bone.y;
+		matPose = g_matBone[Bone];
+		Pos += Weight * mul(Pos, matPose);
+		Norm += Weight * mul(Norm, (float3x3)matPose);
+	}
 
 	//ボーン3
-	Bone = Input.Bone.z;
 	Weight = Input.Weight.z;
-	matPose = g_matBone[Bone];
-	Pos += Weight * mul(Pos, matPose);
-	Norm += Weight * mul(Norm, (float3x3)matPose);
+	
+	if (Weight != 0.0f)
+	{
+		Bone = Input.Bone.z;
+		matPose = g_matBone[Bone];
+		Pos += Weight * mul(Pos, matPose);
+		Norm += Weight * mul(Norm, (float3x3)matPose);
+	}
 
 	//ボーン4
-	Bone = Input.Bone.w;
 	Weight = Input.Weight.w;
-	matPose = g_matBone[Bone];
-	Pos += Weight * mul(Pos, matPose);
-	Norm += Weight * mul(Norm, (float3x3)matPose);
+
+	if (Weight != 0.0f)
+	{
+		Bone = Input.Bone.w;
+		matPose = g_matBone[Bone];
+		Pos += Weight * mul(Pos, matPose);
+		Norm += Weight * mul(Norm, (float3x3)matPose);
+	}
 
 	//位置
 	//output.Pos=mul(Input.Pos,g_mWVP);
 	output.Pos = mul(Pos, g_mWVP);
-	output.Norm = mul(Pos, g_mWVP);
+	output.Norm = normalize(mul(Norm, (float3x3)g_mWVP));
 
 
 	//テクスチャー座標
