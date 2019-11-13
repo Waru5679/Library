@@ -25,7 +25,7 @@ void CTest::Init()
 
 void CTest::Update()
 {
-	m_Frame++;
+	m_Frame+=15;
 	if (m_Frame >= 9000)
 		m_Frame = 0;
 

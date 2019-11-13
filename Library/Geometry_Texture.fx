@@ -56,8 +56,8 @@ VS_OUTPUT VS( VS_IN Input)
 	{
 		Bone = Input.Bone.x;
 		matPose = g_matBone[Bone];
-		Pos += Weight * mul(Pos, matPose);
-		Norm += Weight * mul(Norm, (float3x3)matPose);
+		output.Pos += Weight * mul(Pos, matPose);
+		output.Norm += Weight * mul(Norm, (float3x3)matPose);
 	}
 
 	//ボーン2
@@ -68,8 +68,8 @@ VS_OUTPUT VS( VS_IN Input)
 	{
 		Bone = Input.Bone.y;
 		matPose = g_matBone[Bone];
-		Pos += Weight * mul(Pos, matPose);
-		Norm += Weight * mul(Norm, (float3x3)matPose);
+		output.Pos += Weight * mul(Pos, matPose);
+		output.Norm += Weight * mul(Norm, (float3x3)matPose);
 	}
 
 	//ボーン3
@@ -80,8 +80,8 @@ VS_OUTPUT VS( VS_IN Input)
 	{
 		Bone = Input.Bone.z;
 		matPose = g_matBone[Bone];
-		Pos += Weight * mul(Pos, matPose);
-		Norm += Weight * mul(Norm, (float3x3)matPose);
+		output.Pos += Weight * mul(Pos, matPose);
+		output.Norm += Weight * mul(Norm, (float3x3)matPose);
 	}
 
 	//ボーン4
@@ -92,14 +92,14 @@ VS_OUTPUT VS( VS_IN Input)
 	{
 		Bone = Input.Bone.w;
 		matPose = g_matBone[Bone];
-		Pos += Weight * mul(Pos, matPose);
-		Norm += Weight * mul(Norm, (float3x3)matPose);
+		output.Pos += Weight * mul(Pos, matPose);
+		output.Norm += Weight * mul(Norm, (float3x3)matPose);
 	}
 
 	//位置
 	//output.Pos=mul(Input.Pos,g_mWVP);
-	output.Pos = mul(Pos, g_mWVP);
-	output.Norm = normalize(mul(Norm, (float3x3)g_mWVP));
+	output.Pos = mul(output.Pos, g_mWVP);
+	output.Norm = normalize(mul(output.Norm, (float3x3)g_mWVP));
 
 
 	//テクスチャー座標
