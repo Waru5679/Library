@@ -34,54 +34,57 @@ struct VS_OUTPUT
 	float4 Color : COLOR;
 };
 
-//
-//バーテックスシェーダー
-//
-VS_OUTPUT VS( VS_IN Input)
+struct SKIN_OUT
 {
-    VS_OUTPUT output = (VS_OUTPUT)0;
+	float4 Pos;
+	float3 Norm;
+};
 
-	float4 Pos = float4(Input.Pos,1);
+SKIN_OUT Skin(VS_IN Input)
+{
+	SKIN_OUT Output = (SKIN_OUT)0;
+
+	float4 Pos = float4(Input.Pos, 1);
 	float3 Norm = Input.Norm;
 
 	uint Bone;
 	float Weight;
 	matrix matPose;
-	
+
 	//ボーン1
 	Weight = Input.Weight.x;
-	
+
 	//ウェイト0は処理しない
 	if (Weight != 0.0f)
 	{
 		Bone = Input.Bone.x;
 		matPose = g_matBone[Bone];
-		output.Pos += Weight * mul(Pos, matPose);
-		output.Norm += Weight * mul(Norm, (float3x3)matPose);
+		Output.Pos += Weight * mul(Pos, matPose);
+		Output.Norm += Weight * mul(Norm, (float3x3)matPose);
 	}
 
 	//ボーン2
 	Weight = Input.Weight.y;
-	
+
 	//ウェイト0は処理しない
 	if (Weight != 0.0f)
 	{
 		Bone = Input.Bone.y;
 		matPose = g_matBone[Bone];
-		output.Pos += Weight * mul(Pos, matPose);
-		output.Norm += Weight * mul(Norm, (float3x3)matPose);
+		Output.Pos += Weight * mul(Pos, matPose);
+		Output.Norm += Weight * mul(Norm, (float3x3)matPose);
 	}
 
 	//ボーン3
 	Weight = Input.Weight.z;
-	
+
 	//ウェイト0は処理しない
 	if (Weight != 0.0f)
 	{
 		Bone = Input.Bone.z;
 		matPose = g_matBone[Bone];
-		output.Pos += Weight * mul(Pos, matPose);
-		output.Norm += Weight * mul(Norm, (float3x3)matPose);
+		Output.Pos += Weight * mul(Pos, matPose);
+		Output.Norm += Weight * mul(Norm, (float3x3)matPose);
 	}
 
 	//ボーン4
@@ -92,16 +95,27 @@ VS_OUTPUT VS( VS_IN Input)
 	{
 		Bone = Input.Bone.w;
 		matPose = g_matBone[Bone];
-		output.Pos += Weight * mul(Pos, matPose);
-		output.Norm += Weight * mul(Norm, (float3x3)matPose);
+		Output.Pos += Weight * mul(Pos, matPose);
+		Output.Norm += Weight * mul(Norm, (float3x3)matPose);
 	}
 
+	return Output;
+}
+
+//
+//バーテックスシェーダー
+//
+VS_OUTPUT VS( VS_IN Input)
+{
+    VS_OUTPUT output = (VS_OUTPUT)0;
+
+	//スキンアニメーション
+	SKIN_OUT skin = Skin(Input);
+
 	//位置
-	//output.Pos=mul(Input.Pos,g_mWVP);
-	output.Pos = mul(output.Pos, g_mWVP);
-	output.Norm = normalize(mul(output.Norm, (float3x3)g_mWVP));
-
-
+	output.Pos = mul(skin.Pos, g_mWVP);
+	output.Norm = normalize(mul(skin.Norm, (float3x3)g_mWVP));
+	
 	//テクスチャー座標
 	//幅と高さでスケーリング→左上の点の差分ずらす
 	output.Tex = Input.Tex*float2(g_UvSrc.z, g_UvSrc.w) + float2(g_UvSrc.x, g_UvSrc.y);
@@ -144,4 +158,3 @@ technique10 Render
         SetPixelShader( CompileShader( ps_4_0, PS() ) );
     }
 }
-
