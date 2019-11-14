@@ -2,6 +2,7 @@
 #include "Main.h"
 #include "Camera.h"
 #include "LibraryHeader.h"
+#include "X_Loader.h"
 #include "XLoader_Skin.h"
 
 //シェーダクラス

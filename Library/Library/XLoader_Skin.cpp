@@ -1,6 +1,7 @@
+#include "LibraryHeader.h"
 #include "XLoader_Skin.h"
 #include "Release.h"
-#include "LibraryHeader.h"
+
 #include <math.h>
 
 //インスタンス
@@ -20,7 +21,7 @@ bool CX_Skin::LoadSkinMesh(const char* FileName, SKIN_MESH* pSkinMesh)
 	}
 
 	//templateを省いたファイルの読み込み開始位置を保存
-	long ReadStartPos = GetTemplateSkipStartPos(fp);
+	long ReadStartPos = X_LOADER->GetTemplateSkipStartPos(fp);
 
 	MESH	Mesh;				//メッシュ
 	int		BoneNum			= 0;//ボーン数
@@ -34,17 +35,17 @@ bool CX_Skin::LoadSkinMesh(const char* FileName, SKIN_MESH* pSkinMesh)
 	SKIN_MESH_HEADER SkinHeader;	//スキンメッシュヘッダー
 
 	//スキンメッシュヘッダー読み込み
-	LoadSkinMeshHeader(fp, &SkinHeader, ReadStartPos);
+	X_LOADER->LoadSkinMeshHeader(fp, &SkinHeader, ReadStartPos);
 
 	//メッシュの読み込み
-	if (LoadMesh(fp, &Mesh, &SkinHeader,ReadStartPos) == false)
+	if (X_LOADER->LoadMesh(fp, &Mesh, &SkinHeader,ReadStartPos) == false)
 	{
 		//メッシュ読み込み失敗
 		return false;
 	}
 	
 	//ボーン数取得
-	BoneNum = GetBoneNum(fp, ReadStartPos);
+	BoneNum = X_LOADER->GetBoneNum(fp, ReadStartPos);
 	
 	//ボーンがあるときのみ
 	if (BoneNum != 0)
@@ -53,7 +54,7 @@ bool CX_Skin::LoadSkinMesh(const char* FileName, SKIN_MESH* pSkinMesh)
 		pBone = new BONE[BoneNum];
 
 		//ボーン読み込み
-		if (LoadBone(fp, pBone, ReadStartPos) == false)
+		if (X_LOADER->LoadBone(fp, pBone, ReadStartPos) == false)
 		{
 			//ボーン読み込み失敗
 			return false;
@@ -61,7 +62,7 @@ bool CX_Skin::LoadSkinMesh(const char* FileName, SKIN_MESH* pSkinMesh)
 	}
 
 	//スキンウェイトの数を数える
-	SkinWeightNum = GetSkinWeightNum(fp, ReadStartPos);
+	SkinWeightNum = X_LOADER->GetSkinWeightNum(fp, ReadStartPos);
 
 	//スキンウェイトがあるときのみ
 	if (SkinWeightNum != 0)
@@ -70,7 +71,7 @@ bool CX_Skin::LoadSkinMesh(const char* FileName, SKIN_MESH* pSkinMesh)
 		pSkinWeight = new SKIN_WEIGHT[SkinWeightNum];
 		
 		//スキン情報の読み込み
-		if (LoadSkinWeight(fp, pSkinWeight, ReadStartPos) == false)
+		if (X_LOADER->LoadSkinWeight(fp, pSkinWeight, ReadStartPos) == false)
 		{
 			//スキン情報読み込み失敗
 			return false;
@@ -78,7 +79,7 @@ bool CX_Skin::LoadSkinMesh(const char* FileName, SKIN_MESH* pSkinMesh)
 	}
 
 	//アニメーションの数取得
-	AnimeNum = GetAnimeNum(fp, ReadStartPos);
+	AnimeNum = X_LOADER->GetAnimeNum(fp, ReadStartPos);
 
 	//アニメーションがあるときのみ
 	if (AnimeNum != 0)
@@ -87,7 +88,7 @@ bool CX_Skin::LoadSkinMesh(const char* FileName, SKIN_MESH* pSkinMesh)
 		pAnime = new ANIMATION[AnimeNum];
 
 		//アニメーション読み込み
-		if (LoadAnimation(fp, pAnime, ReadStartPos) == false)
+		if (X_LOADER->LoadAnimation(fp, pAnime, ReadStartPos) == false)
 		{
 			//アニメーション読み込み失敗
 			return false;
@@ -95,10 +96,10 @@ bool CX_Skin::LoadSkinMesh(const char* FileName, SKIN_MESH* pSkinMesh)
 	}
 
 	//スキンメッシュにまとめる
-	SkinMeshPutTogether(Mesh, pBone, BoneNum,pSkinWeight, SkinWeightNum, pAnime,AnimeNum, pSkinMesh,SkinHeader);
+	X_LOADER->SkinMeshPutTogether(Mesh, pBone, BoneNum,pSkinWeight, SkinWeightNum, pAnime,AnimeNum, pSkinMesh,SkinHeader);
 
 	//スキンウェイトの情報をもとに各頂点に対応ボーンとウェイトの情報を持たせる
-	VertexMatchBone(pSkinMesh);
+	X_LOADER->VertexMatchBone(pSkinMesh);
 
 	//ウェイト順に各頂点のボーンインデックスをソートする
 	WeightSort(pSkinMesh);
@@ -108,750 +109,6 @@ bool CX_Skin::LoadSkinMesh(const char* FileName, SKIN_MESH* pSkinMesh)
 
 	return true;
 }
-
-//templateを飛ばした読み込み開始位置を取得する
-long CX_Skin::GetTemplateSkipStartPos(FILE* fp)
-{
-	//ファイルの先頭にセット
-	fseek(fp, 0, SEEK_SET);
-
-	long pos;//ファイルの現在位置
-	
-	//キーワード読み込み
-	char str[READ_ARRAY_SIZE];
-
-	while (!feof(fp))
-	{
-		//ファイルの現在位置保存
-		pos = ftell(fp);
-
-		//キーワード 読み込み
-		fscanf_s(fp, "%s ", str, sizeof(str));
-
-		//Frameが出るまで飛ばす
-		if (strcmp(str, "Frame") == 0)
-		{
-			return pos;
-		}
-	}
-}
-
-//メッシュ情報の読み込み
-bool CX_Skin::LoadMesh(FILE* fp, MESH* pMesh, SKIN_MESH_HEADER* pSkinHeader, long lStartPos)
-{
-	//読み込みの開始位置にセット
-	fseek(fp, lStartPos, SEEK_SET);
-
-	int verNum = 0;//頂点数
-	int faceNum = 0;//面の数
-	int normNum = 0;//法線数
-	int uvNum = 0;//UV数
-	int mateNum = 0;//マテリアルの数
-
-	//読み込み用（読み込み後破棄）
-	D3DXVECTOR3* pvPos = nullptr;//頂点座標
-	D3DXVECTOR3* pvNormal = nullptr;//法線
-	D3DXVECTOR2* pvTex = nullptr;//テクスチャ座標
-
-	//読み込み後そのまま使うもの
-	FACE* pFace = nullptr;//面のリスト
-	MATERIAL* pMaterial = nullptr;//マテリアルのリスト
-	VERTEX* pVertex = nullptr;//頂点リスト
-
-	//読み込み用
-	float x, y, z, w;
-	int v1, v2, v3, v4;
-	v1 = v2 = v3 = v4 = 0;
-
-	//キーワード読み込み
-	char str[READ_ARRAY_SIZE];
-
-	while (!feof(fp))
-	{
-		//キーワード 読み込み
-		fscanf_s(fp, "%s ", str, sizeof(str));
-
-		//頂点
-		if (strcmp(str, "Mesh") == 0)
-		{
-			//メッシュ名
-			fgets(str, sizeof(str), fp);
-
-			//頂点数
-			fgets(str, sizeof(str), fp);
-			verNum = atoi(str);
-
-			//頂点座標メモリ確保
-			pvPos = new D3DXVECTOR3[verNum];
-
-			//頂点座標読み込み
-			for (int i = 0; i < verNum; i++)
-			{
-				fscanf_s(fp, "%f;%f;%f;,", &x, &y, &z);
-				pvPos[i].x = x;
-				pvPos[i].y = y;
-				pvPos[i].z = z;
-			}
-
-			//;除去
-			fgets(str, sizeof(str), fp);
-
-			//面の数
-			fgets(str, sizeof(str), fp);
-			faceNum = atoi(str);
-
-			//面のメモリ確保
-			pFace = new FACE[faceNum];
-
-			int faceOfVer = 0;//面を構成する頂点数
-
-			//面読み込み
-			for (int i = 0; i < faceNum; i++)
-			{
-				//面を構成する頂点の数
-				fscanf_s(fp, "%d;", &faceOfVer);
-				pFace[i].m_FaceOfVer = faceOfVer;
-
-				//面構成のインデックスリストのメモリ確保
-				pFace[i].m_pIndex = new int[faceOfVer];
-
-				//三角ポリゴン
-				if (faceOfVer == TRIANGLE_POLYGON)
-				{
-					fscanf_s(fp, "%d,%d,%d;,", &v1, &v2, &v3);
-					pFace[i].m_pIndex[0] = v1;
-					pFace[i].m_pIndex[1] = v2;
-					pFace[i].m_pIndex[2] = v3;
-				}
-				//四角ポリゴン
-				if (faceOfVer == QUAD_POLYGON)
-				{
-					fscanf_s(fp, "%d,%d,%d,%d;,", &v1, &v2, &v3, &v4);
-					pFace[i].m_pIndex[0] = v1;
-					pFace[i].m_pIndex[1] = v2;
-					pFace[i].m_pIndex[2] = v3;
-					pFace[i].m_pIndex[3] = v4;
-				}
-			}
-		}
-		//法線
-		if (strcmp(str, "MeshNormals") == 0)
-		{
-			//{除去
-			fgets(str, sizeof(str), fp);
-
-			//法線数
-			fgets(str, sizeof(str), fp);
-			normNum = atoi(str);
-
-			//法線メモリ確保
-			pvNormal = new D3DXVECTOR3[normNum];
-
-			//法線読み込み
-			for (int i = 0; i < normNum; i++)
-			{
-				fscanf_s(fp, "%f;%f;%f;,", &x, &y, &z);
-				pvNormal[i].x = x;
-				pvNormal[i].y = y;
-				pvNormal[i].z = z;
-			}
-		}
-
-		//テクスチャー座標 読み込み
-		if (strcmp(str, "MeshTextureCoords") == 0)
-		{
-			//{除去
-			fgets(str, sizeof(str), fp);
-
-			//UVの数
-			fgets(str, sizeof(str), fp);
-			uvNum = atoi(str);
-
-			//UVメモリ確保
-			pvTex = new D3DXVECTOR2[uvNum];
-
-			//UV読み込み
-			for (int i = 0; i < uvNum; i++)
-			{
-				fscanf_s(fp, "%f;%f;,", &x, &y);
-				pvTex[i].x = x;
-				pvTex[i].y = y;
-			}
-		}
-
-		//マテリアルリスト読み込み
-		if (strcmp(str, "MeshMaterialList") == 0)
-		{
-			//{除去
-			fgets(str, sizeof(str), fp);
-
-			//マテリアルの数
-			fgets(str, sizeof(str), fp);
-			mateNum = atoi(str);
-
-			//マテリアルメモリ確保
-			pMaterial = new MATERIAL[mateNum];
-
-			//面の数
-			fgets(str, sizeof(str), fp);
-			faceNum = atoi(str);
-
-			//面に何番のマテリアルを使うか
-			for (int i = 0; i < faceNum; i++)
-			{
-				//読み込み
-				fscanf_s(fp, "%d", &pFace[i].m_UseMaterial);
-
-				//,または;の除去
-				fgets(str, sizeof(str), fp);
-			}
-		}
-	}
-
-	//読み込みの開始位置に戻る
-	fseek(fp, lStartPos, SEEK_SET);
-
-	while (!feof(fp))
-	{
-		//キーワード 読み込み
-		fscanf_s(fp, "%s ", str, sizeof(str));
-
-		//マテリアル読み込み
-		for (int i = 0; i < mateNum; i++)
-		{
-			if (strcmp(str, "Material") == 0)
-			{
-				//{除去
-				fgets(str, sizeof(str), fp);
-
-				//面の色
-				fscanf_s(fp, "%f;%f;%f;%f;;", &x, &y, &z, &w);
-				pMaterial[i].m_vFaceColor.x = x;
-				pMaterial[i].m_vFaceColor.y = y;
-				pMaterial[i].m_vFaceColor.z = z;
-				pMaterial[i].m_vFaceColor.w = w;
-
-				//スペキュラーのパワー
-				fscanf_s(fp, "%f;", &pMaterial[i].m_fPower);
-
-				//スペキュラー
-				fscanf_s(fp, "%f;%f;%f;;", &x, &y, &z);
-				pMaterial[i].m_vKs.x = x;
-				pMaterial[i].m_vKs.y = y;
-				pMaterial[i].m_vKs.z = z;
-
-				//エミッシブ
-				fscanf_s(fp, "%f;%f;%f;;", &x, &y, &z);
-				pMaterial[i].m_vKe.x = x;
-				pMaterial[i].m_vKe.y = y;
-				pMaterial[i].m_vKe.z = z;
-
-				//テクスチャ
-				fscanf_s(fp, "%s ", str, sizeof(str));
-				if (strcmp(str, "TextureFilename") == 0)
-				{
-					fgets(str, sizeof(str), fp);//{除去
-
-					//読み込み最大サイズ
-					int size = sizeof(pMaterial[i].m_TexName);
-
-					//テクスチャ名
-					fscanf_s(fp, "%s", pMaterial[i].m_TexName, size);
-
-					//"と;を除去する
-					ErasCharFromString(pMaterial->m_TexName, size, '\"');
-					ErasCharFromString(pMaterial->m_TexName, size, ';');
-
-					//テクスチャーを作成
-					if (FAILED(D3DX10CreateShaderResourceViewFromFileA(DX->GetDevice(), pMaterial[i].m_TexName, NULL, NULL, &pMaterial[i].m_pTexture, NULL)))
-					{
-						//テクスチャ作成失敗
-						return false;
-					}
-				}
-			}
-		}
-	}
-
-	//頂点構造体メモリ確保
-	pVertex = new VERTEX[verNum];
-
-	//頂点構造体にまとめる
-	for (int i = 0; i < verNum; i++)
-	{
-		pVertex[i].m_vPos = pvPos[i];
-		pVertex[i].m_vNorm = pvNormal[i];
-		pVertex[i].m_vTex = pvTex[i];
-	}
-
-	//マテリアル毎に情報を整理する
-	for (int i = 0; i < mateNum; i++)
-	{
-		//そのマテリアルを使用する面の数を数える
-		int UseFaceNum = 0;
-		for (int j = 0; j < faceNum; j++)
-		{
-			if (pFace[j].m_UseMaterial == i)
-			{
-				UseFaceNum++;
-			}
-		}
-
-		//面の数
-		pMaterial[i].m_FaceNum = UseFaceNum;
-
-		//面のリストメモリ確保
-		pMaterial[i].m_pFaceIndex = new int[UseFaceNum];
-
-		//面のインデックスを保存
-		int face_count = 0;
-		for (int j = 0; j < faceNum; j++)
-		{
-			//このマテリアルを使用する面のみ
-			if (pFace[j].m_UseMaterial == i)
-			{
-				pMaterial[i].m_pFaceIndex[face_count] = j;
-				face_count++;
-			}
-		}
-
-		//面の数だけメモリ確保
-		pMaterial[i].m_ppIndexBuffer = new ID3D10Buffer * [pMaterial[i].m_FaceNum];
-
-		//面の数だけインデックスバッファ作成
-		for (int j = 0; j < pMaterial[i].m_FaceNum; j++)
-		{
-			FACE face = pFace[pMaterial[i].m_pFaceIndex[j]];
-
-			//インデックスバッファ作成
-			pMaterial[i].m_ppIndexBuffer[j] = DRAW->BufferCreate(face.m_pIndex, sizeof(int) * face.m_FaceOfVer, D3D10_BIND_INDEX_BUFFER);
-		}
-	}
-
-	//一時保存からメッシュポインタへデータを移す
-	pMesh->m_MaterialNum = mateNum;
-	pMesh->m_pMaterial = pMaterial;
-	pMesh->m_FaceNum = faceNum;
-	pMesh->m_pFace = pFace;
-	pMesh->m_pVertex = pVertex;
-	pMesh->m_VerNum = verNum;
-	pMesh->m_UvNum = uvNum;
-
-	//一時保存は破棄
-	PointerRelease(pvPos);
-	PointerRelease(pvNormal);
-	PointerRelease(pvTex);
-
-	return true;
-}
-
-//指定文字を文字列から消す
-void CX_Skin::ErasCharFromString(char* pSource,int Size, char Erace)
-{
-	int count = 0;//除去カウント
-
-	for (int i = 0; i < Size; i++)
-	{
-		if (pSource[i] == Erace)
-		{
-			//除去数をカウント
-			count++;
-		}
-		else
-		{
-			//カウント分を詰めてコピー
-			pSource[i - count] = pSource[i];
-		}
-	}
-}
-
-//スキンメッシュヘッダー読み込み
-void CX_Skin::LoadSkinMeshHeader(FILE* fp, SKIN_MESH_HEADER* pSkinHeader, long lStartPos)
-{
-	//ファイルの先頭にセット
-	fseek(fp, lStartPos, SEEK_SET);
-
-	//キーワード読み込み用
-	char str[READ_ARRAY_SIZE];
-
-	while (!feof(fp))
-	{
-		fscanf_s(fp, "%s ", str, sizeof(str));
-
-		//スキンメッシュヘッダー読み込み
-		if (strcmp(str, "XSkinMeshHeader") == 0)
-		{
-			//{除去
-			fscanf_s(fp, "%s", str, sizeof(str));
-
-			//頂点の最大ウェイト数
-			fscanf_s(fp, "%d;", &pSkinHeader->m_MaxVertex);
-			
-			//面の最大ウェイト数
-			fscanf_s(fp, "%d;", &pSkinHeader->m_MaxFace);
-			
-			//ボーン数
-			fscanf_s(fp, "%d;", &pSkinHeader->m_BoneNum);
-			
-			//}除去
-			fscanf_s(fp, "%s", str, sizeof(str));
-		}
-	}
-}
-
-//ボーン数の取得
-int CX_Skin::GetBoneNum(FILE* fp, long lStartPos)
-{
-	//ファイルの先頭にセット
-	fseek(fp, lStartPos, SEEK_SET);
-
-	int boneNum = 0;	//ボーンの数
-	
-	//キーワード読み込み用
-	char str[READ_ARRAY_SIZE];
-
-	//ボーンの数を数える
-	while (!feof(fp))
-	{
-		fscanf_s(fp, "%s ", str, sizeof(str));
-
-		if (strcmp(str, "Frame") == 0)
-		{
-			boneNum++;
-		}
-	}
-
-	return boneNum;
-}
-
-//ボーン読み込み
-bool CX_Skin::LoadBone(FILE* fp, BONE* pBone, long lStartPos)	
-{
-	//ファイルの先頭にセット
-	fseek(fp, lStartPos, SEEK_SET);
-
-	int boneNum=0;	//ボーンの数
-		
-	//キーワード読み込み用
-	char str[READ_ARRAY_SIZE];
-	
-	int start_count = 0;//{を数える
-	int end_count	= 0;//}を数える
-		
-	int boneIndex = 0;//インデックスカウンター
-
-	//ボーン読み込み
-	while (!feof(fp))
-	{
-		fscanf_s(fp, "%s ", str, sizeof(str));
-
-		//ボーン
-		if (strcmp(str, "Frame") == 0)
-		{
-			//ボーンをリストに保存
-			BONE bone= LoadBoneInfo(fp, &boneIndex, pBone);
-			pBone[bone.m_index]=bone;
-		}
-	}
-	return true;
-}
-
-//ボーン情報の読み込み
-BONE CX_Skin::LoadBoneInfo(FILE* fp, int* pBoneIndex, BONE* pBone)
-{
-	//関数呼び出し時のファイルの位置を保存
-	long ReadStartPos = ftell(fp);
-
-	int start_count = 0;//{カウント
-	int end_count	= 0;//}カウント
-	int childNum	= 0;//子ボーンの数
-
-	//読み込み用
-	char str[READ_ARRAY_SIZE];
-
-	//ボーン読み込み用
-	BONE bone;
-
-	//自身のインデックス
-	bone.m_index = *(pBoneIndex);
-	
-	//先に子ボーンの数を数える
-	while (start_count != end_count || start_count == 0 || end_count == 0)
-	{
-		fscanf_s(fp, "%s ", str, sizeof(str));
-
-		//{カウント
-		if (strcmp(str, "{") == 0)
-		{
-			start_count++;
-		}
-
-		//}カウント
-		if (strcmp(str, "}") == 0)
-		{
-			end_count++;
-		}
-		//子ボーン
-		if (strcmp(str, "Frame") == 0)
-		{
-			//このボーンの直属の子
-			if (start_count - end_count == 1)
-			{
-				childNum++;
-			}
-			else
-			{
-				;//孫ボーンなどはカウントしない
-			}
-		}
-	}
-
-	//この関数が呼ばれたと時の位置に戻す
-	fseek(fp, ReadStartPos, SEEK_SET);
-
-	//子の数を保存
-	bone.m_ChildNum = childNum;
-
-	//子ボーンのインデックスリストメモリ確保
-	bone.m_pChildIndex = new int[childNum];
-
-	//カウンタを初期化
-	start_count = 0;
-	end_count = 0;
-	childNum = 0;
-
-	//ボーン名
-	fscanf_s(fp, "%s", bone.m_Name, sizeof(bone.m_Name));
-
-	//本読み込み
-	while (start_count != end_count || start_count == 0 || end_count == 0)
-	{
-		fscanf_s(fp, "%s ", str, sizeof(str));
-
-		//{カウント
-		if (strcmp(str, "{") == 0)
-		{
-			start_count++;
-		}
-
-		//}カウント
-		if (strcmp(str, "}") == 0)
-		{
-			end_count++;
-		}
-
-		//初期ポーズ
-		if (strcmp(str, "FrameTransformMatrix") == 0)
-		{
-			//{除去
-			fgets(str, sizeof(str), fp);
-
-			//行列読み込み
-			D3DXMATRIX mat;
-			fgets(str, sizeof(str), fp);
-			sscanf_s(str, "%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f;;",
-				&mat._11, &mat._12, &mat._13, &mat._14,
-				&mat._21, &mat._22, &mat._23, &mat._24,
-				&mat._31, &mat._32, &mat._33, &mat._34,
-				&mat._41, &mat._42, &mat._43, &mat._44);
-
-			//保存
-			bone.m_matBindPose = mat;
-
-			//}除去
-			fgets(str, sizeof(str), fp);
-		}
-
-		//子ボーン
-		if (strcmp(str, "Frame") == 0)
-		{
-			//ボーンのインデックス更新
-			*pBoneIndex = *(pBoneIndex)+1;
-
-			//子ボーンのインデックスを保存
-			bone.m_pChildIndex[childNum++] = *pBoneIndex;
-
-			//ボーンをリストに保存
-			BONE read = LoadBoneInfo(fp, pBoneIndex, pBone);
-			pBone[read.m_index] = read;
-		}
-	}
-
-	return bone;
-}
-
-//スキンウェイトの数を取得
-int CX_Skin::GetSkinWeightNum(FILE* fp, long lStartPos)
-{
-	//読み込み開始位置にセットする
-	fseek(fp, lStartPos, SEEK_SET);
-
-	//スキンウェイトの数
-	int SkinWeightNum = 0;
-
-	//キーワード読み込み用
-	char str[READ_ARRAY_SIZE];
-	
-	//スキンウェイトの数をカウントする
-	while (!feof(fp))
-	{
-		fscanf_s(fp, "%s ", str, sizeof(str));
-
-		if (strcmp(str, "SkinWeights") == 0)
-		{
-			SkinWeightNum++;
-		}
-	}
-
-	return SkinWeightNum;
-}
-
-//スキンウェイトの読み込み
-bool CX_Skin::LoadSkinWeight(FILE* fp, SKIN_WEIGHT* pSkinWeight, long lStartPos)
-{
-	//読み込み開始位置にセットする
-	fseek(fp, lStartPos, SEEK_SET);
-
-	//キーワード読み込み用
-	char str[READ_ARRAY_SIZE];
-		
-	//読み込み用
-	char boneName[NAME_ARRAY_SIZE];	//ボーン名
-	int count		= 0;			//カウンター		
-	int weightNum	= 0;			//ウェイト数
-	D3DXMATRIX mat;					//行列
-
-	//読み込み
-	while (!feof(fp))
-	{
-		fscanf_s(fp, "%s ", str, sizeof(str));
-
-		//スキンウェイト
-		if (strcmp(str, "SkinWeights") == 0)
-		{
-			fgets(str, sizeof(str), fp);//{除去
-			
-			//ボーン名
-			fscanf_s(fp, "%s", boneName,sizeof(boneName));
-
-			//"と;を除去する
-			ErasCharFromString(boneName, sizeof(boneName), '\"');
-			ErasCharFromString(boneName, sizeof(boneName), ';');
-
-			//保存
-			strcpy_s(pSkinWeight[count].m_BoneName, boneName);
-						
-			//ウェイトの数
-			fscanf_s(fp, "%d;", &weightNum);		
-			pSkinWeight[count].m_WeightNum = weightNum;
-
-			//インデックスとウェイトのメモリ確保
-			pSkinWeight[count].m_pIndex = new int[weightNum];
-			pSkinWeight[count].m_pWeight = new float[weightNum];
-
-			//インデックス読み込み
-			for (int i = 0; i < weightNum; i++)
-			{
-				fscanf_s(fp, "%d", &pSkinWeight[count].m_pIndex[i]);
-
-				//,または;の除去
-				fgets(str, sizeof(str), fp);
-			}
-
-			//ウェイト読み込み
-			for (int i = 0; i < weightNum; i++)
-			{
-				fscanf_s(fp, "%f", &pSkinWeight[count].m_pWeight[i]);
-				//,または;の除去
-				fgets(str, sizeof(str), fp);
-			}
-			//オフセット行列
-			fscanf_s(fp,"%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f;;",
-				&mat._11, &mat._12, &mat._13, &mat._14,
-				&mat._21, &mat._22, &mat._23, &mat._24,
-				&mat._31, &mat._32, &mat._33, &mat._34,
-				&mat._41, &mat._42, &mat._43, &mat._44);
-			pSkinWeight[count].m_matOffset = mat;
-
-			//カウンター更新
-			count++;
-		}
-	}
-	return true;
-}
-
-//アニメーションの数を取得
-int CX_Skin::GetAnimeNum(FILE* fp, long lStartPos)
-{
-	//読み込み開始位置にセットする
-	fseek(fp, lStartPos, SEEK_SET);
-
-	//アニメーションの数
-	int animeNum = 0;
-
-	//キーワード読み込み用
-	char str[READ_ARRAY_SIZE];
-
-	//アニメーションの数を数える
-	while (!feof(fp))
-	{
-		fscanf_s(fp, "%s ", str, sizeof(str));
-
-		if (strcmp(str, "AnimationSet") == 0)
-		{
-			animeNum++;
-		}
-	}
-	return animeNum;
-}
-
-//スキンウェイトの情報をもとに各頂点に対応ボーンとウェイトの情報を持たせる
-void CX_Skin::VertexMatchBone(SKIN_MESH* pSkin)
-{
-	//対応ボーン名
-	char boneName[NAME_ARRAY_SIZE];
-
-	for (int i = 0; i < pSkin->m_WeightNum; i++)
-	{
-		//対応ボーン名
-		strcpy_s(boneName, pSkin->m_pWeight[i].m_BoneName);
-
-		//対応ボーンを探す
-		bool bFind = false;
-		int boneID = -1;
-		for (int j = 0; j < pSkin->m_BoneNum && bFind == false; j++)
-		{
-			//対応ボーン発見
-			if (strcmp(pSkin->m_pBone[j].m_Name, boneName) == 0)
-			{
-				bFind = true;
-				boneID = j;
-			}
-		}
-
-		//対応ボーンにオフセット行列を渡す
-		pSkin->m_pBone[boneID].m_matOffset = pSkin->m_pWeight[i].m_matOffset;
-		
-		//対応頂点にボーンIDとウェイトを渡す
-		for (int j = 0; j < pSkin->m_pWeight[i].m_WeightNum; j++)
-		{
-			VERTEX ver = pSkin->m_Mesh.m_pVertex[pSkin->m_pWeight[i].m_pIndex[j]];
-
-			//ボーンID
-			ver.m_BoneIndex[ver.m_WeightNum] = boneID;
-
-			//ウェイト
-			ver.m_fWeight[ver.m_WeightNum] = pSkin->m_pWeight[i].m_pWeight[j];
-
-			//ウェイト数更新
-			ver.m_WeightNum++;
-
-			//保存
-			pSkin->m_Mesh.m_pVertex[pSkin->m_pWeight[i].m_pIndex[j]] = ver;
-		}
-	}
-}
-
 
 //ウェイトが大きい順にソートする
 void CX_Skin::WeightSort(SKIN_MESH* pSkin)
@@ -880,190 +137,12 @@ void CX_Skin::WeightSort(SKIN_MESH* pSkin)
 	}
 }
 
-//ボーン毎のキー情報の読み込み
-BONE_KEY CX_Skin::LoadBoneKey(FILE* fp)
-{
-	BONE_KEY Out;
-
-	//キーワード読み込み用
-	char str[READ_ARRAY_SIZE];
-
-	//対応ボーン名
-	char boneName[NAME_ARRAY_SIZE];	
-
-	//読み込み用初期化
-	int keyNum = 0;
-	int keyCount = 0;
-	int valueNum = 0;
-
-	//AnimationX 
-	fscanf_s(fp, "%s ", str, sizeof(str));
-
-	//{除去
-	fgets(str, sizeof(str), fp);
-
-	//対応ボーン名
-	fgets(boneName, sizeof(boneName), fp);
-
-	//{と}、空白、\nを除去
-	ErasCharFromString(boneName, sizeof(boneName), '{');
-	ErasCharFromString(boneName, sizeof(boneName), '}');
-	ErasCharFromString(boneName, sizeof(boneName), ' ');
-	ErasCharFromString(boneName, sizeof(boneName), '\n');
-
-	//保存
-	strcpy_s(Out.m_AffectBoneName, boneName);
-
-	//1行飛ばす
-	fgets(str, sizeof(str), fp);//AnimationKey{
-
-	//キータイプ
-	fscanf_s(fp, "%d;", &Out.m_KeyType);
-
-	//キーの数
-	fscanf_s(fp, "%d;", &keyNum);
-	Out.m_KeyNum = keyNum;
-
-	//キーのメモリ確保
-	Out.m_pKey = new KEY[keyNum];
-
-	//キーの読み込み
-	for (int i = 0; i < keyNum; i++)
-	{
-		//コマ
-		fscanf_s(fp, "%d;", &Out.m_pKey[i].m_Time);
-
-		//データの数
-		fscanf_s(fp, "%d;", &valueNum);
-		Out.m_pKey[i].m_ValueNum = valueNum;
-
-		//データのメモリ確保
-		Out.m_pKey[i].m_pfValue = new float[valueNum];
-
-		//カウンター初期化
-		keyCount = 0;
-
-		//最初の一つ
-		fscanf_s(fp, "%f", &Out.m_pKey[i].m_pfValue[keyCount++]);
-
-		//2つ目以降は,も含めて読む
-		while (keyCount < Out.m_pKey[i].m_ValueNum)
-		{
-			fscanf_s(fp, ",%f",&Out.m_pKey[i].m_pfValue[keyCount++]);
-		}
-
-		//;;,を除去
-		fgets(str, sizeof(str), fp);
-	}	
-	return Out;
-}
-
-
-//アニメーション読み込み
-bool CX_Skin::LoadAnimation(FILE* fp, ANIMATION* pAnime, long lStartPos)
-{
-	//読み込み開始位置にセットする
-	fseek(fp, lStartPos, SEEK_SET);
-
-	//キーワード読み込み用
-	char str[READ_ARRAY_SIZE];
-
-	//読み込み用
-	char animeName[NAME_ARRAY_SIZE];	//アニメーション名
-	char boneName[NAME_ARRAY_SIZE];		//対応ボーン名
-	int animeCount = 0;					//アニメーションカウンター
-	
-	while (!feof(fp))
-	{
-		fscanf_s(fp, "%s ", str, sizeof(str));
-
-		//アニメーション
-		if (strcmp(str, "AnimationSet") == 0)
-		{
-			//アニメーション名
-			fscanf_s(fp, "%s ", animeName, sizeof(animeName));
-			strcpy_s(pAnime[animeCount].m_Name, animeName);
-
-			//ファイルの位置を保存
-			long ReadStartPos = ftell(fp);
-
-			int boneNum = 0;
-			int start_count = 0;
-			int end_count = 0;
-
-			//先に対応ボーンの数を数える
-			while (start_count != end_count || start_count == 0 || end_count == 0)
-			{
-				fscanf_s(fp, "%s ", str, sizeof(str));
-
-				//{カウント
-				if (strcmp(str, "{") == 0)
-				{
-					start_count++;
-				}
-
-				//}カウント
-				if (strcmp(str, "}") == 0)
-				{
-					end_count++;
-				}
-
-				//対応ボーン
-				if (strcmp(str, "Animation") == 0)
-				{
-					boneNum++;
-				}
-			}
-
-			//対応ボーン数保存
-			pAnime[animeCount].m_BoneKeyNum = boneNum;
-
-			//メモリ確保
-			pAnime[animeCount].m_pBoneKey = new BONE_KEY[boneNum];
-
-			//アニメーション読み込み位置にセットする
-			fseek(fp, ReadStartPos, SEEK_SET);
-
-			//対応ボーン分読み込み
-			int boneCount = 0;
-			while(!feof(fp)&&(boneCount<boneNum))
-			{
-				fscanf_s(fp, "%s ", str, sizeof(str));
-
-				if (strcmp(str, "Animation") == 0)
-				{
-					//ボーン毎のキー読み込み
-					pAnime[animeCount].m_pBoneKey[boneCount] = LoadBoneKey(fp);
-					boneCount++;
-				}
-			}
-			//カウンター更新
-			animeCount++;
-		}
-	}
-	return true;
-}
-
-//スキンメッシュにまとめる
-void CX_Skin::SkinMeshPutTogether(MESH Mesh, BONE* pBone, int BoneNum, SKIN_WEIGHT* pSkinWeight,int WeightNum ,ANIMATION* pAnimation, int AnimeNum, SKIN_MESH* pSkinMesh,SKIN_MESH_HEADER SkinHeader)
-{
-	pSkinMesh->m_Mesh		= Mesh;						//メッシュ
-	pSkinMesh->m_BoneNum	= BoneNum;					//ボーン数
-	pSkinMesh->m_pBone		= pBone;					//ボーン
-	pSkinMesh->m_WeightNum	= WeightNum;				//ウェイト数	
-	pSkinMesh->m_pWeight	= pSkinWeight;				//ウェイトリスト
-	pSkinMesh->m_AnimeNum	= AnimeNum;					//アニメーションの数
-	pSkinMesh->m_pAnimation	= pAnimation;				//アニメーション
-	pSkinMesh->m_SkinHeader	= SkinHeader;				//スキンヘッダー
-	pSkinMesh->m_pRoot		= &pSkinMesh->m_pBone[0];	//ルートボーン
-}
-
 //フレーム補完
 KEY CX_Skin::FrameComplement(int NowFrame, BONE_KEY BoneKey)
 {
 	KEY out;
 
-	int keyNum = BoneKey.m_KeyNum;
+	int	 keyNum		= BoneKey.m_KeyNum;
 	int* pFrameDiff = new int[keyNum];
 
 	bool bKey = false;
@@ -1140,6 +219,7 @@ KEY CX_Skin::FrameComplement(int NowFrame, BONE_KEY BoneKey)
 
 	//フレーム差分破棄
 	delete[] pFrameDiff;
+	pFrameDiff = nullptr;
 
 	return out;
 }
@@ -1147,19 +227,22 @@ KEY CX_Skin::FrameComplement(int NowFrame, BONE_KEY BoneKey)
 //ボーンの更新
 void CX_Skin::BoneUpdate(SKIN_MESH* pSkin, int AnimeId, int NowFrame)
 {
+	//実行するアニメーションデータ
 	ANIMATION anime = pSkin->m_pAnimation[AnimeId];
+	
+	//ボーン毎に更新する
+	bool bBoneFind = false;
 	for (int i = 0; i < pSkin->m_BoneNum; i++)
 	{
-		bool bBoneFind = false;
+		bBoneFind = false;
 		pSkin->m_pBone[i].m_matNewPose=GetPose(&bBoneFind,pSkin, pSkin->m_pRoot, anime, NowFrame,i);
-
-		int a = 0;
 	}
 }
 
 //ポーズを取得する
 D3DXMATRIX CX_Skin::GetPose(bool* bBoneFind,SKIN_MESH* pSkin, BONE* pBone, ANIMATION Anime, int NowFrame, int BoneID)
 {
+	//ポーズ
 	D3DXMATRIX matOut;
 	D3DXMatrixIdentity(&matOut);
 

@@ -222,6 +222,9 @@
     <ClInclude Include="Library\SkinShader.h">
       <Filter>リソース ファイル\SkinShader</Filter>
     </ClInclude>
+    <ClInclude Include="Library\X_Loader.h">
+      <Filter>リソース ファイル\XLoader</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Library\Audio.cpp">
@@ -319,6 +322,9 @@
     </ClCompile>
     <ClCompile Include="Library\SkinShader.cpp">
       <Filter>リソース ファイル\SkinShader</Filter>
+    </ClCompile>
+    <ClCompile Include="Library\X_Loader.cpp">
+      <Filter>リソース ファイル\XLoader</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

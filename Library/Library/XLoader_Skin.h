@@ -3,6 +3,7 @@
 #include "Main.h"
 #include "Singleton.h"
 #include "Struct.h"
+#include "LibraryHeader.h"
 #include <stdio.h>
 
 constexpr int TRIANGLE_POLYGON{ 3 };	//三角ポリゴン
@@ -37,6 +38,12 @@ struct VERTEX
 //ポリゴン
 struct FACE
 {
+	FACE()
+	{
+		m_FaceOfVer = -1;
+		m_pIndex = nullptr;
+		m_UseMaterial = -1;
+	}
 	int m_FaceOfVer;	//構成する頂点の数
 	int* m_pIndex;		//構成する頂点のインデックス
 	int m_UseMaterial;	//使用するマテリアル
@@ -45,15 +52,23 @@ struct FACE
 //マテリアル構造体
 struct MATERIAL
 {
+	MATERIAL()
+	{
+		ZeroMemory(this, sizeof(MATERIAL));
+		m_pTexture = nullptr;
+		m_pFaceIndex = nullptr;
+		m_ppIndexBuffer = nullptr;
+	}
+
 	char						m_TexName[NAME_ARRAY_SIZE];	//ファイル名
 	D3DXVECTOR4					m_vFaceColor;				//面の色
 	D3DXVECTOR3					m_vKs;						//スペキュラー
 	float						m_fPower;					//スペキュラーのパワー
 	D3DXVECTOR3					m_vKe;						//エミッシブ
-	ID3D10ShaderResourceView*	m_pTexture;					//テクスチャポインタ	
+	ID3D10ShaderResourceView* m_pTexture;					//テクスチャポインタ	
 	int							m_FaceNum;					//このマテリアルを使用する面の数
-	int*						m_pFaceIndex;				//このマテリアルで使用する面のインデックスリスト
-	ID3D10Buffer**				m_ppIndexBuffer;			//インデックスバッファ
+	int* m_pFaceIndex;				//このマテリアルで使用する面のインデックスリスト
+	ID3D10Buffer** m_ppIndexBuffer;			//インデックスバッファ
 };
 
 //ボーン構造体
@@ -69,7 +84,7 @@ struct BONE
 	char		m_Name[NAME_ARRAY_SIZE];	//ボーン名
 	int			m_index;					//自身のインデックス
 	int			m_ChildNum;					//子の数
-	int*		m_pChildIndex;				//自分の子のインデックスリスト
+	int* m_pChildIndex;				//自分の子のインデックスリスト
 	D3DXMATRIX	m_matBindPose;				//初期ポーズ（ずっと変わらない）
 	D3DXMATRIX	m_matNewPose;				//現在のポーズ（その都度変わる）
 	D3DXMATRIX  m_matOffset;				//オフセット行列
@@ -78,54 +93,97 @@ struct BONE
 //どのボーンが度の頂点にどれだけの影響を与えるか
 struct SKIN_WEIGHT
 {
+	SKIN_WEIGHT()
+	{
+		m_WeightNum = -1;
+		m_pIndex = nullptr;
+		m_pWeight = nullptr;
+		D3DXMatrixIdentity(&m_matOffset);
+	}
+
 	char		m_BoneName[NAME_ARRAY_SIZE];//ボーン名
 	int			m_WeightNum;				//ウェイトの数
-	int*		m_pIndex;					//影響を受ける頂点のインデックスリスト
-	float*		m_pWeight;					//ウェイトリスト
+	int* m_pIndex;					//影響を受ける頂点のインデックスリスト
+	float* m_pWeight;					//ウェイトリスト
 	D3DXMATRIX	m_matOffset;				//オフセット行列
 };
 
 //アニメーションのキー
 struct KEY
 {
+	KEY()
+	{
+		m_Time = -1;
+		m_ValueNum = -1;
+		m_pfValue = nullptr;
+	}
+
 	int		m_Time;		//コマ
 	int		m_ValueNum;	//値の数
-	float*	m_pfValue;	//値のリスト
+	float* m_pfValue;	//値のリスト
 };
 
 //ボーンのキー
 struct BONE_KEY
 {
+	BONE_KEY()
+	{
+		m_KeyNum = -1;
+		m_KeyType = -1;
+		m_pKey = nullptr;
+	}
+
 	char	m_AffectBoneName[NAME_ARRAY_SIZE];	//影響を受けるボーン名
 	int		m_KeyType;							//キータイプ
 	int		m_KeyNum;							//キーの数
-	KEY*	m_pKey;								//キーリスト
+	KEY* m_pKey;								//キーリスト
 };
 
 //アニメーション構造体
 struct ANIMATION
 {
+	ANIMATION()
+	{
+		m_BoneKeyNum = -1;
+		m_pBoneKey = nullptr;
+	}
+
 	char		m_Name[NAME_ARRAY_SIZE];//アニメーション名
 	int			m_BoneKeyNum;			//対応ボーンの数
-	BONE_KEY*	m_pBoneKey;				//ボーンのキーリスト
+	BONE_KEY* m_pBoneKey;				//ボーンのキーリスト
 };
 
 //メッシュ
 struct MESH
 {
+	MESH()
+	{
+		m_VerNum = -1;
+		m_FaceNum = -1;
+		m_MaterialNum = -1;
+		m_pFace = nullptr;
+		m_pMaterial = nullptr;
+		m_pVertexBuffer = nullptr;
+		m_pVertex = nullptr;
+	}
 	int				m_VerNum;		//頂点数
-	int				m_UvNum;		//UVの数(頂点数と同じ)
 	int				m_FaceNum;		//面(ポリゴン)数
-	FACE*			m_pFace;		//面リスト
+	FACE* m_pFace;		//面リスト
 	int				m_MaterialNum;	//マテリアルの数
-	MATERIAL*		m_pMaterial;	//マテリアルリスト
-	ID3D10Buffer*	m_pVertexBuffer;//頂点バッファ
-	VERTEX*			m_pVertex;		//頂点情報のリスト
+	MATERIAL* m_pMaterial;	//マテリアルリスト
+	ID3D10Buffer* m_pVertexBuffer;//頂点バッファ
+	VERTEX* m_pVertex;		//頂点情報のリスト
 };
 
 //スキンメッシュヘッダー
 struct SKIN_MESH_HEADER
 {
+	SKIN_MESH_HEADER()
+	{
+		m_MaxVertex = -1;
+		m_MaxFace = -1;
+		m_BoneNum = -1;
+	}
 	int	m_MaxVertex;//頂点の最大ウェイト数
 	int m_MaxFace;	//面の最大ウェイト数
 	int m_BoneNum;	//ボーン数
@@ -134,19 +192,30 @@ struct SKIN_MESH_HEADER
 //スキンメッシュ
 struct SKIN_MESH
 {
+	SKIN_MESH()
+	{
+		m_Mesh = MESH();
+		m_BoneNum = -1;
+		m_pBone = nullptr;
+		m_SkinHeader = SKIN_MESH_HEADER();
+		m_WeightNum = -1;
+		m_pWeight = nullptr;
+		m_AnimeNum = -1;
+		m_pAnimation = nullptr;
+		m_pRoot = nullptr;
+	}
 
 	MESH				m_Mesh;			//メッシュ
 	int					m_BoneNum;		//ボーン数
-	BONE*				m_pBone;		//ボーンリスト
+	BONE* m_pBone;		//ボーンリスト
 	SKIN_MESH_HEADER	m_SkinHeader;	//スキンメッシュヘッダー
 	int					m_WeightNum;	//ウェイト数
-	SKIN_WEIGHT*		m_pWeight;		//スキンウェイト
+	SKIN_WEIGHT* m_pWeight;		//スキンウェイト
 	int					m_AnimeNum;		//アニメーション数
-	ANIMATION*			m_pAnimation;	//アニメーション
-	BONE*				m_pRoot;		//ルートボーン
-	D3DXMATRIX			m_mFinalWorld;	//最終的なワールド行列（この姿勢でレンダリングする）
-	
+	ANIMATION* m_pAnimation;	//アニメーション
+	BONE* m_pRoot;		//ルートボーン
 };
+
 
 //Xファイル関連のクラス
 class CX_Skin : public CSingleton<CX_Skin>
@@ -168,49 +237,11 @@ public:
 	//メッシュ描画(テスト用)
 	void DrawMesh(D3DMATRIX matWorld, SKIN_MESH* pSkinMesh, CColorData* pColor);
 private:
-	int GetBoneNum(FILE* fp, long lStartPos);		//ボーン数の取得
-	int GetSkinWeightNum(FILE* fp, long lStartPos);	//スキンウェイトの数を取得
-	int GetAnimeNum(FILE* fp, long lStartPos);		//アニメーションの数を取得
-
-	//templateを飛ばした読み込み開始位置を取得する
-	long GetTemplateSkipStartPos(FILE* fp);
-
-	//メッシュ情報の読み込み
-	bool LoadMesh(FILE* fp, MESH* pMesh, SKIN_MESH_HEADER* pSkinHeader, long lStartPos);
-
-	//スキンメッシュヘッダー読み込み
-	void LoadSkinMeshHeader(FILE* fp, SKIN_MESH_HEADER* pSkinHeader, long lStartPos);
 	
-	//ボーン読み込み
-	bool LoadBone(FILE* fp, BONE* pBone, long lStartPos);
-
-	//ボーン情報の読み込み(再起関数))
-	BONE LoadBoneInfo(FILE* fp, int* pBoneIndex, BONE* pBone);
-	
-	//スキンウェイトの読み込み
-	bool LoadSkinWeight(FILE* fp, SKIN_WEIGHT* pSkinWeight, long lStartPos);
-
-	//アニメーション読み込み
-	bool LoadAnimation(FILE* fp, ANIMATION* pAnime, long lStartPos);
-
-	//指定文字を文字列から消す
-	void ErasCharFromString(char* pSource, int Size, char Erace);
-
-	//スキンメッシュにまとめる
-	void SkinMeshPutTogether(MESH Mesh, BONE* pBone, int BoneNum,SKIN_WEIGHT* pSkinWeight,int WeightNum,ANIMATION* pAnimation, int AnimeNum, SKIN_MESH* pSkinMesh,SKIN_MESH_HEADER SkinHeader);
-
-	//ボーン毎のキー情報読み込み
-	BONE_KEY LoadBoneKey(FILE* fp);
-	
-	//スキンウェイトの情報をもとに各頂点に対応ボーンとウェイトの情報を持たせる
-	void VertexMatchBone(SKIN_MESH* pSkin);
-
 	//ボーンの更新
 	void BoneUpdate(SKIN_MESH* pSkin, int AnimeId, int NowFrame);
 
 	//ポーズを取得する
-	//D3DXMATRIX GetPose(SKIN_MESH* pSkin, BONE* pBone, ANIMATION Anime, int NowFrame, int BoneID);
-
 	D3DXMATRIX GetPose(bool* bFind, SKIN_MESH* pSkin, BONE* pBone, ANIMATION Anime, int NowFrame, int BoneID);
 
 	//ウェイトが大きい順にソートする
@@ -218,6 +249,5 @@ private:
 
 	//フレーム補完
 	KEY FrameComplement(int NowFrame, BONE_KEY BoneKey);
-	
-	SKIN_MESH	m_SkinMesh;		//スキンメッシュ
+	SKIN_MESH m_SkinMesh;	//スキンメッシュ
 };

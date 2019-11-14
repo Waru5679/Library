@@ -17,6 +17,7 @@
 #include "Ray.h"
 #include "Polygon.h"
 #include "SkinShader.h"
+#include "X_Loader.h"
 
 //変えるかもしれないけどここでインクルードするもの
 #include "Struct.h"
@@ -36,6 +37,7 @@
 #define HIT CHit::GetInstance()
 #define LOADER CObjLoader::GetInstance()
 #define SKIN_SHADER CSkinShader::GetInstance()
+#define X_LOADER CX_Loader::GetInstance()
 
 #define INPUT CInput::GetInstance()
 #define RAY CRay::GetInstance()

@@ -172,6 +172,7 @@
     <ClInclude Include="Library\TextureManager.h" />
     <ClInclude Include="Library\Trace.h" />
     <ClInclude Include="Library\XLoader_Skin.h" />
+    <ClInclude Include="Library\X_Loader.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Game\2DPolygon.cpp" />
@@ -206,6 +207,7 @@
     <ClCompile Include="Library\TextureManager.cpp" />
     <ClCompile Include="Library\Trace.cpp" />
     <ClCompile Include="Library\XLoader_Skin.cpp" />
+    <ClCompile Include="Library\X_Loader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Geometry_Texture.fx">
