@@ -45,6 +45,7 @@ void CSceneMain::Init()
 
 	//シェーダーにカメラセット
 	SHADER->SetCamera(dynamic_cast<CCameraBase*>(pCamera));
+	SKIN_SHADER->SetCamera(dynamic_cast<CCameraBase*>(pCamera));
 	DRAW->SetCamera(dynamic_cast<CCameraBase*>(pCamera));
 
 	AUDIO->StartMusic(0);

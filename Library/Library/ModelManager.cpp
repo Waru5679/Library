@@ -1,8 +1,6 @@
 #include "ModelManager.h"
 #include "LibraryHeader.h"
 
-#include "XLoader.h"
-
 //インスタンス
 CModelManager* CModelManager::m_pInstance = nullptr;
 

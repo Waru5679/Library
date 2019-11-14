@@ -100,6 +100,9 @@
     <Filter Include="リソース ファイル\XLoader">
       <UniqueIdentifier>{72ec159b-0852-41f6-866e-469bcf7e7c54}</UniqueIdentifier>
     </Filter>
+    <Filter Include="リソース ファイル\SkinShader">
+      <UniqueIdentifier>{5e782ec4-f376-4c70-9250-8cdb338d8ead}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Library\Camera.h">
@@ -213,11 +216,11 @@
     <ClInclude Include="Game\Test.h">
       <Filter>ソース ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Library\XLoader.h">
-      <Filter>リソース ファイル\XLoader</Filter>
-    </ClInclude>
     <ClInclude Include="Library\XLoader_Skin.h">
       <Filter>リソース ファイル\XLoader</Filter>
+    </ClInclude>
+    <ClInclude Include="Library\SkinShader.h">
+      <Filter>リソース ファイル\SkinShader</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -311,16 +314,19 @@
     <ClCompile Include="Game\Test.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Library\XLoader.cpp">
-      <Filter>リソース ファイル\XLoader</Filter>
-    </ClCompile>
     <ClCompile Include="Library\XLoader_Skin.cpp">
       <Filter>リソース ファイル\XLoader</Filter>
+    </ClCompile>
+    <ClCompile Include="Library\SkinShader.cpp">
+      <Filter>リソース ファイル\SkinShader</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Geometry_Texture.fx">
       <Filter>リソース ファイル\Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="Geometry_Texture_Skin.fx">
+      <Filter>リソース ファイル\SkinShader</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

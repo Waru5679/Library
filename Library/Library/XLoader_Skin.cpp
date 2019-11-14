@@ -1196,9 +1196,9 @@ D3DXMATRIX CX_Skin::GetPose(bool* bBoneFind,SKIN_MESH* pSkin, BONE* pBone, ANIMA
 	bool bFind = false;
 	for (int i = 0; i < pBone->m_ChildNum && bFind == false; i++)
 	{
-	
 		matOut=GetPose(&bFind,pSkin, &pSkin->m_pBone[pBone->m_pChildIndex[i]], Anime, NowFrame,BoneID)*matNewPose;
 		
+		//目当てのボーンが見つかっていれば
 		if (bFind == true)
 		{
 			*bBoneFind = true;
@@ -1251,13 +1251,13 @@ void CX_Skin::DrawMesh(D3DMATRIX matWorld, SKIN_MESH* pSkinMesh, CColorData* pCo
 			}
 
 			//シェーダセット
-			SHADER->SetShader(pSkinMesh->m_Mesh.m_pMaterial[i].m_pTexture, NULL, pColor, matWorld,pSkinMesh);
+			SKIN_SHADER->SetShader(pSkinMesh->m_Mesh.m_pMaterial[i].m_pTexture, NULL, pColor, matWorld,pSkinMesh);
 
 			D3D10_TECHNIQUE_DESC dc;
-			SHADER->GetTechnique()->GetDesc(&dc);
+			SKIN_SHADER->GetTechnique()->GetDesc(&dc);
 			for (UINT p = 0; p < dc.Passes; ++p)
 			{
-				SHADER->GetTechnique()->GetPassByIndex(p)->Apply(0);
+				SKIN_SHADER->GetTechnique()->GetPassByIndex(p)->Apply(0);
 				DX->GetDevice()->DrawIndexed(face.m_FaceOfVer, 0, 0);
 			}
 		}

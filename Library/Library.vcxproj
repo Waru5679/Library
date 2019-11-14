@@ -166,13 +166,11 @@
     <ClInclude Include="Library\SceneInclude.h" />
     <ClInclude Include="Library\Shader.h" />
     <ClInclude Include="Library\Singleton.h" />
+    <ClInclude Include="Library\SkinShader.h" />
     <ClInclude Include="Library\Struct.h" />
     <ClInclude Include="Library\Task.h" />
     <ClInclude Include="Library\TextureManager.h" />
     <ClInclude Include="Library\Trace.h" />
-    <ClInclude Include="Library\XLoader.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-    </ClInclude>
     <ClInclude Include="Library\XLoader_Skin.h" />
   </ItemGroup>
   <ItemGroup>
@@ -203,16 +201,17 @@
     <ClCompile Include="Library\Scene.cpp" />
     <ClCompile Include="Library\SceneInclude.cpp" />
     <ClCompile Include="Library\Shader.cpp" />
+    <ClCompile Include="Library\SkinShader.cpp" />
     <ClCompile Include="Library\Task.cpp" />
     <ClCompile Include="Library\TextureManager.cpp" />
     <ClCompile Include="Library\Trace.cpp" />
-    <ClCompile Include="Library\XLoader.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="Library\XLoader_Skin.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Geometry_Texture.fx">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="Geometry_Texture_Skin.fx">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </FxCompile>
   </ItemGroup>

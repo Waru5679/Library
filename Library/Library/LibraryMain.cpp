@@ -19,8 +19,14 @@ bool CLibraryMain::Init(HINSTANCE hInst)
 		return false;
 	}
 
+
 	//シェーダー初期化
-	if (SHADER->Init(DX->GetDevice())==false)
+	if (SHADER->Init(DX->GetDevice()) == false)
+	{
+		return false;
+	}
+	//スキンメッシュ用シェーダ初期化
+	if (SKIN_SHADER->Init(DX->GetDevice()) == false)
 	{
 		return false;
 	}
@@ -119,6 +125,7 @@ void  CLibraryMain::Release()
 	AUDIO->Release();
 	FONT->Release();
 	DRAW->Release();
+	SKIN_SHADER->Release();
 	SHADER->Release();
 	DX->Release();
 	

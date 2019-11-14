@@ -1,14 +1,14 @@
-#include "Shader.h"
+#include "SkinShader.h"
 #include "Main.h"
 
 //インスタンス
-CShader* CShader::m_pInstance = nullptr;
+CSkinShader* CSkinShader::m_pInstance = nullptr;
 
 //初期化
-bool CShader::Init(ID3D10Device* pDevice)
+bool CSkinShader::Init(ID3D10Device* pDevice)
 {
 	//エフェクトを作成
-	D3DX10CreateEffectFromFile(L"Geometry_Texture.fx", NULL, NULL, "fx_4_0",
+	D3DX10CreateEffectFromFile(L"Geometry_Texture_Skin.fx", NULL, NULL, "fx_4_0",
 		D3D10_SHADER_ENABLE_STRICTNESS | D3D10_SHADER_DEBUG, 0,
 		pDevice, NULL, NULL, &m_pEffect, NULL, NULL);
 
@@ -25,11 +25,14 @@ bool CShader::Init(ID3D10Device* pDevice)
 	m_pShaderSrc = m_pEffect->GetVariableByName("g_UvSrc")->AsVector();
 	m_pShaderColor = m_pEffect->GetVariableByName("g_Color")->AsVector();
 
+	//ボーンのポーズ行列
+	m_pBone = m_pEffect->GetVariableByName("g_matBone")->AsMatrix();
+
 	return true;
 }
 
 //インプットレイアウトの作成
-bool CShader::CreateLayOut(ID3D10Device* pDevice)
+bool CSkinShader::CreateLayOut(ID3D10Device* pDevice)
 {
 	//頂点インプットレイアウトを定義	
 	D3D10_INPUT_ELEMENT_DESC layout[] =
@@ -37,6 +40,8 @@ bool CShader::CreateLayOut(ID3D10Device* pDevice)
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D10_INPUT_PER_VERTEX_DATA, 0 },
 		{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D10_INPUT_PER_VERTEX_DATA, 0 },
 		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 24, D3D10_INPUT_PER_VERTEX_DATA, 0 },
+		{ "BONE_INDEX", 0, DXGI_FORMAT_R32G32B32A32_UINT, 0, 32, D3D10_INPUT_PER_VERTEX_DATA, 0 },
+		{ "BONE_WEIGHT", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 48,D3D10_INPUT_PER_VERTEX_DATA, 0 },
 	};
 	UINT numElements = sizeof(layout) / sizeof(layout[0]);
 
@@ -52,8 +57,9 @@ bool CShader::CreateLayOut(ID3D10Device* pDevice)
 }
 
 //シェーダーセット
-void CShader::SetShader(ID3D10ShaderResourceView* pTexture, RECT_F* pSrc,CColorData* pColor, D3DXMATRIX matWorld)
-{	
+void CSkinShader::SetShader(ID3D10ShaderResourceView* pTexture, RECT_F* pSrc, CColorData* pColor, D3DXMATRIX matWorld, SKIN_MESH* pSkin)
+{
+
 	//頂点インプットレイアウトをセット
 	DX->GetDevice()->IASetInputLayout(m_pVertexLayout);
 
@@ -61,10 +67,18 @@ void CShader::SetShader(ID3D10ShaderResourceView* pTexture, RECT_F* pSrc,CColorD
 	if (m_pCamera == nullptr)
 		return;
 
-	//ワールド＊ビュー*プロジェクション
-	D3DXMATRIX objWVP = matWorld *m_pCamera->GetViewMatrix() *m_pCamera->GetProjMatrix();
-	m_pShaderWorldViewProjection->SetMatrix((float*)&(objWVP));
-	
+	//ワールド*ビュー*プロジェクション
+	D3DXMATRIX objWVP = matWorld * m_pCamera->GetViewMatrix() * m_pCamera->GetProjMatrix();
+	m_pShaderWorldViewProjection->SetMatrix((float*) & (objWVP));
+
+	//ボーンのポーズ行列をシェーダ渡す
+	D3DXMATRIX mat;
+	for (int i = 0; i < pSkin->m_BoneNum; i++)
+	{
+		mat = pSkin->m_pBone[i].m_matNewPose;
+		m_pBone->SetMatrixArray((float*)& mat, i, 1);
+	}
+
 	//切り取り位置
 	D3DXVECTOR4 vSrc;
 	if (pSrc == NULL)
@@ -99,14 +113,16 @@ void CShader::SetShader(ID3D10ShaderResourceView* pTexture, RECT_F* pSrc,CColorD
 }
 
 //解放
-void CShader::Release()
+void CSkinShader::Release()
 {
 	m_pVertexLayout->Release();
 	m_pEffect->Release();
 
 	//カメラ破棄
-	if(m_pCamera!=nullptr)
-		PointerRelease(m_pCamera);
+	if (m_pCamera != nullptr)
+	{	
+		m_pCamera = nullptr;
+	}
 
 	//インスタンス破棄
 	PointerRelease(m_pInstance);

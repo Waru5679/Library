@@ -1,5 +1,4 @@
 #include "Test.h"
-#include "../Library/XLoader.h"
 #include "../Library/XLoader_Skin.h"
 
 #define SKIN CX_Skin::GetInstance()
