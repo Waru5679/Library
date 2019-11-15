@@ -36,21 +36,21 @@ bool CX_Loader::LoadMesh(FILE* fp, MESH* pMesh, SKIN_MESH_HEADER* pSkinHeader, l
 	//読み込みの開始位置にセット
 	fseek(fp, lStartPos, SEEK_SET);
 
-	int verNum = 0;//頂点数
+	int verNum	= 0;//頂点数
 	int faceNum = 0;//面の数
 	int normNum = 0;//法線数
-	int uvNum = 0;//UV数
+	int uvNum	= 0;//UV数
 	int mateNum = 0;//マテリアルの数
 
 	//読み込み用（読み込み後破棄）
-	D3DXVECTOR3* pvPos = nullptr;//頂点座標
-	D3DXVECTOR3* pvNormal = nullptr;//法線
-	D3DXVECTOR2* pvTex = nullptr;//テクスチャ座標
+	D3DXVECTOR3* pvPos		= nullptr;//頂点座標
+	D3DXVECTOR3* pvNormal	= nullptr;//法線
+	D3DXVECTOR2* pvTex		= nullptr;//テクスチャ座標
 
 	//読み込み後そのまま使うもの
-	FACE* pFace = nullptr;//面のリスト
+	FACE* pFace			= nullptr;//面のリスト
 	MATERIAL* pMaterial = nullptr;//マテリアルのリスト
-	VERTEX* pVertex = nullptr;//頂点リスト
+	VERTEX* pVertex		= nullptr;//頂点リスト
 
 	//読み込み用
 	float x, y, z, w;
@@ -324,11 +324,11 @@ bool CX_Loader::LoadMesh(FILE* fp, MESH* pMesh, SKIN_MESH_HEADER* pSkinHeader, l
 
 	//一時保存からメッシュポインタへデータを移す
 	pMesh->m_MaterialNum = mateNum;
-	pMesh->m_pMaterial = pMaterial;
-	pMesh->m_FaceNum = faceNum;
-	pMesh->m_pFace = pFace;
-	pMesh->m_pVertex = pVertex;
-	pMesh->m_VerNum = verNum;
+	pMesh->m_pMaterial	= pMaterial;
+	pMesh->m_FaceNum	= faceNum;
+	pMesh->m_pFace		= pFace;
+	pMesh->m_pVertex	= pVertex;
+	pMesh->m_VerNum		= verNum;
 
 	//一時保存は破棄
 	PointerRelease(pvPos);
@@ -429,7 +429,7 @@ bool CX_Loader::LoadBone(FILE* fp, BONE* pBone, long lStartPos)
 	char str[READ_ARRAY_SIZE];
 
 	int start_count = 0;//{を数える
-	int end_count = 0;//}を数える
+	int end_count	= 0;//}を数える
 
 	int boneIndex = 0;//インデックスカウンター
 
@@ -456,8 +456,8 @@ BONE CX_Loader::LoadBoneInfo(FILE* fp, int* pBoneIndex, BONE* pBone)
 	long ReadStartPos = ftell(fp);
 
 	int start_count = 0;//{カウント
-	int end_count = 0;//}カウント
-	int childNum = 0;//子ボーンの数
+	int end_count	= 0;//}カウント
+	int childNum	= 0;//子ボーンの数
 
 	//読み込み用
 	char str[READ_ARRAY_SIZE];
@@ -510,8 +510,8 @@ BONE CX_Loader::LoadBoneInfo(FILE* fp, int* pBoneIndex, BONE* pBone)
 
 	//カウンタを初期化
 	start_count = 0;
-	end_count = 0;
-	childNum = 0;
+	end_count	= 0;
+	childNum	= 0;
 
 	//ボーン名
 	fscanf_s(fp, "%s", bone.m_Name, sizeof(bone.m_Name));
@@ -611,8 +611,8 @@ bool CX_Loader::LoadSkinWeight(FILE* fp, SKIN_WEIGHT* pSkinWeight, long lStartPo
 
 	//読み込み用
 	char boneName[NAME_ARRAY_SIZE];	//ボーン名
-	int count = 0;			//カウンター		
-	int weightNum = 0;			//ウェイト数
+	int count		= 0;			//カウンター		
+	int weightNum	= 0;			//ウェイト数
 	D3DXMATRIX mat;					//行列
 
 	//読み込み
@@ -915,11 +915,11 @@ void CX_Loader::SkinMeshPutTogether(MESH Mesh, BONE* pBone, int BoneNum, SKIN_WE
 {
 	pSkinMesh->m_Mesh = Mesh;						//メッシュ
 	pSkinMesh->m_BoneNum = BoneNum;					//ボーン数
-	pSkinMesh->m_pBone = pBone;					//ボーン
+	pSkinMesh->m_pBone = pBone;						//ボーン
 	pSkinMesh->m_WeightNum = WeightNum;				//ウェイト数	
 	pSkinMesh->m_pWeight = pSkinWeight;				//ウェイトリスト
-	pSkinMesh->m_AnimeNum = AnimeNum;					//アニメーションの数
-	pSkinMesh->m_pAnimation = pAnimation;				//アニメーション
-	pSkinMesh->m_SkinHeader = SkinHeader;				//スキンヘッダー
+	pSkinMesh->m_AnimeNum = AnimeNum;				//アニメーションの数
+	pSkinMesh->m_pAnimation = pAnimation;			//アニメーション
+	pSkinMesh->m_SkinHeader = SkinHeader;			//スキンヘッダー
 	pSkinMesh->m_pRoot = &pSkinMesh->m_pBone[0];	//ルートボーン
 }

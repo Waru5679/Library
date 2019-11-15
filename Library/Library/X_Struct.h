@@ -1,11 +1,11 @@
 #pragma once
 #include "Main.h"
 
-constexpr int TRIANGLE_POLYGON{ 3 };	//三角ポリゴン
-constexpr int QUAD_POLYGON{ 4 };		//四角ポリゴン
-constexpr int READ_ARRAY_SIZE{ 200 };	//読み込み用キー配列のサイズ
-constexpr int NAME_ARRAY_SIZE{ 100 };	//名前配列のサイズ
-constexpr int MAX_VER_WEIGH{ 4 };		//頂点の最大ウェイト
+constexpr int TRIANGLE_POLYGON	{ 3 };	//三角ポリゴン
+constexpr int QUAD_POLYGON		{ 4 };	//四角ポリゴン
+constexpr int READ_ARRAY_SIZE	{ 200 };//読み込み用キー配列のサイズ
+constexpr int NAME_ARRAY_SIZE	{ 100 };//名前配列のサイズ
+constexpr int MAX_VER_WEIGH		{ 4 };	//頂点の最大ウェイト
 
 //頂点構造体
 struct VERTEX
@@ -59,10 +59,10 @@ struct MATERIAL
 	D3DXVECTOR3					m_vKs;						//スペキュラー
 	float						m_fPower;					//スペキュラーのパワー
 	D3DXVECTOR3					m_vKe;						//エミッシブ
-	ID3D10ShaderResourceView* m_pTexture;					//テクスチャポインタ	
+	ID3D10ShaderResourceView*	m_pTexture;					//テクスチャポインタ	
 	int							m_FaceNum;					//このマテリアルを使用する面の数
-	int* m_pFaceIndex;				//このマテリアルで使用する面のインデックスリスト
-	ID3D10Buffer** m_ppIndexBuffer;			//インデックスバッファ
+	int*						m_pFaceIndex;				//このマテリアルで使用する面のインデックスリスト
+	ID3D10Buffer**				m_ppIndexBuffer;			//インデックスバッファ
 };
 
 //ボーン構造体
@@ -78,7 +78,7 @@ struct BONE
 	char		m_Name[NAME_ARRAY_SIZE];	//ボーン名
 	int			m_index;					//自身のインデックス
 	int			m_ChildNum;					//子の数
-	int* m_pChildIndex;				//自分の子のインデックスリスト
+	int*		m_pChildIndex;				//自分の子のインデックスリスト
 	D3DXMATRIX	m_matBindPose;				//初期ポーズ（ずっと変わらない）
 	D3DXMATRIX	m_matNewPose;				//現在のポーズ（その都度変わる）
 	D3DXMATRIX  m_matOffset;				//オフセット行列
@@ -97,8 +97,8 @@ struct SKIN_WEIGHT
 
 	char		m_BoneName[NAME_ARRAY_SIZE];//ボーン名
 	int			m_WeightNum;				//ウェイトの数
-	int* m_pIndex;					//影響を受ける頂点のインデックスリスト
-	float* m_pWeight;					//ウェイトリスト
+	int*		m_pIndex;					//影響を受ける頂点のインデックスリスト
+	float*		m_pWeight;					//ウェイトリスト
 	D3DXMATRIX	m_matOffset;				//オフセット行列
 };
 
@@ -114,7 +114,7 @@ struct KEY
 
 	int		m_Time;		//コマ
 	int		m_ValueNum;	//値の数
-	float* m_pfValue;	//値のリスト
+	float*	m_pfValue;	//値のリスト
 };
 
 //ボーンのキー
@@ -130,7 +130,7 @@ struct BONE_KEY
 	char	m_AffectBoneName[NAME_ARRAY_SIZE];	//影響を受けるボーン名
 	int		m_KeyType;							//キータイプ
 	int		m_KeyNum;							//キーの数
-	KEY* m_pKey;								//キーリスト
+	KEY*	m_pKey;								//キーリスト
 };
 
 //アニメーション構造体
@@ -144,7 +144,7 @@ struct ANIMATION
 
 	char		m_Name[NAME_ARRAY_SIZE];//アニメーション名
 	int			m_BoneKeyNum;			//対応ボーンの数
-	BONE_KEY* m_pBoneKey;				//ボーンのキーリスト
+	BONE_KEY*	m_pBoneKey;				//ボーンのキーリスト
 };
 
 //メッシュ
@@ -162,11 +162,11 @@ struct MESH
 	}
 	int				m_VerNum;		//頂点数
 	int				m_FaceNum;		//面(ポリゴン)数
-	FACE* m_pFace;		//面リスト
+	FACE*			m_pFace;		//面リスト
 	int				m_MaterialNum;	//マテリアルの数
-	MATERIAL* m_pMaterial;	//マテリアルリスト
-	ID3D10Buffer* m_pVertexBuffer;//頂点バッファ
-	VERTEX* m_pVertex;		//頂点情報のリスト
+	MATERIAL*		m_pMaterial;	//マテリアルリスト
+	ID3D10Buffer*	m_pVertexBuffer;//頂点バッファ
+	VERTEX*			 m_pVertex;		//頂点情報のリスト
 };
 
 //スキンメッシュヘッダー
@@ -201,11 +201,11 @@ struct SKIN_MESH
 
 	MESH				m_Mesh;			//メッシュ
 	int					m_BoneNum;		//ボーン数
-	BONE* m_pBone;		//ボーンリスト
+	BONE*				m_pBone;		//ボーンリスト
 	SKIN_MESH_HEADER	m_SkinHeader;	//スキンメッシュヘッダー
 	int					m_WeightNum;	//ウェイト数
-	SKIN_WEIGHT* m_pWeight;		//スキンウェイト
+	SKIN_WEIGHT*		m_pWeight;		//スキンウェイト
 	int					m_AnimeNum;		//アニメーション数
-	ANIMATION* m_pAnimation;	//アニメーション
-	BONE* m_pRoot;		//ルートボーン
+	ANIMATION*			m_pAnimation;	//アニメーション
+	BONE*				m_pRoot;		//ルートボーン
 };
