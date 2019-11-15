@@ -173,6 +173,7 @@
     <ClInclude Include="Library\Trace.h" />
     <ClInclude Include="Library\XLoader_Skin.h" />
     <ClInclude Include="Library\X_Loader.h" />
+    <ClInclude Include="Library\X_Struct.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Game\2DPolygon.cpp" />

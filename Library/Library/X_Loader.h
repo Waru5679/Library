@@ -5,7 +5,7 @@
 #include "LibraryHeader.h"
 #include "Singleton.h"
 #include "Release.h"
-#include"XLoader_Skin.h"
+#include "X_Struct.h"
 #include <stdio.h>
 
 //Xファイル読みこみクラス
@@ -42,7 +42,6 @@ public:
 
 	//アニメーション読み込み
 	bool LoadAnimation(FILE* fp, ANIMATION* pAnime, long lStartPos);
-
 
 	//スキンメッシュにまとめる
 	void SkinMeshPutTogether(MESH Mesh, BONE* pBone, int BoneNum, SKIN_WEIGHT* pSkinWeight, int WeightNum, ANIMATION* pAnimation, int AnimeNum, SKIN_MESH* pSkinMesh, SKIN_MESH_HEADER SkinHeader);

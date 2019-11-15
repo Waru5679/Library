@@ -225,6 +225,9 @@
     <ClInclude Include="Library\X_Loader.h">
       <Filter>リソース ファイル\XLoader</Filter>
     </ClInclude>
+    <ClInclude Include="Library\X_Struct.h">
+      <Filter>リソース ファイル\XLoader</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Library\Audio.cpp">
