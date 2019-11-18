@@ -38,6 +38,6 @@ private:
 	void WeightSort(SKIN_MESH* pSkin);
 
 	//フレーム補完
-	KEY FrameComplement(int NowFrame, BONE_KEY BoneKey);
+	KEY FrameComplement(int NowFrame, ANIMATOIN_KEY AnimKey);
 	SKIN_MESH m_SkinMesh;	//スキンメッシュ
 };

@@ -746,7 +746,6 @@ void CX_Loader::VertexMatchBone(SKIN_MESH* pSkin)
 	}
 }
 
-
 //ボーン毎のキー情報の読み込み
 BONE_KEY CX_Loader::LoadBoneKey(FILE* fp)
 {
@@ -762,27 +761,109 @@ BONE_KEY CX_Loader::LoadBoneKey(FILE* fp)
 	int keyNum = 0;
 	int keyCount = 0;
 	int valueNum = 0;
+	int count = 0;//カウンター
 
-	//AnimationX 
+	int start_count = 0;	//{カウント
+	int end_count = 0;		//}カウント
+
+	//関数呼び出し時のファイルの位置を保存
+	long ReadStartPos = ftell(fp);
+
+	//アニメーションキーの数を取得
+	int AnimeKeyNum = GetAnimeKeyNum(fp);
+
+	//アニメーションキーのメモリ確保
+	Out.m_pAniKey = new ANIMATOIN_KEY[AnimeKeyNum];
+
+	//アニメーションキーの数保存
+	Out.m_AniKeyNum = AnimeKeyNum;
+
+	//この関数が呼ばれたと時の位置に戻す
+	fseek(fp, ReadStartPos, SEEK_SET);
+
+	//アニメーション名
 	fscanf_s(fp, "%s ", str, sizeof(str));
+	
+	while (start_count != end_count || start_count == 0 || end_count == 0)
+	{
+		fscanf_s(fp, "%s ", str, sizeof(str));
 
-	//{除去
-	fgets(str, sizeof(str), fp);
+		//{カウント
+		if (strcmp(str, "{") == 0)
+		{
+			//対応ボーン名
+			if (start_count - end_count >= 1)
+			{
+				fscanf_s(fp, "%s ", boneName, sizeof(boneName));
 
-	//対応ボーン名
-	fgets(boneName, sizeof(boneName), fp);
+				//保存
+				strcpy_s(Out.m_AffectBoneName, boneName);
+			}
+			start_count++;			
+		}
+		
+		//}カウント
+		if (strcmp(str, "}") == 0)
+			end_count++;
 
-	//{と}、空白、\nを除去
-	ErasCharFromString(boneName, sizeof(boneName), '{');
-	ErasCharFromString(boneName, sizeof(boneName), '}');
-	ErasCharFromString(boneName, sizeof(boneName), ' ');
-	ErasCharFromString(boneName, sizeof(boneName), '\n');
 
-	//保存
-	strcpy_s(Out.m_AffectBoneName, boneName);
+		//アニメーションキー読み込み
+		if (strcmp(str, "AnimationKey") == 0)
+		{
+			//{除去
+			fgets(str, sizeof(str), fp);
 
-	//1行飛ばす
-	fgets(str, sizeof(str), fp);//AnimationKey{
+			//読み込み
+			Out.m_pAniKey[count++]=LoadAnimationKey(fp);
+
+			//}除去
+			fgets(str, sizeof(str), fp);
+		}
+	}
+	return Out;
+}
+
+//アニメーションキーの数を取得する
+int CX_Loader::GetAnimeKeyNum(FILE* fp)
+{
+	int Out = 0;
+
+	//キーワード読み込み用
+	char str[READ_ARRAY_SIZE];
+
+	int start_count = 0;	//{カウント
+	int end_count = 0;		//}カウント
+
+	while (start_count != end_count || start_count == 0 || end_count == 0)
+	{
+		fscanf_s(fp, "%s ", str, sizeof(str));
+
+		//{カウント
+		if (strcmp(str, "{") == 0)
+			start_count++;
+		
+		//}カウント
+		if (strcmp(str, "}") == 0)
+			end_count++;
+		
+		//アニメーションキーをカウント
+		if (strcmp(str, "AnimationKey") == 0)
+			Out++;
+	}
+	return Out;
+}
+
+//アニメーションキーの読み込み
+ANIMATOIN_KEY CX_Loader::LoadAnimationKey(FILE* fp)
+{
+	ANIMATOIN_KEY Out;
+
+	//キーワード読み込み用
+	char str[READ_ARRAY_SIZE];
+
+	int keyNum = -1;//キーの数
+	int valueNum = -1;//値の数
+	int keyCount = 0;//キーカウンター
 
 	//キータイプ
 	fscanf_s(fp, "%d;", &Out.m_KeyType);
@@ -822,6 +903,7 @@ BONE_KEY CX_Loader::LoadBoneKey(FILE* fp)
 		//;;,を除去
 		fgets(str, sizeof(str), fp);
 	}
+
 	return Out;
 }
 
@@ -834,6 +916,9 @@ bool CX_Loader::LoadAnimation(FILE* fp, ANIMATION* pAnime, long lStartPos)
 
 	//キーワード読み込み用
 	char str[READ_ARRAY_SIZE];
+
+	//アニメーション名
+	char AnimeName[NAME_ARRAY_SIZE];
 
 	//読み込み用
 	char animeName[NAME_ARRAY_SIZE];	//アニメーション名

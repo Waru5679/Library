@@ -1,6 +1,7 @@
 #include "LibraryHeader.h"
 #include "XLoader_Skin.h"
 #include "Release.h"
+#include "Math.h"
 
 #include <math.h>
 
@@ -138,40 +139,39 @@ void CX_Skin::WeightSort(SKIN_MESH* pSkin)
 }
 
 //フレーム補完
-KEY CX_Skin::FrameComplement(int NowFrame, BONE_KEY BoneKey)
+KEY CX_Skin::FrameComplement(int NowFrame, ANIMATOIN_KEY AnimKey)
 {
 	KEY out;
 
-	int	 keyNum		= BoneKey.m_KeyNum;
+	int	 keyNum		= AnimKey.m_KeyNum;
 	int* pFrameDiff = new int[keyNum];
-
 	bool bKey = false;
 
 	//フレームの間隔差を保存
 	for (int i = 0; i <keyNum; i++)
 	{
-		pFrameDiff[i] = BoneKey.m_pKey[i].m_Time - NowFrame;
+		pFrameDiff[i] = AnimKey.m_pKey[i].m_Time - NowFrame;
 
 		//現在のフレームがキーフレームの場合
 		if (pFrameDiff[i] == 0)
 		{
 			bKey = true;
-			out = BoneKey.m_pKey[i];
+			out = AnimKey.m_pKey[i];
 		}
 	}
 
 	//キーフレーム以外なら補完する
 	if(bKey==false)
 	{
-		KEY before= BoneKey.m_pKey[0];
-		KEY after= BoneKey.m_pKey[keyNum-1];
+		KEY before= AnimKey.m_pKey[0];
+		KEY after= AnimKey.m_pKey[keyNum-1];
 		
 		//前フレームを探す
 		for (int i = 0; i < keyNum; i++)
 		{
 			//差がマイナスの場合前フレーム
 			if (pFrameDiff[i] < 0)
-				before = BoneKey.m_pKey[i];
+				before = AnimKey.m_pKey[i];
 		}
 
 		//後フレームを探す
@@ -179,7 +179,7 @@ KEY CX_Skin::FrameComplement(int NowFrame, BONE_KEY BoneKey)
 		{
 			//差がプラスなら後フレーム
 			if (pFrameDiff[i] > 0)
-				after = BoneKey.m_pKey[i];
+				after = AnimKey.m_pKey[i];
 		}
 
 		//フレーム差を求める
@@ -246,6 +246,7 @@ D3DXMATRIX CX_Skin::GetPose(bool* bBoneFind,SKIN_MESH* pSkin, BONE* pBone, ANIMA
 	D3DXMATRIX matOut;
 	D3DXMatrixIdentity(&matOut);
 
+	//新しいポーズ
 	D3DXMATRIX matNewPose;
 	D3DXMatrixIdentity(&matNewPose);
 
@@ -258,11 +259,65 @@ D3DXMATRIX CX_Skin::GetPose(bool* bBoneFind,SKIN_MESH* pSkin, BONE* pBone, ANIMA
 		{
 			bAnimFind = true;
 
-			//フレーム補完
-			KEY newPose = FrameComplement(NowFrame, Anime.m_pBoneKey[i]);
+			//フレーム補完用
+			D3DXMATRIX matRot, matTrans, matScale,matMatrix;
+			D3DXMatrixIdentity(&matRot);
+			D3DXMatrixIdentity(&matTrans);
+			D3DXMatrixIdentity(&matScale);
+			D3DXMatrixIdentity(&matMatrix);
 
-			//補完したポーズを行列にする
-			matNewPose = D3DXMATRIX(newPose.m_pfValue);
+			//そのボーンのポーズを更新する　
+			for (int j = 0; j < Anime.m_pBoneKey[i].m_AniKeyNum; j++)
+			{
+				//回転
+				if (Anime.m_pBoneKey[i].m_pAniKey[j].m_KeyType==KEY_TYPE::ROT)
+				{
+					//フレーム補完
+					KEY newPose = FrameComplement(NowFrame, Anime.m_pBoneKey[i].m_pAniKey[j]);
+
+					//補完したデータをベクトルにする
+					D3DXVECTOR3 vRot(newPose.m_pfValue[0], newPose.m_pfValue[1], newPose.m_pfValue[2]);
+
+					//行列に変換
+					matRot=MakeMatRot(vRot);
+				}
+				//スケール
+				if (Anime.m_pBoneKey[i].m_pAniKey[j].m_KeyType == KEY_TYPE::SCALE)
+				{
+					//フレーム補完
+					KEY newPose = FrameComplement(NowFrame, Anime.m_pBoneKey[i].m_pAniKey[j]);
+
+					//補完したデータをベクトルにする
+					D3DXVECTOR3 vScale(newPose.m_pfValue[0], newPose.m_pfValue[1], newPose.m_pfValue[2]);
+
+					//行列に変換
+					matScale = MakeMatScale(vScale);
+				}
+				//移動
+				if (Anime.m_pBoneKey[i].m_pAniKey[j].m_KeyType == KEY_TYPE::TRANS)
+				{
+					//フレーム補完
+					KEY newPose = FrameComplement(NowFrame, Anime.m_pBoneKey[i].m_pAniKey[j]);
+
+					//補完したデータをベクトルにする
+					D3DXVECTOR3 vTrans(newPose.m_pfValue[0], newPose.m_pfValue[1], newPose.m_pfValue[2]);
+
+					//行列に変換
+					matTrans = MakeMatTrans(vTrans);
+				}
+				//行列
+				if (Anime.m_pBoneKey[i].m_pAniKey[j].m_KeyType >= KEY_TYPE::MATRIX)
+				{
+					//フレーム補完
+					KEY newPose = FrameComplement(NowFrame, Anime.m_pBoneKey[i].m_pAniKey[j]);		
+
+					//行列に変換
+					matMatrix = D3DXMATRIX(newPose.m_pfValue);
+				}
+			}
+
+			//新しいポーズ
+			matNewPose = matScale * matRot * matTrans * matMatrix;
 
 			//ほしいボーンIDのボーンなら
 			if (pBone->m_index == BoneID)

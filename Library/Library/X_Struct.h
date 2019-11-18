@@ -7,6 +7,15 @@ constexpr int READ_ARRAY_SIZE	{ 200 };//読み込み用キー配列のサイズ
 constexpr int NAME_ARRAY_SIZE	{ 100 };//名前配列のサイズ
 constexpr int MAX_VER_WEIGH		{ 4 };	//頂点の最大ウェイト
 
+//アニメーションのキータイプ
+enum KEY_TYPE
+{
+	ROT,	//回転
+	SCALE,	//スケール
+	TRANS,	//移動
+	MATRIX,	//行列
+};
+
 //頂点構造体
 struct VERTEX
 {
@@ -117,20 +126,31 @@ struct KEY
 	float*	m_pfValue;	//値のリスト
 };
 
-//ボーンのキー
-struct BONE_KEY
+struct  ANIMATOIN_KEY
 {
-	BONE_KEY()
+	ANIMATOIN_KEY()
 	{
 		m_KeyNum = -1;
 		m_KeyType = -1;
 		m_pKey = nullptr;
 	}
+	int		m_KeyType;	//キータイプ
+	int		m_KeyNum;	//キーの数
+	KEY*	m_pKey;		//キーリスト
+};
 
-	char	m_AffectBoneName[NAME_ARRAY_SIZE];	//影響を受けるボーン名
-	int		m_KeyType;							//キータイプ
-	int		m_KeyNum;							//キーの数
-	KEY*	m_pKey;								//キーリスト
+//ボーンのキー
+struct BONE_KEY
+{
+	BONE_KEY()
+	{
+		m_AniKeyNum = -1;
+		m_pAniKey = nullptr;
+	}
+
+	char			m_AffectBoneName[NAME_ARRAY_SIZE];	//影響を受けるボーン名
+	int				m_AniKeyNum;						//キーの数
+	ANIMATOIN_KEY*	m_pAniKey;							//キーリスト
 };
 
 //アニメーション構造体

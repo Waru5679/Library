@@ -49,6 +49,12 @@ public:
 	//ボーン毎のキー情報読み込み
 	BONE_KEY LoadBoneKey(FILE* fp);
 
+	//アニメーションキーの数を取得する
+	int GetAnimeKeyNum(FILE* fp);
+
+	//アニメーションキーの読み込み
+	ANIMATOIN_KEY LoadAnimationKey(FILE* fp);
+
 	//スキンウェイトの情報をもとに各頂点に対応ボーンとウェイトの情報を持たせる
 	void VertexMatchBone(SKIN_MESH* pSkin);
 
