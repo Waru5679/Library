@@ -2,7 +2,6 @@
 #include "GameHeader.h"
 
 #include "Test.h"
-
 //‰Šú‰»
 void CSceneMain::Init()
 {

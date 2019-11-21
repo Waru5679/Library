@@ -44,11 +44,11 @@ void C2DPolygon::Update()
 		m_Move.y = 1.0f;
 	}
 
-	//回転テスト
-	if (INPUT->GetKeyPush(VK_RETURN) == true)
-	{
-		m_fRad += 1.0f;
-	}
+	////回転テスト
+	//if (INPUT->GetKeyPush(VK_RETURN) == true)
+	//{
+	//	m_fRad += 1.0f;
+	//}
 
 	//移動
 	m_ScreenPos.x += m_Move.x;

@@ -468,6 +468,10 @@ BONE CX_Loader::LoadBoneInfo(FILE* fp, int* pBoneIndex, BONE* pBone)
 	//自身のインデックス
 	bone.m_index = *(pBoneIndex);
 
+	char test[READ_ARRAY_SIZE];
+
+	fscanf_s(fp, "%s ", test, sizeof(test));
+
 	//先に子ボーンの数を数える
 	while (start_count != end_count || start_count == 0 || end_count == 0)
 	{
@@ -512,6 +516,21 @@ BONE CX_Loader::LoadBoneInfo(FILE* fp, int* pBoneIndex, BONE* pBone)
 	start_count = 0;
 	end_count	= 0;
 	childNum	= 0;
+
+	//fscanf_s(fp, "%s ", str, sizeof(str));
+
+	////ボーン名がない場合
+	//if (strcmp(str, "{") == 0)
+	//{
+	//	start_count++;
+	//	strcpy_s(bone.m_Name, "NoName");
+	//}
+	//else
+	//{
+	//	
+	//	strcmp(bone.m_Name, str);
+
+	//}
 
 	//ボーン名
 	fscanf_s(fp, "%s", bone.m_Name, sizeof(bone.m_Name));
@@ -783,7 +802,13 @@ BONE_KEY CX_Loader::LoadBoneKey(FILE* fp)
 
 	//アニメーション名
 	fscanf_s(fp, "%s ", str, sizeof(str));
-	
+
+	//アニメーション名がない場合
+	if (strcmp(str, "{") == 0)
+	{
+		start_count++;
+	}
+
 	while (start_count != end_count || start_count == 0 || end_count == 0)
 	{
 		fscanf_s(fp, "%s ", str, sizeof(str));
@@ -791,15 +816,16 @@ BONE_KEY CX_Loader::LoadBoneKey(FILE* fp)
 		//{カウント
 		if (strcmp(str, "{") == 0)
 		{
+			start_count++;
+
 			//対応ボーン名
-			if (start_count - end_count >= 1)
+			if (start_count - end_count >= 2)
 			{
 				fscanf_s(fp, "%s ", boneName, sizeof(boneName));
 
 				//保存
 				strcpy_s(Out.m_AffectBoneName, boneName);
-			}
-			start_count++;			
+			}						
 		}
 		
 		//}カウント
