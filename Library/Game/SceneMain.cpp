@@ -2,6 +2,8 @@
 #include "GameHeader.h"
 
 #include "Test.h"
+#include "VmdTest.h"
+
 //初期化
 void CSceneMain::Init()
 {
@@ -35,19 +37,27 @@ void CSceneMain::Init()
 	g_Task.InsertObj(pEnemy, ObjName::ObjEnemy);
 
 	//テスト
-
 	vPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	vScale = D3DXVECTOR3(2.0f, 2.0f, 2.0f);
 
 	CTest* pTest = new CTest(vPos, vAngle, vScale);
 	g_Task.InsertObj(pTest, ObjName::ObjTest);
 
+
+	//Vmdテスト
+	vPos = D3DXVECTOR3(10.0f, 0.0f, 0.0f);
+	vScale = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
+
+	CVmdTest* pVmdTest = new CVmdTest(vPos, vAngle, vScale);
+	g_Task.InsertObj(pVmdTest, ObjName::ObjVmdTest);
+
+
 	//シェーダーにカメラセット
 	SHADER->SetCamera(dynamic_cast<CCameraBase*>(pCamera));
 	SKIN_SHADER->SetCamera(dynamic_cast<CCameraBase*>(pCamera));
 	DRAW->SetCamera(dynamic_cast<CCameraBase*>(pCamera));
 
-	AUDIO->StartMusic(0);
+	//AUDIO->StartMusic(0);
 }
 
 //更新

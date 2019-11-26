@@ -39,6 +39,7 @@ enum ObjName
 	ObjAiming,		//照準
 
 	ObjTest,		//テスト
+	ObjVmdTest,		//vmd
 };
 
 //モデル

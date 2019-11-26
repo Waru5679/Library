@@ -37,9 +37,7 @@ void CTest::Update()
 
 void CTest::Draw()
 {
-	
-	SKIN->DrawMesh(m_matWorld, &m_SkinMesh, nullptr);
-	
+	SKIN->DrawMesh(m_matWorld, &m_SkinMesh, nullptr);	
 }
 
 void CTest::Release()

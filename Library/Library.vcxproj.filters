@@ -103,6 +103,9 @@
     <Filter Include="リソース ファイル\SkinShader">
       <UniqueIdentifier>{5e782ec4-f376-4c70-9250-8cdb338d8ead}</UniqueIdentifier>
     </Filter>
+    <Filter Include="リソース ファイル\VmdLoader">
+      <UniqueIdentifier>{acf2ecac-e06a-48d8-a042-05d4c929956a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Library\Camera.h">
@@ -228,6 +231,12 @@
     <ClInclude Include="Library\X_Struct.h">
       <Filter>リソース ファイル\XLoader</Filter>
     </ClInclude>
+    <ClInclude Include="Game\VmdTest.h">
+      <Filter>ソース ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Library\VmdLoader.h">
+      <Filter>リソース ファイル\VmdLoader</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Library\Audio.cpp">
@@ -328,6 +337,12 @@
     </ClCompile>
     <ClCompile Include="Library\X_Loader.cpp">
       <Filter>リソース ファイル\XLoader</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\VmdTest.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Library\VmdLoader.cpp">
+      <Filter>リソース ファイル\VmdLoader</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

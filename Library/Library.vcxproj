@@ -140,6 +140,7 @@
     <ClInclude Include="Game\Player.h" />
     <ClInclude Include="Game\SceneMain.h" />
     <ClInclude Include="Game\Test.h" />
+    <ClInclude Include="Game\VmdTest.h" />
     <ClInclude Include="Library\Audio.h" />
     <ClInclude Include="Library\Camera.h" />
     <ClInclude Include="Library\CObj.h" />
@@ -171,6 +172,7 @@
     <ClInclude Include="Library\Task.h" />
     <ClInclude Include="Library\TextureManager.h" />
     <ClInclude Include="Library\Trace.h" />
+    <ClInclude Include="Library\VmdLoader.h" />
     <ClInclude Include="Library\XLoader_Skin.h" />
     <ClInclude Include="Library\X_Loader.h" />
     <ClInclude Include="Library\X_Struct.h" />
@@ -185,6 +187,7 @@
     <ClCompile Include="Game\Player.cpp" />
     <ClCompile Include="Game\SceneMain.cpp" />
     <ClCompile Include="Game\Test.cpp" />
+    <ClCompile Include="Game\VmdTest.cpp" />
     <ClCompile Include="Library\Audio.cpp" />
     <ClCompile Include="Library\Csv.cpp" />
     <ClCompile Include="Library\DirectX.cpp" />
@@ -207,6 +210,7 @@
     <ClCompile Include="Library\Task.cpp" />
     <ClCompile Include="Library\TextureManager.cpp" />
     <ClCompile Include="Library\Trace.cpp" />
+    <ClCompile Include="Library\VmdLoader.cpp" />
     <ClCompile Include="Library\XLoader_Skin.cpp" />
     <ClCompile Include="Library\X_Loader.cpp" />
   </ItemGroup>
