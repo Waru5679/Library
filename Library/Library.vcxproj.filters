@@ -106,6 +106,12 @@
     <Filter Include="リソース ファイル\VmdLoader">
       <UniqueIdentifier>{acf2ecac-e06a-48d8-a042-05d4c929956a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="リソース ファイル\PmxLoader">
+      <UniqueIdentifier>{ab135966-c438-4cf5-a2ee-d9b6789683f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="リソース ファイル\Binary">
+      <UniqueIdentifier>{40a6c04d-0e45-493e-8d6b-7a8d28effd99}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Library\Camera.h">
@@ -234,8 +240,14 @@
     <ClInclude Include="Game\VmdTest.h">
       <Filter>ソース ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="Library\PmxLoader.h">
+      <Filter>リソース ファイル\PmxLoader</Filter>
+    </ClInclude>
     <ClInclude Include="Library\VmdLoader.h">
       <Filter>リソース ファイル\VmdLoader</Filter>
+    </ClInclude>
+    <ClInclude Include="Library\Binary.h">
+      <Filter>リソース ファイル\Binary</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -343,6 +355,12 @@
     </ClCompile>
     <ClCompile Include="Library\VmdLoader.cpp">
       <Filter>リソース ファイル\VmdLoader</Filter>
+    </ClCompile>
+    <ClCompile Include="Library\PmxLoader.cpp">
+      <Filter>リソース ファイル\PmxLoader</Filter>
+    </ClCompile>
+    <ClCompile Include="Library\Binary.cpp">
+      <Filter>リソース ファイル\Binary</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

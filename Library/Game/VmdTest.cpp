@@ -1,7 +1,9 @@
 #include "VmdTest.h"
 #include "..//Library/VmdLoader.h"
+#include "..//Library/PmxLoader.h"
 
 #define VMD CVmdLoader::GetInstance()
+#define PMX CPmxLoader::GetInstance()
 
 CVmdTest::CVmdTest(D3DXVECTOR3 vPos, D3DXVECTOR3 vAngle, D3DXVECTOR3 vScale)
 {
@@ -14,6 +16,8 @@ void CVmdTest::Init()
 {
 	VMD->Load("Model/Test.vmd",&m_data);
 	VMD->Write("VmdOutTest.txt",&m_data);
+
+	PMX->Load("Model/Alicia_solid/test.pmx",&m_PmxData);
 
 }
 

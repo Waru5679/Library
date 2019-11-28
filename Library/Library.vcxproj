@@ -142,6 +142,7 @@
     <ClInclude Include="Game\Test.h" />
     <ClInclude Include="Game\VmdTest.h" />
     <ClInclude Include="Library\Audio.h" />
+    <ClInclude Include="Library\Binary.h" />
     <ClInclude Include="Library\Camera.h" />
     <ClInclude Include="Library\CObj.h" />
     <ClInclude Include="Library\Csv.h" />
@@ -159,6 +160,7 @@
     <ClInclude Include="Library\Math.h" />
     <ClInclude Include="Library\ObjLoader.h" />
     <ClInclude Include="Library\ModelManager.h" />
+    <ClInclude Include="Library\PmxLoader.h" />
     <ClInclude Include="Library\Polygon.h" />
     <ClInclude Include="Library\Ray.h" />
     <ClInclude Include="Library\Release.h" />
@@ -189,6 +191,7 @@
     <ClCompile Include="Game\Test.cpp" />
     <ClCompile Include="Game\VmdTest.cpp" />
     <ClCompile Include="Library\Audio.cpp" />
+    <ClCompile Include="Library\Binary.cpp" />
     <ClCompile Include="Library\Csv.cpp" />
     <ClCompile Include="Library\DirectX.cpp" />
     <ClCompile Include="Library\Font.cpp" />
@@ -200,6 +203,7 @@
     <ClCompile Include="Library\Math.cpp" />
     <ClCompile Include="Library\ObjLoader.cpp" />
     <ClCompile Include="Library\ModelManager.cpp" />
+    <ClCompile Include="Library\PmxLoader.cpp" />
     <ClCompile Include="Library\Polygon.cpp" />
     <ClCompile Include="Library\Ray.cpp" />
     <ClCompile Include="Library\Route.cpp" />

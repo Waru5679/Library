@@ -50,8 +50,5 @@ public:
 	bool Load(const char* FileName, VMD_DATA* pVmdData);
 	//‘‚«o‚µ
 	bool Write(const char* FileName, VMD_DATA* pVmdData);
-
 private:
-	unsigned long CtoL(unsigned char str[4]);//char‚©‚çLong‚Ö
-
 };

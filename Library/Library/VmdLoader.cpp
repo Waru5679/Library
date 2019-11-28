@@ -1,5 +1,6 @@
 #include "VmdLoader.h"
 #include <stdio.h>
+#include "Binary.h"
 
 //インスタンス
 CVmdLoader* CVmdLoader::m_pInstance = nullptr;
@@ -152,14 +153,4 @@ bool CVmdLoader::Write(const char* FileName, VMD_DATA* pVmdData)
 	fclose(fp);
 
 	return true;
-}
-
-//charからLongへ
-unsigned long CVmdLoader::CtoL(unsigned char str[4])
-{
-	unsigned long out;
-
-	out = str[0] | str[1] << 8 | str[2] << 16 | str[3] << 24;
-	
-	return out;
 }
