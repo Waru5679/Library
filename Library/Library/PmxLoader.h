@@ -94,7 +94,7 @@ struct PMX_VERTEX
 //pmx面データ
 struct PMX_FACE
 {
-
+	int m_VerIndex[3];//頂点
 };
 
 //pmxデータ

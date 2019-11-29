@@ -16,14 +16,14 @@ bool CPmxLoader::Load(const char* FileName, PMX_DATA* pPmxData)
 		return false;
 
 	//読み込み用
-	unsigned char pData[4];
+	unsigned char Data[4];
 
 	//ファイルタイプ
 	fread_s(pPmxData->m_Head.m_FileType, sizeof(pPmxData->m_Head.m_FileType), sizeof(pPmxData->m_Head.m_FileType), 1, fp);
 
 	//バージョン
-	fread_s(pData, sizeof(pData), sizeof(pData), 1, fp);
-	pPmxData->m_Head.m_Ver = CtoL(pData);
+	fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
+	pPmxData->m_Head.m_Ver = CtoL(Data);
 
 	//ファイルタイプ
 	fread_s(&pPmxData->m_Head.m_Size, sizeof(pPmxData->m_Head.m_Size), sizeof(pPmxData->m_Head.m_Size), 1, fp);
@@ -44,8 +44,8 @@ bool CPmxLoader::Load(const char* FileName, PMX_DATA* pPmxData)
 	fread_s(test_1, sizeof(test_1), sizeof(test_1), 1, fp);
 	
 	//頂点数
-	fread_s(pData, sizeof(pData), sizeof(pData), 1, fp);
-	pPmxData->VerNum = CtoL(pData);
+	fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
+	pPmxData->VerNum = CtoL(Data);
 
 	//頂点なし
 	if (pPmxData->m_pVertex <= 0)
@@ -60,8 +60,8 @@ bool CPmxLoader::Load(const char* FileName, PMX_DATA* pPmxData)
 	VertexLoad(fp, pPmxData);
 	
 	//面の数
-	fread_s(pData, sizeof(pData), sizeof(pData), 1, fp);
-	pPmxData->FaceNum = CtoL(pData);
+	fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
+	pPmxData->FaceNum = CtoL(Data);
 
 	//面なし
 	if (pPmxData->FaceNum <= 0)
@@ -82,43 +82,32 @@ bool CPmxLoader::Load(const char* FileName, PMX_DATA* pPmxData)
 void CPmxLoader::VertexLoad(FILE* fp, PMX_DATA* pPmxData)
 {
 	//読み込み用
-	unsigned char pData[4];
+	unsigned char Data[4];
 
 	//頂点の数だけ読み込む
 	for (int i = 0; i < pPmxData->VerNum; i++)
 	{
-		//Pos_X
-		fread_s(pData, sizeof(pData), sizeof(pData), 1, fp);
-		pPmxData->m_pVertex[i].m_fPos[0] = CtoL(pData);
+		//Pos
+		for (int j = 0; j < 3; j++)
+		{
+			fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
+			pPmxData->m_pVertex[i].m_fPos[j] = CtoL(Data);
+		}
+		
+		//Norm
+		for (int j = 0; j < 3; j++)
+		{
+			fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
+			pPmxData->m_pVertex[i].m_fNorm[j] = CtoL(Data);
+		}
 
-		//Pos_Y
-		fread_s(pData, sizeof(pData), sizeof(pData), 1, fp);
-		pPmxData->m_pVertex[i].m_fPos[1] = CtoL(pData);
-
-		//Pos_Z
-		fread_s(pData, sizeof(pData), sizeof(pData), 1, fp);
-		pPmxData->m_pVertex[i].m_fPos[2] = CtoL(pData);
-
-		//Norm_X
-		fread_s(pData, sizeof(pData), sizeof(pData), 1, fp);
-		pPmxData->m_pVertex[i].m_fNorm[0] = CtoL(pData);
-
-		//Norm_Y
-		fread_s(pData, sizeof(pData), sizeof(pData), 1, fp);
-		pPmxData->m_pVertex[i].m_fNorm[1] = CtoL(pData);
-
-		//Norm_Z
-		fread_s(pData, sizeof(pData), sizeof(pData), 1, fp);
-		pPmxData->m_pVertex[i].m_fNorm[2] = CtoL(pData);
-
-		//UV_X
-		fread_s(pData, sizeof(pData), sizeof(pData), 1, fp);
-		pPmxData->m_pVertex[i].m_fUv[0] = CtoL(pData);
-
-		//UV_Y
-		fread_s(pData, sizeof(pData), sizeof(pData), 1, fp);
-		pPmxData->m_pVertex[i].m_fUv[1] = CtoL(pData);
-
+		//UV
+		for (int j = 0; j < 3; j++)
+		{
+			fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
+			pPmxData->m_pVertex[i].m_fUv[j] = CtoL(Data);
+		}
+		
 		//追加UVがある場合
 		if (pPmxData->m_Head.m_pData[1] != 0)
 		{
@@ -128,8 +117,8 @@ void CPmxLoader::VertexLoad(FILE* fp, PMX_DATA* pPmxData)
 			//追加分
 			for (int j = 0; j < pPmxData->m_Head.m_pData[1]; j++)
 			{
-				fread_s(pData, sizeof(pData), sizeof(pData), 1, fp);
-				pPmxData->m_pVertex[i].m_pfAddUv[j] = CtoL(pData);
+				fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
+				pPmxData->m_pVertex[i].m_pfAddUv[j] = CtoL(Data);
 			}
 		}
 
@@ -143,108 +132,101 @@ void CPmxLoader::VertexLoad(FILE* fp, PMX_DATA* pPmxData)
 		switch (pPmxData->m_pVertex[i].m_WeightData.m_WeightType)
 		{
 			//BDFE1方式
-		case 0:
-		{
-			//ボーンID
-			fread_s(pData, sizeof(pData), sizeof(char) * BoneIndexSize, 1, fp);
-			pPmxData->m_pVertex[i].m_WeightData.m_Bdef1.m_BoneID = CtoL(pData);
-
-			break;
-		}
-		//BDFE2方式
-		case 1:
-		{
-			//ボーンID_1
-			fread_s(pData, sizeof(pData), sizeof(char) * BoneIndexSize, 1, fp);
-			pPmxData->m_pVertex[i].m_WeightData.m_Bdef2.m_BoneID[0] = CtoL(pData);
-
-			//ボーンID_2
-			fread_s(pData, sizeof(pData), sizeof(char) * BoneIndexSize, 1, fp);
-			pPmxData->m_pVertex[i].m_WeightData.m_Bdef2.m_BoneID[1] = CtoL(pData);
-
-			//ウェイト
-			fread_s(pData, sizeof(pData), sizeof(pData), 1, fp);
-			pPmxData->m_pVertex[i].m_WeightData.m_Bdef2.m_Weight = CtoL(pData);
-
-			break;
-
-		}
-		//BDFE4方式
-		case 2:
-		{
-			//ボーンID_1
-			fread_s(pData, sizeof(pData), sizeof(char) * BoneIndexSize, 1, fp);
-			pPmxData->m_pVertex[i].m_WeightData.m_Bdef4.m_BoneID[0] = CtoL(pData);
-
-			//ボーンID_2
-			fread_s(pData, sizeof(pData), sizeof(char) * BoneIndexSize, 1, fp);
-			pPmxData->m_pVertex[i].m_WeightData.m_Bdef4.m_BoneID[1] = CtoL(pData);
-
-			//ボーンID_3
-			fread_s(pData, sizeof(pData), sizeof(char) * BoneIndexSize, 1, fp);
-			pPmxData->m_pVertex[i].m_WeightData.m_Bdef4.m_BoneID[2] = CtoL(pData);
-
-			//ボーンID_4
-			fread_s(pData, sizeof(pData), sizeof(char) * BoneIndexSize, 1, fp);
-			pPmxData->m_pVertex[i].m_WeightData.m_Bdef4.m_BoneID[3] = CtoL(pData);
-
-			//ウェイト_1
-			fread_s(pData, sizeof(pData), sizeof(pData), 1, fp);
-			pPmxData->m_pVertex[i].m_WeightData.m_Bdef4.m_Weight[0] = CtoL(pData);
-
-			//ウェイト_2
-			fread_s(pData, sizeof(pData), sizeof(pData), 1, fp);
-			pPmxData->m_pVertex[i].m_WeightData.m_Bdef4.m_Weight[1] = CtoL(pData);
-
-			//ウェイト_3
-			fread_s(pData, sizeof(pData), sizeof(pData), 1, fp);
-			pPmxData->m_pVertex[i].m_WeightData.m_Bdef4.m_Weight[2] = CtoL(pData);
-
-			//ウェイト_4
-			fread_s(pData, sizeof(pData), sizeof(pData), 1, fp);
-			pPmxData->m_pVertex[i].m_WeightData.m_Bdef4.m_Weight[3] = CtoL(pData);
-
-			break;
-		}
-		//SDEF方式
-		case 3:
-		{
-			//ボーンID_1
-			fread_s(pData, sizeof(pData), sizeof(char) * BoneIndexSize, 1, fp);
-			pPmxData->m_pVertex[i].m_WeightData.m_Sdef.m_BoneID[0] = CtoL(pData);
-
-			//ボーンID_2
-			fread_s(pData, sizeof(pData), sizeof(char) * BoneIndexSize, 1, fp);
-			pPmxData->m_pVertex[i].m_WeightData.m_Sdef.m_BoneID[1] = CtoL(pData);
-
-			//ウェイト
-			fread_s(pData, sizeof(pData), sizeof(pData), 1, fp);
-			pPmxData->m_pVertex[i].m_WeightData.m_Sdef.m_Weight = CtoL(pData);
-
-			//3x3マトリックス
-			for (int j = 0; j < 3; j++)
+			case 0:
 			{
-				for (int k = 0; k < 3; k++)
-				{
-					fread_s(pData, sizeof(pData), sizeof(pData), 1, fp);
-					pPmxData->m_pVertex[i].m_WeightData.m_Sdef.m_Matrix[j][k] = CtoL(pData);
-				}
-			}
+				//ボーンID
+				fread_s(Data, sizeof(Data), sizeof(char) * BoneIndexSize, 1, fp);
+				pPmxData->m_pVertex[i].m_WeightData.m_Bdef1.m_BoneID = CtoL(Data);
 
-			break;
-		}
-		default:
-			break;
+				break;
+			}
+			//BDFE2方式
+			case 1:
+			{
+				//ボーンID*2
+				for (int j = 0; j < 2; j++)
+				{
+					fread_s(Data, sizeof(Data), sizeof(char) * BoneIndexSize, 1, fp);
+					pPmxData->m_pVertex[i].m_WeightData.m_Bdef2.m_BoneID[j] = CtoL(Data);
+				}
+			
+				//ウェイト
+				fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
+				pPmxData->m_pVertex[i].m_WeightData.m_Bdef2.m_Weight = CtoL(Data);
+
+				break;
+			}
+			//BDFE4方式
+			case 2:
+			{
+				//ボーンID*4
+				for (int j = 0; j < 4; j++)
+				{		
+					fread_s(Data, sizeof(Data), sizeof(char) * BoneIndexSize, 1, fp);
+					pPmxData->m_pVertex[i].m_WeightData.m_Bdef4.m_BoneID[j] = CtoL(Data);
+				}
+	
+				//ウェイト*4
+				for (int j = 0; j < 4; j++)
+				{
+					//ウェイト_1
+					fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
+					pPmxData->m_pVertex[i].m_WeightData.m_Bdef4.m_Weight[j] = CtoL(Data);
+				}
+				break;
+			}
+			//SDEF方式
+			case 3:
+			{
+				//ボーンID*2
+				for (int j = 0; j < 2; j++)
+				{
+					fread_s(Data, sizeof(Data), sizeof(char) * BoneIndexSize, 1, fp);
+					pPmxData->m_pVertex[i].m_WeightData.m_Sdef.m_BoneID[0] = CtoL(Data);
+				}
+			
+				//ウェイト
+				fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
+				pPmxData->m_pVertex[i].m_WeightData.m_Sdef.m_Weight = CtoL(Data);
+
+				//3x3マトリックス
+				for (int j = 0; j < 3; j++)
+				{
+					for (int k = 0; k < 3; k++)
+					{
+						fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
+						pPmxData->m_pVertex[i].m_WeightData.m_Sdef.m_Matrix[j][k] = CtoL(Data);
+					}
+				}
+
+				break;
+			}
+			default:
+				break;
 		}
 
 		//エッジ倍率
-		fread_s(pData, sizeof(pData), sizeof(pData), 1, fp);
-		pPmxData->m_pVertex[i].m_EdgeMagn = CtoL(pData);
+		fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
+		pPmxData->m_pVertex[i].m_EdgeMagn = CtoL(Data);
 	}
 }
 
 //面読み込み
 void CPmxLoader::FaceLoad(FILE* fp, PMX_DATA* pPmxData)
 {
+	////頂点インデックスサイズ
+	//int IndexSize = pPmxData->m_Head.m_pData[2];
 
+	//unsigned char Data[4];
+
+	////面の数回す
+	//for (int i = 0; i < pPmxData->FaceNum; i++)
+	//{
+	//	//頂点インデックス読み込み
+	//	for (int j = 0; j < 3; j++)
+	//	{
+	//		fread_s(Data, sizeof(Data), sizeof(char) * IndexSize, 1, fp);
+	//		pPmxData->m_pFace[i].m_VerIndex[j] = CtoL(Data);
+	//	}
+	//}
 }
