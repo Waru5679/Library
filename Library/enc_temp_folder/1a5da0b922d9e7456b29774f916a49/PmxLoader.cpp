@@ -53,7 +53,7 @@ bool CPmxLoader::Load(const char* FileName, PMX_DATA* pPmxData)
 	//頂点読み込み
 	if (pPmxData->m_pVertex <= 0)
 	{
-		//頂点なし
+		//頂点なし？
 		return false;
 	}
 	
