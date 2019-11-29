@@ -131,4 +131,7 @@ private:
 	//í∏ì_ì«Ç›çûÇ›
 	void VertexLoad(FILE* fp, PMX_DATA* pPmxData);
 	
+	//ñ ì«Ç›çûÇ›
+	void FaceLoad(FILE* fp, PMX_DATA* pPmxData);
+	
 };

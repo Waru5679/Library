@@ -517,22 +517,6 @@ BONE CX_Loader::LoadBoneInfo(FILE* fp, int* pBoneIndex, BONE* pBone)
 	end_count	= 0;
 	childNum	= 0;
 
-	//fscanf_s(fp, "%s ", str, sizeof(str));
-
-	////ボーン名がない場合
-	//if (strcmp(str, "{") == 0)
-	//{
-	//	start_count++;
-	//	strcpy_s(bone.m_Name, "NoName");
-	//}
-	//else
-	//{
-	//	
-	//	strcmp(bone.m_Name, str);
-
-	//}
-
-	//ボーン名
 	fscanf_s(fp, "%s", bone.m_Name, sizeof(bone.m_Name));
 
 	//本読み込み

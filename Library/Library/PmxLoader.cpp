@@ -47,16 +47,15 @@ bool CPmxLoader::Load(const char* FileName, PMX_DATA* pPmxData)
 	fread_s(pData, sizeof(pData), sizeof(pData), 1, fp);
 	pPmxData->VerNum = CtoL(pData);
 
-	//頂点メモリ確保
-	pPmxData->m_pVertex = new PMX_VERTEX[pPmxData->VerNum];
-
-	//頂点読み込み
+	//頂点なし
 	if (pPmxData->m_pVertex <= 0)
 	{
-		//頂点なし
 		return false;
 	}
-	
+
+	//頂点メモリ確保
+	pPmxData->m_pVertex = new PMX_VERTEX[pPmxData->VerNum];
+		
 	//頂点読み込み
 	VertexLoad(fp, pPmxData);
 	
@@ -64,8 +63,17 @@ bool CPmxLoader::Load(const char* FileName, PMX_DATA* pPmxData)
 	fread_s(pData, sizeof(pData), sizeof(pData), 1, fp);
 	pPmxData->FaceNum = CtoL(pData);
 
+	//面なし
+	if (pPmxData->FaceNum <= 0)
+	{
+		return false;
+	}
+
 	//面データメモリ確保
 	pPmxData->m_pFace = new PMX_FACE[pPmxData->FaceNum];
+
+	//面データ読み込み
+	FaceLoad(fp, pPmxData);
 
 	return true;
 }
@@ -201,7 +209,6 @@ void CPmxLoader::VertexLoad(FILE* fp, PMX_DATA* pPmxData)
 		//SDEF方式
 		case 3:
 		{
-
 			//ボーンID_1
 			fread_s(pData, sizeof(pData), sizeof(char) * BoneIndexSize, 1, fp);
 			pPmxData->m_pVertex[i].m_WeightData.m_Sdef.m_BoneID[0] = CtoL(pData);
@@ -234,4 +241,10 @@ void CPmxLoader::VertexLoad(FILE* fp, PMX_DATA* pPmxData)
 		fread_s(pData, sizeof(pData), sizeof(pData), 1, fp);
 		pPmxData->m_pVertex[i].m_EdgeMagn = CtoL(pData);
 	}
+}
+
+//面読み込み
+void CPmxLoader::FaceLoad(FILE* fp, PMX_DATA* pPmxData)
+{
+
 }
