@@ -25,7 +25,7 @@ bool CVmdLoader::Load(const char* FileName, VMD_DATA* pVmdData)
 	//モーションレコード数
 	unsigned char pData[4];
 	fread_s(pData, sizeof(pData), sizeof(pData), 1, fp);
-	pVmdData->m_MotionRecordNum = CtoL(pData);
+	pVmdData->m_MotionRecordNum = StrToInt(pData, sizeof(pData));
 	
 	//モーション分のメモリ確保
 	pVmdData->m_pMotion = new VMD_MOTION[pVmdData->m_MotionRecordNum];
@@ -38,35 +38,21 @@ bool CVmdLoader::Load(const char* FileName, VMD_DATA* pVmdData)
 		
 		//フレームナンバー
 		fread_s(pData, sizeof(pData), sizeof(pData), 1, fp);
-		pVmdData->m_pMotion[i].FrameNum = CtoL(pData);
+		pVmdData->m_pMotion[i].FrameNum = StrToInt(pData, sizeof(pData));
 
-		//Pos_X
-		fread_s(pData, sizeof(pData), sizeof(pData), 1, fp);
-		pVmdData->m_pMotion[i].Pos[0]= CtoL(pData);
+		//Pos
+		for (int j = 0; j < 3; j++)
+		{
+			fread_s(pData, sizeof(pData), sizeof(pData), 1, fp);
+			pVmdData->m_pMotion[i].Pos[j] = StrToFloat(pData, sizeof(pData));
+		}
 
-		//Pos_Y
-		fread_s(pData, sizeof(pData), sizeof(pData), 1, fp);
-		pVmdData->m_pMotion[i].Pos[1] = CtoL(pData);
-		
-		//Pos_Z
-		fread_s(pData, sizeof(pData), sizeof(pData), 1, fp);
-		pVmdData->m_pMotion[i].Pos[2] = CtoL(pData);
-
-		//Rot_X
-		fread_s(pData, sizeof(pData), sizeof(pData), 1, fp);
-		pVmdData->m_pMotion[i].Rot[0] = CtoL(pData);
-
-		//Rot_Y
-		fread_s(pData, sizeof(pData), sizeof(pData), 1, fp);
-		pVmdData->m_pMotion[i].Rot[1] = CtoL(pData);
-
-		//Rot_Z
-		fread_s(pData, sizeof(pData), sizeof(pData), 1, fp);
-		pVmdData->m_pMotion[i].Rot[2] = CtoL(pData);
-
-		//Rot_W
-		fread_s(pData, sizeof(pData), sizeof(pData), 1, fp);
-		pVmdData->m_pMotion[i].Rot[3] = CtoL(pData);
+		//Rot
+		for (int j = 0; j < 4; j++)
+		{
+			fread_s(pData, sizeof(pData), sizeof(pData), 1, fp);
+			pVmdData->m_pMotion[i].Rot[j] = StrToFloat(pData, sizeof(pData));
+		}
 
 		//補完データ
 		fread_s(pVmdData->m_pMotion[i].Data, sizeof(pVmdData->m_pMotion[i].Data), sizeof(pVmdData->m_pMotion[i].Data), 1, fp);
@@ -74,7 +60,7 @@ bool CVmdLoader::Load(const char* FileName, VMD_DATA* pVmdData)
 
 	//スキンレコード数
 	fread_s(pData, sizeof(pData), sizeof(pData), 1, fp);
-	pVmdData->m_SkinRecordNum = CtoL(pData);
+	pVmdData->m_SkinRecordNum = StrToInt(pData, sizeof(pData));
 
 	//スキン分のメモリ確保
 	pVmdData->m_pSkin = new VMD_SKIN[pVmdData->m_SkinRecordNum];
@@ -87,11 +73,11 @@ bool CVmdLoader::Load(const char* FileName, VMD_DATA* pVmdData)
 
 		//フレームナンバー
 		fread_s(pData, sizeof(pData), sizeof(pData), 1, fp);
-		pVmdData->m_pSkin[i].FlameNum = CtoL(pData);
+		pVmdData->m_pSkin[i].FlameNum = StrToInt(pData, sizeof(pData));
 
 		//ウェイト
 		fread_s(pData, sizeof(pData), sizeof(pData), 1, fp);
-		pVmdData->m_pSkin[i].Weight = CtoL(pData);
+		pVmdData->m_pSkin[i].Weight = StrToFloat(pData, sizeof(pData));
 	}
 
 	//ファイルクローズ

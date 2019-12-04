@@ -76,11 +76,14 @@ struct PMX_HEADER
 //pmx頂点データ
 struct PMX_VERTEX
 {
+	PMX_VERTEX()
+	{
+		m_pfAddUv = nullptr;
+	}
 	~PMX_VERTEX()
 	{
 		delete[] m_pfAddUv;
 		m_pfAddUv = nullptr;
-
 	}
 
 	float m_fPos[3];
