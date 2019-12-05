@@ -17,7 +17,8 @@ void CVmdTest::Init()
 	VMD->Load("Model/Test.vmd",&m_data);
 	VMD->Write("VmdOutTest.txt",&m_data);
 
-	PMX->Load("Model/Alicia_solid/test.pmx",&m_PmxData);
+	PMX->Load("Model/Alicia_solid/Alicia_solid.pmx",&m_PmxData);
+	PMX->Write("PmxOutTest.txt", &m_PmxData);
 
 }
 

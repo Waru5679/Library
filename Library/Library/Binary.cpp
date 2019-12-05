@@ -72,3 +72,24 @@ unsigned short StrToShort(unsigned char Str[2])
 
 	return Out;
 }
+
+
+//指定文字を文字列から消す
+void ErasCharFromString(unsigned char* pSource, int Size, char Erace)
+{
+	int count = 0;//除去カウント
+
+	for (int i = 0; i < Size; i++)
+	{
+		if (pSource[i] == Erace)
+		{
+			//除去数をカウント
+			count++;
+		}
+		else
+		{
+			//カウント分を詰めてコピー
+			pSource[i - count] = pSource[i];
+		}
+	}
+}

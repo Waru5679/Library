@@ -15,3 +15,6 @@ unsigned long StrToLong(unsigned char Str[4]);
 
 //str‚©‚çShort‚Ö
 unsigned short StrToShort(unsigned char Str[2]);
+
+//w’è•¶š‚ğ•¶š—ñ‚©‚çÁ‚·
+void ErasCharFromString(unsigned char* pSource, int Size, char Erace);

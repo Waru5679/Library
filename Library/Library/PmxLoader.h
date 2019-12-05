@@ -66,11 +66,46 @@ struct PMX_HEADER
 		delete[] m_pData;
 		m_pData = nullptr;
 	}
-
 	char	m_FileType[4];	//ファイル種類"PMX_"固定
 	float	m_Ver;			//バージョン
 	char	m_Size;
 	unsigned char*	m_pData;
+};
+
+//pmxモデル情報
+struct PMX_MODEL_INFO
+{
+	PMX_MODEL_INFO()
+	{
+		m_CommentEngSize = -1;
+		m_CommentJpnSize = -1;
+		m_NameEngSize = -1;
+		m_NameJpnSize = -1;
+		m_pNameJap = nullptr;
+		m_pNameEng = nullptr;
+		m_pCommentJap = nullptr;
+		m_pCommentEng = nullptr;
+	}
+	~PMX_MODEL_INFO()
+	{
+		delete[] m_pNameJap;
+		m_pNameJap = nullptr;
+		delete[] m_pNameEng;
+		m_pNameEng = nullptr;
+		delete[] m_pCommentJap;
+		m_pCommentJap = nullptr;
+		delete[] m_pCommentEng;
+		m_pCommentEng = nullptr;
+	}
+	int m_NameJpnSize;		//モデル名(日)サイズ
+	int m_NameEngSize;		//モデル名(英)サイズ
+	int m_CommentJpnSize;	//コメント(日)サイズ
+	int m_CommentEngSize;	//コメント(英)サイズ
+	
+	unsigned char* m_pNameJap;	//モデル名(日)
+	unsigned char* m_pNameEng;	//モデル名(英)
+	unsigned char* m_pCommentJap;//コメント(日)
+	unsigned char* m_pCommentEng;//コメント(英)
 };
 
 //pmx頂点データ
@@ -100,6 +135,12 @@ struct PMX_FACE
 	int m_VerIndex[3];//頂点
 };
 
+//pmxテクスチャ
+struct PMX_TEXTURE
+{
+	char m_Name[10];
+};
+
 //pmxデータ
 struct PMX_DATA
 {
@@ -109,11 +150,14 @@ struct PMX_DATA
 		m_pVertex = nullptr;
 	}
 
-	PMX_HEADER m_Head;//ヘッダー
-	int VerNum;//頂点数
-	PMX_VERTEX* m_pVertex;//頂点データ
-	int FaceNum;//面の数
-	PMX_FACE* m_pFace;//面のデータ
+	PMX_HEADER	m_Head;		//ヘッダー
+	PMX_MODEL_INFO m_ModelInfo;//モデルデータ
+	int			m_VerNum;	//頂点数
+	PMX_VERTEX* m_pVertex;	//頂点データ
+	int			m_FaceNum;	//面の数
+	PMX_FACE*	m_pFace;	//面のデータ
+	int			m_TexNum;	//テクスチャ数
+	PMX_TEXTURE* m_pTex;	//テクスチャデータ
 
 };
 
@@ -129,7 +173,11 @@ public:
 
 	//読み込み
 	bool Load(const char* FileName, PMX_DATA* pPmxData);
+	//書き出し
+	bool Write(const char* FileName, PMX_DATA* pPmxData);
 private:
+	//モデル情報読み込み
+	void ModelInfoLoad(FILE* fp, PMX_DATA* pPmxData);
 
 	//頂点読み込み
 	void VertexLoad(FILE* fp, PMX_DATA* pPmxData);
@@ -137,4 +185,6 @@ private:
 	//面読み込み
 	void FaceLoad(FILE* fp, PMX_DATA* pPmxData);
 	
+	//テクスチャ読み込み
+	void TexLoad(FILE* fp, PMX_DATA* pPmxData);
 };

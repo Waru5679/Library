@@ -39,43 +39,113 @@ bool CPmxLoader::Load(const char* FileName, PMX_DATA* pPmxData)
 		fread_s(&pPmxData->m_Head.m_pData[i], sizeof(unsigned char), sizeof(unsigned char), 1, fp);		
 	}
 
-	//モデル名&コメントスキップ
-	char test_1[16];
-	fread_s(test_1, sizeof(test_1), sizeof(test_1), 1, fp);
-	
+	//モデル情報読み込み
+	ModelInfoLoad(fp, pPmxData);
+
 	//頂点数
 	fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
-	pPmxData->VerNum = StrToInt(Data, sizeof(Data));
+	pPmxData->m_VerNum = StrToInt(Data, sizeof(Data));
 
 	//頂点なし
-	if (pPmxData->VerNum <= 0)
+	if (pPmxData->m_VerNum <= 0)
 	{
 		return false;
 	}
 
 	//頂点メモリ確保
-	pPmxData->m_pVertex = new PMX_VERTEX[pPmxData->VerNum];
+	pPmxData->m_pVertex = new PMX_VERTEX[pPmxData->m_VerNum];
 		
 	//頂点読み込み
 	VertexLoad(fp, pPmxData);
 	
 	//面の数
 	fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
-	pPmxData->FaceNum = StrToInt(Data, sizeof(Data));
+	pPmxData->m_FaceNum = StrToInt(Data, sizeof(Data));
 
 	//面なし
-	if (pPmxData->FaceNum <= 0)
+	if (pPmxData->m_FaceNum <= 0)
 	{
 		return false;
 	}
 
 	//面データメモリ確保
-	pPmxData->m_pFace = new PMX_FACE[pPmxData->FaceNum];
+	pPmxData->m_pFace = new PMX_FACE[pPmxData->m_FaceNum];
 
 	//面データ読み込み
 	FaceLoad(fp, pPmxData);
 
+	//テクスチャ数読み込み
+	fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
+	pPmxData->m_TexNum = StrToInt(Data, sizeof(Data));
+
+	//テクスチャなし
+	if (pPmxData->m_TexNum <= 0)
+	{
+		return false;
+	}
+
+	//テクスチャ読み込み
+	TexLoad(fp, pPmxData);
+
 	return true;
+}
+
+//モデル情報読み込み
+void CPmxLoader::ModelInfoLoad(FILE* fp, PMX_DATA* pPmxData)
+{
+	unsigned char Data[4];
+
+	//モデル名(日)サイズ
+	fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
+	pPmxData->m_ModelInfo.m_NameJpnSize = StrToInt(Data,sizeof(Data));
+
+	//メモリ確保
+	pPmxData->m_ModelInfo.m_pNameJap = new unsigned char[pPmxData->m_ModelInfo.m_NameJpnSize];
+
+	//モデル名(日)読み込み
+	fread_s(pPmxData->m_ModelInfo.m_pNameJap, pPmxData->m_ModelInfo.m_NameJpnSize, pPmxData->m_ModelInfo.m_NameJpnSize, 1, fp);
+	
+	//文字列から\0を消す
+	ErasCharFromString(pPmxData->m_ModelInfo.m_pNameJap, pPmxData->m_ModelInfo.m_NameJpnSize, '\0');
+
+	//モデル名(英)サイズ
+	fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
+	pPmxData->m_ModelInfo.m_NameEngSize = StrToInt(Data, sizeof(Data));
+
+	//メモリ確保
+	pPmxData->m_ModelInfo.m_pNameEng = new unsigned char[pPmxData->m_ModelInfo.m_NameEngSize];
+
+	//モデル名(英)読み込み
+	fread_s(pPmxData->m_ModelInfo.m_pNameEng, pPmxData->m_ModelInfo.m_NameEngSize, pPmxData->m_ModelInfo.m_NameEngSize, 1, fp);
+
+	//文字列から\0を消す
+	ErasCharFromString(pPmxData->m_ModelInfo.m_pNameEng, pPmxData->m_ModelInfo.m_NameEngSize, '\0');
+
+	//コメント(日)サイズ
+	fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
+	pPmxData->m_ModelInfo.m_CommentJpnSize = StrToInt(Data,sizeof(Data));
+
+	//メモリ確保
+	pPmxData->m_ModelInfo.m_pCommentJap = new unsigned char[pPmxData->m_ModelInfo.m_CommentJpnSize];
+
+	//コメント(日)読み込み
+	fread_s(pPmxData->m_ModelInfo.m_pCommentJap, pPmxData->m_ModelInfo.m_CommentJpnSize, pPmxData->m_ModelInfo.m_CommentJpnSize, 1, fp);
+
+	//文字列から\0を消す
+	ErasCharFromString(pPmxData->m_ModelInfo.m_pCommentJap, pPmxData->m_ModelInfo.m_CommentJpnSize, '\0');
+
+	//コメント(英)サイズ
+	fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
+	pPmxData->m_ModelInfo.m_CommentEngSize = StrToInt(Data, sizeof(Data));
+
+	//メモリ確保
+	pPmxData->m_ModelInfo.m_pCommentEng = new unsigned char[pPmxData->m_ModelInfo.m_CommentEngSize];
+
+	//コメント(英)読み込み
+	fread_s(pPmxData->m_ModelInfo.m_pCommentEng, pPmxData->m_ModelInfo.m_CommentEngSize, pPmxData->m_ModelInfo.m_CommentEngSize, 1, fp);
+
+	//文字列から\0を消す
+	ErasCharFromString(pPmxData->m_ModelInfo.m_pCommentEng, pPmxData->m_ModelInfo.m_CommentEngSize, '\0');
 }
 
 //頂点読み込み
@@ -92,7 +162,7 @@ void CPmxLoader::VertexLoad(FILE* fp, PMX_DATA* pPmxData)
 	pBoneIndex = new unsigned char[BoneIndexSize];
 
 	//頂点の数だけ読み込む
-	for (int i = 0; i < pPmxData->VerNum; i++)
+	for (int i = 0; i < pPmxData->m_VerNum; i++)
 	{
 		//Pos
 		for (int j = 0; j < 3; j++)
@@ -132,7 +202,7 @@ void CPmxLoader::VertexLoad(FILE* fp, PMX_DATA* pPmxData)
 		//ウェイト変形方式
 		fread_s(&pPmxData->m_pVertex[i].m_WeightData.m_WeightType, sizeof(unsigned char), sizeof(unsigned char), 1, fp);
 
-		//変形方式に応じてメモリ確保
+		//変形方式に応じて読み込み
 		switch (pPmxData->m_pVertex[i].m_WeightData.m_WeightType)
 		{
 			//BDFE1方式
@@ -173,7 +243,7 @@ void CPmxLoader::VertexLoad(FILE* fp, PMX_DATA* pPmxData)
 				//ウェイト*4
 				for (int j = 0; j < 4; j++)
 				{
-					//ウェイト_1
+					//ウェイト
 					fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
 					pPmxData->m_pVertex[i].m_WeightData.m_Bdef4.m_Weight[j] = StrToFloat(Data, sizeof(Data));
 				}
@@ -226,17 +296,182 @@ void CPmxLoader::FaceLoad(FILE* fp, PMX_DATA* pPmxData)
 	pData = new unsigned char[IndexSize];
 	
 	//面の数回す
-	for (int i = 0; i < pPmxData->FaceNum; i++)
+	for (int i = 0; i < pPmxData->m_FaceNum; i++)
 	{
 		//頂点インデックス読み込み
 		for (int j = 0; j < 3; j++)
 		{
 			fread_s(pData,IndexSize, IndexSize, 1, fp);
-			
 			pPmxData->m_pFace[i].m_VerIndex[j] = StrToInt(pData, IndexSize);
 		}
+
+		int a = 0;
 	}
 
 	delete[] pData;
 	pData = nullptr;
+}
+
+
+//テクスチャ読み込み
+void CPmxLoader::TexLoad(FILE* fp, PMX_DATA* pPmxData)
+{
+
+}
+
+
+//書き出し
+bool CPmxLoader::Write(const char* FileName, PMX_DATA* pPmxData)
+{
+	FILE* fp = nullptr;
+	fopen_s(&fp, FileName, "w");
+
+	//オープン失敗
+	if (fp == nullptr)
+		return false;
+
+	fprintf_s(fp, "ファイルタイプ:%s\n", pPmxData->m_Head.m_FileType);
+	fprintf_s(fp, "バージョン:%f\n", pPmxData->m_Head.m_Ver);
+
+	fprintf_s(fp, "バイト列サイズ:%d\n", pPmxData->m_Head.m_Size);
+	for (int i = 0; i < pPmxData->m_Head.m_Size; i++)
+	{
+		fprintf_s(fp, "%d,", pPmxData->m_Head.m_pData[i]);
+	}
+	fprintf_s(fp, "\n");
+
+	fprintf_s(fp,"モデル名(日):%s\n", pPmxData->m_ModelInfo.m_pNameJap);
+	fprintf_s(fp, "モデル名(英):%s\n", pPmxData->m_ModelInfo.m_pNameEng);
+	fprintf_s(fp, "コメント(日):%s\n", pPmxData->m_ModelInfo.m_pCommentJap);
+	fprintf_s(fp, "コメント(英):%s\n", pPmxData->m_ModelInfo.m_pCommentEng);
+
+	fprintf_s(fp, "頂点数：%d\n", pPmxData->m_VerNum);
+
+	for (int i = 0; i < pPmxData->m_VerNum; i++)
+	{
+		fprintf_s(fp, "頂点%8d\n", i);
+	
+		fprintf_s(fp, "Pos:");
+		for (int j = 0; j < 3; j++)
+		{
+			fprintf_s(fp, "%f,", pPmxData->m_pVertex[i].m_fPos[j]);
+		}
+		fprintf_s(fp, "\n");
+
+		fprintf_s(fp, "Norm:");
+		for (int j = 0; j < 3; j++)
+		{
+			fprintf_s(fp, "%f,", pPmxData->m_pVertex[i].m_fNorm[j]);
+		}
+		fprintf_s(fp, "\n");
+
+		fprintf_s(fp, "Uv:");
+		for (int j = 0; j < 2; j++)
+		{
+			fprintf_s(fp, "%f,", pPmxData->m_pVertex[i].m_fUv[j]);
+		}
+		fprintf_s(fp, "\n");
+
+		//追加頂点があれば
+		if (pPmxData->m_pVertex->m_pfAddUv != nullptr)
+		{
+			fprintf_s(fp, "AddUv:");
+			for (int j = 0; j < 4; j++)
+			{
+				fprintf_s(fp, "%f,", pPmxData->m_pVertex[i].m_pfAddUv[i]);
+			}
+			fprintf_s(fp, "\n");
+		}
+
+		fprintf_s(fp, "ウェイト変形方式:%d\n",pPmxData->m_pVertex[i].m_WeightData.m_WeightType);
+
+		//変形方式に応じて吐き出す
+		switch (pPmxData->m_pVertex[i].m_WeightData.m_WeightType)
+		{
+			//BDEF1
+			case 0:
+			{
+				fprintf_s(fp, "ボーンID");
+				fprintf_s(fp, "%d", pPmxData->m_pVertex[i].m_WeightData.m_Bdef1.m_BoneID);
+				break;
+			}
+			//BDEF2
+			case 1:
+			{
+
+				fprintf_s(fp, "ボーンID");
+				for (int j = 0; j < 2; j++)
+				{
+					fprintf_s(fp, "%d,", pPmxData->m_pVertex[i].m_WeightData.m_Bdef2.m_BoneID[j]);
+				}
+				fprintf_s(fp,"\n");
+				
+				fprintf_s(fp, "ウェイト値");
+				fprintf_s(fp, "%f\n", pPmxData->m_pVertex[i].m_WeightData.m_Bdef2.m_Weight);
+				break;
+			}
+			//BDEF4
+			case 2:
+			{
+				fprintf_s(fp, "ボーンID");
+				for (int j = 0; j < 4; j++)
+				{
+					fprintf_s(fp, "%d,", pPmxData->m_pVertex[i].m_WeightData.m_Bdef4.m_BoneID[j]);
+				}
+				fprintf_s(fp, "\n");
+
+				fprintf_s(fp, "ウェイト値");
+				for (int j = 0; j < 4; j++)
+				{
+					fprintf_s(fp, "%f,", pPmxData->m_pVertex[i].m_WeightData.m_Bdef4.m_Weight[j]);
+				}
+				fprintf_s(fp, "\n");
+				break;
+			}
+			//BDEF2
+			case 3:
+			{
+				fprintf_s(fp, "ボーンID");
+				for (int j = 0; j < 2; j++)
+				{
+					fprintf_s(fp, "%d,", pPmxData->m_pVertex[i].m_WeightData.m_Sdef.m_BoneID[j]);
+				}
+				fprintf_s(fp, "\n");
+
+				fprintf_s(fp, "ウェイト値");
+				fprintf_s(fp, "%f\n", pPmxData->m_pVertex[i].m_WeightData.m_Sdef.m_Weight);
+
+				fprintf_s(fp, "変形用行列3x3");
+				for (int j = 0; j < 3; j++)
+				{
+					for (int k = 0; k < 3; k++)
+					{
+						fprintf_s(fp, "%f", pPmxData->m_pVertex[i].m_WeightData.m_Sdef.m_Matrix[j][k]);
+					}
+					fprintf_s(fp, "\n");
+				}
+				fprintf_s(fp, "\n");
+				break;
+			}
+			default:
+				break;
+		}
+		
+		fprintf_s(fp, "エッジ倍率：");
+		fprintf_s(fp, "%f\n", pPmxData->m_pVertex->m_EdgeMagn);
+		fprintf_s(fp, "\n");
+	}
+
+	fprintf_s(fp, "面の数：%d\n", pPmxData->m_FaceNum);
+
+	for (int i = 0; i < pPmxData->m_FaceNum; i++)
+	{
+		fprintf_s(fp, "%5d:", i);
+		for (int j = 0; j < 3; j++)
+		{
+			fprintf_s(fp, "%8d", pPmxData->m_pFace[i].m_VerIndex[j]);
+		}
+		fprintf_s(fp, "\n");
+	}
+	return true;
 }
