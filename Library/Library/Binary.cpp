@@ -52,7 +52,6 @@ float StrToFloat(unsigned char* pStr, int Size)
 	return Out;
 }
 
-
 //strからLongへ
 unsigned long StrToLong(unsigned char Str[4])
 {
@@ -91,5 +90,11 @@ void ErasCharFromString(unsigned char* pSource, int Size, char Erace)
 			//カウント分を詰めてコピー
 			pSource[i - count] = pSource[i];
 		}
+	}
+
+	//除去していれば文字列の最後に\nをいれる
+	if (count > 0)
+	{
+		pSource[Size - count] = '\0';
 	}
 }

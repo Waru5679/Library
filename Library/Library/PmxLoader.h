@@ -138,7 +138,16 @@ struct PMX_FACE
 //pmxテクスチャ
 struct PMX_TEXTURE
 {
-	char m_Name[10];
+	PMX_TEXTURE()
+	{
+		m_pPass = nullptr;
+	}
+	~PMX_TEXTURE()
+	{
+		delete[] m_pPass;
+		m_pPass = nullptr;
+	}
+	unsigned char* m_pPass;
 };
 
 //pmxデータ
@@ -146,8 +155,12 @@ struct PMX_DATA
 {
 	~PMX_DATA()
 	{
-		delete m_pVertex;
+		delete[] m_pVertex;
 		m_pVertex = nullptr;
+		delete[] m_pFace;
+		m_pFace = nullptr;
+		delete[] m_pTex;
+		m_pTex = nullptr;
 	}
 
 	PMX_HEADER	m_Head;		//ヘッダー

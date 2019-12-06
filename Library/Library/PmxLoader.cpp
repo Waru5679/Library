@@ -58,9 +58,12 @@ bool CPmxLoader::Load(const char* FileName, PMX_DATA* pPmxData)
 	//頂点読み込み
 	VertexLoad(fp, pPmxData);
 	
-	//面の数
+	//面のサイズ
 	fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
 	pPmxData->m_FaceNum = StrToInt(Data, sizeof(Data));
+
+	//3頂点で1面
+	pPmxData->m_FaceNum /= 3;
 
 	//面なし
 	if (pPmxData->m_FaceNum <= 0)
@@ -73,7 +76,7 @@ bool CPmxLoader::Load(const char* FileName, PMX_DATA* pPmxData)
 
 	//面データ読み込み
 	FaceLoad(fp, pPmxData);
-
+		
 	//テクスチャ数読み込み
 	fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
 	pPmxData->m_TexNum = StrToInt(Data, sizeof(Data));
@@ -83,6 +86,9 @@ bool CPmxLoader::Load(const char* FileName, PMX_DATA* pPmxData)
 	{
 		return false;
 	}
+
+	//テクスチャデータメモリ確保
+	pPmxData->m_pTex = new PMX_TEXTURE[pPmxData->m_TexNum];
 
 	//テクスチャ読み込み
 	TexLoad(fp, pPmxData);
@@ -304,8 +310,6 @@ void CPmxLoader::FaceLoad(FILE* fp, PMX_DATA* pPmxData)
 			fread_s(pData,IndexSize, IndexSize, 1, fp);
 			pPmxData->m_pFace[i].m_VerIndex[j] = StrToInt(pData, IndexSize);
 		}
-
-		int a = 0;
 	}
 
 	delete[] pData;
@@ -316,7 +320,24 @@ void CPmxLoader::FaceLoad(FILE* fp, PMX_DATA* pPmxData)
 //テクスチャ読み込み
 void CPmxLoader::TexLoad(FILE* fp, PMX_DATA* pPmxData)
 {
+	unsigned char Data[4];
+	int AfterByte;
 
+	for (int i = 0; i < pPmxData->m_TexNum; i++)
+	{
+		//後続バイト数
+		fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
+		AfterByte = StrToInt(Data, sizeof(Data));
+
+		//テクスチャパスメモリ確保
+		pPmxData->m_pTex[i].m_pPass = new unsigned char[AfterByte];
+
+		//テクスチャパス読み込み
+		fread_s(pPmxData->m_pTex[i].m_pPass, AfterByte, AfterByte, 1, fp);
+
+		//文字列から\0を消す
+		ErasCharFromString(pPmxData->m_pTex[i].m_pPass, AfterByte, '\0');
+	}
 }
 
 
@@ -341,9 +362,10 @@ bool CPmxLoader::Write(const char* FileName, PMX_DATA* pPmxData)
 	fprintf_s(fp, "\n");
 
 	fprintf_s(fp,"モデル名(日):%s\n", pPmxData->m_ModelInfo.m_pNameJap);
-	fprintf_s(fp, "モデル名(英):%s\n", pPmxData->m_ModelInfo.m_pNameEng);
-	fprintf_s(fp, "コメント(日):%s\n", pPmxData->m_ModelInfo.m_pCommentJap);
-	fprintf_s(fp, "コメント(英):%s\n", pPmxData->m_ModelInfo.m_pCommentEng);
+	fprintf_s(fp,"モデル名(英):%s\n", pPmxData->m_ModelInfo.m_pNameEng);
+	fprintf_s(fp,"コメント(日):%s\n", pPmxData->m_ModelInfo.m_pCommentJap);
+	fprintf_s(fp,"コメント(英):%s\n", pPmxData->m_ModelInfo.m_pCommentEng);
+	fprintf_s(fp, "\n");
 
 	fprintf_s(fp, "頂点数：%d\n", pPmxData->m_VerNum);
 
@@ -391,7 +413,7 @@ bool CPmxLoader::Write(const char* FileName, PMX_DATA* pPmxData)
 			//BDEF1
 			case 0:
 			{
-				fprintf_s(fp, "ボーンID");
+				fprintf_s(fp, "ボーンID:");
 				fprintf_s(fp, "%d", pPmxData->m_pVertex[i].m_WeightData.m_Bdef1.m_BoneID);
 				break;
 			}
@@ -399,28 +421,28 @@ bool CPmxLoader::Write(const char* FileName, PMX_DATA* pPmxData)
 			case 1:
 			{
 
-				fprintf_s(fp, "ボーンID");
+				fprintf_s(fp, "ボーンID:");
 				for (int j = 0; j < 2; j++)
 				{
 					fprintf_s(fp, "%d,", pPmxData->m_pVertex[i].m_WeightData.m_Bdef2.m_BoneID[j]);
 				}
 				fprintf_s(fp,"\n");
 				
-				fprintf_s(fp, "ウェイト値");
+				fprintf_s(fp, "ウェイト値:");
 				fprintf_s(fp, "%f\n", pPmxData->m_pVertex[i].m_WeightData.m_Bdef2.m_Weight);
 				break;
 			}
 			//BDEF4
 			case 2:
 			{
-				fprintf_s(fp, "ボーンID");
+				fprintf_s(fp, "ボーンID:");
 				for (int j = 0; j < 4; j++)
 				{
 					fprintf_s(fp, "%d,", pPmxData->m_pVertex[i].m_WeightData.m_Bdef4.m_BoneID[j]);
 				}
 				fprintf_s(fp, "\n");
 
-				fprintf_s(fp, "ウェイト値");
+				fprintf_s(fp, "ウェイト値:");
 				for (int j = 0; j < 4; j++)
 				{
 					fprintf_s(fp, "%f,", pPmxData->m_pVertex[i].m_WeightData.m_Bdef4.m_Weight[j]);
@@ -431,17 +453,17 @@ bool CPmxLoader::Write(const char* FileName, PMX_DATA* pPmxData)
 			//BDEF2
 			case 3:
 			{
-				fprintf_s(fp, "ボーンID");
+				fprintf_s(fp, "ボーンID:");
 				for (int j = 0; j < 2; j++)
 				{
 					fprintf_s(fp, "%d,", pPmxData->m_pVertex[i].m_WeightData.m_Sdef.m_BoneID[j]);
 				}
 				fprintf_s(fp, "\n");
 
-				fprintf_s(fp, "ウェイト値");
+				fprintf_s(fp, "ウェイト値:");
 				fprintf_s(fp, "%f\n", pPmxData->m_pVertex[i].m_WeightData.m_Sdef.m_Weight);
 
-				fprintf_s(fp, "変形用行列3x3");
+				fprintf_s(fp, "変形用行列3x3:");
 				for (int j = 0; j < 3; j++)
 				{
 					for (int k = 0; k < 3; k++)
@@ -473,5 +495,13 @@ bool CPmxLoader::Write(const char* FileName, PMX_DATA* pPmxData)
 		}
 		fprintf_s(fp, "\n");
 	}
+
+	fprintf_s(fp, "テクスチャ数：%d\n", pPmxData->m_TexNum);
+
+	for (int i = 0; i < pPmxData->m_TexNum; i++)
+	{
+		fprintf_s(fp, "%s\n", pPmxData->m_pTex[i].m_pPass);
+	}
+	
 	return true;
 }
