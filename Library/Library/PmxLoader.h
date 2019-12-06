@@ -177,6 +177,44 @@ struct PMX_TEXTURE
 	unsigned char* m_pPass;	//テクスチャパス
 };
 
+//pmxマテリアル
+struct PMX_MATERIAL
+{
+	PMX_MATERIAL()
+	{
+		m_pNameEng = nullptr;
+		m_pNameJap = nullptr;
+	}
+	~PMX_MATERIAL()
+	{
+		//材質名(日)
+		if (m_pNameJap != nullptr)
+		{
+			delete[] m_pNameJap;
+			m_pNameJap = nullptr;
+		}
+		//材質名(英)
+		if (m_pNameEng != nullptr)
+		{
+			delete[] m_pNameEng;
+			m_pNameEng = nullptr;
+		}
+	}
+	unsigned char* m_pNameJap;//材質名(日)
+	unsigned char* m_pNameEng;//材質名(英)
+
+	float m_Diffuse[4];	//拡散光
+	float m_Specular[3];//スペキュラー（鏡面反射
+	float m_SpePower;	//スペキュラーパワー
+	float m_Ambient[3];	//アンビエント
+
+	unsigned char m_BitFlag;//描画フラグ
+	float m_Edge[4];		//エッジ色
+	float m_EdgeSize;		//エッジサイズ
+
+
+};
+
 //pmxデータ
 struct PMX_DATA
 {
@@ -204,14 +242,16 @@ struct PMX_DATA
 		}
 	}
 
-	PMX_HEADER		m_Head;		//ヘッダー
-	PMX_MODEL_INFO	m_ModelInfo;//モデルデータ
-	int				m_VerNum;	//頂点数
-	PMX_VERTEX*		m_pVertex;	//頂点データ
-	int				m_FaceNum;	//面の数
-	PMX_FACE*		m_pFace;	//面のデータ
-	int				m_TexNum;	//テクスチャ数
-	PMX_TEXTURE*	m_pTex;		//テクスチャデータ
+	PMX_HEADER		m_Head;			//ヘッダー
+	PMX_MODEL_INFO	m_ModelInfo;	//モデルデータ
+	int				m_VerNum;		//頂点数
+	PMX_VERTEX*		m_pVertex;		//頂点データ
+	int				m_FaceNum;		//面の数
+	PMX_FACE*		m_pFace;		//面のデータ
+	int				m_TexNum;		//テクスチャ数
+	PMX_TEXTURE*	m_pTex;			//テクスチャデータ
+	int				m_MaterialNum;	//マテリアル数
+	PMX_MATERIAL*	m_pMaterial;	//マテリアル数
 
 };
 
@@ -240,5 +280,8 @@ private:
 	void FaceLoad(FILE* fp, PMX_DATA* pPmxData);
 	
 	//テクスチャ読み込み
-	void TexLoad(FILE* fp, PMX_DATA* pPmxData);
+	void TextureLoad(FILE* fp, PMX_DATA* pPmxData);
+
+	//マテリアル読み込み
+	void MaterialLoad(FILE* fp, PMX_DATA* pPmxData);
 };

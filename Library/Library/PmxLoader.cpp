@@ -91,7 +91,23 @@ bool CPmxLoader::Load(const char* FileName, PMX_DATA* pPmxData)
 	pPmxData->m_pTex = new PMX_TEXTURE[pPmxData->m_TexNum];
 
 	//テクスチャ読み込み
-	TexLoad(fp, pPmxData);
+	TextureLoad(fp, pPmxData);
+
+	//マテリアル数
+	fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
+	pPmxData->m_MaterialNum = StrToInt(Data, sizeof(Data));
+
+	//マテリアルなし
+	if (pPmxData->m_MaterialNum <= 0)
+	{
+		return false;
+	}
+
+	//マテリアルメモリ確保
+	pPmxData->m_pMaterial = new PMX_MATERIAL[pPmxData->m_MaterialNum];
+
+	//マテリアル読み込み
+	MaterialLoad(fp, pPmxData);
 
 	return true;
 }
@@ -318,7 +334,7 @@ void CPmxLoader::FaceLoad(FILE* fp, PMX_DATA* pPmxData)
 
 
 //テクスチャ読み込み
-void CPmxLoader::TexLoad(FILE* fp, PMX_DATA* pPmxData)
+void CPmxLoader::TextureLoad(FILE* fp, PMX_DATA* pPmxData)
 {
 	unsigned char Data[4];
 	int AfterByte;
@@ -340,6 +356,51 @@ void CPmxLoader::TexLoad(FILE* fp, PMX_DATA* pPmxData)
 	}
 }
 
+
+//マテリアル読み込み
+void CPmxLoader::MaterialLoad(FILE* fp, PMX_DATA* pPmxData)
+{
+	unsigned char Data[4];
+
+	//材質名用サイズ
+	int JapSize;
+	int EngSize;
+
+	for (int i = 0; i < pPmxData->m_MaterialNum; i++)
+	{
+		////材質名(日）サイズ
+		//fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
+		//JapSize = StrToInt(Data, sizeof(Data));
+
+		////メモリ確保
+		//pPmxData->m_pMaterial[i].m_pNameJap = new unsigned char[JapSize];
+
+		////材質名(日）読み込み
+		//fread_s(pPmxData->m_pMaterial[i].m_pNameJap, JapSize, JapSize, 1, fp);
+
+		////文字列から\0を消す
+		//ErasCharFromString(pPmxData->m_pMaterial[i].m_pNameJap, JapSize, '\0');
+
+		////材質名(英）サイズ
+		//fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
+		//EngSize = StrToInt(Data, sizeof(Data));
+
+		////メモリ確保
+		//pPmxData->m_pMaterial[i].m_pNameEng = new unsigned char[EngSize];
+
+		////材質名(英）読み込み
+		//fread_s(pPmxData->m_pMaterial[i].m_pNameEng, EngSize, EngSize, 1, fp);
+
+		////文字列から\0を消す
+		//ErasCharFromString(pPmxData->m_pMaterial[i].m_pNameEng, EngSize, '\0');
+
+		////Diffuse
+		//for (int i = 0; i < 4; i++)
+		//{
+
+		//}
+	}
+}
 
 //書き出し
 bool CPmxLoader::Write(const char* FileName, PMX_DATA* pPmxData)
