@@ -63,8 +63,11 @@ struct PMX_HEADER
 {
 	~PMX_HEADER()
 	{
-		delete[] m_pData;
-		m_pData = nullptr;
+		if (m_pData != nullptr)
+		{
+			delete[] m_pData;
+			m_pData = nullptr;
+		}
 	}
 	char	m_FileType[4];	//ファイル種類"PMX_"固定
 	float	m_Ver;			//バージョン
@@ -88,14 +91,30 @@ struct PMX_MODEL_INFO
 	}
 	~PMX_MODEL_INFO()
 	{
-		delete[] m_pNameJap;
-		m_pNameJap = nullptr;
-		delete[] m_pNameEng;
-		m_pNameEng = nullptr;
-		delete[] m_pCommentJap;
-		m_pCommentJap = nullptr;
-		delete[] m_pCommentEng;
-		m_pCommentEng = nullptr;
+		//モデル名(日)
+		if (m_pNameJap != nullptr)
+		{
+			delete[] m_pNameJap;
+			m_pNameJap = nullptr;
+		}
+		//モデル名(英)
+		if (m_pNameEng != nullptr)
+		{
+			delete[] m_pNameEng;
+			m_pNameEng = nullptr;
+		}
+		//コメント(日)
+		if (m_pCommentJap != nullptr)
+		{
+			delete[] m_pCommentJap;
+			m_pCommentJap = nullptr;
+		}
+		//コメント(英)
+		if (m_pCommentEng!= nullptr)
+		{
+			delete[] m_pCommentEng;
+			m_pCommentEng = nullptr;
+		}
 	}
 	int m_NameJpnSize;		//モデル名(日)サイズ
 	int m_NameEngSize;		//モデル名(英)サイズ
@@ -117,16 +136,20 @@ struct PMX_VERTEX
 	}
 	~PMX_VERTEX()
 	{
-		delete[] m_pfAddUv;
-		m_pfAddUv = nullptr;
+		//追加UV
+		if (m_pfAddUv != nullptr)
+		{
+			delete[] m_pfAddUv;
+			m_pfAddUv = nullptr;
+		}
 	}
 
-	float m_fPos[3];
-	float m_fNorm[3];
-	float m_fUv[2];
-	float* m_pfAddUv;	//追加UV
-	PMX_WEIGHT_DATA m_WeightData;//ウェイトデータ
-	float m_EdgeMagn;//エッジ倍率
+	float m_fPos[3];				//位置
+	float m_fNorm[3];				//法線
+	float m_fUv[2];					//UV
+	float* m_pfAddUv;				//追加UV
+	float m_EdgeMagn;				//エッジ倍率
+	PMX_WEIGHT_DATA m_WeightData;	//ウェイトデータ
 };
 
 //pmx面データ
@@ -144,10 +167,14 @@ struct PMX_TEXTURE
 	}
 	~PMX_TEXTURE()
 	{
-		delete[] m_pPass;
-		m_pPass = nullptr;
+		//テクスチャパス
+		if (m_pPass != nullptr)
+		{
+			delete[] m_pPass;
+			m_pPass = nullptr;
+		}
 	}
-	unsigned char* m_pPass;
+	unsigned char* m_pPass;	//テクスチャパス
 };
 
 //pmxデータ
@@ -155,22 +182,36 @@ struct PMX_DATA
 {
 	~PMX_DATA()
 	{
-		delete[] m_pVertex;
-		m_pVertex = nullptr;
-		delete[] m_pFace;
-		m_pFace = nullptr;
-		delete[] m_pTex;
-		m_pTex = nullptr;
+		//頂点データ
+		if (m_pVertex != nullptr)
+		{
+			delete[] m_pVertex;
+			m_pVertex = nullptr;
+		}
+
+		//面のデータ
+		if (m_pFace != nullptr)
+		{
+			delete[] m_pFace;
+			m_pFace = nullptr;
+		}
+
+		//テクスチャデータ
+		if (m_pTex != nullptr)
+		{
+			delete[] m_pTex;
+			m_pTex = nullptr;
+		}
 	}
 
-	PMX_HEADER	m_Head;		//ヘッダー
-	PMX_MODEL_INFO m_ModelInfo;//モデルデータ
-	int			m_VerNum;	//頂点数
-	PMX_VERTEX* m_pVertex;	//頂点データ
-	int			m_FaceNum;	//面の数
-	PMX_FACE*	m_pFace;	//面のデータ
-	int			m_TexNum;	//テクスチャ数
-	PMX_TEXTURE* m_pTex;	//テクスチャデータ
+	PMX_HEADER		m_Head;		//ヘッダー
+	PMX_MODEL_INFO	m_ModelInfo;//モデルデータ
+	int				m_VerNum;	//頂点数
+	PMX_VERTEX*		m_pVertex;	//頂点データ
+	int				m_FaceNum;	//面の数
+	PMX_FACE*		m_pFace;	//面のデータ
+	int				m_TexNum;	//テクスチャ数
+	PMX_TEXTURE*	m_pTex;		//テクスチャデータ
 
 };
 
