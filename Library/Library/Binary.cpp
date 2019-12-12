@@ -94,35 +94,6 @@ unsigned short StrToShort(unsigned char Str[2])
 	return Out;
 }
 
-//float StrToFloat(unsigned char* pStr)
-//{
-//	float	Out;
-//	long	Data;	//Data
-//	long	Mant;	//仮数
-//	int		Sign;	//符号
-//	long	Index;	//指数
-//	
-//	Data = pStr[0] | (pStr[1]<<8) | (pStr[2] << 16) | (pStr[3] << 24);
-//
-//	//符号
-//	Sign = (Data & 0x80000000) >> 31;
-//
-//	//指数
-//	Index = (Data & 0x7f800000)>>23;
-//	
-//	//符号付きに
-//	Index -=0x7f;
-//
-//	//仮数
-//	Mant = (Data & 0x007fffff);
-//
-//	//floatにする
-//	Out=powf(-1, Sign)* powf(2, Index)*(1.0f+Mant);
-//	
-//	return Out;
-//}
-
-
 //指定文字を文字列から消す
 void ErasCharFromString(unsigned char* pSource, int Size, char Erace)
 {
