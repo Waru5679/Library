@@ -23,7 +23,7 @@ bool CPmxLoader::Load(const char* FileName, PMX_DATA* pPmxData)
 
 	//バージョン
 	fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
-	pPmxData->m_Head.m_Ver = StrToFloat(Data, sizeof(Data));
+	pPmxData->m_Head.m_Ver = StrToFloat(Data);
 
 	//ファイルタイプ
 	fread_s(&pPmxData->m_Head.m_Size, sizeof(pPmxData->m_Head.m_Size), sizeof(pPmxData->m_Head.m_Size), 1, fp);
@@ -190,21 +190,21 @@ void CPmxLoader::VertexLoad(FILE* fp, PMX_DATA* pPmxData)
 		for (int j = 0; j < 3; j++)
 		{
 			fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
-			pPmxData->m_pVertex[i].m_fPos[j] = StrToFloat(Data, sizeof(Data));
+			pPmxData->m_pVertex[i].m_fPos[j] = StrToFloat(Data);
 		}
 		
 		//Norm
 		for (int j = 0; j < 3; j++)
 		{
 			fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
-			pPmxData->m_pVertex[i].m_fNorm[j] = StrToFloat(Data, sizeof(Data));
+			pPmxData->m_pVertex[i].m_fNorm[j] = StrToFloat(Data);
 		}
 
 		//UV
 		for (int j = 0; j < 2; j++)
 		{
 			fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
-			pPmxData->m_pVertex[i].m_fUv[j] = StrToFloat(Data, sizeof(Data));
+			pPmxData->m_pVertex[i].m_fUv[j] = StrToFloat(Data);
 		}
 		
 		//追加UVがある場合
@@ -217,7 +217,7 @@ void CPmxLoader::VertexLoad(FILE* fp, PMX_DATA* pPmxData)
 			for (int j = 0; j < pPmxData->m_Head.m_pData[1]; j++)
 			{
 				fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
-				pPmxData->m_pVertex[i].m_pfAddUv[j] = StrToFloat(Data, sizeof(Data));
+				pPmxData->m_pVertex[i].m_pfAddUv[j] = StrToFloat(Data);
 			}
 		}
 
@@ -248,7 +248,7 @@ void CPmxLoader::VertexLoad(FILE* fp, PMX_DATA* pPmxData)
 			
 				//ウェイト
 				fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
-				pPmxData->m_pVertex[i].m_WeightData.m_Bdef2.m_Weight = StrToFloat(Data, sizeof(Data));
+				pPmxData->m_pVertex[i].m_WeightData.m_Bdef2.m_Weight = StrToFloat(Data);
 
 				break;
 			}
@@ -267,7 +267,7 @@ void CPmxLoader::VertexLoad(FILE* fp, PMX_DATA* pPmxData)
 				{
 					//ウェイト
 					fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
-					pPmxData->m_pVertex[i].m_WeightData.m_Bdef4.m_Weight[j] = StrToFloat(Data, sizeof(Data));
+					pPmxData->m_pVertex[i].m_WeightData.m_Bdef4.m_Weight[j] = StrToFloat(Data);
 				}
 				break;
 			}
@@ -283,7 +283,7 @@ void CPmxLoader::VertexLoad(FILE* fp, PMX_DATA* pPmxData)
 			
 				//ウェイト
 				fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
-				pPmxData->m_pVertex[i].m_WeightData.m_Sdef.m_Weight = StrToFloat(Data, sizeof(Data));
+				pPmxData->m_pVertex[i].m_WeightData.m_Sdef.m_Weight = StrToFloat(Data);
 
 				//3x3マトリックス
 				for (int j = 0; j < 3; j++)
@@ -291,7 +291,7 @@ void CPmxLoader::VertexLoad(FILE* fp, PMX_DATA* pPmxData)
 					for (int k = 0; k < 3; k++)
 					{
 						fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
-						pPmxData->m_pVertex[i].m_WeightData.m_Sdef.m_Matrix[j][k] = StrToFloat(Data, sizeof(Data));
+						pPmxData->m_pVertex[i].m_WeightData.m_Sdef.m_Matrix[j][k] = StrToFloat(Data);
 					}
 				}
 				break;
@@ -302,7 +302,7 @@ void CPmxLoader::VertexLoad(FILE* fp, PMX_DATA* pPmxData)
 
 		//エッジ倍率
 		fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
-		pPmxData->m_pVertex[i].m_EdgeMagn = StrToFloat(Data, sizeof(Data));
+		pPmxData->m_pVertex[i].m_EdgeMagn = StrToFloat(Data);
 	}
 	delete[] pBoneIndex;
 	pBoneIndex = nullptr;
@@ -331,7 +331,6 @@ void CPmxLoader::FaceLoad(FILE* fp, PMX_DATA* pPmxData)
 	delete[] pData;
 	pData = nullptr;
 }
-
 
 //テクスチャ読み込み
 void CPmxLoader::TextureLoad(FILE* fp, PMX_DATA* pPmxData)
@@ -409,28 +408,25 @@ void CPmxLoader::MaterialLoad(FILE* fp, PMX_DATA* pPmxData)
 		for (int j = 0; j < 4; j++)
 		{
 			fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
-			pPmxData->m_pMaterial[i].m_Diffuse[j] = StrToFloat(Data, sizeof(Data));
+			pPmxData->m_pMaterial[i].m_Diffuse[j] = StrToFloat(Data);
 		}
-
-		//てすと！！！！
-		StrToFloat(Data);
 
 		//スペキュラー
 		for (int j = 0; j < 3; j++)
 		{
 			fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
-			pPmxData->m_pMaterial[i].m_Specular[j] = StrToFloat(Data, sizeof(Data));
+			pPmxData->m_pMaterial[i].m_Specular[j] = StrToFloat(Data);
 		}
 
 		//スペキュラパワー
 		fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
-		pPmxData->m_pMaterial[i].m_SpePower = StrToFloat(Data, sizeof(Data));
+		pPmxData->m_pMaterial[i].m_SpePower = StrToFloat(Data);
 
 		//アンビエント
 		for (int j = 0; j < 3; j++)
 		{
 			fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
-			pPmxData->m_pMaterial[i].m_Ambient[j] = StrToFloat(Data, sizeof(Data));
+			pPmxData->m_pMaterial[i].m_Ambient[j] = StrToFloat(Data);
 		}
 
 		//描画フラグ
@@ -440,12 +436,12 @@ void CPmxLoader::MaterialLoad(FILE* fp, PMX_DATA* pPmxData)
 		for (int j = 0; j < 4; j++)
 		{
 			fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
-			pPmxData->m_pMaterial[i].m_Edge[j] = StrToFloat(Data, sizeof(Data));
+			pPmxData->m_pMaterial[i].m_Edge[j] = StrToFloat(Data);
 		}
 
 		//エッジサイズ
 		fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
-		pPmxData->m_pMaterial[i].m_EdgeSize = StrToFloat(Data, sizeof(Data));
+		pPmxData->m_pMaterial[i].m_EdgeSize = StrToFloat(Data);
 
 		//通常テクスチャ
 		fread_s(pTexData, TexIndexSize, TexIndexSize, 1, fp);
@@ -576,7 +572,7 @@ bool CPmxLoader::Write(const char* FileName, PMX_DATA* pPmxData)
 			case 0:
 			{
 				fprintf_s(fp, "ボーンID:");
-				fprintf_s(fp, "%d", pPmxData->m_pVertex[i].m_WeightData.m_Bdef1.m_BoneID);
+				fprintf_s(fp, "%d\n", pPmxData->m_pVertex[i].m_WeightData.m_Bdef1.m_BoneID);
 				break;
 			}
 			//BDEF2

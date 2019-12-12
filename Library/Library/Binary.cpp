@@ -1,5 +1,5 @@
 #include "Binary.h"
-//#include <math.h>
+#include <math.h>
 
 //Strからintへ
 int StrToInt(unsigned char* pStr, int Size)
@@ -28,28 +28,49 @@ int StrToInt(unsigned char* pStr, int Size)
 }
 
 //Strからfloatへ
-float StrToFloat(unsigned char* pStr, int Size)
+float StrToFloat(unsigned char* pStr)
 {
-	float Out;
+	float	Out;
+	long	Data;	//Data
+	long	Mant;	//仮数
+	int		Sign;	//符号
+	long	Index;	//指数
 
-	switch (Size)
+	Data = pStr[0] | (pStr[1] << 8) | (pStr[2] << 16) | (pStr[3] << 24);
+
+	//符号
+	Sign = (Data & 0x80000000) >> 31;
+
+	//指数
+	Index = (Data & 0x7f800000) >> 23;
+
+	//符号付きに
+	Index -= 0x7f;
+
+	//仮数
+	Mant = (Data & 0x007fffff);
+	
+	//仮数部の桁数を調べる
+	int Count = 0;
+	long MantCopy = Mant;
+	while (1)
 	{
-		case CHAR:
+		MantCopy /= 10;
+		Count++;
+
+		if (MantCopy < 10)
 		{
-			Out = pStr[0];
-			break;
-		}
-		case SHORT:
-		{
-			Out = (float)StrToShort(pStr);
-			break;
-		}
-		case LONG:
-		{
-			Out = (float)StrToLong(pStr);
+			Count++;
 			break;
 		}
 	}
+
+	//仮数部を小数にする
+	float fMant = Mant/(float)pow(10, Count);
+
+	//floatにする
+	Out = powf(-1, Sign) * powf(2, Index) * (1.0f + fMant);
+
 	return Out;
 }
 
@@ -73,31 +94,33 @@ unsigned short StrToShort(unsigned char Str[2])
 	return Out;
 }
 
-float StrToFloat(unsigned char* pStr)
-{
-	float Out=0.0f;
-	//long Data;
-	//long Mant;//仮数
-	//int Sign;//符号
-	//long Index;//指数
-	//int IndexSign;//指数符号
-
-	//Data = pStr[0] | (pStr[1]<<8) | (pStr[2] << 16) | (pStr[3] << 24);
-	//
-	//Index = (Data & 0x78000000)>>23;
-	//
-	////符号付きに
-	//Index -=0x80;
-
-	//Sign = (Data&0x80000000)>>31;	
-
-	//Mant = (Data & 0x007fffff);
-
-	//Out=powf(-1, Sign)* Mant* powf(2, Index);
-	//
-	
-	return Out;
-}
+//float StrToFloat(unsigned char* pStr)
+//{
+//	float	Out;
+//	long	Data;	//Data
+//	long	Mant;	//仮数
+//	int		Sign;	//符号
+//	long	Index;	//指数
+//	
+//	Data = pStr[0] | (pStr[1]<<8) | (pStr[2] << 16) | (pStr[3] << 24);
+//
+//	//符号
+//	Sign = (Data & 0x80000000) >> 31;
+//
+//	//指数
+//	Index = (Data & 0x7f800000)>>23;
+//	
+//	//符号付きに
+//	Index -=0x7f;
+//
+//	//仮数
+//	Mant = (Data & 0x007fffff);
+//
+//	//floatにする
+//	Out=powf(-1, Sign)* powf(2, Index)*(1.0f+Mant);
+//	
+//	return Out;
+//}
 
 
 //指定文字を文字列から消す

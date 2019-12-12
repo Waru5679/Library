@@ -7,16 +7,13 @@ constexpr int LONG	{ 4 };	//Long
 //Str‚©‚çInt‚Ö
 int StrToInt(unsigned char* pStr, int Size);
 
-//Str‚©‚çfloat‚Ö
-float StrToFloat(unsigned char* pStr, int Size);
-
 //str‚©‚çLong‚Ö
 unsigned long StrToLong(unsigned char Str[4]);
 
 //str‚©‚çShort‚Ö
 unsigned short StrToShort(unsigned char Str[2]);
 
-//long‚©‚çfloat‚Ö
+//Str‚©‚çfloat‚Ö
 float StrToFloat(unsigned char* pStr);
 
 //w’è•¶š‚ğ•¶š—ñ‚©‚çÁ‚·

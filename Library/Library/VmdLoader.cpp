@@ -44,14 +44,14 @@ bool CVmdLoader::Load(const char* FileName, VMD_DATA* pVmdData)
 		for (int j = 0; j < 3; j++)
 		{
 			fread_s(pData, sizeof(pData), sizeof(pData), 1, fp);
-			pVmdData->m_pMotion[i].Pos[j] = StrToFloat(pData, sizeof(pData));
+			pVmdData->m_pMotion[i].Pos[j] = StrToFloat(pData);
 		}
 
 		//Rot
 		for (int j = 0; j < 4; j++)
 		{
 			fread_s(pData, sizeof(pData), sizeof(pData), 1, fp);
-			pVmdData->m_pMotion[i].Rot[j] = StrToFloat(pData, sizeof(pData));
+			pVmdData->m_pMotion[i].Rot[j] = StrToFloat(pData);
 		}
 
 		//補完データ
@@ -77,7 +77,7 @@ bool CVmdLoader::Load(const char* FileName, VMD_DATA* pVmdData)
 
 		//ウェイト
 		fread_s(pData, sizeof(pData), sizeof(pData), 1, fp);
-		pVmdData->m_pSkin[i].Weight = StrToFloat(pData, sizeof(pData));
+		pVmdData->m_pSkin[i].Weight = StrToFloat(pData);
 	}
 
 	//ファイルクローズ
