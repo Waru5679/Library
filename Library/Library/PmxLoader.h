@@ -208,11 +208,19 @@ struct PMX_MATERIAL
 	float m_SpePower;	//スペキュラーパワー
 	float m_Ambient[3];	//アンビエント
 
-	unsigned char m_BitFlag;//描画フラグ
+	unsigned char m_BitFlag;//描画フラグ( 0x01:両面描画, 0x02:地面影, 0x04:セルフシャドウマップへの描画, 0x08:セルフシャドウの描画, 0x10:エッジ描画)
 	float m_Edge[4];		//エッジ色
 	float m_EdgeSize;		//エッジサイズ
 
+	int m_NormTex;			//通常テクスチャインデックス
+	int m_SphereTex;		//スフィアテクスチャインデックス
+	unsigned char m_SphereMode;//スフィアモード(0:無効 1:乗算(sph) 2:加算(spa) 3:サブテクスチャ)
+	
+	unsigned char m_ToonFlag;//共有Toonフラグ
+	int m_ToonTex;			//トゥーンテクスチャインデックス
 
+	unsigned char* m_pMemo;	//メモ
+	int m_UseVerNum;		//使用する頂点数
 };
 
 //pmxデータ

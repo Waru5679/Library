@@ -366,40 +366,141 @@ void CPmxLoader::MaterialLoad(FILE* fp, PMX_DATA* pPmxData)
 	int JapSize;
 	int EngSize;
 
+	//メモサイズ
+	int MemoSize;
+
+	//テクスチャインデックスサイズ
+	int TexIndexSize = pPmxData->m_Head.m_pData[3];
+	
+	//テクスチャデータ読み込み用
+	unsigned char* pTexData = nullptr;
+	pTexData = new unsigned char[TexIndexSize];
+		
+	//読み込み
 	for (int i = 0; i < pPmxData->m_MaterialNum; i++)
 	{
-		////材質名(日）サイズ
-		//fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
-		//JapSize = StrToInt(Data, sizeof(Data));
+		//材質名(日）サイズ
+		fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
+		JapSize = StrToInt(Data, sizeof(Data));
 
-		////メモリ確保
-		//pPmxData->m_pMaterial[i].m_pNameJap = new unsigned char[JapSize];
+		//メモリ確保
+		pPmxData->m_pMaterial[i].m_pNameJap = new unsigned char[JapSize];
 
-		////材質名(日）読み込み
-		//fread_s(pPmxData->m_pMaterial[i].m_pNameJap, JapSize, JapSize, 1, fp);
+		//材質名(日）読み込み
+		fread_s(pPmxData->m_pMaterial[i].m_pNameJap, JapSize, JapSize, 1, fp);
 
-		////文字列から\0を消す
-		//ErasCharFromString(pPmxData->m_pMaterial[i].m_pNameJap, JapSize, '\0');
+		//文字列から\0を消す
+		ErasCharFromString(pPmxData->m_pMaterial[i].m_pNameJap, JapSize, '\0');
 
-		////材質名(英）サイズ
-		//fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
-		//EngSize = StrToInt(Data, sizeof(Data));
+		//材質名(英）サイズ
+		fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
+		EngSize = StrToInt(Data, sizeof(Data));
 
-		////メモリ確保
-		//pPmxData->m_pMaterial[i].m_pNameEng = new unsigned char[EngSize];
+		//メモリ確保
+		pPmxData->m_pMaterial[i].m_pNameEng = new unsigned char[EngSize];
 
-		////材質名(英）読み込み
-		//fread_s(pPmxData->m_pMaterial[i].m_pNameEng, EngSize, EngSize, 1, fp);
+		//材質名(英）読み込み
+		fread_s(pPmxData->m_pMaterial[i].m_pNameEng, EngSize, EngSize, 1, fp);
 
-		////文字列から\0を消す
-		//ErasCharFromString(pPmxData->m_pMaterial[i].m_pNameEng, EngSize, '\0');
+		//文字列から\0を消す
+		ErasCharFromString(pPmxData->m_pMaterial[i].m_pNameEng, EngSize, '\0');
 
-		////Diffuse
-		//for (int i = 0; i < 4; i++)
-		//{
+		//ディフューズ
+		for (int j = 0; j < 4; j++)
+		{
+			fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
+			pPmxData->m_pMaterial[i].m_Diffuse[j] = StrToFloat(Data, sizeof(Data));
+		}
 
-		//}
+		//てすと！！！！
+		StrToFloat(Data);
+
+		//スペキュラー
+		for (int j = 0; j < 3; j++)
+		{
+			fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
+			pPmxData->m_pMaterial[i].m_Specular[j] = StrToFloat(Data, sizeof(Data));
+		}
+
+		//スペキュラパワー
+		fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
+		pPmxData->m_pMaterial[i].m_SpePower = StrToFloat(Data, sizeof(Data));
+
+		//アンビエント
+		for (int j = 0; j < 3; j++)
+		{
+			fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
+			pPmxData->m_pMaterial[i].m_Ambient[j] = StrToFloat(Data, sizeof(Data));
+		}
+
+		//描画フラグ
+		fread_s(&pPmxData->m_pMaterial[i].m_BitFlag, sizeof(pPmxData->m_pMaterial[i].m_BitFlag), sizeof(pPmxData->m_pMaterial[i].m_BitFlag), 1, fp);
+
+		//エッジ色
+		for (int j = 0; j < 4; j++)
+		{
+			fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
+			pPmxData->m_pMaterial[i].m_Edge[j] = StrToFloat(Data, sizeof(Data));
+		}
+
+		//エッジサイズ
+		fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
+		pPmxData->m_pMaterial[i].m_EdgeSize = StrToFloat(Data, sizeof(Data));
+
+		//通常テクスチャ
+		fread_s(pTexData, TexIndexSize, TexIndexSize, 1, fp);
+		pPmxData->m_pMaterial[i].m_NormTex = StrToInt(pTexData, TexIndexSize);
+		
+		//スフィアテクスチャ
+		fread_s(pTexData, TexIndexSize, TexIndexSize, 1, fp);
+		pPmxData->m_pMaterial[i].m_SphereTex = StrToInt(pTexData, TexIndexSize);
+
+		//スフィアモード
+		fread_s(&pPmxData->m_pMaterial[i].m_SphereMode, sizeof(unsigned char), sizeof(unsigned char), 1, fp);
+
+		//共有Toonフラグ
+		fread_s(&pPmxData->m_pMaterial[i].m_ToonFlag, sizeof(unsigned char), sizeof(unsigned char), 1, fp);
+
+		switch (pPmxData->m_pMaterial[i].m_ToonFlag)
+		{
+			//Toonテクスチャ
+			case 0:
+			{
+				fread_s(pTexData, TexIndexSize, TexIndexSize, 1, fp);
+				pPmxData->m_pMaterial[i].m_ToonTex = StrToInt(pTexData, TexIndexSize);
+				break;
+			}
+			//共有Toonテクスチャ
+			case 1:
+			{
+				unsigned char read;
+				fread_s(&read, sizeof(unsigned char), sizeof(unsigned char), 1, fp);
+				pPmxData->m_pMaterial[i].m_ToonTex = StrToInt(&read, sizeof(read));
+				break;
+			}
+		}
+
+		//メモサイズ
+		fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
+		MemoSize = StrToInt(Data, sizeof(Data));
+
+		//メモリ確保
+		pPmxData->m_pMaterial[i].m_pMemo = new unsigned char[MemoSize];
+
+		//メモ読み込み
+		fread_s(pPmxData->m_pMaterial[i].m_pMemo, MemoSize, MemoSize, 1, fp);
+
+		//文字列から\0を消す
+		ErasCharFromString(pPmxData->m_pMaterial[i].m_pMemo, MemoSize, '\0');
+
+		//使用する頂点数
+		fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
+		pPmxData->m_pMaterial[i].m_UseVerNum = StrToInt(Data, sizeof(Data));
 	}
+
+	//読み込み用破棄
+	delete[] pTexData;
+	pTexData = nullptr;
 }
 
 //書き出し
@@ -564,5 +665,58 @@ bool CPmxLoader::Write(const char* FileName, PMX_DATA* pPmxData)
 		fprintf_s(fp, "%s\n", pPmxData->m_pTex[i].m_pPass);
 	}
 	
+	fprintf_s(fp, "マテリアル数：%d\n", pPmxData->m_MaterialNum);
+
+	for (int i = 0; i < pPmxData->m_MaterialNum; i++)
+	{
+		fprintf_s(fp, "マテリアル名(日):%s\n", pPmxData->m_pMaterial[i].m_pNameJap);
+		fprintf_s(fp, "マテリアル名(英):%s\n", pPmxData->m_pMaterial[i].m_pNameEng);
+		
+		fprintf_s(fp, "Diffuse:");
+		for (int j = 0; j < 4; j++)
+		{
+			fprintf_s(fp, "%f,",pPmxData->m_pMaterial[i].m_Diffuse[j]);
+		}
+		fprintf_s(fp, "\n");
+
+		fprintf_s(fp, "Specular:");
+		for (int j = 0; j < 3; j++)
+		{
+			fprintf_s(fp, "%f,", pPmxData->m_pMaterial[i].m_Specular[j]);
+		}
+		fprintf_s(fp, "\n");
+
+		fprintf_s(fp, "SpecularPower:%f\n", pPmxData->m_pMaterial[i].m_SpePower);
+
+		fprintf_s(fp, "Ambient:");
+		for (int j = 0; j < 3; j++)
+		{
+			fprintf_s(fp, "%f,", pPmxData->m_pMaterial[i].m_Ambient[j]);
+		}
+		fprintf_s(fp, "\n");
+
+		fprintf_s(fp, "描画フラグ:%d\n", pPmxData->m_pMaterial[i].m_BitFlag);
+
+		fprintf_s(fp, "Edge:");
+		for (int j = 0; j < 4; j++)
+		{
+			fprintf_s(fp, "%f,", pPmxData->m_pMaterial[i].m_Edge[j]);
+		}
+		fprintf_s(fp, "\n");
+
+		fprintf_s(fp, "EdgeSize:%f\n", pPmxData->m_pMaterial[i].m_EdgeSize);
+
+		fprintf_s(fp, "Texture:%d\n", pPmxData->m_pMaterial[i].m_NormTex);
+		fprintf_s(fp, "SphereTexture:%d\n", pPmxData->m_pMaterial[i].m_SphereTex);
+		fprintf_s(fp, "SphereMode:%d\n", pPmxData->m_pMaterial[i].m_SphereMode);
+		fprintf_s(fp, "ToonTexture:%d\n", pPmxData->m_pMaterial[i].m_ToonTex);
+		fprintf_s(fp, "ToonFlag:%d\n", pPmxData->m_pMaterial[i].m_ToonFlag);
+
+		fprintf_s(fp, "メモ:%s\n", pPmxData->m_pMaterial[i].m_pMemo);
+		fprintf_s(fp, "使用する頂点数:%d\n", pPmxData->m_pMaterial[i].m_UseVerNum);
+
+		fprintf_s(fp, "\n");
+	}
+
 	return true;
 }
