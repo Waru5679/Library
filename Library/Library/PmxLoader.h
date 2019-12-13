@@ -199,28 +199,100 @@ struct PMX_MATERIAL
 			delete[] m_pNameEng;
 			m_pNameEng = nullptr;
 		}
+		//メモ
+		if (m_pMemo != nullptr)
+		{
+			delete[] m_pMemo;
+			m_pMemo = nullptr;
+		}
 	}
-	unsigned char* m_pNameJap;//材質名(日)
-	unsigned char* m_pNameEng;//材質名(英)
+	unsigned char*	m_pNameJap;		//材質名(日)
+	unsigned char*	m_pNameEng;		//材質名(英)
+	unsigned char*	m_pMemo;		//メモ
+	unsigned char	m_BitFlag;		//描画フラグ( 0x01:両面描画, 0x02:地面影, 0x04:セルフシャドウマップへの描画, 0x08:セルフシャドウの描画, 0x10:エッジ描画)
+	unsigned char	m_SphereMode;	//スフィアモード(0:無効 1:乗算(sph) 2:加算(spa) 3:サブテクスチャ)
+	unsigned char	m_ToonFlag;		//共有Toonフラグ
 
-	float m_Diffuse[4];	//拡散光
-	float m_Specular[3];//スペキュラー（鏡面反射
-	float m_SpePower;	//スペキュラーパワー
-	float m_Ambient[3];	//アンビエント
+	float	m_Diffuse[4];	//拡散光
+	float	m_Specular[3];	//スペキュラー（鏡面反射
+	float	m_SpePower;		//スペキュラーパワー
+	float	m_Ambient[3];	//アンビエント
+	float	m_Edge[4];		//エッジ色
+	float	m_EdgeSize;		//エッジサイズ
+	int		m_NormTex;		//通常テクスチャインデックス
+	int		m_SphereTex;	//スフィアテクスチャインデックス
+	int		m_ToonTex;		//トゥーンテクスチャインデックス
+	int		m_UseVerNum;	//使用する頂点数
+};
 
-	unsigned char m_BitFlag;//描画フラグ( 0x01:両面描画, 0x02:地面影, 0x04:セルフシャドウマップへの描画, 0x08:セルフシャドウの描画, 0x10:エッジ描画)
-	float m_Edge[4];		//エッジ色
-	float m_EdgeSize;		//エッジサイズ
 
-	int m_NormTex;			//通常テクスチャインデックス
-	int m_SphereTex;		//スフィアテクスチャインデックス
-	unsigned char m_SphereMode;//スフィアモード(0:無効 1:乗算(sph) 2:加算(spa) 3:サブテクスチャ)
-	
-	unsigned char m_ToonFlag;//共有Toonフラグ
-	int m_ToonTex;			//トゥーンテクスチャインデックス
+struct PMX_IK_LINK
+{
+	int m_LinkBoneId;//リンクボーンID
+	unsigned char m_RadRest;//角度制限
+	float m_fLowerRad[3];	//下限角度
+	float m_fUpperRad[3];	//上限角度
+};
 
-	unsigned char* m_pMemo;	//メモ
-	int m_UseVerNum;		//使用する頂点数
+//pmxIK
+struct PMX_IK
+{
+	PMX_IK()
+	{
+		m_pLink = nullptr;
+	}
+	~PMX_IK()
+	{
+		delete[] m_pLink;
+		m_pLink = nullptr;
+	}
+	int m_TargetId;//ターゲットボーンId
+	int m_RoopTime;//回転数
+	float m_fRad;//回転角度
+	int m_LinkNum;//リンク数
+	PMX_IK_LINK* m_pLink;//リンクデータ
+};
+
+//pmxボーン
+struct PMX_BONE
+{
+	PMX_BONE()
+	{
+		m_pNameJap = nullptr;
+		m_pNameEng = nullptr;
+	}
+	~PMX_BONE()
+	{
+		//ボーン名(日)
+		if (m_pNameJap != nullptr)
+		{
+			delete[] m_pNameJap;
+			m_pNameJap = nullptr;
+		}
+		//ボーン名(英)
+		if (m_pNameEng != nullptr)
+		{
+			delete[] m_pNameEng;
+			m_pNameEng = nullptr;
+		}
+	}
+	unsigned char*	m_pNameJap;		//ボーン名(日)
+	unsigned char*	m_pNameEng;		//ボーン名(英)
+	unsigned char	m_BitFlag[2];	//ビットフラグ
+
+	float	m_fPos[3];		//位置
+	int		m_ParentId;		//親インデックス
+	int		m_Hierarchy;	//変形階層
+
+	float	m_fOffset[3];	//オフセット
+	int		m_ConnectId;	//接続先ボーンID
+	int m_GrantId;//付与親ボーン
+	float m_fGrantRate;//付与率
+	float m_fFixedAxis[3];//固定軸
+	float m_fAxisX[3];	//X軸
+	float m_fAxisZ[3];	//Z軸
+	int m_Key;//Key
+	PMX_IK m_Ik;//IKデータ
 };
 
 //pmxデータ
@@ -234,19 +306,29 @@ struct PMX_DATA
 			delete[] m_pVertex;
 			m_pVertex = nullptr;
 		}
-
 		//面のデータ
 		if (m_pFace != nullptr)
 		{
 			delete[] m_pFace;
 			m_pFace = nullptr;
 		}
-
 		//テクスチャデータ
 		if (m_pTex != nullptr)
 		{
 			delete[] m_pTex;
 			m_pTex = nullptr;
+		}
+		//マテリアルデータ
+		if (m_pMaterial != nullptr)
+		{
+			delete[] m_pMaterial;
+			m_pMaterial = nullptr;
+		}
+		//ボーンデータ
+		if (m_pBone != nullptr)
+		{
+			delete[] m_pBone;
+			m_pBone = nullptr;
 		}
 	}
 
@@ -259,7 +341,9 @@ struct PMX_DATA
 	int				m_TexNum;		//テクスチャ数
 	PMX_TEXTURE*	m_pTex;			//テクスチャデータ
 	int				m_MaterialNum;	//マテリアル数
-	PMX_MATERIAL*	m_pMaterial;	//マテリアル数
+	PMX_MATERIAL*	m_pMaterial;	//マテリアルデータ
+	int m_BoneNum;//ボーン数
+	PMX_BONE* m_pBone;	//ボーンデータ
 
 };
 
@@ -292,4 +376,8 @@ private:
 
 	//マテリアル読み込み
 	void MaterialLoad(FILE* fp, PMX_DATA* pPmxData);
+
+	//ボーン読み込み
+	void BoneLoad(FILE* fp, PMX_DATA* pPmxData);
+
 };

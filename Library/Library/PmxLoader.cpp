@@ -109,6 +109,22 @@ bool CPmxLoader::Load(const char* FileName, PMX_DATA* pPmxData)
 	//マテリアル読み込み
 	MaterialLoad(fp, pPmxData);
 
+	//ボーン数
+	fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
+	pPmxData->m_BoneNum = StrToInt(Data, sizeof(Data));
+
+	//ボーンなし
+	if (pPmxData->m_BoneNum <= 0)
+	{
+		return false;
+	}
+
+	//ボーンメモリ確保
+	pPmxData->m_pBone = new PMX_BONE[pPmxData->m_BoneNum];
+
+	//ボーン読み込み
+	BoneLoad(fp, pPmxData);
+	
 	return true;
 }
 
@@ -499,6 +515,195 @@ void CPmxLoader::MaterialLoad(FILE* fp, PMX_DATA* pPmxData)
 	pTexData = nullptr;
 }
 
+//ボーン読み込み
+void CPmxLoader::BoneLoad(FILE* fp, PMX_DATA* pPmxData)
+{
+	unsigned char Data[4];
+
+	//ボーン名用サイズ
+	int JapSize;
+	int EngSize;
+
+	//ボーンインデックスサイズ
+	int BoneIndexSize = pPmxData->m_Head.m_pData[5];
+
+	//ボーンデータ読み込み用
+	unsigned char* pBoneData = nullptr;
+	pBoneData = new unsigned char[BoneIndexSize];
+	
+	//bitフラグ変換用
+	int Flag;
+
+	//読み込み
+	for (int i = 0; i < pPmxData->m_BoneNum; i++)
+	{
+		//ボーン名(日)サイズ
+		fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
+		JapSize = StrToInt(Data, sizeof(Data));
+
+		//メモリ確保
+		pPmxData->m_pBone[i].m_pNameJap = new unsigned char[JapSize];
+
+		//ボーン名(日)読み込み
+		fread_s(pPmxData->m_pBone[i].m_pNameJap, JapSize, JapSize, 1, fp);
+
+		//文字列から\0を消す
+		ErasCharFromString(pPmxData->m_pBone[i].m_pNameJap, JapSize, '\0');
+
+		//ボーン名(英)サイズ
+		fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
+		EngSize = StrToInt(Data, sizeof(Data));
+
+		//メモリ確保
+		pPmxData->m_pBone[i].m_pNameEng = new unsigned char[EngSize];
+
+		//ボーン名(英)読み込み
+		fread_s(pPmxData->m_pBone[i].m_pNameEng, EngSize, EngSize, 1, fp);
+
+		//文字列から\0を消す
+		ErasCharFromString(pPmxData->m_pBone[i].m_pNameEng, EngSize, '\0');
+
+		//位置
+		for (int j = 0; j < 3; j++)
+		{
+			fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
+			pPmxData->m_pBone[i].m_fPos[j] = StrToFloat(Data);
+		}
+
+		//親ボーンID
+		fread_s(pBoneData, BoneIndexSize, BoneIndexSize, 1, fp);
+		pPmxData->m_pBone[i].m_ParentId = StrToInt(pBoneData, BoneIndexSize);
+		
+		//変形階層
+		fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
+		pPmxData->m_pBone[i].m_Hierarchy = StrToInt(Data,sizeof(Data));
+
+		//Bitフラグ
+		for (int j = 0; j < 2; j++)
+		{
+			fread_s(&pPmxData->m_pBone[i].m_BitFlag[j], sizeof(unsigned char), sizeof(unsigned char), 1, fp);
+		}
+
+		//ビットフラグをintにする
+		Flag=StrToInt(pPmxData->m_pBone[i].m_BitFlag, sizeof(pPmxData->m_pBone[i].m_BitFlag));
+		
+		//接続先0
+		if ((Flag & 0x0001) == 0)
+		{
+			for (int j = 0; j < 3; j++)
+			{
+				fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
+				pPmxData->m_pBone[i].m_fOffset[j] = StrToFloat(Data);
+			}
+		}
+		//接続先1
+		else
+		{
+			//接続先ボーンID
+			fread_s(pBoneData, BoneIndexSize, BoneIndexSize, 1, fp);
+			pPmxData->m_pBone[i].m_ConnectId = StrToInt(pBoneData, BoneIndexSize);
+		}
+
+		//回転または移動の付与があるとき
+		if ((Flag & 0x0100) != 0 || (Flag & 0x0200) != 0)
+		{
+			//付与親ボーンID
+			fread_s(pBoneData, BoneIndexSize, BoneIndexSize, 1, fp);
+			pPmxData->m_pBone[i].m_GrantId = StrToInt(pBoneData, BoneIndexSize);
+						
+			//付与率
+			fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
+			pPmxData->m_pBone[i].m_fGrantRate = StrToFloat(Data);
+		}
+	
+		//軸固定
+		if ((Flag & 0x0400) != 0)
+		{
+			for (int j = 0; j < 3; j++)
+			{
+				fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
+				pPmxData->m_pBone[i].m_fFixedAxis[j] = StrToFloat(Data);
+			}
+		}
+
+		//ローカル軸
+		if ((Flag & 0x0800) != 0)
+		{
+			for (int j = 0; j < 3; j++)
+			{
+				fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
+				pPmxData->m_pBone[i].m_fAxisX[j] = StrToFloat(Data);
+			}
+			for (int j = 0; j < 3; j++)
+			{
+				fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
+				pPmxData->m_pBone[i].m_fAxisZ[j] = StrToFloat(Data);
+			}
+		}
+
+		//外部親変形
+		if ((Flag & 0x2000) != 0)
+		{
+			fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
+			pPmxData->m_pBone[i].m_Key = StrToInt(Data,sizeof(Data));
+		}
+
+		//IK
+		if ((Flag & 0x0020) != 0)
+		{
+			//ターゲットボーンID
+			fread_s(pBoneData, BoneIndexSize, BoneIndexSize, 1, fp);
+			pPmxData->m_pBone[i].m_Ik.m_TargetId = StrToInt(pBoneData, BoneIndexSize);
+
+			//ループ回数
+			fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
+			pPmxData->m_pBone[i].m_Ik.m_RoopTime = StrToInt(Data, sizeof(Data));
+
+			//回転角
+			fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
+			pPmxData->m_pBone[i].m_Ik.m_fRad = StrToFloat(Data);
+
+			//IKリンク数
+			fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
+			pPmxData->m_pBone[i].m_Ik.m_LinkNum = StrToInt(Data, sizeof(Data));
+
+			//メモリ確保
+			pPmxData->m_pBone[i].m_Ik.m_pLink = new PMX_IK_LINK[pPmxData->m_pBone[i].m_Ik.m_LinkNum];
+
+			//IKリンク読み込み
+			for (int j = 0; j < pPmxData->m_pBone[i].m_Ik.m_LinkNum; j++)
+			{
+				//リンクボーンID
+				fread_s(pBoneData, BoneIndexSize, BoneIndexSize, 1, fp);
+				pPmxData->m_pBone[i].m_Ik.m_pLink[j].m_LinkBoneId = StrToInt(pBoneData, BoneIndexSize);
+				
+				//角度制限
+				fread_s(&pPmxData->m_pBone[i].m_Ik.m_pLink[j].m_RadRest, sizeof(unsigned char), sizeof(unsigned char), 1, fp);
+
+				//角度制限ありの場合
+				if (pPmxData->m_pBone[i].m_Ik.m_pLink[j].m_RadRest == 1)
+				{
+					//下限
+					for (int k = 0; k < 3; k++)
+					{
+						fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
+						pPmxData->m_pBone[i].m_Ik.m_pLink[j].m_fLowerRad[k] = StrToFloat(Data);
+					}
+					//上限
+					for (int k = 0; k < 3; k++)
+					{
+						fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
+						pPmxData->m_pBone[i].m_Ik.m_pLink[j].m_fUpperRad[k] = StrToFloat(Data);
+					}
+				}
+			}
+		}
+	}
+	//読み込み用破棄
+	delete[] pBoneData;
+	pBoneData = nullptr;
+}
+
 //書き出し
 bool CPmxLoader::Write(const char* FileName, PMX_DATA* pPmxData)
 {
@@ -711,6 +916,92 @@ bool CPmxLoader::Write(const char* FileName, PMX_DATA* pPmxData)
 		fprintf_s(fp, "メモ:%s\n", pPmxData->m_pMaterial[i].m_pMemo);
 		fprintf_s(fp, "使用する頂点数:%d\n", pPmxData->m_pMaterial[i].m_UseVerNum);
 
+		fprintf_s(fp, "\n");
+	}
+
+	fprintf_s(fp, "ボーン数：%d\n", pPmxData->m_BoneNum);
+
+	for (int i = 0; i < pPmxData->m_BoneNum; i++)
+	{
+		fprintf_s(fp, "ボーン名(日):%s\n", pPmxData->m_pBone[i].m_pNameJap);
+		fprintf_s(fp, "ボーン名(英):%s\n", pPmxData->m_pBone[i].m_pNameEng);
+
+		fprintf_s(fp, "Pos:");
+		for (int j = 0; j < 3; j++)
+		{
+			fprintf_s(fp, "%f,", pPmxData->m_pBone[i].m_fPos[j]);
+		}
+		fprintf_s(fp, "\n");
+
+		fprintf_s(fp, "親ボーンID:%d\n", pPmxData->m_pBone[i].m_ParentId);
+		fprintf_s(fp, "変形階層:%d\n", pPmxData->m_pBone[i].m_Hierarchy);
+		fprintf_s(fp, "BitFlag:");
+		for (int j = 0; j < 2; j++)
+		{
+			fprintf_s(fp, "%d,",pPmxData->m_pBone[i].m_BitFlag[j]);
+		}
+		fprintf_s(fp, "\n");
+
+		fprintf_s(fp, "Offset:");
+		for (int j = 0; j < 3; j++)
+		{
+			fprintf_s(fp, "%f,", pPmxData->m_pBone[i].m_fOffset[j]);
+		}
+		fprintf_s(fp, "\n");
+		
+		fprintf_s(fp, "接続先ボーン:%d\n",pPmxData->m_pBone[i].m_ConnectId);
+
+		fprintf_s(fp, "付与親ボーン:%d\n", pPmxData->m_pBone[i].m_GrantId);
+		fprintf_s(fp, "付与率:%f\n", pPmxData->m_pBone[i].m_fGrantRate);
+
+		fprintf_s(fp, "軸固定:");
+		for (int j = 0; j < 3; j++)
+		{
+			fprintf_s(fp, "%f,", pPmxData->m_pBone[i].m_fFixedAxis[j]);
+		}
+		fprintf_s(fp, "\n");
+
+		fprintf_s(fp, "ローカル軸X:");
+		for (int j = 0; j < 3; j++)
+		{
+			fprintf_s(fp, "%f,", pPmxData->m_pBone[i].m_fAxisX[j]);
+		}
+		fprintf_s(fp, "\n");
+
+		fprintf_s(fp, "ローカル軸Z:");
+		for (int j = 0; j < 3; j++)
+		{
+			fprintf_s(fp, "%f,", pPmxData->m_pBone[i].m_fAxisZ[j]);
+		}
+		fprintf_s(fp, "\n");
+		
+		fprintf_s(fp, "Key:%d\n",pPmxData->m_pBone[i].m_Key);
+			
+		fprintf_s(fp, "ターゲットボーン:%d\n", pPmxData->m_pBone[i].m_Ik.m_TargetId);
+		fprintf_s(fp, "ループ回数:%d\n", pPmxData->m_pBone[i].m_Ik.m_RoopTime);
+		fprintf_s(fp, "回転角:%f\n", pPmxData->m_pBone[i].m_Ik.m_fRad);
+
+		fprintf_s(fp, "リンク数:%d\n", pPmxData->m_pBone[i].m_Ik.m_LinkNum);
+		
+		for (int j = 0; j < pPmxData->m_pBone[i].m_Ik.m_LinkNum; j++)
+		{
+			fprintf_s(fp, "リンクボーン:%d\n", pPmxData->m_pBone[i].m_Ik.m_pLink[j].m_LinkBoneId);
+			fprintf_s(fp, "角度制限:%d\n", pPmxData->m_pBone[i].m_Ik.m_pLink[j].m_RadRest);
+
+			fprintf_s(fp, "下限角:");
+			for (int k = 0; k < 3; k++)
+			{
+				fprintf_s(fp, "%f,", pPmxData->m_pBone[i].m_Ik.m_pLink[j].m_fLowerRad[k]);
+			}
+			fprintf_s(fp, "\n");
+
+			fprintf_s(fp, "上限角:");
+			for (int k = 0; k < 3; k++)
+			{
+				fprintf_s(fp, "%f,", pPmxData->m_pBone[i].m_Ik.m_pLink[j].m_fUpperRad[k]);
+			}
+			fprintf_s(fp, "\n");
+		}
 		fprintf_s(fp, "\n");
 	}
 
