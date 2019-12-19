@@ -51,11 +51,46 @@ struct SDEF
 //ウェイトデータ
 struct PMX_WEIGHT_DATA
 {
+	PMX_WEIGHT_DATA()
+	{
+		m_pBdef1 = nullptr;
+		m_pBdef2 = nullptr;
+		m_pBdef4 = nullptr;
+		m_pSdef = nullptr;
+	}
+	~PMX_WEIGHT_DATA()
+	{
+		//BDEF1
+		if (m_pBdef1 != nullptr)
+		{
+			delete m_pBdef1;
+			m_pBdef1 = nullptr;
+		}
+		//BDEF2
+		if (m_pBdef2 != nullptr)
+		{
+			delete m_pBdef2;
+			m_pBdef2 = nullptr;
+		}
+		//BDEF4
+		if (m_pBdef4 != nullptr)
+		{
+			delete m_pBdef4;
+			m_pBdef4 = nullptr;
+		}
+		//SDEF
+		if (m_pBdef1 != nullptr)
+		{
+			delete m_pSdef;
+			m_pSdef = nullptr;
+		}
+	}
 	unsigned char m_WeightType;//ウェイト変形方式
-	BDEF1	m_Bdef1;	//BDEF1形式のデータ
-	BDEF2	m_Bdef2;	//BDEF2形式のデータ
-	BDEF4	m_Bdef4;	//BDEF4形式のデータ
-	SDEF	m_Sdef;		//SDEF形式のデータ
+	
+	BDEF1*	m_pBdef1;	//BDEF1形式のデータ
+	BDEF2*	m_pBdef2;	//BDEF2形式のデータ
+	BDEF4*	m_pBdef4;	//BDEF4形式のデータ
+	SDEF*	m_pSdef;	//SDEF形式のデータ
 };
 
 //pmxヘッダー
@@ -149,6 +184,7 @@ struct PMX_VERTEX
 	float m_fUv[2];					//UV
 	float* m_pfAddUv;				//追加UV
 	float m_EdgeMagn;				//エッジ倍率
+	
 	PMX_WEIGHT_DATA m_WeightData;	//ウェイトデータ
 };
 
@@ -225,13 +261,14 @@ struct PMX_MATERIAL
 	int		m_UseVerNum;	//使用する頂点数
 };
 
-
+//pmxIKリンク
 struct PMX_IK_LINK
 {
-	int m_LinkBoneId;//リンクボーンID
-	unsigned char m_RadRest;//角度制限
-	float m_fLowerRad[3];	//下限角度
-	float m_fUpperRad[3];	//上限角度
+	unsigned char m_RadRest;//角度制限の有無
+
+	int		m_LinkBoneId;	//リンクボーンID
+	float	m_fLowerRad[3];	//下限角度
+	float	m_fUpperRad[3];	//上限角度
 };
 
 //pmxIK
@@ -246,10 +283,12 @@ struct PMX_IK
 		delete[] m_pLink;
 		m_pLink = nullptr;
 	}
-	int m_TargetId;//ターゲットボーンId
-	int m_RoopTime;//回転数
-	float m_fRad;//回転角度
-	int m_LinkNum;//リンク数
+	int		m_TargetId;	//ターゲットボーンId
+	int		m_RoopTime;	//回転数
+	int		m_LinkNum;	//リンク数
+
+	float	m_fRad;		//回転角度
+
 	PMX_IK_LINK* m_pLink;//リンクデータ
 };
 
@@ -279,21 +318,142 @@ struct PMX_BONE
 	unsigned char*	m_pNameJap;		//ボーン名(日)
 	unsigned char*	m_pNameEng;		//ボーン名(英)
 	unsigned char	m_BitFlag[2];	//ビットフラグ
-
-	float	m_fPos[3];		//位置
+		
 	int		m_ParentId;		//親インデックス
 	int		m_Hierarchy;	//変形階層
+	int		m_ConnectId;	//接続先ボーンID
+	int		m_GrantId;		//付与親ボーン
 
 	float	m_fOffset[3];	//オフセット
-	int		m_ConnectId;	//接続先ボーンID
-	int m_GrantId;//付与親ボーン
-	float m_fGrantRate;//付与率
-	float m_fFixedAxis[3];//固定軸
-	float m_fAxisX[3];	//X軸
-	float m_fAxisZ[3];	//Z軸
-	int m_Key;//Key
-	PMX_IK m_Ik;//IKデータ
+	float	m_fGrantRate;	//付与率
+	float	m_fPos[3];		//位置
+	float	m_fFixedAxis[3];//固定軸
+	float	m_fAxisX[3];	//X軸
+	float	m_fAxisZ[3];	//Z軸
+	int		m_Key;			//Key
+	PMX_IK	m_Ik;			//IKデータ
 };
+
+
+//pmx頂点モーフ
+struct PMX_VER_MORPH
+{
+	int		m_VerId;		//頂点ID
+	float	m_fOffset[3];	//座標オフセット値
+};
+
+//pmxUVモーフ
+struct PMX_UV_MORPH
+{
+	int		m_VerId;		//頂点ID
+	float	m_fOffset[4];	//UVオフセット
+};
+
+//pmxボーンモーフ
+struct PMX_BONE_MORPH
+{
+	int		m_BoneId;	//ボーンID
+	float	m_fMove[3];	//移動量
+	float	m_fRot[4];	//回転量
+};
+
+//pmx材質モーフ
+struct PMX_MATE_MORPH
+{
+	unsigned char m_Format;//演算形式
+
+	int		m_MateId;		//対応マテリアルID(-1は全マテリアル対応)
+	float	m_fDiffuse[4];	//拡散光
+	float	m_fSpecular[3];	//スペキュラー（鏡面反射
+	float	m_fSpePower;		//スペキュラーパワー
+	float	m_fAmbient[3];	//アンビエント
+	float	m_fEdge[4];		//エッジ色
+	float	m_fEdgeSize;		//エッジサイズ
+	float	m_fTex[4];		//テクスチャ係数
+	float	m_fSphereTex[4];	//スフィアテクスチャ係数
+	float	m_fToonTex[4];	//Toonテクスチャ係数
+};
+
+//グループモーフ
+struct PMX_GROUP_MORPH
+{
+	int		m_MorphId;	//モーフID
+	float	m_fRate;	//モーフ率
+};
+
+//pmxモーフ
+struct PMX_MORPH
+{
+	PMX_MORPH()
+	{
+		m_pNameJap		= nullptr;
+		m_pNameEng		= nullptr;
+		m_pVerMorph		= nullptr;	
+		m_pUvMorph		= nullptr;
+		m_pBoneMorph	= nullptr;
+		m_pMateMorph	= nullptr;
+		m_pGroupMorph	= nullptr;
+	}
+	~PMX_MORPH()
+	{
+		//モーフ名(日)
+		if (m_pNameJap != nullptr)
+		{
+			delete[] m_pNameJap;
+			m_pNameJap = nullptr;
+		}
+		//モーフ名(英)
+		if (m_pNameEng != nullptr)
+		{
+			delete[] m_pNameEng;
+			m_pNameEng = nullptr;
+		}
+		//頂点モーフ
+		if (m_pVerMorph != nullptr)
+		{
+			delete[] m_pVerMorph;
+			m_pVerMorph = nullptr;
+		}
+		//UVモーフ
+		if (m_pUvMorph != nullptr)
+		{
+			delete[] m_pUvMorph;
+			m_pUvMorph = nullptr;
+		}
+		//ボーンモーフ
+		if (m_pBoneMorph != nullptr)
+		{
+			delete[] m_pBoneMorph;
+			m_pBoneMorph = nullptr;
+		}
+		//材質モーフ
+		if (m_pMateMorph != nullptr)
+		{
+			delete[] m_pMateMorph;
+			m_pMateMorph = nullptr;
+		}
+		//グループモーフ
+		if (m_pGroupMorph != nullptr)
+		{
+			delete[] m_pGroupMorph;
+			m_pGroupMorph = nullptr;
+		}
+	}
+
+	unsigned char* m_pNameJap;		//モーフ名(日)
+	unsigned char* m_pNameEng;		//モーフ名(英)
+	unsigned char m_PmdType;		//PMDカテゴリー(0:システム予約,1:眉(左下),2:目(左上),3:口(右上),4:その他(右下)) 
+	unsigned char m_MorphType;		//モーフタイプ(0:グループ,1:頂点,2:ボーン,3:UV,4-7:追加UV,8:材質)
+	
+	int	m_DataNum;	//データ数
+
+	PMX_VER_MORPH*		m_pVerMorph;	//頂点モーフ
+	PMX_UV_MORPH*		m_pUvMorph;		//UVモーフ
+	PMX_BONE_MORPH*		m_pBoneMorph;	//ボーンモーフ
+	PMX_MATE_MORPH*		m_pMateMorph;	//材質モーフ
+	PMX_GROUP_MORPH*	m_pGroupMorph;	//グループモーフ
+};
+
 
 //pmxデータ
 struct PMX_DATA
@@ -330,21 +490,29 @@ struct PMX_DATA
 			delete[] m_pBone;
 			m_pBone = nullptr;
 		}
+		//モーフデータ
+		if (m_pMorph != nullptr)
+		{
+			delete[] m_pMorph;
+			m_pMorph = nullptr;
+		}
 	}
+
+	int		m_VerNum;		//頂点数
+	int		m_FaceNum;		//面の数
+	int		m_TexNum;		//テクスチャ数
+	int		m_MaterialNum;	//マテリアル数
+	int		m_BoneNum;		//ボーン数
+	int		m_MorphNum;		//モーフ数
 
 	PMX_HEADER		m_Head;			//ヘッダー
 	PMX_MODEL_INFO	m_ModelInfo;	//モデルデータ
-	int				m_VerNum;		//頂点数
 	PMX_VERTEX*		m_pVertex;		//頂点データ
-	int				m_FaceNum;		//面の数
 	PMX_FACE*		m_pFace;		//面のデータ
-	int				m_TexNum;		//テクスチャ数
 	PMX_TEXTURE*	m_pTex;			//テクスチャデータ
-	int				m_MaterialNum;	//マテリアル数
 	PMX_MATERIAL*	m_pMaterial;	//マテリアルデータ
-	int m_BoneNum;//ボーン数
-	PMX_BONE* m_pBone;	//ボーンデータ
-
+	PMX_BONE*		m_pBone;		//ボーンデータ
+	PMX_MORPH*		m_pMorph;		//モーフデータ	
 };
 
 //PMX読み込み
@@ -362,22 +530,27 @@ public:
 	//書き出し
 	bool Write(const char* FileName, PMX_DATA* pPmxData);
 private:
+	//ヘッダ情報読みこみ
+	void HeadLoad(FILE* fp, PMX_DATA* pPmxData);
+
 	//モデル情報読み込み
 	void ModelInfoLoad(FILE* fp, PMX_DATA* pPmxData);
 
 	//頂点読み込み
-	void VertexLoad(FILE* fp, PMX_DATA* pPmxData);
+	bool VertexLoad(FILE* fp, PMX_DATA* pPmxData);
 	
 	//面読み込み
-	void FaceLoad(FILE* fp, PMX_DATA* pPmxData);
+	bool FaceLoad(FILE* fp, PMX_DATA* pPmxData);
 	
 	//テクスチャ読み込み
-	void TextureLoad(FILE* fp, PMX_DATA* pPmxData);
+	bool TextureLoad(FILE* fp, PMX_DATA* pPmxData);
 
 	//マテリアル読み込み
-	void MaterialLoad(FILE* fp, PMX_DATA* pPmxData);
+	bool MaterialLoad(FILE* fp, PMX_DATA* pPmxData);
 
 	//ボーン読み込み
-	void BoneLoad(FILE* fp, PMX_DATA* pPmxData);
+	bool BoneLoad(FILE* fp, PMX_DATA* pPmxData);
 
+	//モーフ読み込み
+	bool MorphLoad(FILE* fp, PMX_DATA* pPmxData);
 };
