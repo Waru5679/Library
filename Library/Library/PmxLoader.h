@@ -115,10 +115,6 @@ struct PMX_MODEL_INFO
 {
 	PMX_MODEL_INFO()
 	{
-		m_CommentEngSize = -1;
-		m_CommentJpnSize = -1;
-		m_NameEngSize = -1;
-		m_NameJpnSize = -1;
 		m_pNameJap = nullptr;
 		m_pNameEng = nullptr;
 		m_pCommentJap = nullptr;
@@ -151,11 +147,6 @@ struct PMX_MODEL_INFO
 			m_pCommentEng = nullptr;
 		}
 	}
-	int m_NameJpnSize;		//モデル名(日)サイズ
-	int m_NameEngSize;		//モデル名(英)サイズ
-	int m_CommentJpnSize;	//コメント(日)サイズ
-	int m_CommentEngSize;	//コメント(英)サイズ
-	
 	unsigned char* m_pNameJap;	//モデル名(日)
 	unsigned char* m_pNameEng;	//モデル名(英)
 	unsigned char* m_pCommentJap;//コメント(日)

@@ -94,57 +94,79 @@ void CPmxLoader::ModelInfoLoad(FILE* fp, PMX_DATA* pPmxData)
 {
 	unsigned char Data[4];
 
+	//サイズ
+	int NameJapSize;
+	int NameEngSize;
+	int CommentJapSize;
+	int CommentEngSize;
+
 	//モデル名(日)サイズ
 	fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
-	pPmxData->m_ModelInfo.m_NameJpnSize = StrToInt(Data,sizeof(Data));
+	NameJapSize = StrToInt(Data,sizeof(Data));
 
-	//メモリ確保
-	pPmxData->m_ModelInfo.m_pNameJap = new unsigned char[pPmxData->m_ModelInfo.m_NameJpnSize];
+	//サイズあるときのみ
+	if (NameJapSize > 0)
+	{
+		//メモリ確保
+		pPmxData->m_ModelInfo.m_pNameJap = new unsigned char[NameJapSize];
 
-	//モデル名(日)読み込み
-	fread_s(pPmxData->m_ModelInfo.m_pNameJap, pPmxData->m_ModelInfo.m_NameJpnSize, pPmxData->m_ModelInfo.m_NameJpnSize, 1, fp);
+		//モデル名(日)読み込み
+		fread_s(pPmxData->m_ModelInfo.m_pNameJap, NameJapSize, NameJapSize, 1, fp);
 	
-	//文字列から\0を消す
-	ErasCharFromString(pPmxData->m_ModelInfo.m_pNameJap, pPmxData->m_ModelInfo.m_NameJpnSize, '\0');
+		//文字列から\0を消す
+		pPmxData->m_ModelInfo.m_pNameJap=ErasCharFromString(pPmxData->m_ModelInfo.m_pNameJap, NameJapSize, '\0');
+	}
 
 	//モデル名(英)サイズ
 	fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
-	pPmxData->m_ModelInfo.m_NameEngSize = StrToInt(Data, sizeof(Data));
+	NameEngSize = StrToInt(Data, sizeof(Data));
 
-	//メモリ確保
-	pPmxData->m_ModelInfo.m_pNameEng = new unsigned char[pPmxData->m_ModelInfo.m_NameEngSize];
+	//サイズあるときのみ
+	if (NameEngSize > 0)
+	{
+		//メモリ確保
+		pPmxData->m_ModelInfo.m_pNameEng = new unsigned char[NameEngSize];
 
-	//モデル名(英)読み込み
-	fread_s(pPmxData->m_ModelInfo.m_pNameEng, pPmxData->m_ModelInfo.m_NameEngSize, pPmxData->m_ModelInfo.m_NameEngSize, 1, fp);
-
-	//文字列から\0を消す
-	ErasCharFromString(pPmxData->m_ModelInfo.m_pNameEng, pPmxData->m_ModelInfo.m_NameEngSize, '\0');
+		//モデル名(英)読み込み
+		fread_s(pPmxData->m_ModelInfo.m_pNameEng, NameEngSize, NameEngSize, 1, fp);
+		
+		//文字列から\0を消す
+		pPmxData->m_ModelInfo.m_pNameEng=ErasCharFromString(pPmxData->m_ModelInfo.m_pNameEng, NameEngSize, '\0');
+	}
 
 	//コメント(日)サイズ
 	fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
-	pPmxData->m_ModelInfo.m_CommentJpnSize = StrToInt(Data,sizeof(Data));
+	CommentJapSize = StrToInt(Data,sizeof(Data));
 
-	//メモリ確保
-	pPmxData->m_ModelInfo.m_pCommentJap = new unsigned char[pPmxData->m_ModelInfo.m_CommentJpnSize];
+	//サイズあるときのみ
+	if (CommentJapSize > 0)
+	{
+		//メモリ確保
+		pPmxData->m_ModelInfo.m_pCommentJap = new unsigned char[CommentJapSize];
 
-	//コメント(日)読み込み
-	fread_s(pPmxData->m_ModelInfo.m_pCommentJap, pPmxData->m_ModelInfo.m_CommentJpnSize, pPmxData->m_ModelInfo.m_CommentJpnSize, 1, fp);
+		//コメント(日)読み込み
+		fread_s(pPmxData->m_ModelInfo.m_pCommentJap, CommentJapSize, CommentJapSize, 1, fp);
 
-	//文字列から\0を消す
-	ErasCharFromString(pPmxData->m_ModelInfo.m_pCommentJap, pPmxData->m_ModelInfo.m_CommentJpnSize, '\0');
+		//文字列から\0を消す
+		pPmxData->m_ModelInfo.m_pCommentJap=ErasCharFromString(pPmxData->m_ModelInfo.m_pCommentJap, CommentJapSize, '\0');
+	}
 
 	//コメント(英)サイズ
 	fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
-	pPmxData->m_ModelInfo.m_CommentEngSize = StrToInt(Data, sizeof(Data));
+	CommentEngSize = StrToInt(Data, sizeof(Data));
 
-	//メモリ確保
-	pPmxData->m_ModelInfo.m_pCommentEng = new unsigned char[pPmxData->m_ModelInfo.m_CommentEngSize];
+	//サイズあるときのみ
+	if (CommentEngSize > 0)
+	{
+		//メモリ確保
+		pPmxData->m_ModelInfo.m_pCommentEng = new unsigned char[CommentEngSize];
 
-	//コメント(英)読み込み
-	fread_s(pPmxData->m_ModelInfo.m_pCommentEng, pPmxData->m_ModelInfo.m_CommentEngSize, pPmxData->m_ModelInfo.m_CommentEngSize, 1, fp);
-
-	//文字列から\0を消す
-	ErasCharFromString(pPmxData->m_ModelInfo.m_pCommentEng, pPmxData->m_ModelInfo.m_CommentEngSize, '\0');
+		//コメント(英)読み込み
+		fread_s(pPmxData->m_ModelInfo.m_pCommentEng, CommentEngSize, CommentEngSize, 1, fp);
+	
+		//文字列から\0を消す
+		pPmxData->m_ModelInfo.m_pCommentEng=ErasCharFromString(pPmxData->m_ModelInfo.m_pCommentEng, CommentEngSize, '\0');
+	}
 }
 
 //頂点読み込み
@@ -386,14 +408,18 @@ bool CPmxLoader::TextureLoad(FILE* fp, PMX_DATA* pPmxData)
 		fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
 		AfterByte = StrToInt(Data, sizeof(Data));
 
-		//テクスチャパスメモリ確保
-		pPmxData->m_pTex[i].m_pPass = new unsigned char[AfterByte];
+		//サイズあるときのみ
+		if (AfterByte > 0)
+		{
+			//テクスチャパスメモリ確保
+			pPmxData->m_pTex[i].m_pPass = new unsigned char[AfterByte];
 
-		//テクスチャパス読み込み
-		fread_s(pPmxData->m_pTex[i].m_pPass, AfterByte, AfterByte, 1, fp);
+			//テクスチャパス読み込み
+			fread_s(pPmxData->m_pTex[i].m_pPass, AfterByte, AfterByte, 1, fp);
 
-		//文字列から\0を消す
-		ErasCharFromString(pPmxData->m_pTex[i].m_pPass, AfterByte, '\0');
+			//文字列から\0を消す
+			pPmxData->m_pTex[i].m_pPass=ErasCharFromString(pPmxData->m_pTex[i].m_pPass, AfterByte, '\0');
+		}
 	}
 
 	return true;
@@ -418,7 +444,6 @@ bool CPmxLoader::MaterialLoad(FILE* fp, PMX_DATA* pPmxData)
 	//メモリ確保
 	pPmxData->m_pMaterial = new PMX_MATERIAL[pPmxData->m_MaterialNum];
 
-
 	//材質名用サイズ
 	int JapSize;
 	int EngSize;
@@ -440,27 +465,35 @@ bool CPmxLoader::MaterialLoad(FILE* fp, PMX_DATA* pPmxData)
 		fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
 		JapSize = StrToInt(Data, sizeof(Data));
 
-		//メモリ確保
-		pPmxData->m_pMaterial[i].m_pNameJap = new unsigned char[JapSize];
+		//サイズあるときのみ
+		if (JapSize > 0)
+		{
+			//メモリ確保
+			pPmxData->m_pMaterial[i].m_pNameJap = new unsigned char[JapSize];
 
-		//材質名(日）読み込み
-		fread_s(pPmxData->m_pMaterial[i].m_pNameJap, JapSize, JapSize, 1, fp);
+			//材質名(日）読み込み
+			fread_s(pPmxData->m_pMaterial[i].m_pNameJap, JapSize, JapSize, 1, fp);
 
-		//文字列から\0を消す
-		ErasCharFromString(pPmxData->m_pMaterial[i].m_pNameJap, JapSize, '\0');
+			//文字列から\0を消す
+			pPmxData->m_pMaterial[i].m_pNameJap=ErasCharFromString(pPmxData->m_pMaterial[i].m_pNameJap, JapSize, '\0');
+		}
 
 		//材質名(英）サイズ
 		fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
 		EngSize = StrToInt(Data, sizeof(Data));
 
-		//メモリ確保
-		pPmxData->m_pMaterial[i].m_pNameEng = new unsigned char[EngSize];
+		//サイズあるときのみ
+		if (EngSize > 0)
+		{
+			//メモリ確保
+			pPmxData->m_pMaterial[i].m_pNameEng = new unsigned char[EngSize];
 
-		//材質名(英）読み込み
-		fread_s(pPmxData->m_pMaterial[i].m_pNameEng, EngSize, EngSize, 1, fp);
+			//材質名(英）読み込み
+			fread_s(pPmxData->m_pMaterial[i].m_pNameEng, EngSize, EngSize, 1, fp);
 
-		//文字列から\0を消す
-		ErasCharFromString(pPmxData->m_pMaterial[i].m_pNameEng, EngSize, '\0');
+			//文字列から\0を消す
+			pPmxData->m_pMaterial[i].m_pNameEng=ErasCharFromString(pPmxData->m_pMaterial[i].m_pNameEng, EngSize, '\0');
+		}
 
 		//ディフューズ
 		for (int j = 0; j < 4; j++)
@@ -598,27 +631,35 @@ bool CPmxLoader::BoneLoad(FILE* fp, PMX_DATA* pPmxData)
 		fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
 		JapSize = StrToInt(Data, sizeof(Data));
 
-		//メモリ確保
-		pPmxData->m_pBone[i].m_pNameJap = new unsigned char[JapSize];
+		//サイズあるときのみ
+		if (JapSize > 0)
+		{
+			//メモリ確保
+			pPmxData->m_pBone[i].m_pNameJap = new unsigned char[JapSize];
 
-		//ボーン名(日)読み込み
-		fread_s(pPmxData->m_pBone[i].m_pNameJap, JapSize, JapSize, 1, fp);
+			//ボーン名(日)読み込み
+			fread_s(pPmxData->m_pBone[i].m_pNameJap, JapSize, JapSize, 1, fp);
 
-		//文字列から\0を消す
-		ErasCharFromString(pPmxData->m_pBone[i].m_pNameJap, JapSize, '\0');
+			//文字列から\0を消す
+			pPmxData->m_pBone[i].m_pNameJap=ErasCharFromString(pPmxData->m_pBone[i].m_pNameJap, JapSize, '\0');
+		}
 
 		//ボーン名(英)サイズ
 		fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
 		EngSize = StrToInt(Data, sizeof(Data));
 
-		//メモリ確保
-		pPmxData->m_pBone[i].m_pNameEng = new unsigned char[EngSize];
+		//サイズあるときのみ
+		if (EngSize > 0)
+		{
+			//メモリ確保
+			pPmxData->m_pBone[i].m_pNameEng = new unsigned char[EngSize];
 
-		//ボーン名(英)読み込み
-		fread_s(pPmxData->m_pBone[i].m_pNameEng, EngSize, EngSize, 1, fp);
+			//ボーン名(英)読み込み
+			fread_s(pPmxData->m_pBone[i].m_pNameEng, EngSize, EngSize, 1, fp);
 
-		//文字列から\0を消す
-		ErasCharFromString(pPmxData->m_pBone[i].m_pNameEng, EngSize, '\0');
+			//文字列から\0を消す
+			pPmxData->m_pBone[i].m_pNameEng=ErasCharFromString(pPmxData->m_pBone[i].m_pNameEng, EngSize, '\0');
+		}
 
 		//位置
 		for (int j = 0; j < 3; j++)
@@ -787,219 +828,290 @@ bool CPmxLoader::MorphLoad(FILE* fp, PMX_DATA* pPmxData)
 	int JapSize;
 	int EngSize;
 
-	////読み込み
-	//for (int i = 0; i < pPmxData->m_MorphNum; i++)
-	//{
-	//	long ReadStartPos = ftell(fp);
+	//読み込み
+	for (int i = 0; i < pPmxData->m_MorphNum; i++)
+	{
+		long ReadStartPos = ftell(fp);
 
-	//	//モーフ名(日)サイズ
-	//	fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
-	//	JapSize = StrToInt(Data, sizeof(Data));
+		//モーフ名(日)サイズ
+		fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
+		JapSize = StrToInt(Data, sizeof(Data));
 
-	//	//メモリ確保
-	//	pPmxData->m_pMorph[i].m_pNameJap = new unsigned char[JapSize];
+		if (JapSize > 2)
+		{
+			int a = 0;
+		}
 
-	//	//モーフ名(日)読み込み
-	//	fread_s(pPmxData->m_pMorph[i].m_pNameJap, JapSize, JapSize, 1, fp);
+		//サイズあるときのみ
+		if (JapSize > 0)
+		{
+			//メモリ確保
+			pPmxData->m_pMorph[i].m_pNameJap = new unsigned char[JapSize];
 
-	//	//文字列から\0を消す
-	//	ErasCharFromString(pPmxData->m_pMorph[i].m_pNameJap, JapSize, '\0');
+			//モーフ名(日)読み込み
+			fread_s(pPmxData->m_pMorph[i].m_pNameJap, JapSize, JapSize, 1, fp);
+			
+			//文字列から\0を消す
+			pPmxData->m_pMorph[i].m_pNameJap = ErasCharFromString(pPmxData->m_pMorph[i].m_pNameJap, JapSize, '\0');
+		}
 
-	//	//モーフ名(英)サイズ
-	//	fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
-	//	EngSize = StrToInt(Data, sizeof(Data));
+		//モーフ名(英)サイズ
+		fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
+		EngSize = StrToInt(Data, sizeof(Data));
 
-	//	//メモリ確保
-	//	pPmxData->m_pMorph[i].m_pNameEng = new unsigned char[EngSize];
+		//サイズあるときのみ
+		if (EngSize > 0)
+		{
+			//メモリ確保
+			pPmxData->m_pMorph[i].m_pNameEng = new unsigned char[EngSize];
 
-	//	//ボーン名(英)読み込み
-	//	fread_s(pPmxData->m_pMorph[i].m_pNameEng, EngSize, EngSize, 1, fp);
+			//ボーン名(英)読み込み
+			fread_s(pPmxData->m_pMorph[i].m_pNameEng, EngSize, EngSize, 1, fp);
+			
+			//文字列から\0を消す
+			pPmxData->m_pMorph[i].m_pNameEng=ErasCharFromString(pPmxData->m_pMorph[i].m_pNameEng, EngSize, '\0');
+		}
 
-	//	//文字列から\0を消す
-	//	ErasCharFromString(pPmxData->m_pMorph[i].m_pNameEng, EngSize, '\0');
+		//PMDカテゴリ
+		fread_s(&pPmxData->m_pMorph[i].m_PmdType, sizeof(unsigned char), sizeof(unsigned char), 1, fp);
 
-	//	//PMDカテゴリ
-	//	fread_s(&pPmxData->m_pMorph[i].m_PmdType, sizeof(unsigned char), sizeof(unsigned char), 1, fp);
+		//モーフタイプ
+		fread_s(&pPmxData->m_pMorph[i].m_MorphType, sizeof(unsigned char), sizeof(unsigned char), 1, fp);
 
-	//	//モーフタイプ
-	//	fread_s(&pPmxData->m_pMorph[i].m_MorphType, sizeof(unsigned char), sizeof(unsigned char), 1, fp);
+		//データ数
+		fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
+		pPmxData->m_pMorph[i].m_DataNum = StrToInt(Data, sizeof(Data));
 
-	//	//データ数
-	//	fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
-	//	pPmxData->m_pMorph[i].m_DataNum = StrToInt(Data, sizeof(Data));
+		switch (pPmxData->m_pMorph[i].m_MorphType)
+		{
+			//グループ
+			case 0:
+			{
+				//メモリ確保
+				pPmxData->m_pMorph[i].m_pGroupMorph = new PMX_GROUP_MORPH[pPmxData->m_pMorph[i].m_DataNum];
 
-	//	switch (pPmxData->m_pMorph[i].m_MorphType)
-	//	{
-	//		//グループ
-	//		case 0:
-	//		{
-	//			//メモリ確保
-	//			pPmxData->m_pMorph[i].m_pGroupMorph = new PMX_GROUP_MORPH[pPmxData->m_pMorph[i].m_DataNum];
+				//モーフインデックスサイズ
+				int MorphIndexSize= pPmxData->m_Head.m_pData[6];
 
-	//			//モーフインデックスサイズ
-	//			int MorphIndexSize= pPmxData->m_Head.m_pData[6];
+				//モーフインデックス読み込み用
+				unsigned char* pMorph = nullptr;
+				pMorph = new unsigned char[MorphIndexSize];
 
-	//			//モーフインデックス読み込み用
-	//			unsigned char* pMorph = nullptr;
-	//			pMorph = new unsigned char[MorphIndexSize];
+				//読み込み
+				for (int j = 0; j < pPmxData->m_pMorph[i].m_DataNum; j++)
+				{
+					//モーフインデックス
+					fread_s(pMorph, MorphIndexSize, MorphIndexSize, 1, fp);
+					pPmxData->m_pMorph[i].m_pGroupMorph[j].m_MorphId = StrToInt(pMorph, MorphIndexSize);
 
-	//			//読み込み
-	//			for (int j = 0; j < pPmxData->m_pMorph[i].m_DataNum; j++)
-	//			{
-	//				//モーフインデックス
-	//				fread_s(pMorph, MorphIndexSize, MorphIndexSize, 1, fp);
-	//				pPmxData->m_pMorph[i].m_pGroupMorph[j].m_MorphId = StrToInt(pMorph, MorphIndexSize);
+					//モーフ率
+					fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
+					pPmxData->m_pMorph[i].m_pGroupMorph[j].m_fRate = StrToFloat(Data);
+				}
 
-	//				//モーフ率
-	//				fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
-	//				pPmxData->m_pMorph[i].m_pGroupMorph[j].m_fRate = StrToFloat(Data);
-	//			}
+				//読み込み用破棄
+				delete[] pMorph;
+				pMorph = nullptr;
 
-	//			//読み込み用破棄
-	//			delete[] pMorph;
-	//			pMorph = nullptr;
+				break;
+			}
+			//頂点
+			case 1:
+			{
+				//メモリ確保
+				pPmxData->m_pMorph[i].m_pVerMorph = new PMX_VER_MORPH[pPmxData->m_pMorph[i].m_DataNum];
 
-	//			break;
-	//		}
-	//		//頂点
-	//		case 1:
-	//		{
-	//			//メモリ確保
-	//			pPmxData->m_pMorph[i].m_pVerMorph = new PMX_VER_MORPH[pPmxData->m_pMorph[i].m_DataNum];
+				//頂点インデックスサイズ
+				int VerIndexSize = pPmxData->m_Head.m_pData[2];
 
-	//			//頂点インデックスサイズ
-	//			int VerIndexSize = pPmxData->m_Head.m_pData[2];
+				//頂点インデックス読み込み用
+				unsigned char* pVer = nullptr;
+				pVer = new unsigned char[VerIndexSize];
 
-	//			//頂点インデックス読み込み用
-	//			unsigned char* pVer = nullptr;
-	//			pVer = new unsigned char[VerIndexSize];
+				//読み込み
+				for (int j = 0; j < pPmxData->m_pMorph[i].m_DataNum; j++)
+				{
+					//頂点ID
+					fread_s(pVer, VerIndexSize, VerIndexSize, 1, fp);
+					pPmxData->m_pMorph[i].m_pVerMorph[j].m_VerId=StrToInt(pVer,VerIndexSize);
 
-	//			//読み込み
-	//			for (int j = 0; j < pPmxData->m_pMorph[i].m_DataNum; j++)
-	//			{
-	//				//頂点ID
-	//				fread_s(pVer, VerIndexSize, VerIndexSize, 1, fp);
-	//				pPmxData->m_pMorph[i].m_pVerMorph[j].m_VerId=StrToInt(pVer,VerIndexSize);
+					//オフセット値
+					for (int k = 0; k < 3; k++)
+					{
+						fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
+						pPmxData->m_pMorph[i].m_pVerMorph[j].m_fOffset[k] = StrToFloat(Data);
+					}
+				}
 
-	//				//オフセット値
-	//				for (int k = 0; k < 3; k++)
-	//				{
-	//					fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
-	//					pPmxData->m_pMorph[i].m_pVerMorph[j].m_fOffset[k] = StrToFloat(Data);
-	//				}
-	//			}
+				//読み込み用破棄
+				delete[] pVer;
+				pVer = nullptr;
 
-	//			//読み込み用破棄
-	//			delete[] pVer;
-	//			pVer = nullptr;
+				break;
+			}
+			//ボーン
+			case 2:
+			{
+				//メモリ確保
+				pPmxData->m_pMorph[i].m_pBoneMorph = new PMX_BONE_MORPH[pPmxData->m_pMorph[i].m_DataNum];
+				
+				//ボーンインデックスサイズ
+				int BoneIndexSize = pPmxData->m_Head.m_pData[5];
 
-	//			break;
-	//		}
-	//		//ボーン
-	//		case 2:
-	//		{
-	//			//メモリ確保
-	//			pPmxData->m_pMorph[i].m_pBoneMorph = new PMX_BONE_MORPH[pPmxData->m_pMorph[i].m_DataNum];
-	//			
-	//			//ボーンインデックスサイズ
-	//			int BoneIndexSize = pPmxData->m_Head.m_pData[5];
+				//頂点インデックス読み込み用
+				unsigned char* pBone = nullptr;
+				pBone = new unsigned char[BoneIndexSize];
 
-	//			//頂点インデックス読み込み用
-	//			unsigned char* pBone = nullptr;
-	//			pBone = new unsigned char[BoneIndexSize];
+				//読み込み
+				for (int j = 0; j < pPmxData->m_pMorph[i].m_DataNum; j++)
+				{
+					//ボーンID
+					fread_s(pBone, BoneIndexSize, BoneIndexSize, 1, fp);
+					pPmxData->m_pMorph[i].m_pBoneMorph[j].m_BoneId = StrToInt(pBone, BoneIndexSize);
 
-	//			//読み込み
-	//			for (int j = 0; j < pPmxData->m_pMorph[i].m_DataNum; j++)
-	//			{
-	//				//ボーンID
-	//				fread_s(pBone, BoneIndexSize, BoneIndexSize, 1, fp);
-	//				pPmxData->m_pMorph[i].m_pBoneMorph[j].m_BoneId = StrToInt(pBone, BoneIndexSize);
+					//移動量
+					for (int k = 0; k < 3; k++)
+					{
+						fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
+						pPmxData->m_pMorph[i].m_pBoneMorph[j].m_fMove[k] = StrToFloat(Data);
+					}
+					//回転量
+					for (int k = 0; k < 4; k++)
+					{
+						fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
+						pPmxData->m_pMorph[i].m_pBoneMorph[j].m_fRot[k] = StrToFloat(Data);
+					}
+				}
 
-	//				//移動量
-	//				for (int k = 0; k < 3; k++)
-	//				{
-	//					fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
-	//					pPmxData->m_pMorph[i].m_pBoneMorph[j].m_fMove[k] = StrToFloat(Data);
-	//				}
-	//				//回転量
-	//				for (int k = 0; k < 4; k++)
-	//				{
-	//					fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
-	//					pPmxData->m_pMorph[i].m_pBoneMorph[j].m_fRot[k] = StrToFloat(Data);
-	//				}
-	//			}
+				//読み込み用破棄
+				delete[] pBone;
+				pBone = nullptr;
 
-	//			//読み込み用破棄
-	//			delete[] pBone;
-	//			pBone = nullptr;
+				break;
+			}
+			//材質
+			case 8:
+			{
+				//メモリ確保
+				pPmxData->m_pMorph[i].m_pMateMorph = new PMX_MATE_MORPH[pPmxData->m_pMorph[i].m_DataNum];
 
-	//			break;
-	//		}
-	//		//材質
-	//		case 8:
-	//		{
-	//			//メモリ確保
-	//			pPmxData->m_pMorph[i].m_pMateMorph = new PMX_MATE_MORPH[pPmxData->m_pMorph[i].m_DataNum];
+				//材質サイズ
+				int MateIndexSize = pPmxData->m_Head.m_pData[4];
 
-	//			//材質サイズ
-	//			int MateIndexSize = pPmxData->m_Head.m_pData[4];
+				//材質インデックス読み込み用
+				unsigned char* pMate = nullptr;
+				pMate = new unsigned char[MateIndexSize];
 
-	//			//材質インデックス読み込み用
-	//			unsigned char* pMate = nullptr;
-	//			pMate = new unsigned char[MateIndexSize];
+				//読み込み
+				for (int j = 0; j < pPmxData->m_pMorph[i].m_DataNum; j++)
+				{
+					//材質インデックス
+					fread_s(pMate, MateIndexSize, MateIndexSize, 1, fp);
+					pPmxData->m_pMorph[i].m_pMateMorph[j].m_MateId = StrToInt(pMate, MateIndexSize);
 
-	//			//読み込み
-	//			for (int j = 0; j < pPmxData->m_pMorph[i].m_DataNum; j++)
-	//			{
+					//オフセット演算形式
+					fread_s(&pPmxData->m_pMorph[i].m_pMateMorph[j].m_Format, sizeof(unsigned char), sizeof(unsigned char), 1, fp);
 
-	//				//ここから！！！！
-	//			}
+					//ディフューズ
+					for (int k = 0; k < 4; k++)
+					{
+						fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
+						pPmxData->m_pMorph[i].m_pMateMorph[j].m_fDiffuse[k] = StrToFloat(Data);
+					}
 
-	//			//読み込み用破棄
-	//			delete[] pMate;
-	//			pMate = nullptr;
+					//スペキュラー
+					for (int k = 0; k < 3; k++)
+					{
+						fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
+						pPmxData->m_pMorph[i].m_pMateMorph[j].m_fSpecular[k] = StrToFloat(Data);
+					}
 
-	//			break;
-	//		}
-	//		//UVor追加UV
-	//		default:
-	//		{
-	//			//メモリ確保
-	//			pPmxData->m_pMorph[i].m_pUvMorph= new PMX_UV_MORPH[pPmxData->m_pMorph[i].m_DataNum];
-	//			
-	//			//頂点インデックスサイズ
-	//			int VerIndexSize = pPmxData->m_Head.m_pData[2];
+					//スペキュラパワー
+					fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
+					pPmxData->m_pMorph[i].m_pMateMorph[j].m_fSpePower = StrToFloat(Data);
+					
+					//アンビエント
+					for (int k = 0; k < 3; k++)
+					{
+						fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
+						pPmxData->m_pMorph[i].m_pMateMorph[j].m_fAmbient[k] = StrToFloat(Data);
+					}
 
-	//			//頂点インデックス読み込み用
-	//			unsigned char* pVer = nullptr;
-	//			pVer = new unsigned char[VerIndexSize];
+					//エッジ色
+					for (int k = 0; k < 4; k++)
+					{
+						fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
+						pPmxData->m_pMorph[i].m_pMateMorph[j].m_fEdge[k] = StrToFloat(Data);
+					}
 
-	//			//読み込み
-	//			for (int j = 0; j < pPmxData->m_pMorph[i].m_DataNum; j++)
-	//			{
-	//				//頂点ID
-	//				fread_s(pVer, VerIndexSize, VerIndexSize, 1, fp);
-	//				pPmxData->m_pMorph[i].m_pUvMorph[j].m_VerId = StrToInt(pVer, VerIndexSize);
+					//エッジサイズ
+					fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
+					pPmxData->m_pMorph[i].m_pMateMorph[j].m_fEdgeSize = StrToFloat(Data);
 
-	//				//オフセット値
-	//				for (int k = 0; k < 4; k++)
-	//				{
-	//					fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
-	//					pPmxData->m_pMorph[i].m_pUvMorph[j].m_fOffset[k] = StrToFloat(Data);
-	//				}
+					//テクスチャ係数
+					for (int k = 0; k < 4; k++)
+					{
+						fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
+						pPmxData->m_pMorph[i].m_pMateMorph[j].m_fTex[k] = StrToFloat(Data);
+					}
 
-	//			}
+					//スフィアテクスチャ係数
+					for (int k = 0; k < 4; k++)
+					{
+						fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
+						pPmxData->m_pMorph[i].m_pMateMorph[j].m_fSphereTex[k]= StrToFloat(Data);
+					}
 
-	//			//読み込み用破棄
-	//			delete[] pVer;
-	//			pVer = nullptr;
+					//Toonテクスチャ
+					for (int k = 0; k < 4; k++)
+					{
+						fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
+						pPmxData->m_pMorph[i].m_pMateMorph[j].m_fToonTex[k] = StrToFloat(Data);
+					}
+				}
 
-	//			break;
-	//		}
-	//	}
-	//	
-	//}
+				//読み込み用破棄
+				delete[] pMate;
+				pMate = nullptr;
 
+				break;
+			}
+			//UVor追加UV
+			default:
+			{
+				//メモリ確保
+				pPmxData->m_pMorph[i].m_pUvMorph= new PMX_UV_MORPH[pPmxData->m_pMorph[i].m_DataNum];
+				
+				//頂点インデックスサイズ
+				int VerIndexSize = pPmxData->m_Head.m_pData[2];
+
+				//頂点インデックス読み込み用
+				unsigned char* pVer = nullptr;
+				pVer = new unsigned char[VerIndexSize];
+
+				//読み込み
+				for (int j = 0; j < pPmxData->m_pMorph[i].m_DataNum; j++)
+				{
+					//頂点ID
+					fread_s(pVer, VerIndexSize, VerIndexSize, 1, fp);
+					pPmxData->m_pMorph[i].m_pUvMorph[j].m_VerId = StrToInt(pVer, VerIndexSize);
+
+					//オフセット値
+					for (int k = 0; k < 4; k++)
+					{
+						fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
+						pPmxData->m_pMorph[i].m_pUvMorph[j].m_fOffset[k] = StrToFloat(Data);
+					}
+				}
+
+				//読み込み用破棄
+				delete[] pVer;
+				pVer = nullptr;
+
+				break;
+			}
+		}
+	}
 	return true;
 }
 
@@ -1304,7 +1416,7 @@ bool CPmxLoader::Write(const char* FileName, PMX_DATA* pPmxData)
 		fprintf_s(fp, "\n");
 	}
 
-	/*fprintf_s(fp, "モーフ数:%d\n", pPmxData->m_MorphNum);
+	fprintf_s(fp, "モーフ数:%d\n", pPmxData->m_MorphNum);
 
 	for (int i = 0; i < pPmxData->m_MorphNum; i++)
 	{
@@ -1313,9 +1425,147 @@ bool CPmxLoader::Write(const char* FileName, PMX_DATA* pPmxData)
 
 		fprintf_s(fp, "PMDカテゴリ:%d\n", pPmxData->m_pMorph[i].m_PmdType);
 		fprintf_s(fp, "モーフタイプ:%d\n", pPmxData->m_pMorph[i].m_MorphType);
+		fprintf_s(fp, "データ数:%d\n", pPmxData->m_pMorph[i].m_DataNum);
+		
+		//タイプごとに出力する
+		switch (pPmxData->m_pMorph[i].m_MorphType)
+		{
+			//グループモーフ
+			case 0:
+			{				
+				for (int j = 0; j < pPmxData->m_pMorph[i].m_DataNum; j++)
+				{
+					fprintf_s(fp, "モーフID:%d\n", pPmxData->m_pMorph[i].m_pGroupMorph[j].m_MorphId);
+					fprintf_s(fp, "モーフ率:%f\n", pPmxData->m_pMorph[i].m_pGroupMorph[j].m_fRate);
+				}
+				fprintf_s(fp, "\n");
+				break;
+			}
+			//頂点モーフ
+			case 1:
+			{
+				for (int j = 0; j < pPmxData->m_pMorph[i].m_DataNum; j++)
+				{
+					fprintf_s(fp, "頂点ID:%d\n", pPmxData->m_pMorph[i].m_pVerMorph[j].m_VerId);
 
+					fprintf_s(fp, "座標オフセット:");
+					for (int k = 0; k < 3; k++)
+					{
+						fprintf_s(fp, "%f,", pPmxData->m_pMorph[i].m_pVerMorph[j].m_fOffset[k]);
+					}
+					fprintf_s(fp, "\n");					
+				}
+				fprintf_s(fp, "\n");
+				break;
+			}
+			//ボーン
+			case 2:
+			{
+				for (int j = 0; j < pPmxData->m_pMorph[i].m_DataNum; j++)
+				{
+					fprintf_s(fp, "ボーンID:%d\n", pPmxData->m_pMorph[i].m_pBoneMorph[j].m_BoneId);
 
+					fprintf_s(fp, "移動量:");
+					for (int k = 0; k < 3; k++)
+					{
+						fprintf_s(fp, "%f,", pPmxData->m_pMorph[i].m_pBoneMorph[j].m_fMove[k]);
+					}
+					fprintf_s(fp, "\n");
+
+					fprintf_s(fp, "回転量:");
+					for (int k = 0; k < 4; k++)
+					{
+						fprintf_s(fp, "%f,", pPmxData->m_pMorph[i].m_pBoneMorph[j].m_fRot[k]);
+					}
+					fprintf_s(fp, "\n");
+				}
+				fprintf_s(fp, "\n");
+				break;
+			}
+			//材質
+			case 8:
+			{
+				for (int j = 0; j < pPmxData->m_pMorph[i].m_DataNum; j++)
+				{
+					fprintf_s(fp, "材質ID:%d\n", pPmxData->m_pMorph[i].m_pMateMorph[j].m_MateId);
+					fprintf_s(fp, "オフセット演算形式:%d\n", pPmxData->m_pMorph[i].m_pMateMorph[j].m_Format);
+					
+					fprintf_s(fp, "Diffuse:");
+					for (int k = 0; k < 4; k++)
+					{
+						fprintf_s(fp, "%f,", pPmxData->m_pMorph[i].m_pMateMorph[j].m_fDiffuse[k]);
+					}
+					fprintf_s(fp, "\n");
+					
+					fprintf_s(fp, "Specular:");
+					for (int k = 0; k < 3; k++)
+					{
+						fprintf_s(fp, "%f,", pPmxData->m_pMorph[i].m_pMateMorph[j].m_fSpecular[k]);
+					}
+					fprintf_s(fp, "\n");
+
+					fprintf_s(fp, "SpecularPower:%f\n", pPmxData->m_pMorph[i].m_pMateMorph[j].m_fSpePower);
+
+					fprintf_s(fp, "Ambient:");
+					for (int k = 0; k < 3; k++)
+					{
+						fprintf_s(fp, "%f,", pPmxData->m_pMorph[i].m_pMateMorph[j].m_fAmbient[k]);
+					}
+					fprintf_s(fp, "\n");
+
+					fprintf_s(fp, "EdgeColor:");
+					for (int k = 0; k < 4; k++)
+					{
+						fprintf_s(fp, "%f,", pPmxData->m_pMorph[i].m_pMateMorph[j].m_fAmbient[k]);
+					}
+					fprintf_s(fp, "\n");
+
+					fprintf_s(fp, "EdgeSize:%f\n", pPmxData->m_pMorph[i].m_pMateMorph[j].m_fEdgeSize);
+
+					fprintf_s(fp, "Tex:");
+					for (int k = 0; k < 4; k++)
+					{
+						fprintf_s(fp, "%f,", pPmxData->m_pMorph[i].m_pMateMorph[j].m_fTex[k]);
+					}
+					fprintf_s(fp, "\n");
+					
+					fprintf_s(fp, "SphereTex:");
+					for (int k = 0; k < 4; k++)
+					{
+						fprintf_s(fp, "%f,", pPmxData->m_pMorph[i].m_pMateMorph[j].m_fSphereTex[k]);
+					}
+					fprintf_s(fp, "\n");
+					
+					fprintf_s(fp, "ToonTex:");
+					for (int k = 0; k < 4; k++)
+					{
+						fprintf_s(fp, "%f,", pPmxData->m_pMorph[i].m_pMateMorph[j].m_fToonTex[k]);
+					}
+					fprintf_s(fp, "\n");
+				}
+				fprintf_s(fp, "\n");
+				break;
+			}
+			//UVor追加UV
+			default:
+			{
+				for (int j = 0; j < pPmxData->m_pMorph[i].m_DataNum; j++)
+				{
+					fprintf_s(fp, "頂点ID:%d\n", pPmxData->m_pMorph[i].m_pUvMorph[j].m_VerId);
+
+					fprintf_s(fp, "UVオフセット:");
+					for (int k = 0; k < 4; k++)
+					{
+						fprintf_s(fp, "%f,", pPmxData->m_pMorph[i].m_pUvMorph[j].m_fOffset[k]);
+					}
+					fprintf_s(fp, "\n");
+				}
+				fprintf_s(fp, "\n");
+				break;
+			}
+		}
 		fprintf_s(fp, "\n");
-	}*/
+	}
+
 	return true;
 }

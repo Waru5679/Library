@@ -95,10 +95,31 @@ unsigned short StrToShort(unsigned char Str[2])
 }
 
 //指定文字を文字列から消す
-void ErasCharFromString(unsigned char* pSource, int Size, char Erace)
+unsigned char* ErasCharFromString(unsigned char* pSource,int Size, char Erace)
 {
+	unsigned char* pOut=nullptr;
+
 	int count = 0;//除去カウント
 
+	//先に除去数をカウント
+	for (int i = 0; i < Size; i++)
+	{
+		if (pSource[i] == Erace)
+		{			
+			count++;
+		}
+	}
+
+	//新しいサイズ(元サイズ-除去数+\0)
+	int NewSize = Size - count + 1;
+
+	//メモリ確保
+	pOut = new unsigned char[NewSize];
+
+	//カウントリセット
+	count = 0;
+
+	//コピー
 	for (int i = 0; i < Size; i++)
 	{
 		if (pSource[i] == Erace)
@@ -109,13 +130,16 @@ void ErasCharFromString(unsigned char* pSource, int Size, char Erace)
 		else
 		{
 			//カウント分を詰めてコピー
-			pSource[i - count] = pSource[i];
+			pOut[i - count] = pSource[i];
 		}
 	}
 
-	//除去していれば文字列の最後に\nをいれる
-	if (count > 0)
-	{
-		pSource[Size - count] = '\0';
-	}
+	//最後に\0を入れる
+	pOut[NewSize - 1] = '\0';
+
+	//元データ破棄
+	delete[] pSource;
+	pSource = nullptr;
+		
+	return pOut;
 }

@@ -17,4 +17,4 @@ unsigned short StrToShort(unsigned char Str[2]);
 float StrToFloat(unsigned char* pStr);
 
 //w’è•¶š‚ğ•¶š—ñ‚©‚çÁ‚·
-void ErasCharFromString(unsigned char* pSource, int Size, char Erace);
+unsigned char* ErasCharFromString(unsigned char* pSource, int Size, char Erace);
