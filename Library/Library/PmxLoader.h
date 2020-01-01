@@ -431,8 +431,8 @@ struct PMX_MORPH
 		}
 	}
 
-	unsigned char* m_pNameJap;		//モーフ名(日)
-	unsigned char* m_pNameEng;		//モーフ名(英)
+	wchar_t* m_pNameJap;		//モーフ名(日)
+	wchar_t* m_pNameEng;		//モーフ名(英)
 	unsigned char m_PmdType;		//PMDカテゴリー(0:システム予約,1:眉(左下),2:目(左上),3:口(右上),4:その他(右下)) 
 	unsigned char m_MorphType;		//モーフタイプ(0:グループ,1:頂点,2:ボーン,3:UV,4-7:追加UV,8:材質)
 	

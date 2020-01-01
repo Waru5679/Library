@@ -143,3 +143,33 @@ unsigned char* ErasCharFromString(unsigned char* pSource,int Size, char Erace)
 		
 	return pOut;
 }
+
+constexpr int BYTE1_MAX{ 128 };
+constexpr int BYTE2_MAX{ 2048 };
+constexpr int BYTE3_MAX{ 65536 };
+
+
+//テキスト変換
+wchar_t* CharToWchar_t(unsigned char* str)
+{
+	wchar_t* pOut = nullptr;
+	
+	//文字列サイズを測る
+	int size = 0;
+	for ( size = 0; str[size] != '\0'; size += 2);
+
+	//メモリ確保
+	pOut = new wchar_t[(size/2)+1];
+
+	int count = 0;
+	for (int i = 0; str[i] != '\0'; i += 2)
+	{
+		pOut[count++] = (str[0]) | (str[1] << 8);
+	}
+
+	//終わりに\0を入れる
+	pOut[size / 2] = '\0';
+
+	return pOut;
+}
+

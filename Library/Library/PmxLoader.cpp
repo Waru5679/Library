@@ -57,6 +57,7 @@ bool CPmxLoader::Load(const char* FileName, PMX_DATA* pPmxData)
 		return false;
 	}
 
+
 	return true;
 }
 
@@ -828,6 +829,10 @@ bool CPmxLoader::MorphLoad(FILE* fp, PMX_DATA* pPmxData)
 	int JapSize;
 	int EngSize;
 
+	//モーフ読み込み用
+	unsigned char* pJapName=nullptr;
+	unsigned char* pEngName=nullptr;
+
 	//読み込み
 	for (int i = 0; i < pPmxData->m_MorphNum; i++)
 	{
@@ -837,24 +842,22 @@ bool CPmxLoader::MorphLoad(FILE* fp, PMX_DATA* pPmxData)
 		fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
 		JapSize = StrToInt(Data, sizeof(Data));
 
-		if (JapSize > 2)
-		{
-			int a = 0;
-		}
-
 		//サイズあるときのみ
 		if (JapSize > 0)
 		{
 			//メモリ確保
-			pPmxData->m_pMorph[i].m_pNameJap = new unsigned char[JapSize];
+			pJapName = new unsigned char[JapSize];
 
 			//モーフ名(日)読み込み
-			fread_s(pPmxData->m_pMorph[i].m_pNameJap, JapSize, JapSize, 1, fp);
+			fread_s(pJapName, JapSize, JapSize, 1, fp);
 			
 			//文字列から\0を消す
-			pPmxData->m_pMorph[i].m_pNameJap = ErasCharFromString(pPmxData->m_pMorph[i].m_pNameJap, JapSize, '\0');
+			pJapName = ErasCharFromString(pJapName, JapSize, '\0');
+			
+			//wchar型の文字列に変換する
+			pPmxData->m_pMorph[i].m_pNameJap= CharToWchar_t(pJapName);
 		}
-
+			
 		//モーフ名(英)サイズ
 		fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
 		EngSize = StrToInt(Data, sizeof(Data));
@@ -863,15 +866,30 @@ bool CPmxLoader::MorphLoad(FILE* fp, PMX_DATA* pPmxData)
 		if (EngSize > 0)
 		{
 			//メモリ確保
-			pPmxData->m_pMorph[i].m_pNameEng = new unsigned char[EngSize];
+			pEngName = new unsigned char[EngSize];
 
 			//ボーン名(英)読み込み
-			fread_s(pPmxData->m_pMorph[i].m_pNameEng, EngSize, EngSize, 1, fp);
+			fread_s(pEngName, EngSize, EngSize, 1, fp);
 			
 			//文字列から\0を消す
-			pPmxData->m_pMorph[i].m_pNameEng=ErasCharFromString(pPmxData->m_pMorph[i].m_pNameEng, EngSize, '\0');
+			pEngName =ErasCharFromString(pEngName, EngSize, '\0');
+
+			//wchar型の文字列に変換する
+			pPmxData->m_pMorph[i].m_pNameEng = CharToWchar_t(pJapName);
 		}
 
+		//読み込み用破棄
+		if (pJapName != nullptr)
+		{
+			delete[] pJapName;
+			pJapName = nullptr;
+		}
+		if (pEngName != nullptr)
+		{
+			delete[]  pEngName;
+			pEngName = nullptr;
+		}
+		
 		//PMDカテゴリ
 		fread_s(&pPmxData->m_pMorph[i].m_PmdType, sizeof(unsigned char), sizeof(unsigned char), 1, fp);
 
@@ -1420,8 +1438,8 @@ bool CPmxLoader::Write(const char* FileName, PMX_DATA* pPmxData)
 
 	for (int i = 0; i < pPmxData->m_MorphNum; i++)
 	{
-		fprintf_s(fp, "モーフ名(日):%s\n", pPmxData->m_pMorph[i].m_pNameJap);
-		fprintf_s(fp, "モーフ名(英):%s\n", pPmxData->m_pMorph[i].m_pNameEng);
+		fprintf_s(fp, "モーフ名(日):%ls\n", pPmxData->m_pMorph[i].m_pNameJap);
+		fprintf_s(fp, "モーフ名(英):%ls\n", pPmxData->m_pMorph[i].m_pNameEng);
 
 		fprintf_s(fp, "PMDカテゴリ:%d\n", pPmxData->m_pMorph[i].m_PmdType);
 		fprintf_s(fp, "モーフタイプ:%d\n", pPmxData->m_pMorph[i].m_MorphType);

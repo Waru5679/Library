@@ -18,3 +18,6 @@ float StrToFloat(unsigned char* pStr);
 
 //指定文字を文字列から消す
 unsigned char* ErasCharFromString(unsigned char* pSource, int Size, char Erace);
+
+//テキスト変換
+wchar_t* CharToWchar_t(unsigned char* str);
