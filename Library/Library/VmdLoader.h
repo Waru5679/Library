@@ -30,10 +30,31 @@ struct VMD_SKIN
 //VMDデータ
 struct VMD_DATA
 {
-	VMD_HEAD		m_Head;				//ヘッダー
+	VMD_DATA()
+	{
+		m_pMotion = nullptr;
+		m_pSkin = nullptr;
+	}
+	~VMD_DATA()
+	{
+		//モーションリスト
+		if (m_pMotion != nullptr)
+		{
+			delete[] m_pMotion;
+			m_pMotion = nullptr;
+		}
+		//スキンリスト
+		if (m_pSkin != nullptr)
+		{
+			delete[] m_pSkin;
+			m_pSkin = nullptr;
+		}
+	}
+
 	unsigned int	m_MotionRecordNum;	//モーション数
-	VMD_MOTION*		m_pMotion;			//モーションリスト
 	unsigned int	m_SkinRecordNum;	//スキン数
+	VMD_HEAD		m_Head;				//ヘッダー
+	VMD_MOTION*		m_pMotion;			//モーションリスト
 	VMD_SKIN*		m_pSkin;			//スキンリスト
 };
 
