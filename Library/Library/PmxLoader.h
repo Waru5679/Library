@@ -105,8 +105,8 @@ struct PMX_HEADER
 		}
 	}
 	char	m_FileType[4];	//ファイル種類"PMX_"固定
+	char	m_Size;			//データサイズ
 	float	m_Ver;			//バージョン
-	char	m_Size;
 	unsigned char*	m_pData;
 };
 
@@ -211,6 +211,7 @@ struct PMX_MATERIAL
 	{
 		m_pNameEng = nullptr;
 		m_pNameJap = nullptr;
+		m_pMemo = nullptr;
 	}
 	~PMX_MATERIAL()
 	{
@@ -447,10 +448,63 @@ struct PMX_MORPH
 	PMX_GROUP_MORPH*	m_pGroupMorph;	//グループモーフ
 };
 
+//枠内要素
+struct FRAME_ELEMENT
+{
+	unsigned char m_Flag;	//0:ボーン 1:モーフ
+	int m_Index;			//ボーンまたはモーフのインデックス
+};
+
+//表示枠
+struct PMX_DISPLAY
+{
+	PMX_DISPLAY()
+	{
+		m_pNameJap = nullptr;
+		m_pNameEng = nullptr;
+	}
+	~PMX_DISPLAY()
+	{
+		//表示枠名(日)
+		if (m_pNameJap != nullptr)
+		{
+			delete[] m_pNameJap;
+			m_pNameJap = nullptr;
+		}
+		//表示枠名(英)
+		if (m_pNameEng != nullptr)
+		{
+			delete[] m_pNameEng;
+			m_pNameEng = nullptr;
+		}
+		//枠内要素数
+		if (m_pElement != nullptr)
+		{
+			delete[] m_pElement;
+			m_pElement = nullptr;
+		}
+	}
+	wchar_t* m_pNameJap;		//表示枠名(日)
+	wchar_t* m_pNameEng;		//表示枠名(英)
+
+	unsigned char	m_SpecialFlag;	//特殊フラグ
+	int				m_ElementNum;	//要素数
+	FRAME_ELEMENT*	m_pElement;		//枠内要素数
+};
 
 //pmxデータ
 struct PMX_DATA
 {
+	PMX_DATA()
+	{	
+		m_pVertex	= nullptr;//頂点データ
+		m_pFace		= nullptr;//面のデータ
+		m_pTex		= nullptr;//テクスチャデータ
+		m_pMaterial = nullptr;//マテリアルデータ
+		m_pBone		= nullptr;//ボーンデータ
+		m_pMorph	= nullptr;//モーフデータ
+		m_pDisplay	= nullptr;//表示枠
+	}
 	~PMX_DATA()
 	{
 		//頂点データ
@@ -489,6 +543,12 @@ struct PMX_DATA
 			delete[] m_pMorph;
 			m_pMorph = nullptr;
 		}
+		//表示枠
+		if (m_pDisplay != nullptr)
+		{
+			delete[] m_pDisplay;
+			m_pDisplay = nullptr;
+		}
 	}
 
 	int		m_VerNum;		//頂点数
@@ -497,6 +557,7 @@ struct PMX_DATA
 	int		m_MaterialNum;	//マテリアル数
 	int		m_BoneNum;		//ボーン数
 	int		m_MorphNum;		//モーフ数
+	int		m_DisplayNum;	//表示枠数
 
 	PMX_HEADER		m_Head;			//ヘッダー
 	PMX_MODEL_INFO	m_ModelInfo;	//モデルデータ
@@ -506,6 +567,7 @@ struct PMX_DATA
 	PMX_MATERIAL*	m_pMaterial;	//マテリアルデータ
 	PMX_BONE*		m_pBone;		//ボーンデータ
 	PMX_MORPH*		m_pMorph;		//モーフデータ	
+	PMX_DISPLAY* m_pDisplay;		//表示枠データ
 };
 
 //PMX読み込み
@@ -546,4 +608,7 @@ private:
 
 	//モーフ読み込み
 	bool MorphLoad(FILE* fp, PMX_DATA* pPmxData);
+
+	//表示枠読み込み
+	bool DisplayFrameLoad(FILE* fp, PMX_DATA* pPmxData);
 };

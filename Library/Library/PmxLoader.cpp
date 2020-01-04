@@ -57,7 +57,11 @@ bool CPmxLoader::Load(const char* FileName, PMX_DATA* pPmxData)
 		return false;
 	}
 
-
+	//表示枠読み込み
+	if (DisplayFrameLoad(fp,pPmxData) == false)
+	{
+		return false;
+	}
 	return true;
 }
 
@@ -388,11 +392,10 @@ bool CPmxLoader::TextureLoad(FILE* fp, PMX_DATA* pPmxData)
 		//サイズあるときのみ
 		if (AfterByte > 0)
 		{
-			//コメント(英)読み込む
+			//テクスチャ名読み込む
 			pPmxData->m_pTex[i].m_pPass = WcharStrRead(AfterByte, fp);
 		}
 	}
-
 	return true;
 }
 
@@ -534,7 +537,7 @@ bool CPmxLoader::MaterialLoad(FILE* fp, PMX_DATA* pPmxData)
 		if (MemoSize > 0)
 		{
 			//メモ
-			pPmxData->m_pMaterial[i].m_pNameJap = WcharStrRead(MemoSize, fp);
+			pPmxData->m_pMaterial[i].m_pMemo = WcharStrRead(MemoSize, fp);
 		}
 	
 		//使用する頂点数
@@ -1043,6 +1046,109 @@ bool CPmxLoader::MorphLoad(FILE* fp, PMX_DATA* pPmxData)
 	return true;
 }
 
+//表示枠読み込み
+bool CPmxLoader::DisplayFrameLoad(FILE* fp, PMX_DATA* pPmxData)
+{
+	unsigned char Data[4];
+
+	//表示枠数
+	fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
+	pPmxData->m_DisplayNum = StrToInt(Data, sizeof(Data));
+
+	//表示枠なし
+	if (pPmxData->m_DisplayNum <= 0)
+	{
+		return false;
+	}
+
+	//メモリ確保
+	pPmxData->m_pDisplay = new PMX_DISPLAY[pPmxData->m_DisplayNum];
+
+	//Indexサイズ
+	int BoneIndexSize = pPmxData->m_Head.m_pData[5];
+	int MorphIndexSize = pPmxData->m_Head.m_pData[6];
+
+	//Index読み込み用
+	unsigned char* pBoneIndex = new unsigned char[BoneIndexSize];
+	unsigned char* pMorphIndex = new unsigned char[MorphIndexSize];
+
+	//枠名サイズ
+	int JapSize;
+	int EngSize;
+
+	//読み込み
+	for (int i = 0; i < pPmxData->m_DisplayNum; i++)
+	{
+		//枠名(日)サイズ
+		fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
+		JapSize = StrToInt(Data, sizeof(Data));
+
+		//サイズあるときのみ
+		if (JapSize > 0)
+		{
+			//枠名(日)読み込み
+			pPmxData->m_pDisplay[i].m_pNameJap = WcharStrRead(JapSize, fp);
+		}
+
+		//枠名(英)サイズ
+		fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
+		EngSize = StrToInt(Data, sizeof(Data));
+
+		//サイズあるときのみ
+		if (EngSize > 0)
+		{
+			//枠名(日)読み込み
+			pPmxData->m_pDisplay[i].m_pNameEng = WcharStrRead(EngSize, fp);
+		}
+
+		//特殊枠フラグ
+		fread_s(&pPmxData->m_pDisplay[i].m_SpecialFlag, sizeof(unsigned char), sizeof(unsigned char) , 1, fp);
+		
+		//後続の要素数
+		fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
+		pPmxData->m_pDisplay[i].m_ElementNum = StrToInt(Data, sizeof(Data));
+
+		//メモリ確保
+		pPmxData->m_pDisplay[i].m_pElement = new FRAME_ELEMENT[pPmxData->m_pDisplay[i].m_ElementNum];
+
+		//枠内要素読み込み
+		for (int j = 0; j < pPmxData->m_pDisplay[i].m_ElementNum; j++)
+		{
+			//フラグ
+			fread_s(&pPmxData->m_pDisplay[i].m_pElement[j].m_Flag, sizeof(unsigned char), sizeof(unsigned char), 1, fp);
+
+			//フラグに合わせて読み込む
+			switch (pPmxData->m_pDisplay[i].m_pElement[j].m_Flag)
+			{
+				//ボーン
+				case 0:
+				{
+					fread_s(pBoneIndex, BoneIndexSize, BoneIndexSize, 1, fp);
+					pPmxData->m_pDisplay[i].m_pElement[j].m_Index = StrToInt(pBoneIndex, BoneIndexSize);
+					break;
+				}
+				//モーフ
+				case 1:
+				{
+					fread_s(pMorphIndex, MorphIndexSize, MorphIndexSize, 1, fp);
+					pPmxData->m_pDisplay[i].m_pElement[j].m_Index = StrToInt(pMorphIndex, MorphIndexSize);
+					break;
+				}
+			default:
+				break;
+			}
+		}
+	}
+	
+	//読み込み用破棄
+	delete[]pBoneIndex;
+	pBoneIndex = nullptr;
+	delete[] pMorphIndex;
+	pMorphIndex = nullptr;
+
+}
+
+
 //書き出し
 bool CPmxLoader::Write(const char* FileName, PMX_DATA* pPmxData)
 {
@@ -1251,8 +1357,7 @@ bool CPmxLoader::Write(const char* FileName, PMX_DATA* pPmxData)
 		fprintf_s(fp, "SphereMode:%d\n", pPmxData->m_pMaterial[i].m_SphereMode);
 		fprintf_s(fp, "ToonTexture:%d\n", pPmxData->m_pMaterial[i].m_ToonTex);
 		fprintf_s(fp, "ToonFlag:%d\n", pPmxData->m_pMaterial[i].m_ToonFlag);
-
-		fprintf_s(fp, "メモ:%s\n", pPmxData->m_pMaterial[i].m_pMemo);
+		fprintf_s(fp, "メモ:%ls\n", pPmxData->m_pMaterial[i].m_pMemo);
 		fprintf_s(fp, "使用する頂点数:%d\n", pPmxData->m_pMaterial[i].m_UseVerNum);
 
 		fprintf_s(fp, "\n");
@@ -1491,6 +1596,25 @@ bool CPmxLoader::Write(const char* FileName, PMX_DATA* pPmxData)
 				fprintf_s(fp, "\n");
 				break;
 			}
+		}
+		fprintf_s(fp, "\n");
+	}
+
+	fprintf_s(fp, "表示枠数:%d\n", pPmxData->m_DisplayNum);
+
+	for (int i = 0; i < pPmxData->m_DisplayNum; i++)
+	{
+		fprintf_s(fp, "表示枠名(日):%ls\n", pPmxData->m_pDisplay[i].m_pNameJap);
+		fprintf_s(fp, "表示枠名(英):%ls\n", pPmxData->m_pDisplay[i].m_pNameEng);
+		fprintf_s(fp, "特殊枠:%d\n", pPmxData->m_pDisplay[i].m_SpecialFlag);
+		fprintf_s(fp, "\n");
+
+		fprintf_s(fp, "枠内要素数：%d\n", pPmxData->m_pDisplay[i].m_ElementNum);
+		for (int j = 0; j < pPmxData->m_pDisplay[i].m_ElementNum; j++)
+		{
+			fprintf_s(fp, "フラグ:%d\n", pPmxData->m_pDisplay[i].m_pElement[j].m_Flag);
+			fprintf_s(fp, "Index:%d\n", pPmxData->m_pDisplay[i].m_pElement[j].m_Index);
+			fprintf_s(fp, "\n");
 		}
 		fprintf_s(fp, "\n");
 	}
