@@ -388,14 +388,8 @@ bool CPmxLoader::TextureLoad(FILE* fp, PMX_DATA* pPmxData)
 		//サイズあるときのみ
 		if (AfterByte > 0)
 		{
-			//テクスチャパスメモリ確保
-			pPmxData->m_pTex[i].m_pPass = new unsigned char[AfterByte];
-
-			//テクスチャパス読み込み
-			fread_s(pPmxData->m_pTex[i].m_pPass, AfterByte, AfterByte, 1, fp);
-
-			//文字列から\0を消す
-			pPmxData->m_pTex[i].m_pPass=ErasCharFromString(pPmxData->m_pTex[i].m_pPass, AfterByte, '\0');
+			//コメント(英)読み込む
+			pPmxData->m_pTex[i].m_pPass = WcharStrRead(AfterByte, fp);
 		}
 	}
 
@@ -445,14 +439,8 @@ bool CPmxLoader::MaterialLoad(FILE* fp, PMX_DATA* pPmxData)
 		//サイズあるときのみ
 		if (JapSize > 0)
 		{
-			//メモリ確保
-			pPmxData->m_pMaterial[i].m_pNameJap = new unsigned char[JapSize];
-
-			//材質名(日）読み込み
-			fread_s(pPmxData->m_pMaterial[i].m_pNameJap, JapSize, JapSize, 1, fp);
-
-			//文字列から\0を消す
-			pPmxData->m_pMaterial[i].m_pNameJap=ErasCharFromString(pPmxData->m_pMaterial[i].m_pNameJap, JapSize, '\0');
+			//材質名(日)
+			pPmxData->m_pMaterial[i].m_pNameJap=WcharStrRead(JapSize, fp);
 		}
 
 		//材質名(英）サイズ
@@ -462,14 +450,8 @@ bool CPmxLoader::MaterialLoad(FILE* fp, PMX_DATA* pPmxData)
 		//サイズあるときのみ
 		if (EngSize > 0)
 		{
-			//メモリ確保
-			pPmxData->m_pMaterial[i].m_pNameEng = new unsigned char[EngSize];
-
-			//材質名(英）読み込み
-			fread_s(pPmxData->m_pMaterial[i].m_pNameEng, EngSize, EngSize, 1, fp);
-
-			//文字列から\0を消す
-			pPmxData->m_pMaterial[i].m_pNameEng=ErasCharFromString(pPmxData->m_pMaterial[i].m_pNameEng, EngSize, '\0');
+			//材質名(英)
+			pPmxData->m_pMaterial[i].m_pNameEng = WcharStrRead(EngSize, fp);
 		}
 
 		//ディフューズ
@@ -547,16 +529,14 @@ bool CPmxLoader::MaterialLoad(FILE* fp, PMX_DATA* pPmxData)
 		//メモサイズ
 		fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
 		MemoSize = StrToInt(Data, sizeof(Data));
-
-		//メモリ確保
-		pPmxData->m_pMaterial[i].m_pMemo = new unsigned char[MemoSize];
-
-		//メモ読み込み
-		fread_s(pPmxData->m_pMaterial[i].m_pMemo, MemoSize, MemoSize, 1, fp);
-
-		//文字列から\0を消す
-		ErasCharFromString(pPmxData->m_pMaterial[i].m_pMemo, MemoSize, '\0');
-
+		
+		//サイズあるときのみ
+		if (MemoSize > 0)
+		{
+			//メモ
+			pPmxData->m_pMaterial[i].m_pNameJap = WcharStrRead(MemoSize, fp);
+		}
+	
 		//使用する頂点数
 		fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
 		pPmxData->m_pMaterial[i].m_UseVerNum = StrToInt(Data, sizeof(Data));
@@ -611,14 +591,8 @@ bool CPmxLoader::BoneLoad(FILE* fp, PMX_DATA* pPmxData)
 		//サイズあるときのみ
 		if (JapSize > 0)
 		{
-			//メモリ確保
-			pPmxData->m_pBone[i].m_pNameJap = new unsigned char[JapSize];
-
-			//ボーン名(日)読み込み
-			fread_s(pPmxData->m_pBone[i].m_pNameJap, JapSize, JapSize, 1, fp);
-
-			//文字列から\0を消す
-			pPmxData->m_pBone[i].m_pNameJap=ErasCharFromString(pPmxData->m_pBone[i].m_pNameJap, JapSize, '\0');
+			//ボーン名(日)
+			pPmxData->m_pBone[i].m_pNameJap = WcharStrRead(JapSize, fp);
 		}
 
 		//ボーン名(英)サイズ
@@ -628,14 +602,8 @@ bool CPmxLoader::BoneLoad(FILE* fp, PMX_DATA* pPmxData)
 		//サイズあるときのみ
 		if (EngSize > 0)
 		{
-			//メモリ確保
-			pPmxData->m_pBone[i].m_pNameEng = new unsigned char[EngSize];
-
-			//ボーン名(英)読み込み
-			fread_s(pPmxData->m_pBone[i].m_pNameEng, EngSize, EngSize, 1, fp);
-
-			//文字列から\0を消す
-			pPmxData->m_pBone[i].m_pNameEng=ErasCharFromString(pPmxData->m_pBone[i].m_pNameEng, EngSize, '\0');
+			//ボーン名(英)
+			pPmxData->m_pBone[i].m_pNameEng = WcharStrRead(EngSize, fp);
 		}
 
 		//位置
@@ -1085,166 +1053,166 @@ bool CPmxLoader::Write(const char* FileName, PMX_DATA* pPmxData)
 	if (fp == nullptr)
 		return false;
 
-	//fprintf_s(fp, "ファイルタイプ:%s\n", pPmxData->m_Head.m_FileType);
-	//fprintf_s(fp, "バージョン:%f\n", pPmxData->m_Head.m_Ver);
+	fprintf_s(fp, "ファイルタイプ:%s\n", pPmxData->m_Head.m_FileType);
+	fprintf_s(fp, "バージョン:%f\n", pPmxData->m_Head.m_Ver);
 
-	//fprintf_s(fp, "バイト列サイズ:%d\n", pPmxData->m_Head.m_Size);
-	//for (int i = 0; i < pPmxData->m_Head.m_Size; i++)
-	//{
-	//	fprintf_s(fp, "%d,", pPmxData->m_Head.m_pData[i]);
-	//}
-	//fprintf_s(fp, "\n");
+	fprintf_s(fp, "バイト列サイズ:%d\n", pPmxData->m_Head.m_Size);
+	for (int i = 0; i < pPmxData->m_Head.m_Size; i++)
+	{
+		fprintf_s(fp, "%d,", pPmxData->m_Head.m_pData[i]);
+	}
+	fprintf_s(fp, "\n");
 
 	fprintf_s(fp,"モデル名(日):%ls\n", pPmxData->m_ModelInfo.m_pNameJap);
 	fprintf_s(fp,"モデル名(英):%ls\n", pPmxData->m_ModelInfo.m_pNameEng);
 	fprintf_s(fp,"コメント(日):%ls\n", pPmxData->m_ModelInfo.m_pCommentJap);
 	fprintf_s(fp,"コメント(英):%ls\n", pPmxData->m_ModelInfo.m_pCommentEng);
-	//fprintf_s(fp, "\n");
+	fprintf_s(fp, "\n");
 
-	//fprintf_s(fp, "頂点数：%d\n", pPmxData->m_VerNum);
+	fprintf_s(fp, "頂点数：%d\n", pPmxData->m_VerNum);
 
-	//for (int i = 0; i < pPmxData->m_VerNum; i++)
-	//{
-	//	fprintf_s(fp, "頂点%8d\n", i);
-	//
-	//	fprintf_s(fp, "Pos:");
-	//	for (int j = 0; j < 3; j++)
-	//	{
-	//		fprintf_s(fp, "%f,", pPmxData->m_pVertex[i].m_fPos[j]);
-	//	}
-	//	fprintf_s(fp, "\n");
+	for (int i = 0; i < pPmxData->m_VerNum; i++)
+	{
+		fprintf_s(fp, "頂点%8d\n", i);
+	
+		fprintf_s(fp, "Pos:");
+		for (int j = 0; j < 3; j++)
+		{
+			fprintf_s(fp, "%f,", pPmxData->m_pVertex[i].m_fPos[j]);
+		}
+		fprintf_s(fp, "\n");
 
-	//	fprintf_s(fp, "Norm:");
-	//	for (int j = 0; j < 3; j++)
-	//	{
-	//		fprintf_s(fp, "%f,", pPmxData->m_pVertex[i].m_fNorm[j]);
-	//	}
-	//	fprintf_s(fp, "\n");
+		fprintf_s(fp, "Norm:");
+		for (int j = 0; j < 3; j++)
+		{
+			fprintf_s(fp, "%f,", pPmxData->m_pVertex[i].m_fNorm[j]);
+		}
+		fprintf_s(fp, "\n");
 
-	//	fprintf_s(fp, "Uv:");
-	//	for (int j = 0; j < 2; j++)
-	//	{
-	//		fprintf_s(fp, "%f,", pPmxData->m_pVertex[i].m_fUv[j]);
-	//	}
-	//	fprintf_s(fp, "\n");
+		fprintf_s(fp, "Uv:");
+		for (int j = 0; j < 2; j++)
+		{
+			fprintf_s(fp, "%f,", pPmxData->m_pVertex[i].m_fUv[j]);
+		}
+		fprintf_s(fp, "\n");
 
-	//	//追加頂点があれば
-	//	if (pPmxData->m_pVertex->m_pfAddUv != nullptr)
-	//	{
-	//		fprintf_s(fp, "AddUv:");
-	//		for (int j = 0; j < 4; j++)
-	//		{
-	//			fprintf_s(fp, "%f,", pPmxData->m_pVertex[i].m_pfAddUv[i]);
-	//		}
-	//		fprintf_s(fp, "\n");
-	//	}
+		//追加頂点があれば
+		if (pPmxData->m_pVertex->m_pfAddUv != nullptr)
+		{
+			fprintf_s(fp, "AddUv:");
+			for (int j = 0; j < 4; j++)
+			{
+				fprintf_s(fp, "%f,", pPmxData->m_pVertex[i].m_pfAddUv[i]);
+			}
+			fprintf_s(fp, "\n");
+		}
 
-	//	fprintf_s(fp, "ウェイト変形方式:%d\n",pPmxData->m_pVertex[i].m_WeightData.m_WeightType);
+		fprintf_s(fp, "ウェイト変形方式:%d\n",pPmxData->m_pVertex[i].m_WeightData.m_WeightType);
 
-	//	//変形方式に応じて吐き出す
-	//	switch (pPmxData->m_pVertex[i].m_WeightData.m_WeightType)
-	//	{
-	//		//BDEF1
-	//		case 0:
-	//		{
-	//			fprintf_s(fp, "ボーンID:");
-	//			fprintf_s(fp, "%d\n", pPmxData->m_pVertex[i].m_WeightData.m_pBdef1->m_BoneID);
-	//			break;
-	//		}
-	//		//BDEF2
-	//		case 1:
-	//		{
+		//変形方式に応じて吐き出す
+		switch (pPmxData->m_pVertex[i].m_WeightData.m_WeightType)
+		{
+			//BDEF1
+			case 0:
+			{
+				fprintf_s(fp, "ボーンID:");
+				fprintf_s(fp, "%d\n", pPmxData->m_pVertex[i].m_WeightData.m_pBdef1->m_BoneID);
+				break;
+			}
+			//BDEF2
+			case 1:
+			{
 
-	//			fprintf_s(fp, "ボーンID:");
-	//			for (int j = 0; j < 2; j++)
-	//			{
-	//				fprintf_s(fp, "%d,", pPmxData->m_pVertex[i].m_WeightData.m_pBdef2->m_BoneID[j]);
-	//			}
-	//			fprintf_s(fp,"\n");
-	//			
-	//			fprintf_s(fp, "ウェイト値:");
-	//			fprintf_s(fp, "%f\n", pPmxData->m_pVertex[i].m_WeightData.m_pBdef2->m_Weight);
-	//			break;
-	//		}
-	//		//BDEF4
-	//		case 2:
-	//		{
-	//			fprintf_s(fp, "ボーンID:");
-	//			for (int j = 0; j < 4; j++)
-	//			{
-	//				fprintf_s(fp, "%d,", pPmxData->m_pVertex[i].m_WeightData.m_pBdef4->m_BoneID[j]);
-	//			}
-	//			fprintf_s(fp, "\n");
+				fprintf_s(fp, "ボーンID:");
+				for (int j = 0; j < 2; j++)
+				{
+					fprintf_s(fp, "%d,", pPmxData->m_pVertex[i].m_WeightData.m_pBdef2->m_BoneID[j]);
+				}
+				fprintf_s(fp,"\n");
+				
+				fprintf_s(fp, "ウェイト値:");
+				fprintf_s(fp, "%f\n", pPmxData->m_pVertex[i].m_WeightData.m_pBdef2->m_Weight);
+				break;
+			}
+			//BDEF4
+			case 2:
+			{
+				fprintf_s(fp, "ボーンID:");
+				for (int j = 0; j < 4; j++)
+				{
+					fprintf_s(fp, "%d,", pPmxData->m_pVertex[i].m_WeightData.m_pBdef4->m_BoneID[j]);
+				}
+				fprintf_s(fp, "\n");
 
-	//			fprintf_s(fp, "ウェイト値:");
-	//			for (int j = 0; j < 4; j++)
-	//			{
-	//				fprintf_s(fp, "%f,", pPmxData->m_pVertex[i].m_WeightData.m_pBdef4->m_Weight[j]);
-	//			}
-	//			fprintf_s(fp, "\n");
-	//			break;
-	//		}
-	//		//BDEF2
-	//		case 3:
-	//		{
-	//			fprintf_s(fp, "ボーンID:");
-	//			for (int j = 0; j < 2; j++)
-	//			{
-	//				fprintf_s(fp, "%d,", pPmxData->m_pVertex[i].m_WeightData.m_pSdef->m_BoneID[j]);
-	//			}
-	//			fprintf_s(fp, "\n");
+				fprintf_s(fp, "ウェイト値:");
+				for (int j = 0; j < 4; j++)
+				{
+					fprintf_s(fp, "%f,", pPmxData->m_pVertex[i].m_WeightData.m_pBdef4->m_Weight[j]);
+				}
+				fprintf_s(fp, "\n");
+				break;
+			}
+			//BDEF2
+			case 3:
+			{
+				fprintf_s(fp, "ボーンID:");
+				for (int j = 0; j < 2; j++)
+				{
+					fprintf_s(fp, "%d,", pPmxData->m_pVertex[i].m_WeightData.m_pSdef->m_BoneID[j]);
+				}
+				fprintf_s(fp, "\n");
 
-	//			fprintf_s(fp, "ウェイト値:");
-	//			fprintf_s(fp, "%f\n", pPmxData->m_pVertex[i].m_WeightData.m_pSdef->m_Weight);
+				fprintf_s(fp, "ウェイト値:");
+				fprintf_s(fp, "%f\n", pPmxData->m_pVertex[i].m_WeightData.m_pSdef->m_Weight);
 
-	//			fprintf_s(fp, "変形用行列3x3:");
-	//			for (int j = 0; j < 3; j++)
-	//			{
-	//				for (int k = 0; k < 3; k++)
-	//				{
-	//					fprintf_s(fp, "%f", pPmxData->m_pVertex[i].m_WeightData.m_pSdef->m_Matrix[j][k]);
-	//				}
-	//				fprintf_s(fp, "\n");
-	//			}
-	//			fprintf_s(fp, "\n");
-	//			break;
-	//		}
-	//		default:
-	//			break;
-	//	}
-	//	
-	//	fprintf_s(fp, "エッジ倍率：");
-	//	fprintf_s(fp, "%f\n", pPmxData->m_pVertex->m_EdgeMagn);
-	//	fprintf_s(fp, "\n");
-	//}
+				fprintf_s(fp, "変形用行列3x3:");
+				for (int j = 0; j < 3; j++)
+				{
+					for (int k = 0; k < 3; k++)
+					{
+						fprintf_s(fp, "%f", pPmxData->m_pVertex[i].m_WeightData.m_pSdef->m_Matrix[j][k]);
+					}
+					fprintf_s(fp, "\n");
+				}
+				fprintf_s(fp, "\n");
+				break;
+			}
+			default:
+				break;
+		}
+		
+		fprintf_s(fp, "エッジ倍率：");
+		fprintf_s(fp, "%f\n", pPmxData->m_pVertex->m_EdgeMagn);
+		fprintf_s(fp, "\n");
+	}
 
-	//fprintf_s(fp, "面の数：%d\n", pPmxData->m_FaceNum);
+	fprintf_s(fp, "面の数：%d\n", pPmxData->m_FaceNum);
 
-	//for (int i = 0; i < pPmxData->m_FaceNum; i++)
-	//{
-	//	fprintf_s(fp, "%5d:", i);
-	//	for (int j = 0; j < 3; j++)
-	//	{
-	//		fprintf_s(fp, "%8d", pPmxData->m_pFace[i].m_VerIndex[j]);
-	//	}
-	//	fprintf_s(fp, "\n");
-	//}
+	for (int i = 0; i < pPmxData->m_FaceNum; i++)
+	{
+		fprintf_s(fp, "%5d:", i);
+		for (int j = 0; j < 3; j++)
+		{
+			fprintf_s(fp, "%8d", pPmxData->m_pFace[i].m_VerIndex[j]);
+		}
+		fprintf_s(fp, "\n");
+	}
 
 	fprintf_s(fp, "テクスチャ数：%d\n", pPmxData->m_TexNum);
 
 	for (int i = 0; i < pPmxData->m_TexNum; i++)
 	{
-		fprintf_s(fp, "%s\n", pPmxData->m_pTex[i].m_pPass);
+		fprintf_s(fp, "%ls\n", pPmxData->m_pTex[i].m_pPass);
 	}
 	
 	fprintf_s(fp, "マテリアル数：%d\n", pPmxData->m_MaterialNum);
 
 	for (int i = 0; i < pPmxData->m_MaterialNum; i++)
 	{
-		fprintf_s(fp, "マテリアル名(日):%s\n", pPmxData->m_pMaterial[i].m_pNameJap);
-		fprintf_s(fp, "マテリアル名(英):%s\n", pPmxData->m_pMaterial[i].m_pNameEng);
+		fprintf_s(fp, "マテリアル名(日):%ls\n", pPmxData->m_pMaterial[i].m_pNameJap);
+		fprintf_s(fp, "マテリアル名(英):%ls\n", pPmxData->m_pMaterial[i].m_pNameEng);
 		
-	/*	fprintf_s(fp, "Diffuse:");
+		fprintf_s(fp, "Diffuse:");
 		for (int j = 0; j < 4; j++)
 		{
 			fprintf_s(fp, "%f,",pPmxData->m_pMaterial[i].m_Diffuse[j]);
@@ -1286,7 +1254,7 @@ bool CPmxLoader::Write(const char* FileName, PMX_DATA* pPmxData)
 
 		fprintf_s(fp, "メモ:%s\n", pPmxData->m_pMaterial[i].m_pMemo);
 		fprintf_s(fp, "使用する頂点数:%d\n", pPmxData->m_pMaterial[i].m_UseVerNum);
-*/
+
 		fprintf_s(fp, "\n");
 	}
 
@@ -1294,10 +1262,10 @@ bool CPmxLoader::Write(const char* FileName, PMX_DATA* pPmxData)
 
 	for (int i = 0; i < pPmxData->m_BoneNum; i++)
 	{
-		fprintf_s(fp, "ボーン名(日):%s\n", pPmxData->m_pBone[i].m_pNameJap);
-		fprintf_s(fp, "ボーン名(英):%s\n", pPmxData->m_pBone[i].m_pNameEng);
+		fprintf_s(fp, "ボーン名(日):%ls\n", pPmxData->m_pBone[i].m_pNameJap);
+		fprintf_s(fp, "ボーン名(英):%ls\n", pPmxData->m_pBone[i].m_pNameEng);
 
-		/*fprintf_s(fp, "Pos:");
+		fprintf_s(fp, "Pos:");
 		for (int j = 0; j < 3; j++)
 		{
 			fprintf_s(fp, "%f,", pPmxData->m_pBone[i].m_fPos[j]);
@@ -1373,7 +1341,7 @@ bool CPmxLoader::Write(const char* FileName, PMX_DATA* pPmxData)
 			}
 			fprintf_s(fp, "\n");
 		}
-		fprintf_s(fp, "\n");*/
+		fprintf_s(fp, "\n");
 	}
 
 	fprintf_s(fp, "モーフ数:%d\n", pPmxData->m_MorphNum);
@@ -1383,147 +1351,147 @@ bool CPmxLoader::Write(const char* FileName, PMX_DATA* pPmxData)
 		fprintf_s(fp, "モーフ名(日):%ls\n", pPmxData->m_pMorph[i].m_pNameJap);
 		fprintf_s(fp, "モーフ名(英):%ls\n", pPmxData->m_pMorph[i].m_pNameEng);
 
-		//fprintf_s(fp, "PMDカテゴリ:%d\n", pPmxData->m_pMorph[i].m_PmdType);
-		//fprintf_s(fp, "モーフタイプ:%d\n", pPmxData->m_pMorph[i].m_MorphType);
-		//fprintf_s(fp, "データ数:%d\n", pPmxData->m_pMorph[i].m_DataNum);
-		//
-		////タイプごとに出力する
-		//switch (pPmxData->m_pMorph[i].m_MorphType)
-		//{
-		//	//グループモーフ
-		//	case 0:
-		//	{				
-		//		for (int j = 0; j < pPmxData->m_pMorph[i].m_DataNum; j++)
-		//		{
-		//			fprintf_s(fp, "モーフID:%d\n", pPmxData->m_pMorph[i].m_pGroupMorph[j].m_MorphId);
-		//			fprintf_s(fp, "モーフ率:%f\n", pPmxData->m_pMorph[i].m_pGroupMorph[j].m_fRate);
-		//		}
-		//		fprintf_s(fp, "\n");
-		//		break;
-		//	}
-		//	//頂点モーフ
-		//	case 1:
-		//	{
-		//		for (int j = 0; j < pPmxData->m_pMorph[i].m_DataNum; j++)
-		//		{
-		//			fprintf_s(fp, "頂点ID:%d\n", pPmxData->m_pMorph[i].m_pVerMorph[j].m_VerId);
+		fprintf_s(fp, "PMDカテゴリ:%d\n", pPmxData->m_pMorph[i].m_PmdType);
+		fprintf_s(fp, "モーフタイプ:%d\n", pPmxData->m_pMorph[i].m_MorphType);
+		fprintf_s(fp, "データ数:%d\n", pPmxData->m_pMorph[i].m_DataNum);
+		
+		//タイプごとに出力する
+		switch (pPmxData->m_pMorph[i].m_MorphType)
+		{
+			//グループモーフ
+			case 0:
+			{				
+				for (int j = 0; j < pPmxData->m_pMorph[i].m_DataNum; j++)
+				{
+					fprintf_s(fp, "モーフID:%d\n", pPmxData->m_pMorph[i].m_pGroupMorph[j].m_MorphId);
+					fprintf_s(fp, "モーフ率:%f\n", pPmxData->m_pMorph[i].m_pGroupMorph[j].m_fRate);
+				}
+				fprintf_s(fp, "\n");
+				break;
+			}
+			//頂点モーフ
+			case 1:
+			{
+				for (int j = 0; j < pPmxData->m_pMorph[i].m_DataNum; j++)
+				{
+					fprintf_s(fp, "頂点ID:%d\n", pPmxData->m_pMorph[i].m_pVerMorph[j].m_VerId);
 
-		//			fprintf_s(fp, "座標オフセット:");
-		//			for (int k = 0; k < 3; k++)
-		//			{
-		//				fprintf_s(fp, "%f,", pPmxData->m_pMorph[i].m_pVerMorph[j].m_fOffset[k]);
-		//			}
-		//			fprintf_s(fp, "\n");					
-		//		}
-		//		fprintf_s(fp, "\n");
-		//		break;
-		//	}
-		//	//ボーン
-		//	case 2:
-		//	{
-		//		for (int j = 0; j < pPmxData->m_pMorph[i].m_DataNum; j++)
-		//		{
-		//			fprintf_s(fp, "ボーンID:%d\n", pPmxData->m_pMorph[i].m_pBoneMorph[j].m_BoneId);
+					fprintf_s(fp, "座標オフセット:");
+					for (int k = 0; k < 3; k++)
+					{
+						fprintf_s(fp, "%f,", pPmxData->m_pMorph[i].m_pVerMorph[j].m_fOffset[k]);
+					}
+					fprintf_s(fp, "\n");					
+				}
+				fprintf_s(fp, "\n");
+				break;
+			}
+			//ボーン
+			case 2:
+			{
+				for (int j = 0; j < pPmxData->m_pMorph[i].m_DataNum; j++)
+				{
+					fprintf_s(fp, "ボーンID:%d\n", pPmxData->m_pMorph[i].m_pBoneMorph[j].m_BoneId);
 
-		//			fprintf_s(fp, "移動量:");
-		//			for (int k = 0; k < 3; k++)
-		//			{
-		//				fprintf_s(fp, "%f,", pPmxData->m_pMorph[i].m_pBoneMorph[j].m_fMove[k]);
-		//			}
-		//			fprintf_s(fp, "\n");
+					fprintf_s(fp, "移動量:");
+					for (int k = 0; k < 3; k++)
+					{
+						fprintf_s(fp, "%f,", pPmxData->m_pMorph[i].m_pBoneMorph[j].m_fMove[k]);
+					}
+					fprintf_s(fp, "\n");
 
-		//			fprintf_s(fp, "回転量:");
-		//			for (int k = 0; k < 4; k++)
-		//			{
-		//				fprintf_s(fp, "%f,", pPmxData->m_pMorph[i].m_pBoneMorph[j].m_fRot[k]);
-		//			}
-		//			fprintf_s(fp, "\n");
-		//		}
-		//		fprintf_s(fp, "\n");
-		//		break;
-		//	}
-		//	//材質
-		//	case 8:
-		//	{
-		//		for (int j = 0; j < pPmxData->m_pMorph[i].m_DataNum; j++)
-		//		{
-		//			fprintf_s(fp, "材質ID:%d\n", pPmxData->m_pMorph[i].m_pMateMorph[j].m_MateId);
-		//			fprintf_s(fp, "オフセット演算形式:%d\n", pPmxData->m_pMorph[i].m_pMateMorph[j].m_Format);
-		//			
-		//			fprintf_s(fp, "Diffuse:");
-		//			for (int k = 0; k < 4; k++)
-		//			{
-		//				fprintf_s(fp, "%f,", pPmxData->m_pMorph[i].m_pMateMorph[j].m_fDiffuse[k]);
-		//			}
-		//			fprintf_s(fp, "\n");
-		//			
-		//			fprintf_s(fp, "Specular:");
-		//			for (int k = 0; k < 3; k++)
-		//			{
-		//				fprintf_s(fp, "%f,", pPmxData->m_pMorph[i].m_pMateMorph[j].m_fSpecular[k]);
-		//			}
-		//			fprintf_s(fp, "\n");
+					fprintf_s(fp, "回転量:");
+					for (int k = 0; k < 4; k++)
+					{
+						fprintf_s(fp, "%f,", pPmxData->m_pMorph[i].m_pBoneMorph[j].m_fRot[k]);
+					}
+					fprintf_s(fp, "\n");
+				}
+				fprintf_s(fp, "\n");
+				break;
+			}
+			//材質
+			case 8:
+			{
+				for (int j = 0; j < pPmxData->m_pMorph[i].m_DataNum; j++)
+				{
+					fprintf_s(fp, "材質ID:%d\n", pPmxData->m_pMorph[i].m_pMateMorph[j].m_MateId);
+					fprintf_s(fp, "オフセット演算形式:%d\n", pPmxData->m_pMorph[i].m_pMateMorph[j].m_Format);
+					
+					fprintf_s(fp, "Diffuse:");
+					for (int k = 0; k < 4; k++)
+					{
+						fprintf_s(fp, "%f,", pPmxData->m_pMorph[i].m_pMateMorph[j].m_fDiffuse[k]);
+					}
+					fprintf_s(fp, "\n");
+					
+					fprintf_s(fp, "Specular:");
+					for (int k = 0; k < 3; k++)
+					{
+						fprintf_s(fp, "%f,", pPmxData->m_pMorph[i].m_pMateMorph[j].m_fSpecular[k]);
+					}
+					fprintf_s(fp, "\n");
 
-		//			fprintf_s(fp, "SpecularPower:%f\n", pPmxData->m_pMorph[i].m_pMateMorph[j].m_fSpePower);
+					fprintf_s(fp, "SpecularPower:%f\n", pPmxData->m_pMorph[i].m_pMateMorph[j].m_fSpePower);
 
-		//			fprintf_s(fp, "Ambient:");
-		//			for (int k = 0; k < 3; k++)
-		//			{
-		//				fprintf_s(fp, "%f,", pPmxData->m_pMorph[i].m_pMateMorph[j].m_fAmbient[k]);
-		//			}
-		//			fprintf_s(fp, "\n");
+					fprintf_s(fp, "Ambient:");
+					for (int k = 0; k < 3; k++)
+					{
+						fprintf_s(fp, "%f,", pPmxData->m_pMorph[i].m_pMateMorph[j].m_fAmbient[k]);
+					}
+					fprintf_s(fp, "\n");
 
-		//			fprintf_s(fp, "EdgeColor:");
-		//			for (int k = 0; k < 4; k++)
-		//			{
-		//				fprintf_s(fp, "%f,", pPmxData->m_pMorph[i].m_pMateMorph[j].m_fAmbient[k]);
-		//			}
-		//			fprintf_s(fp, "\n");
+					fprintf_s(fp, "EdgeColor:");
+					for (int k = 0; k < 4; k++)
+					{
+						fprintf_s(fp, "%f,", pPmxData->m_pMorph[i].m_pMateMorph[j].m_fAmbient[k]);
+					}
+					fprintf_s(fp, "\n");
 
-		//			fprintf_s(fp, "EdgeSize:%f\n", pPmxData->m_pMorph[i].m_pMateMorph[j].m_fEdgeSize);
+					fprintf_s(fp, "EdgeSize:%f\n", pPmxData->m_pMorph[i].m_pMateMorph[j].m_fEdgeSize);
 
-		//			fprintf_s(fp, "Tex:");
-		//			for (int k = 0; k < 4; k++)
-		//			{
-		//				fprintf_s(fp, "%f,", pPmxData->m_pMorph[i].m_pMateMorph[j].m_fTex[k]);
-		//			}
-		//			fprintf_s(fp, "\n");
-		//			
-		//			fprintf_s(fp, "SphereTex:");
-		//			for (int k = 0; k < 4; k++)
-		//			{
-		//				fprintf_s(fp, "%f,", pPmxData->m_pMorph[i].m_pMateMorph[j].m_fSphereTex[k]);
-		//			}
-		//			fprintf_s(fp, "\n");
-		//			
-		//			fprintf_s(fp, "ToonTex:");
-		//			for (int k = 0; k < 4; k++)
-		//			{
-		//				fprintf_s(fp, "%f,", pPmxData->m_pMorph[i].m_pMateMorph[j].m_fToonTex[k]);
-		//			}
-		//			fprintf_s(fp, "\n");
-		//		}
-		//		fprintf_s(fp, "\n");
-		//		break;
-		//	}
-		//	//UVor追加UV
-		//	default:
-		//	{
-		//		for (int j = 0; j < pPmxData->m_pMorph[i].m_DataNum; j++)
-		//		{
-		//			fprintf_s(fp, "頂点ID:%d\n", pPmxData->m_pMorph[i].m_pUvMorph[j].m_VerId);
+					fprintf_s(fp, "Tex:");
+					for (int k = 0; k < 4; k++)
+					{
+						fprintf_s(fp, "%f,", pPmxData->m_pMorph[i].m_pMateMorph[j].m_fTex[k]);
+					}
+					fprintf_s(fp, "\n");
+					
+					fprintf_s(fp, "SphereTex:");
+					for (int k = 0; k < 4; k++)
+					{
+						fprintf_s(fp, "%f,", pPmxData->m_pMorph[i].m_pMateMorph[j].m_fSphereTex[k]);
+					}
+					fprintf_s(fp, "\n");
+					
+					fprintf_s(fp, "ToonTex:");
+					for (int k = 0; k < 4; k++)
+					{
+						fprintf_s(fp, "%f,", pPmxData->m_pMorph[i].m_pMateMorph[j].m_fToonTex[k]);
+					}
+					fprintf_s(fp, "\n");
+				}
+				fprintf_s(fp, "\n");
+				break;
+			}
+			//UVor追加UV
+			default:
+			{
+				for (int j = 0; j < pPmxData->m_pMorph[i].m_DataNum; j++)
+				{
+					fprintf_s(fp, "頂点ID:%d\n", pPmxData->m_pMorph[i].m_pUvMorph[j].m_VerId);
 
-		//			fprintf_s(fp, "UVオフセット:");
-		//			for (int k = 0; k < 4; k++)
-		//			{
-		//				fprintf_s(fp, "%f,", pPmxData->m_pMorph[i].m_pUvMorph[j].m_fOffset[k]);
-		//			}
-		//			fprintf_s(fp, "\n");
-		//		}
-		//		fprintf_s(fp, "\n");
-		//		break;
-		//	}
-		//}
+					fprintf_s(fp, "UVオフセット:");
+					for (int k = 0; k < 4; k++)
+					{
+						fprintf_s(fp, "%f,", pPmxData->m_pMorph[i].m_pUvMorph[j].m_fOffset[k]);
+					}
+					fprintf_s(fp, "\n");
+				}
+				fprintf_s(fp, "\n");
+				break;
+			}
+		}
 		fprintf_s(fp, "\n");
 	}
 

@@ -201,7 +201,7 @@ struct PMX_TEXTURE
 			m_pPass = nullptr;
 		}
 	}
-	unsigned char* m_pPass;	//テクスチャパス
+	wchar_t* m_pPass;	//テクスチャパス
 };
 
 //pmxマテリアル
@@ -233,9 +233,11 @@ struct PMX_MATERIAL
 			m_pMemo = nullptr;
 		}
 	}
-	unsigned char*	m_pNameJap;		//材質名(日)
-	unsigned char*	m_pNameEng;		//材質名(英)
-	unsigned char*	m_pMemo;		//メモ
+
+	wchar_t* m_pNameJap;	//材質名(日)
+	wchar_t* m_pNameEng;	//材質名(英)
+	wchar_t* m_pMemo;		//メモ	
+
 	unsigned char	m_BitFlag;		//描画フラグ( 0x01:両面描画, 0x02:地面影, 0x04:セルフシャドウマップへの描画, 0x08:セルフシャドウの描画, 0x10:エッジ描画)
 	unsigned char	m_SphereMode;	//スフィアモード(0:無効 1:乗算(sph) 2:加算(spa) 3:サブテクスチャ)
 	unsigned char	m_ToonFlag;		//共有Toonフラグ
@@ -306,8 +308,8 @@ struct PMX_BONE
 			m_pNameEng = nullptr;
 		}
 	}
-	unsigned char*	m_pNameJap;		//ボーン名(日)
-	unsigned char*	m_pNameEng;		//ボーン名(英)
+	wchar_t*		m_pNameJap;		//ボーン名(日)
+	wchar_t*		m_pNameEng;		//ボーン名(英)
 	unsigned char	m_BitFlag[2];	//ビットフラグ
 		
 	int		m_ParentId;		//親インデックス
