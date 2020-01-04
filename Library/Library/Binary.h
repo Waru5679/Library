@@ -1,4 +1,5 @@
 #pragma once
+#include <stdio.h>
 
 constexpr int CHAR	{ 1 };	//Char
 constexpr int SHORT	{ 2 };	//Short
@@ -20,4 +21,7 @@ float StrToFloat(unsigned char* pStr);
 unsigned char* ErasCharFromString(unsigned char* pSource, int Size, char Erace);
 
 //テキスト変換
-wchar_t* CharToWchar_t(unsigned char* str);
+wchar_t* CharToWchar_t(unsigned char* pStr, int StrSize);
+
+//wchar_t文字列読み込み
+wchar_t* WcharStrRead(int StrSize, FILE* fp);

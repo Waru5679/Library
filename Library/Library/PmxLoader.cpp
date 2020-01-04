@@ -1,57 +1,57 @@
-#include "PmxLoader.h"
+ï»¿#include "PmxLoader.h"
 #include "Binary.h"
 
-//ƒCƒ“ƒXƒ^ƒ“ƒX
+//ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹
 CPmxLoader* CPmxLoader::m_pInstance = nullptr;
 
-//“Ç‚İ‚İ
+//èª­ã¿è¾¼ã¿
 bool CPmxLoader::Load(const char* FileName, PMX_DATA* pPmxData)
 {
-	//ƒtƒ@ƒCƒ‹ƒI[ƒvƒ“
+	//ãƒ•ã‚¡ã‚¤ãƒ«ã‚ªãƒ¼ãƒ—ãƒ³
 	FILE* fp = nullptr;
 	fopen_s(&fp, FileName, "rb");
 
-	//ƒtƒ@ƒCƒ‹ƒI[ƒvƒ“¸”s
+	//ãƒ•ã‚¡ã‚¤ãƒ«ã‚ªãƒ¼ãƒ—ãƒ³å¤±æ•—
 	if (fp == nullptr)
 		return false;
 
-	//ƒwƒbƒ_î•ñ“Ç‚İ‚İ
+	//ãƒ˜ãƒƒãƒ€æƒ…å ±èª­ã¿è¾¼ã¿
 	HeadLoad(fp, pPmxData);	
 
-	//ƒ‚ƒfƒ‹î•ñ“Ç‚İ‚İ
+	//ãƒ¢ãƒ‡ãƒ«æƒ…å ±èª­ã¿è¾¼ã¿
 	ModelInfoLoad(fp, pPmxData);
 
-	//’¸“_“Ç‚İ‚İ
+	//é ‚ç‚¹èª­ã¿è¾¼ã¿
 	if (VertexLoad(fp, pPmxData) == false)
 	{
 		return false;
 	}
 	
-	//–Êƒf[ƒ^“Ç‚İ‚İ
+	//é¢ãƒ‡ãƒ¼ã‚¿èª­ã¿è¾¼ã¿
 	if (FaceLoad(fp, pPmxData) == false)
 	{
 		return false;
 	}
 		
-	//ƒeƒNƒXƒ`ƒƒ“Ç‚İ‚İ
+	//ãƒ†ã‚¯ã‚¹ãƒãƒ£èª­ã¿è¾¼ã¿
 	if (TextureLoad(fp, pPmxData) == false)
 	{
 		return false;
 	}
 
-	//ƒ}ƒeƒŠƒAƒ‹“Ç‚İ‚İ
+	//ãƒãƒ†ãƒªã‚¢ãƒ«èª­ã¿è¾¼ã¿
 	if (MaterialLoad(fp, pPmxData) == false)
 	{
 		return false;
 	}
 
-	//ƒ{[ƒ““Ç‚İ‚İ
+	//ãƒœãƒ¼ãƒ³èª­ã¿è¾¼ã¿
 	if (BoneLoad(fp, pPmxData) == false)
 	{
 		return false;
 	}
 	
-	//ƒ‚[ƒt“Ç‚İ‚İ
+	//ãƒ¢ãƒ¼ãƒ•èª­ã¿è¾¼ã¿
 	if (MorphLoad(fp, pPmxData) == false)
 	{
 		return false;
@@ -62,140 +62,116 @@ bool CPmxLoader::Load(const char* FileName, PMX_DATA* pPmxData)
 }
 
 
-//ƒwƒbƒ_î•ñ“Ç‚İ‚±‚İ
+//ãƒ˜ãƒƒãƒ€æƒ…å ±èª­ã¿ã“ã¿
 void CPmxLoader::HeadLoad(FILE* fp, PMX_DATA* pPmxData)
 {
-	//“Ç‚İ‚İ—p
+	//èª­ã¿è¾¼ã¿ç”¨
 	unsigned char Data[4];
 
-	//ƒtƒ@ƒCƒ‹ƒ^ƒCƒv
+	//ãƒ•ã‚¡ã‚¤ãƒ«ã‚¿ã‚¤ãƒ—
 	fread_s(pPmxData->m_Head.m_FileType, sizeof(pPmxData->m_Head.m_FileType), sizeof(pPmxData->m_Head.m_FileType), 1, fp);
 
-	//ƒo[ƒWƒ‡ƒ“
+	//ãƒãƒ¼ã‚¸ãƒ§ãƒ³
 	fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
 	pPmxData->m_Head.m_Ver = StrToFloat(Data);
 
-	//ƒtƒ@ƒCƒ‹ƒ^ƒCƒv
+	//ãƒ•ã‚¡ã‚¤ãƒ«ã‚¿ã‚¤ãƒ—
 	fread_s(&pPmxData->m_Head.m_Size, sizeof(pPmxData->m_Head.m_Size), sizeof(pPmxData->m_Head.m_Size), 1, fp);
 
-	//ƒoƒCƒg—ñƒTƒCƒY
+	//ãƒã‚¤ãƒˆåˆ—ã‚µã‚¤ã‚º
 	int Size = pPmxData->m_Head.m_Size;
 	pPmxData->m_Head.m_pData = new unsigned char[Size];
 
-	//ƒoƒCƒg—ñ“Ç‚İ‚İ
+	//ãƒã‚¤ãƒˆåˆ—èª­ã¿è¾¼ã¿
 	for (int i = 0; i < Size; i++)
 	{
-		//ƒtƒ@ƒCƒ‹ƒ^ƒCƒv
+		//ãƒ•ã‚¡ã‚¤ãƒ«ã‚¿ã‚¤ãƒ—
 		fread_s(&pPmxData->m_Head.m_pData[i], sizeof(unsigned char), sizeof(unsigned char), 1, fp);
 	}
 }
 
-//ƒ‚ƒfƒ‹î•ñ“Ç‚İ‚İ
+//ãƒ¢ãƒ‡ãƒ«æƒ…å ±èª­ã¿è¾¼ã¿
 void CPmxLoader::ModelInfoLoad(FILE* fp, PMX_DATA* pPmxData)
 {
 	unsigned char Data[4];
 
-	//ƒTƒCƒY
+	//ã‚µã‚¤ã‚º
 	int NameJapSize;
 	int NameEngSize;
 	int CommentJapSize;
 	int CommentEngSize;
-
-	//ƒ‚ƒfƒ‹–¼(“ú)ƒTƒCƒY
+	
+	//ãƒ¢ãƒ‡ãƒ«å(æ—¥)ã‚µã‚¤ã‚º
 	fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
 	NameJapSize = StrToInt(Data,sizeof(Data));
 
-	//ƒTƒCƒY‚ ‚é‚Æ‚«‚Ì‚İ
+	//ã‚µã‚¤ã‚ºã‚ã‚‹ã¨ãã®ã¿
 	if (NameJapSize > 0)
 	{
-		//ƒƒ‚ƒŠŠm•Û
-		pPmxData->m_ModelInfo.m_pNameJap = new unsigned char[NameJapSize];
-
-		//ƒ‚ƒfƒ‹–¼(“ú)“Ç‚İ‚İ
-		fread_s(pPmxData->m_ModelInfo.m_pNameJap, NameJapSize, NameJapSize, 1, fp);
-	
-		//•¶š—ñ‚©‚ç\0‚ğÁ‚·
-		pPmxData->m_ModelInfo.m_pNameJap=ErasCharFromString(pPmxData->m_ModelInfo.m_pNameJap, NameJapSize, '\0');
+		//ãƒ¢ãƒ‡ãƒ«å(æ—¥)èª­ã¿è¾¼ã‚€
+		pPmxData->m_ModelInfo.m_pNameJap=WcharStrRead(NameJapSize, fp);
 	}
 
-	//ƒ‚ƒfƒ‹–¼(‰p)ƒTƒCƒY
+	//ãƒ¢ãƒ‡ãƒ«å(è‹±)ã‚µã‚¤ã‚º
 	fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
 	NameEngSize = StrToInt(Data, sizeof(Data));
 
-	//ƒTƒCƒY‚ ‚é‚Æ‚«‚Ì‚İ
+	//ã‚µã‚¤ã‚ºã‚ã‚‹ã¨ãã®ã¿
 	if (NameEngSize > 0)
 	{
-		//ƒƒ‚ƒŠŠm•Û
-		pPmxData->m_ModelInfo.m_pNameEng = new unsigned char[NameEngSize];
-
-		//ƒ‚ƒfƒ‹–¼(‰p)“Ç‚İ‚İ
-		fread_s(pPmxData->m_ModelInfo.m_pNameEng, NameEngSize, NameEngSize, 1, fp);
-		
-		//•¶š—ñ‚©‚ç\0‚ğÁ‚·
-		pPmxData->m_ModelInfo.m_pNameEng=ErasCharFromString(pPmxData->m_ModelInfo.m_pNameEng, NameEngSize, '\0');
+		//ãƒ¢ãƒ‡ãƒ«å(è‹±)èª­ã¿è¾¼ã‚€
+		pPmxData->m_ModelInfo.m_pNameEng=WcharStrRead(NameEngSize, fp);
 	}
 
-	//ƒRƒƒ“ƒg(“ú)ƒTƒCƒY
+	//ã‚³ãƒ¡ãƒ³ãƒˆ(æ—¥)ã‚µã‚¤ã‚º
 	fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
 	CommentJapSize = StrToInt(Data,sizeof(Data));
 
-	//ƒTƒCƒY‚ ‚é‚Æ‚«‚Ì‚İ
+	//ã‚µã‚¤ã‚ºã‚ã‚‹ã¨ãã®ã¿
 	if (CommentJapSize > 0)
 	{
-		//ƒƒ‚ƒŠŠm•Û
-		pPmxData->m_ModelInfo.m_pCommentJap = new unsigned char[CommentJapSize];
-
-		//ƒRƒƒ“ƒg(“ú)“Ç‚İ‚İ
-		fread_s(pPmxData->m_ModelInfo.m_pCommentJap, CommentJapSize, CommentJapSize, 1, fp);
-
-		//•¶š—ñ‚©‚ç\0‚ğÁ‚·
-		pPmxData->m_ModelInfo.m_pCommentJap=ErasCharFromString(pPmxData->m_ModelInfo.m_pCommentJap, CommentJapSize, '\0');
+		//ã‚³ãƒ¡ãƒ³ãƒˆ(æ—¥)èª­ã¿è¾¼ã‚€
+		pPmxData->m_ModelInfo.m_pCommentJap=WcharStrRead(CommentJapSize, fp);
 	}
 
-	//ƒRƒƒ“ƒg(‰p)ƒTƒCƒY
+	//ã‚³ãƒ¡ãƒ³ãƒˆ(è‹±)ã‚µã‚¤ã‚º
 	fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
 	CommentEngSize = StrToInt(Data, sizeof(Data));
 
-	//ƒTƒCƒY‚ ‚é‚Æ‚«‚Ì‚İ
+	//ã‚µã‚¤ã‚ºã‚ã‚‹ã¨ãã®ã¿
 	if (CommentEngSize > 0)
 	{
-		//ƒƒ‚ƒŠŠm•Û
-		pPmxData->m_ModelInfo.m_pCommentEng = new unsigned char[CommentEngSize];
-
-		//ƒRƒƒ“ƒg(‰p)“Ç‚İ‚İ
-		fread_s(pPmxData->m_ModelInfo.m_pCommentEng, CommentEngSize, CommentEngSize, 1, fp);
-	
-		//•¶š—ñ‚©‚ç\0‚ğÁ‚·
-		pPmxData->m_ModelInfo.m_pCommentEng=ErasCharFromString(pPmxData->m_ModelInfo.m_pCommentEng, CommentEngSize, '\0');
+		//ã‚³ãƒ¡ãƒ³ãƒˆ(è‹±)èª­ã¿è¾¼ã‚€
+		pPmxData->m_ModelInfo.m_pCommentEng=WcharStrRead(CommentEngSize, fp);
 	}
 }
 
-//’¸“_“Ç‚İ‚İ
+//é ‚ç‚¹èª­ã¿è¾¼ã¿
 bool CPmxLoader::VertexLoad(FILE* fp, PMX_DATA* pPmxData)
 {
 	unsigned char Data[4];
 	
-	//’¸“_”
+	//é ‚ç‚¹æ•°
 	fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
 	pPmxData->m_VerNum = StrToInt(Data, sizeof(Data));
 
-	//’¸“_‚È‚µ
+	//é ‚ç‚¹ãªã—
 	if (pPmxData->m_VerNum <= 0)
 	{
 		return false;
 	}
 
-	//ƒƒ‚ƒŠŠm•Û
+	//ãƒ¡ãƒ¢ãƒªç¢ºä¿
 	pPmxData->m_pVertex = new PMX_VERTEX[pPmxData->m_VerNum];
 	
-	//ƒ{[ƒ“ƒCƒ“ƒfƒbƒNƒXƒTƒCƒY
+	//ãƒœãƒ¼ãƒ³ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã‚µã‚¤ã‚º
 	int BoneIndexSize = pPmxData->m_Head.m_pData[5];
 
-	//ƒ{[ƒ“ƒCƒ“ƒfƒbƒNƒXƒf[ƒ^‚Ì“Ç‚İ‚İ—p
+	//ãƒœãƒ¼ãƒ³ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ãƒ‡ãƒ¼ã‚¿ã®èª­ã¿è¾¼ã¿ç”¨
 	unsigned char* pBoneIndex;
 	pBoneIndex = new unsigned char[BoneIndexSize];
 
-	//’¸“_‚Ì”‚¾‚¯“Ç‚İ‚Ş
+	//é ‚ç‚¹ã®æ•°ã ã‘èª­ã¿è¾¼ã‚€
 	for (int i = 0; i < pPmxData->m_VerNum; i++)
 	{
 		//Pos
@@ -219,13 +195,13 @@ bool CPmxLoader::VertexLoad(FILE* fp, PMX_DATA* pPmxData)
 			pPmxData->m_pVertex[i].m_fUv[j] = StrToFloat(Data);
 		}
 		
-		//’Ç‰ÁUV‚ª‚ ‚éê‡
+		//è¿½åŠ UVãŒã‚ã‚‹å ´åˆ
 		if (pPmxData->m_Head.m_pData[1] != 0)
 		{
-			//’Ç‰Á•ª‚Ìƒƒ‚ƒŠŠm•Û
+			//è¿½åŠ åˆ†ã®ãƒ¡ãƒ¢ãƒªç¢ºä¿
 			pPmxData->m_pVertex[i].m_pfAddUv = new float[pPmxData->m_Head.m_pData[1]];
 
-			//’Ç‰Á•ª
+			//è¿½åŠ åˆ†
 			for (int j = 0; j < pPmxData->m_Head.m_pData[1]; j++)
 			{
 				fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
@@ -233,83 +209,83 @@ bool CPmxLoader::VertexLoad(FILE* fp, PMX_DATA* pPmxData)
 			}
 		}
 
-		//ƒEƒFƒCƒg•ÏŒ`•û®
+		//ã‚¦ã‚§ã‚¤ãƒˆå¤‰å½¢æ–¹å¼
 		fread_s(&pPmxData->m_pVertex[i].m_WeightData.m_WeightType, sizeof(unsigned char), sizeof(unsigned char), 1, fp);
 
-		//•ÏŒ`•û®‚É‰‚¶‚Ä“Ç‚İ‚İ
+		//å¤‰å½¢æ–¹å¼ã«å¿œã˜ã¦èª­ã¿è¾¼ã¿
 		switch (pPmxData->m_pVertex[i].m_WeightData.m_WeightType)
 		{
-			//BDFE1•û®
+			//BDFE1æ–¹å¼
 			case 0:
 			{
-				//ƒƒ‚ƒŠŠm•Û
+				//ãƒ¡ãƒ¢ãƒªç¢ºä¿
 				pPmxData->m_pVertex[i].m_WeightData.m_pBdef1 = new BDEF1;
 
-				//ƒ{[ƒ“ID
+				//ãƒœãƒ¼ãƒ³ID
 				fread_s(pBoneIndex, BoneIndexSize, BoneIndexSize, 1, fp);
 				pPmxData->m_pVertex[i].m_WeightData.m_pBdef1->m_BoneID = StrToInt(pBoneIndex, BoneIndexSize);
 
 				break;
 			}
-			//BDFE2•û®
+			//BDFE2æ–¹å¼
 			case 1:
 			{
-				//ƒƒ‚ƒŠŠm•Û
+				//ãƒ¡ãƒ¢ãƒªç¢ºä¿
 				pPmxData->m_pVertex[i].m_WeightData.m_pBdef2 = new BDEF2;
 
-				//ƒ{[ƒ“ID*2
+				//ãƒœãƒ¼ãƒ³ID*2
 				for (int j = 0; j < 2; j++)
 				{
 					fread_s(pBoneIndex, BoneIndexSize, BoneIndexSize, 1, fp);
 					pPmxData->m_pVertex[i].m_WeightData.m_pBdef2->m_BoneID[j] = StrToInt(pBoneIndex, BoneIndexSize);
 				}
 			
-				//ƒEƒFƒCƒg
+				//ã‚¦ã‚§ã‚¤ãƒˆ
 				fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
 				pPmxData->m_pVertex[i].m_WeightData.m_pBdef2->m_Weight = StrToFloat(Data);
 
 				break;
 			}
-			//BDFE4•û®
+			//BDFE4æ–¹å¼
 			case 2:
 			{
-				//ƒƒ‚ƒŠŠm•Û
+				//ãƒ¡ãƒ¢ãƒªç¢ºä¿
 				pPmxData->m_pVertex[i].m_WeightData.m_pBdef4 = new BDEF4;
 
-				//ƒ{[ƒ“ID*4
+				//ãƒœãƒ¼ãƒ³ID*4
 				for (int j = 0; j < 4; j++)
 				{		
 					fread_s(pBoneIndex, BoneIndexSize, BoneIndexSize, 1, fp);
 					pPmxData->m_pVertex[i].m_WeightData.m_pBdef4->m_BoneID[j] = StrToInt(pBoneIndex, BoneIndexSize);
 				}
 	
-				//ƒEƒFƒCƒg*4
+				//ã‚¦ã‚§ã‚¤ãƒˆ*4
 				for (int j = 0; j < 4; j++)
 				{
-					//ƒEƒFƒCƒg
+					//ã‚¦ã‚§ã‚¤ãƒˆ
 					fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
 					pPmxData->m_pVertex[i].m_WeightData.m_pBdef4->m_Weight[j] = StrToFloat(Data);
 				}
 				break;
 			}
-			//SDEF•û®
+			//SDEFæ–¹å¼
 			case 3:
 			{
-				//ƒƒ‚ƒŠŠm•Û
+				//ãƒ¡ãƒ¢ãƒªç¢ºä¿
 				pPmxData->m_pVertex[i].m_WeightData.m_pSdef = new SDEF;
 
-				//ƒ{[ƒ“ID*2
+				//ãƒœãƒ¼ãƒ³ID*2
 				for (int j = 0; j < 2; j++)
 				{
 					fread_s(pBoneIndex, BoneIndexSize, BoneIndexSize, 1, fp);
 					pPmxData->m_pVertex[i].m_WeightData.m_pSdef->m_BoneID[j] = StrToInt(pBoneIndex, BoneIndexSize);
 				}
 			
-				//ƒEƒFƒCƒg
+				//ã‚¦ã‚§ã‚¤ãƒˆ
 				fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
 				pPmxData->m_pVertex[i].m_WeightData.m_pSdef->m_Weight = StrToFloat(Data);
 
-				//3x3ƒ}ƒgƒŠƒbƒNƒX
+				//3x3ãƒãƒˆãƒªãƒƒã‚¯ã‚¹
 				for (int j = 0; j < 3; j++)
 				{
 					for (int k = 0; k < 3; k++)
@@ -324,50 +300,50 @@ bool CPmxLoader::VertexLoad(FILE* fp, PMX_DATA* pPmxData)
 				break;
 		}
 
-		//ƒGƒbƒW”{—¦
+		//ã‚¨ãƒƒã‚¸å€ç‡
 		fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
 		pPmxData->m_pVertex[i].m_EdgeMagn = StrToFloat(Data);
 	}
 
-	//“Ç‚İ‚İ—p”jŠü
+	//èª­ã¿è¾¼ã¿ç”¨ç ´æ£„
 	delete[] pBoneIndex;
 	pBoneIndex = nullptr;
 
 	return true;
 }
 
-//–Ê“Ç‚İ‚İ
+//é¢èª­ã¿è¾¼ã¿
 bool CPmxLoader::FaceLoad(FILE* fp, PMX_DATA* pPmxData)
 {
 	unsigned char Data[4];
 
-	//–Ê‚Ì”
+	//é¢ã®æ•°
 	fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
 	pPmxData->m_FaceNum = StrToInt(Data, sizeof(Data));
 
-	//3’¸“_‚Å1–Ê
+	//3é ‚ç‚¹ã§1é¢
 	pPmxData->m_FaceNum /= 3;
 
-	//–Ê‚È‚µ
+	//é¢ãªã—
 	if (pPmxData->m_FaceNum <= 0)
 	{
 		return false;
 	}
 
-	//–Êƒf[ƒ^ƒƒ‚ƒŠŠm•Û
+	//é¢ãƒ‡ãƒ¼ã‚¿ãƒ¡ãƒ¢ãƒªç¢ºä¿
 	pPmxData->m_pFace = new PMX_FACE[pPmxData->m_FaceNum];
 	
-	//’¸“_ƒCƒ“ƒfƒbƒNƒXƒTƒCƒY
+	//é ‚ç‚¹ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã‚µã‚¤ã‚º
 	int IndexSize = pPmxData->m_Head.m_pData[2];
 
-	//’¸“_ƒCƒ“ƒfƒbƒNƒX“Ç‚İ‚İ—p
+	//é ‚ç‚¹ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹èª­ã¿è¾¼ã¿ç”¨
 	unsigned char* pFaceData;
 	pFaceData = new unsigned char[IndexSize];
 	
-	//–Ê‚Ì”‰ñ‚·
+	//é¢ã®æ•°å›ã™
 	for (int i = 0; i < pPmxData->m_FaceNum; i++)
 	{
-		//’¸“_ƒCƒ“ƒfƒbƒNƒX“Ç‚İ‚İ
+		//é ‚ç‚¹ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹èª­ã¿è¾¼ã¿
 		for (int j = 0; j < 3; j++)
 		{
 			fread_s(pFaceData,IndexSize, IndexSize, 1, fp);
@@ -375,50 +351,50 @@ bool CPmxLoader::FaceLoad(FILE* fp, PMX_DATA* pPmxData)
 		}
 	}
 
-	//“Ç‚İ‚İ—p”jŠü
+	//èª­ã¿è¾¼ã¿ç”¨ç ´æ£„
 	delete[] pFaceData;
 	pFaceData = nullptr;
 
 	return true;
 }
 
-//ƒeƒNƒXƒ`ƒƒ“Ç‚İ‚İ
+//ãƒ†ã‚¯ã‚¹ãƒãƒ£èª­ã¿è¾¼ã¿
 bool CPmxLoader::TextureLoad(FILE* fp, PMX_DATA* pPmxData)
 {
 	unsigned char Data[4];
 	
-	//ƒeƒNƒXƒ`ƒƒ”“Ç‚İ‚İ
+	//ãƒ†ã‚¯ã‚¹ãƒãƒ£æ•°èª­ã¿è¾¼ã¿
 	fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
 	pPmxData->m_TexNum = StrToInt(Data, sizeof(Data));
 
-	//ƒeƒNƒXƒ`ƒƒ‚È‚µ
+	//ãƒ†ã‚¯ã‚¹ãƒãƒ£ãªã—
 	if (pPmxData->m_TexNum <= 0)
 	{
 		return false;
 	}
 
-	//ƒƒ‚ƒŠŠm•Û
+	//ãƒ¡ãƒ¢ãƒªç¢ºä¿
 	pPmxData->m_pTex = new PMX_TEXTURE[pPmxData->m_TexNum];
 
-	//Œã‘±ƒoƒCƒg”
+	//å¾Œç¶šãƒã‚¤ãƒˆæ•°
 	int AfterByte;
 
 	for (int i = 0; i < pPmxData->m_TexNum; i++)
 	{
-		//Œã‘±ƒoƒCƒg”
+		//å¾Œç¶šãƒã‚¤ãƒˆæ•°
 		fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
 		AfterByte = StrToInt(Data, sizeof(Data));
 
-		//ƒTƒCƒY‚ ‚é‚Æ‚«‚Ì‚İ
+		//ã‚µã‚¤ã‚ºã‚ã‚‹ã¨ãã®ã¿
 		if (AfterByte > 0)
 		{
-			//ƒeƒNƒXƒ`ƒƒƒpƒXƒƒ‚ƒŠŠm•Û
+			//ãƒ†ã‚¯ã‚¹ãƒãƒ£ãƒ‘ã‚¹ãƒ¡ãƒ¢ãƒªç¢ºä¿
 			pPmxData->m_pTex[i].m_pPass = new unsigned char[AfterByte];
 
-			//ƒeƒNƒXƒ`ƒƒƒpƒX“Ç‚İ‚İ
+			//ãƒ†ã‚¯ã‚¹ãƒãƒ£ãƒ‘ã‚¹èª­ã¿è¾¼ã¿
 			fread_s(pPmxData->m_pTex[i].m_pPass, AfterByte, AfterByte, 1, fp);
 
-			//•¶š—ñ‚©‚ç\0‚ğÁ‚·
+			//æ–‡å­—åˆ—ã‹ã‚‰\0ã‚’æ¶ˆã™
 			pPmxData->m_pTex[i].m_pPass=ErasCharFromString(pPmxData->m_pTex[i].m_pPass, AfterByte, '\0');
 		}
 	}
@@ -427,138 +403,138 @@ bool CPmxLoader::TextureLoad(FILE* fp, PMX_DATA* pPmxData)
 }
 
 
-//ƒ}ƒeƒŠƒAƒ‹“Ç‚İ‚İ
+//ãƒãƒ†ãƒªã‚¢ãƒ«èª­ã¿è¾¼ã¿
 bool CPmxLoader::MaterialLoad(FILE* fp, PMX_DATA* pPmxData)
 {
 	unsigned char Data[4];
 
-	//ƒ}ƒeƒŠƒAƒ‹”
+	//ãƒãƒ†ãƒªã‚¢ãƒ«æ•°
 	fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
 	pPmxData->m_MaterialNum = StrToInt(Data, sizeof(Data));
 
-	//ƒ}ƒeƒŠƒAƒ‹‚È‚µ
+	//ãƒãƒ†ãƒªã‚¢ãƒ«ãªã—
 	if (pPmxData->m_MaterialNum <= 0)
 	{
 		return false;
 	}
 
-	//ƒƒ‚ƒŠŠm•Û
+	//ãƒ¡ãƒ¢ãƒªç¢ºä¿
 	pPmxData->m_pMaterial = new PMX_MATERIAL[pPmxData->m_MaterialNum];
 
-	//Ş¿–¼—pƒTƒCƒY
+	//æè³ªåç”¨ã‚µã‚¤ã‚º
 	int JapSize;
 	int EngSize;
 
-	//ƒƒ‚ƒTƒCƒY
+	//ãƒ¡ãƒ¢ã‚µã‚¤ã‚º
 	int MemoSize;
 
-	//ƒeƒNƒXƒ`ƒƒƒCƒ“ƒfƒbƒNƒXƒTƒCƒY
+	//ãƒ†ã‚¯ã‚¹ãƒãƒ£ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã‚µã‚¤ã‚º
 	int TexIndexSize = pPmxData->m_Head.m_pData[3];
 	
-	//ƒeƒNƒXƒ`ƒƒƒf[ƒ^“Ç‚İ‚İ—p
+	//ãƒ†ã‚¯ã‚¹ãƒãƒ£ãƒ‡ãƒ¼ã‚¿èª­ã¿è¾¼ã¿ç”¨
 	unsigned char* pTexData = nullptr;
 	pTexData = new unsigned char[TexIndexSize];
 		
-	//“Ç‚İ‚İ
+	//èª­ã¿è¾¼ã¿
 	for (int i = 0; i < pPmxData->m_MaterialNum; i++)
 	{
-		//Ş¿–¼(“újƒTƒCƒY
+		//æè³ªå(æ—¥ï¼‰ã‚µã‚¤ã‚º
 		fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
 		JapSize = StrToInt(Data, sizeof(Data));
 
-		//ƒTƒCƒY‚ ‚é‚Æ‚«‚Ì‚İ
+		//ã‚µã‚¤ã‚ºã‚ã‚‹ã¨ãã®ã¿
 		if (JapSize > 0)
 		{
-			//ƒƒ‚ƒŠŠm•Û
+			//ãƒ¡ãƒ¢ãƒªç¢ºä¿
 			pPmxData->m_pMaterial[i].m_pNameJap = new unsigned char[JapSize];
 
-			//Ş¿–¼(“új“Ç‚İ‚İ
+			//æè³ªå(æ—¥ï¼‰èª­ã¿è¾¼ã¿
 			fread_s(pPmxData->m_pMaterial[i].m_pNameJap, JapSize, JapSize, 1, fp);
 
-			//•¶š—ñ‚©‚ç\0‚ğÁ‚·
+			//æ–‡å­—åˆ—ã‹ã‚‰\0ã‚’æ¶ˆã™
 			pPmxData->m_pMaterial[i].m_pNameJap=ErasCharFromString(pPmxData->m_pMaterial[i].m_pNameJap, JapSize, '\0');
 		}
 
-		//Ş¿–¼(‰pjƒTƒCƒY
+		//æè³ªå(è‹±ï¼‰ã‚µã‚¤ã‚º
 		fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
 		EngSize = StrToInt(Data, sizeof(Data));
 
-		//ƒTƒCƒY‚ ‚é‚Æ‚«‚Ì‚İ
+		//ã‚µã‚¤ã‚ºã‚ã‚‹ã¨ãã®ã¿
 		if (EngSize > 0)
 		{
-			//ƒƒ‚ƒŠŠm•Û
+			//ãƒ¡ãƒ¢ãƒªç¢ºä¿
 			pPmxData->m_pMaterial[i].m_pNameEng = new unsigned char[EngSize];
 
-			//Ş¿–¼(‰pj“Ç‚İ‚İ
+			//æè³ªå(è‹±ï¼‰èª­ã¿è¾¼ã¿
 			fread_s(pPmxData->m_pMaterial[i].m_pNameEng, EngSize, EngSize, 1, fp);
 
-			//•¶š—ñ‚©‚ç\0‚ğÁ‚·
+			//æ–‡å­—åˆ—ã‹ã‚‰\0ã‚’æ¶ˆã™
 			pPmxData->m_pMaterial[i].m_pNameEng=ErasCharFromString(pPmxData->m_pMaterial[i].m_pNameEng, EngSize, '\0');
 		}
 
-		//ƒfƒBƒtƒ…[ƒY
+		//ãƒ‡ã‚£ãƒ•ãƒ¥ãƒ¼ã‚º
 		for (int j = 0; j < 4; j++)
 		{
 			fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
 			pPmxData->m_pMaterial[i].m_Diffuse[j] = StrToFloat(Data);
 		}
 
-		//ƒXƒyƒLƒ…ƒ‰[
+		//ã‚¹ãƒšã‚­ãƒ¥ãƒ©ãƒ¼
 		for (int j = 0; j < 3; j++)
 		{
 			fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
 			pPmxData->m_pMaterial[i].m_Specular[j] = StrToFloat(Data);
 		}
 
-		//ƒXƒyƒLƒ…ƒ‰ƒpƒ[
+		//ã‚¹ãƒšã‚­ãƒ¥ãƒ©ãƒ‘ãƒ¯ãƒ¼
 		fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
 		pPmxData->m_pMaterial[i].m_SpePower = StrToFloat(Data);
 
-		//ƒAƒ“ƒrƒGƒ“ƒg
+		//ã‚¢ãƒ³ãƒ“ã‚¨ãƒ³ãƒˆ
 		for (int j = 0; j < 3; j++)
 		{
 			fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
 			pPmxData->m_pMaterial[i].m_Ambient[j] = StrToFloat(Data);
 		}
 
-		//•`‰æƒtƒ‰ƒO
+		//æç”»ãƒ•ãƒ©ã‚°
 		fread_s(&pPmxData->m_pMaterial[i].m_BitFlag, sizeof(pPmxData->m_pMaterial[i].m_BitFlag), sizeof(pPmxData->m_pMaterial[i].m_BitFlag), 1, fp);
 
-		//ƒGƒbƒWF
+		//ã‚¨ãƒƒã‚¸è‰²
 		for (int j = 0; j < 4; j++)
 		{
 			fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
 			pPmxData->m_pMaterial[i].m_Edge[j] = StrToFloat(Data);
 		}
 
-		//ƒGƒbƒWƒTƒCƒY
+		//ã‚¨ãƒƒã‚¸ã‚µã‚¤ã‚º
 		fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
 		pPmxData->m_pMaterial[i].m_EdgeSize = StrToFloat(Data);
 
-		//’ÊíƒeƒNƒXƒ`ƒƒ
+		//é€šå¸¸ãƒ†ã‚¯ã‚¹ãƒãƒ£
 		fread_s(pTexData, TexIndexSize, TexIndexSize, 1, fp);
 		pPmxData->m_pMaterial[i].m_NormTex = StrToInt(pTexData, TexIndexSize);
 		
-		//ƒXƒtƒBƒAƒeƒNƒXƒ`ƒƒ
+		//ã‚¹ãƒ•ã‚£ã‚¢ãƒ†ã‚¯ã‚¹ãƒãƒ£
 		fread_s(pTexData, TexIndexSize, TexIndexSize, 1, fp);
 		pPmxData->m_pMaterial[i].m_SphereTex = StrToInt(pTexData, TexIndexSize);
 
-		//ƒXƒtƒBƒAƒ‚[ƒh
+		//ã‚¹ãƒ•ã‚£ã‚¢ãƒ¢ãƒ¼ãƒ‰
 		fread_s(&pPmxData->m_pMaterial[i].m_SphereMode, sizeof(unsigned char), sizeof(unsigned char), 1, fp);
 
-		//‹¤—LToonƒtƒ‰ƒO
+		//å…±æœ‰Toonãƒ•ãƒ©ã‚°
 		fread_s(&pPmxData->m_pMaterial[i].m_ToonFlag, sizeof(unsigned char), sizeof(unsigned char), 1, fp);
 
 		switch (pPmxData->m_pMaterial[i].m_ToonFlag)
 		{
-			//ToonƒeƒNƒXƒ`ƒƒ
+			//Toonãƒ†ã‚¯ã‚¹ãƒãƒ£
 			case 0:
 			{
 				fread_s(pTexData, TexIndexSize, TexIndexSize, 1, fp);
 				pPmxData->m_pMaterial[i].m_ToonTex = StrToInt(pTexData, TexIndexSize);
 				break;
 			}
-			//‹¤—LToonƒeƒNƒXƒ`ƒƒ
+			//å…±æœ‰Toonãƒ†ã‚¯ã‚¹ãƒãƒ£
 			case 1:
 			{
 				unsigned char read;
@@ -568,155 +544,155 @@ bool CPmxLoader::MaterialLoad(FILE* fp, PMX_DATA* pPmxData)
 			}
 		}
 
-		//ƒƒ‚ƒTƒCƒY
+		//ãƒ¡ãƒ¢ã‚µã‚¤ã‚º
 		fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
 		MemoSize = StrToInt(Data, sizeof(Data));
 
-		//ƒƒ‚ƒŠŠm•Û
+		//ãƒ¡ãƒ¢ãƒªç¢ºä¿
 		pPmxData->m_pMaterial[i].m_pMemo = new unsigned char[MemoSize];
 
-		//ƒƒ‚“Ç‚İ‚İ
+		//ãƒ¡ãƒ¢èª­ã¿è¾¼ã¿
 		fread_s(pPmxData->m_pMaterial[i].m_pMemo, MemoSize, MemoSize, 1, fp);
 
-		//•¶š—ñ‚©‚ç\0‚ğÁ‚·
+		//æ–‡å­—åˆ—ã‹ã‚‰\0ã‚’æ¶ˆã™
 		ErasCharFromString(pPmxData->m_pMaterial[i].m_pMemo, MemoSize, '\0');
 
-		//g—p‚·‚é’¸“_”
+		//ä½¿ç”¨ã™ã‚‹é ‚ç‚¹æ•°
 		fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
 		pPmxData->m_pMaterial[i].m_UseVerNum = StrToInt(Data, sizeof(Data));
 	}
 
-	//“Ç‚İ‚İ—p”jŠü
+	//èª­ã¿è¾¼ã¿ç”¨ç ´æ£„
 	delete[] pTexData;
 	pTexData = nullptr;
 
 	return true;
 }
 
-//ƒ{[ƒ““Ç‚İ‚İ
+//ãƒœãƒ¼ãƒ³èª­ã¿è¾¼ã¿
 bool CPmxLoader::BoneLoad(FILE* fp, PMX_DATA* pPmxData)
 {
 	unsigned char Data[4];
 
-	//ƒ{[ƒ“”
+	//ãƒœãƒ¼ãƒ³æ•°
 	fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
 	pPmxData->m_BoneNum = StrToInt(Data, sizeof(Data));
 
-	//ƒ{[ƒ“‚È‚µ
+	//ãƒœãƒ¼ãƒ³ãªã—
 	if (pPmxData->m_BoneNum <= 0)
 	{
 		return false;
 	}
 
-	//ƒƒ‚ƒŠŠm•Û
+	//ãƒ¡ãƒ¢ãƒªç¢ºä¿
 	pPmxData->m_pBone = new PMX_BONE[pPmxData->m_BoneNum];
 
-	//ƒ{[ƒ“–¼—pƒTƒCƒY
+	//ãƒœãƒ¼ãƒ³åç”¨ã‚µã‚¤ã‚º
 	int JapSize;
 	int EngSize;
 
-	//ƒ{[ƒ“ƒCƒ“ƒfƒbƒNƒXƒTƒCƒY
+	//ãƒœãƒ¼ãƒ³ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã‚µã‚¤ã‚º
 	int BoneIndexSize = pPmxData->m_Head.m_pData[5];
 
-	//ƒ{[ƒ“ƒf[ƒ^“Ç‚İ‚İ—p
+	//ãƒœãƒ¼ãƒ³ãƒ‡ãƒ¼ã‚¿èª­ã¿è¾¼ã¿ç”¨
 	unsigned char* pBoneData = nullptr;
 	pBoneData = new unsigned char[BoneIndexSize];
 	
-	//bitƒtƒ‰ƒO•ÏŠ·—p
+	//bitãƒ•ãƒ©ã‚°å¤‰æ›ç”¨
 	int Flag;
 
-	//“Ç‚İ‚İ
+	//èª­ã¿è¾¼ã¿
 	for (int i = 0; i < pPmxData->m_BoneNum; i++)
 	{
-		//ƒ{[ƒ“–¼(“ú)ƒTƒCƒY
+		//ãƒœãƒ¼ãƒ³å(æ—¥)ã‚µã‚¤ã‚º
 		fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
 		JapSize = StrToInt(Data, sizeof(Data));
 
-		//ƒTƒCƒY‚ ‚é‚Æ‚«‚Ì‚İ
+		//ã‚µã‚¤ã‚ºã‚ã‚‹ã¨ãã®ã¿
 		if (JapSize > 0)
 		{
-			//ƒƒ‚ƒŠŠm•Û
+			//ãƒ¡ãƒ¢ãƒªç¢ºä¿
 			pPmxData->m_pBone[i].m_pNameJap = new unsigned char[JapSize];
 
-			//ƒ{[ƒ“–¼(“ú)“Ç‚İ‚İ
+			//ãƒœãƒ¼ãƒ³å(æ—¥)èª­ã¿è¾¼ã¿
 			fread_s(pPmxData->m_pBone[i].m_pNameJap, JapSize, JapSize, 1, fp);
 
-			//•¶š—ñ‚©‚ç\0‚ğÁ‚·
+			//æ–‡å­—åˆ—ã‹ã‚‰\0ã‚’æ¶ˆã™
 			pPmxData->m_pBone[i].m_pNameJap=ErasCharFromString(pPmxData->m_pBone[i].m_pNameJap, JapSize, '\0');
 		}
 
-		//ƒ{[ƒ“–¼(‰p)ƒTƒCƒY
+		//ãƒœãƒ¼ãƒ³å(è‹±)ã‚µã‚¤ã‚º
 		fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
 		EngSize = StrToInt(Data, sizeof(Data));
 
-		//ƒTƒCƒY‚ ‚é‚Æ‚«‚Ì‚İ
+		//ã‚µã‚¤ã‚ºã‚ã‚‹ã¨ãã®ã¿
 		if (EngSize > 0)
 		{
-			//ƒƒ‚ƒŠŠm•Û
+			//ãƒ¡ãƒ¢ãƒªç¢ºä¿
 			pPmxData->m_pBone[i].m_pNameEng = new unsigned char[EngSize];
 
-			//ƒ{[ƒ“–¼(‰p)“Ç‚İ‚İ
+			//ãƒœãƒ¼ãƒ³å(è‹±)èª­ã¿è¾¼ã¿
 			fread_s(pPmxData->m_pBone[i].m_pNameEng, EngSize, EngSize, 1, fp);
 
-			//•¶š—ñ‚©‚ç\0‚ğÁ‚·
+			//æ–‡å­—åˆ—ã‹ã‚‰\0ã‚’æ¶ˆã™
 			pPmxData->m_pBone[i].m_pNameEng=ErasCharFromString(pPmxData->m_pBone[i].m_pNameEng, EngSize, '\0');
 		}
 
-		//ˆÊ’u
+		//ä½ç½®
 		for (int j = 0; j < 3; j++)
 		{
 			fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
 			pPmxData->m_pBone[i].m_fPos[j] = StrToFloat(Data);
 		}
 
-		//eƒ{[ƒ“ID
+		//è¦ªãƒœãƒ¼ãƒ³ID
 		fread_s(pBoneData, BoneIndexSize, BoneIndexSize, 1, fp);
 		pPmxData->m_pBone[i].m_ParentId = StrToInt(pBoneData, BoneIndexSize);
 		
-		//•ÏŒ`ŠK‘w
+		//å¤‰å½¢éšå±¤
 		fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
 		pPmxData->m_pBone[i].m_Hierarchy = StrToInt(Data,sizeof(Data));
 
-		//Bitƒtƒ‰ƒO
+		//Bitãƒ•ãƒ©ã‚°
 		for (int j = 0; j < 2; j++)
 		{
 			fread_s(&pPmxData->m_pBone[i].m_BitFlag[j], sizeof(unsigned char), sizeof(unsigned char), 1, fp);
 		}
 
-		//ƒrƒbƒgƒtƒ‰ƒO‚ğint‚É‚·‚é
+		//ãƒ“ãƒƒãƒˆãƒ•ãƒ©ã‚°ã‚’intã«ã™ã‚‹
 		Flag=StrToInt(pPmxData->m_pBone[i].m_BitFlag, sizeof(pPmxData->m_pBone[i].m_BitFlag));
 		
-		//Ú‘±æ0
+		//æ¥ç¶šå…ˆ0
 		if ((Flag & 0x0001) == 0)
 		{
-			//ƒIƒtƒZƒbƒg
+			//ã‚ªãƒ•ã‚»ãƒƒãƒˆ
 			for (int j = 0; j < 3; j++)
 			{
 				fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
 				pPmxData->m_pBone[i].m_fOffset[j] = StrToFloat(Data);
 			}
 		}
-		//Ú‘±æ1
+		//æ¥ç¶šå…ˆ1
 		else
 		{
-			//Ú‘±æƒ{[ƒ“ID
+			//æ¥ç¶šå…ˆãƒœãƒ¼ãƒ³ID
 			fread_s(pBoneData, BoneIndexSize, BoneIndexSize, 1, fp);
 			pPmxData->m_pBone[i].m_ConnectId = StrToInt(pBoneData, BoneIndexSize);
 		}
 
-		//‰ñ“]‚Ü‚½‚ÍˆÚ“®‚Ì•t—^‚ª‚ ‚é‚Æ‚«
+		//å›è»¢ã¾ãŸã¯ç§»å‹•ã®ä»˜ä¸ãŒã‚ã‚‹ã¨ã
 		if ((Flag & 0x0100) != 0 || (Flag & 0x0200) != 0)
 		{
-			//•t—^eƒ{[ƒ“ID
+			//ä»˜ä¸è¦ªãƒœãƒ¼ãƒ³ID
 			fread_s(pBoneData, BoneIndexSize, BoneIndexSize, 1, fp);
 			pPmxData->m_pBone[i].m_GrantId = StrToInt(pBoneData, BoneIndexSize);
 						
-			//•t—^—¦
+			//ä»˜ä¸ç‡
 			fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
 			pPmxData->m_pBone[i].m_fGrantRate = StrToFloat(Data);
 		}
 	
-		//²ŒÅ’è
+		//è»¸å›ºå®š
 		if ((Flag & 0x0400) != 0)
 		{
 			for (int j = 0; j < 3; j++)
@@ -726,7 +702,7 @@ bool CPmxLoader::BoneLoad(FILE* fp, PMX_DATA* pPmxData)
 			}
 		}
 
-		//ƒ[ƒJƒ‹²
+		//ãƒ­ãƒ¼ã‚«ãƒ«è»¸
 		if ((Flag & 0x0800) != 0)
 		{
 			for (int j = 0; j < 3; j++)
@@ -741,7 +717,7 @@ bool CPmxLoader::BoneLoad(FILE* fp, PMX_DATA* pPmxData)
 			}
 		}
 
-		//ŠO•”e•ÏŒ`
+		//å¤–éƒ¨è¦ªå¤‰å½¢
 		if ((Flag & 0x2000) != 0)
 		{
 			fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
@@ -751,45 +727,45 @@ bool CPmxLoader::BoneLoad(FILE* fp, PMX_DATA* pPmxData)
 		//IK
 		if ((Flag & 0x0020) != 0)
 		{
-			//ƒ^[ƒQƒbƒgƒ{[ƒ“ID
+			//ã‚¿ãƒ¼ã‚²ãƒƒãƒˆãƒœãƒ¼ãƒ³ID
 			fread_s(pBoneData, BoneIndexSize, BoneIndexSize, 1, fp);
 			pPmxData->m_pBone[i].m_Ik.m_TargetId = StrToInt(pBoneData, BoneIndexSize);
 
-			//ƒ‹[ƒv‰ñ”
+			//ãƒ«ãƒ¼ãƒ—å›æ•°
 			fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
 			pPmxData->m_pBone[i].m_Ik.m_RoopTime = StrToInt(Data, sizeof(Data));
 
-			//‰ñ“]Šp
+			//å›è»¢è§’
 			fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
 			pPmxData->m_pBone[i].m_Ik.m_fRad = StrToFloat(Data);
 
-			//IKƒŠƒ“ƒN”
+			//IKãƒªãƒ³ã‚¯æ•°
 			fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
 			pPmxData->m_pBone[i].m_Ik.m_LinkNum = StrToInt(Data, sizeof(Data));
 
-			//ƒƒ‚ƒŠŠm•Û
+			//ãƒ¡ãƒ¢ãƒªç¢ºä¿
 			pPmxData->m_pBone[i].m_Ik.m_pLink = new PMX_IK_LINK[pPmxData->m_pBone[i].m_Ik.m_LinkNum];
 
-			//IKƒŠƒ“ƒN“Ç‚İ‚İ
+			//IKãƒªãƒ³ã‚¯èª­ã¿è¾¼ã¿
 			for (int j = 0; j < pPmxData->m_pBone[i].m_Ik.m_LinkNum; j++)
 			{
-				//ƒŠƒ“ƒNƒ{[ƒ“ID
+				//ãƒªãƒ³ã‚¯ãƒœãƒ¼ãƒ³ID
 				fread_s(pBoneData, BoneIndexSize, BoneIndexSize, 1, fp);
 				pPmxData->m_pBone[i].m_Ik.m_pLink[j].m_LinkBoneId = StrToInt(pBoneData, BoneIndexSize);
 				
-				//Šp“x§ŒÀ
+				//è§’åº¦åˆ¶é™
 				fread_s(&pPmxData->m_pBone[i].m_Ik.m_pLink[j].m_RadRest, sizeof(unsigned char), sizeof(unsigned char), 1, fp);
 
-				//Šp“x§ŒÀ‚ ‚è‚Ìê‡
+				//è§’åº¦åˆ¶é™ã‚ã‚Šã®å ´åˆ
 				if (pPmxData->m_pBone[i].m_Ik.m_pLink[j].m_RadRest == 1)
 				{
-					//‰ºŒÀ
+					//ä¸‹é™
 					for (int k = 0; k < 3; k++)
 					{
 						fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
 						pPmxData->m_pBone[i].m_Ik.m_pLink[j].m_fLowerRad[k] = StrToFloat(Data);
 					}
-					//ãŒÀ
+					//ä¸Šé™
 					for (int k = 0; k < 3; k++)
 					{
 						fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
@@ -800,160 +776,126 @@ bool CPmxLoader::BoneLoad(FILE* fp, PMX_DATA* pPmxData)
 		}
 	}
 	
-	//“Ç‚İ‚İ—p”jŠü
+	//èª­ã¿è¾¼ã¿ç”¨ç ´æ£„
 	delete[] pBoneData;
 	pBoneData = nullptr;
 
 	return true;
 }
 
-//ƒ‚[ƒt“Ç‚İ‚İ
+//ãƒ¢ãƒ¼ãƒ•èª­ã¿è¾¼ã¿
 bool CPmxLoader::MorphLoad(FILE* fp, PMX_DATA* pPmxData)
 {
 	unsigned char Data[4];
 
-	//ƒ‚[ƒt”
+	//ãƒ¢ãƒ¼ãƒ•æ•°
 	fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
 	pPmxData->m_MorphNum = StrToInt(Data, sizeof(Data));
 
-	//ƒ‚[ƒt
+	//ãƒ¢ãƒ¼ãƒ•
 	if (pPmxData->m_MorphNum <= 0)
 	{
 		return false;
 	}
 
-	//ƒƒ‚ƒŠŠm•Û
+	//ãƒ¡ãƒ¢ãƒªç¢ºä¿
 	pPmxData->m_pMorph = new PMX_MORPH[pPmxData->m_MorphNum];
 
-	//ƒ‚[ƒt–¼ƒTƒCƒY
+	//ãƒ¢ãƒ¼ãƒ•åã‚µã‚¤ã‚º
 	int JapSize;
 	int EngSize;
 
-	//ƒ‚[ƒt“Ç‚İ‚İ—p
-	unsigned char* pJapName=nullptr;
-	unsigned char* pEngName=nullptr;
-
-	//“Ç‚İ‚İ
+	//èª­ã¿è¾¼ã¿
 	for (int i = 0; i < pPmxData->m_MorphNum; i++)
 	{
 		long ReadStartPos = ftell(fp);
 
-		//ƒ‚[ƒt–¼(“ú)ƒTƒCƒY
+		//ãƒ¢ãƒ¼ãƒ•å(æ—¥)ã‚µã‚¤ã‚º
 		fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
 		JapSize = StrToInt(Data, sizeof(Data));
 
-		//ƒTƒCƒY‚ ‚é‚Æ‚«‚Ì‚İ
+		//ã‚µã‚¤ã‚ºã‚ã‚‹ã¨ãã®ã¿
 		if (JapSize > 0)
 		{
-			//ƒƒ‚ƒŠŠm•Û
-			pJapName = new unsigned char[JapSize];
-
-			//ƒ‚[ƒt–¼(“ú)“Ç‚İ‚İ
-			fread_s(pJapName, JapSize, JapSize, 1, fp);
-			
-			//•¶š—ñ‚©‚ç\0‚ğÁ‚·
-			pJapName = ErasCharFromString(pJapName, JapSize, '\0');
-			
-			//wcharŒ^‚Ì•¶š—ñ‚É•ÏŠ·‚·‚é
-			pPmxData->m_pMorph[i].m_pNameJap= CharToWchar_t(pJapName);
+			//ãƒ¢ãƒ¼ãƒ•å(æ—¥)èª­ã¿è¾¼ã¿
+			pPmxData->m_pMorph[i].m_pNameJap = WcharStrRead(JapSize, fp);
 		}
 			
-		//ƒ‚[ƒt–¼(‰p)ƒTƒCƒY
+		//ãƒ¢ãƒ¼ãƒ•å(è‹±)ã‚µã‚¤ã‚º
 		fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
 		EngSize = StrToInt(Data, sizeof(Data));
 
-		//ƒTƒCƒY‚ ‚é‚Æ‚«‚Ì‚İ
+		//ã‚µã‚¤ã‚ºã‚ã‚‹ã¨ãã®ã¿
 		if (EngSize > 0)
 		{
-			//ƒƒ‚ƒŠŠm•Û
-			pEngName = new unsigned char[EngSize];
-
-			//ƒ{[ƒ“–¼(‰p)“Ç‚İ‚İ
-			fread_s(pEngName, EngSize, EngSize, 1, fp);
-			
-			//•¶š—ñ‚©‚ç\0‚ğÁ‚·
-			pEngName =ErasCharFromString(pEngName, EngSize, '\0');
-
-			//wcharŒ^‚Ì•¶š—ñ‚É•ÏŠ·‚·‚é
-			pPmxData->m_pMorph[i].m_pNameEng = CharToWchar_t(pJapName);
-		}
-
-		//“Ç‚İ‚İ—p”jŠü
-		if (pJapName != nullptr)
-		{
-			delete[] pJapName;
-			pJapName = nullptr;
-		}
-		if (pEngName != nullptr)
-		{
-			delete[]  pEngName;
-			pEngName = nullptr;
+			//ãƒ¢ãƒ¼ãƒ•å(è‹±)èª­ã¿è¾¼ã¿
+			pPmxData->m_pMorph[i].m_pNameJap = WcharStrRead(JapSize, fp);
 		}
 		
-		//PMDƒJƒeƒSƒŠ
+		//PMDã‚«ãƒ†ã‚´ãƒª
 		fread_s(&pPmxData->m_pMorph[i].m_PmdType, sizeof(unsigned char), sizeof(unsigned char), 1, fp);
 
-		//ƒ‚[ƒtƒ^ƒCƒv
+		//ãƒ¢ãƒ¼ãƒ•ã‚¿ã‚¤ãƒ—
 		fread_s(&pPmxData->m_pMorph[i].m_MorphType, sizeof(unsigned char), sizeof(unsigned char), 1, fp);
 
-		//ƒf[ƒ^”
+		//ãƒ‡ãƒ¼ã‚¿æ•°
 		fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
 		pPmxData->m_pMorph[i].m_DataNum = StrToInt(Data, sizeof(Data));
 
 		switch (pPmxData->m_pMorph[i].m_MorphType)
 		{
-			//ƒOƒ‹[ƒv
+			//ã‚°ãƒ«ãƒ¼ãƒ—
 			case 0:
 			{
-				//ƒƒ‚ƒŠŠm•Û
+				//ãƒ¡ãƒ¢ãƒªç¢ºä¿
 				pPmxData->m_pMorph[i].m_pGroupMorph = new PMX_GROUP_MORPH[pPmxData->m_pMorph[i].m_DataNum];
 
-				//ƒ‚[ƒtƒCƒ“ƒfƒbƒNƒXƒTƒCƒY
+				//ãƒ¢ãƒ¼ãƒ•ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã‚µã‚¤ã‚º
 				int MorphIndexSize= pPmxData->m_Head.m_pData[6];
 
-				//ƒ‚[ƒtƒCƒ“ƒfƒbƒNƒX“Ç‚İ‚İ—p
+				//ãƒ¢ãƒ¼ãƒ•ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹èª­ã¿è¾¼ã¿ç”¨
 				unsigned char* pMorph = nullptr;
 				pMorph = new unsigned char[MorphIndexSize];
 
-				//“Ç‚İ‚İ
+				//èª­ã¿è¾¼ã¿
 				for (int j = 0; j < pPmxData->m_pMorph[i].m_DataNum; j++)
 				{
-					//ƒ‚[ƒtƒCƒ“ƒfƒbƒNƒX
+					//ãƒ¢ãƒ¼ãƒ•ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹
 					fread_s(pMorph, MorphIndexSize, MorphIndexSize, 1, fp);
 					pPmxData->m_pMorph[i].m_pGroupMorph[j].m_MorphId = StrToInt(pMorph, MorphIndexSize);
 
-					//ƒ‚[ƒt—¦
+					//ãƒ¢ãƒ¼ãƒ•ç‡
 					fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
 					pPmxData->m_pMorph[i].m_pGroupMorph[j].m_fRate = StrToFloat(Data);
 				}
 
-				//“Ç‚İ‚İ—p”jŠü
+				//èª­ã¿è¾¼ã¿ç”¨ç ´æ£„
 				delete[] pMorph;
 				pMorph = nullptr;
 
 				break;
 			}
-			//’¸“_
+			//é ‚ç‚¹
 			case 1:
 			{
-				//ƒƒ‚ƒŠŠm•Û
+				//ãƒ¡ãƒ¢ãƒªç¢ºä¿
 				pPmxData->m_pMorph[i].m_pVerMorph = new PMX_VER_MORPH[pPmxData->m_pMorph[i].m_DataNum];
 
-				//’¸“_ƒCƒ“ƒfƒbƒNƒXƒTƒCƒY
+				//é ‚ç‚¹ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã‚µã‚¤ã‚º
 				int VerIndexSize = pPmxData->m_Head.m_pData[2];
 
-				//’¸“_ƒCƒ“ƒfƒbƒNƒX“Ç‚İ‚İ—p
+				//é ‚ç‚¹ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹èª­ã¿è¾¼ã¿ç”¨
 				unsigned char* pVer = nullptr;
 				pVer = new unsigned char[VerIndexSize];
 
-				//“Ç‚İ‚İ
+				//èª­ã¿è¾¼ã¿
 				for (int j = 0; j < pPmxData->m_pMorph[i].m_DataNum; j++)
 				{
-					//’¸“_ID
+					//é ‚ç‚¹ID
 					fread_s(pVer, VerIndexSize, VerIndexSize, 1, fp);
 					pPmxData->m_pMorph[i].m_pVerMorph[j].m_VerId=StrToInt(pVer,VerIndexSize);
 
-					//ƒIƒtƒZƒbƒg’l
+					//ã‚ªãƒ•ã‚»ãƒƒãƒˆå€¤
 					for (int k = 0; k < 3; k++)
 					{
 						fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
@@ -961,39 +903,39 @@ bool CPmxLoader::MorphLoad(FILE* fp, PMX_DATA* pPmxData)
 					}
 				}
 
-				//“Ç‚İ‚İ—p”jŠü
+				//èª­ã¿è¾¼ã¿ç”¨ç ´æ£„
 				delete[] pVer;
 				pVer = nullptr;
 
 				break;
 			}
-			//ƒ{[ƒ“
+			//ãƒœãƒ¼ãƒ³
 			case 2:
 			{
-				//ƒƒ‚ƒŠŠm•Û
+				//ãƒ¡ãƒ¢ãƒªç¢ºä¿
 				pPmxData->m_pMorph[i].m_pBoneMorph = new PMX_BONE_MORPH[pPmxData->m_pMorph[i].m_DataNum];
 				
-				//ƒ{[ƒ“ƒCƒ“ƒfƒbƒNƒXƒTƒCƒY
+				//ãƒœãƒ¼ãƒ³ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã‚µã‚¤ã‚º
 				int BoneIndexSize = pPmxData->m_Head.m_pData[5];
 
-				//’¸“_ƒCƒ“ƒfƒbƒNƒX“Ç‚İ‚İ—p
+				//é ‚ç‚¹ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹èª­ã¿è¾¼ã¿ç”¨
 				unsigned char* pBone = nullptr;
 				pBone = new unsigned char[BoneIndexSize];
 
-				//“Ç‚İ‚İ
+				//èª­ã¿è¾¼ã¿
 				for (int j = 0; j < pPmxData->m_pMorph[i].m_DataNum; j++)
 				{
-					//ƒ{[ƒ“ID
+					//ãƒœãƒ¼ãƒ³ID
 					fread_s(pBone, BoneIndexSize, BoneIndexSize, 1, fp);
 					pPmxData->m_pMorph[i].m_pBoneMorph[j].m_BoneId = StrToInt(pBone, BoneIndexSize);
 
-					//ˆÚ“®—Ê
+					//ç§»å‹•é‡
 					for (int k = 0; k < 3; k++)
 					{
 						fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
 						pPmxData->m_pMorph[i].m_pBoneMorph[j].m_fMove[k] = StrToFloat(Data);
 					}
-					//‰ñ“]—Ê
+					//å›è»¢é‡
 					for (int k = 0; k < 4; k++)
 					{
 						fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
@@ -1001,86 +943,86 @@ bool CPmxLoader::MorphLoad(FILE* fp, PMX_DATA* pPmxData)
 					}
 				}
 
-				//“Ç‚İ‚İ—p”jŠü
+				//èª­ã¿è¾¼ã¿ç”¨ç ´æ£„
 				delete[] pBone;
 				pBone = nullptr;
 
 				break;
 			}
-			//Ş¿
+			//æè³ª
 			case 8:
 			{
-				//ƒƒ‚ƒŠŠm•Û
+				//ãƒ¡ãƒ¢ãƒªç¢ºä¿
 				pPmxData->m_pMorph[i].m_pMateMorph = new PMX_MATE_MORPH[pPmxData->m_pMorph[i].m_DataNum];
 
-				//Ş¿ƒTƒCƒY
+				//æè³ªã‚µã‚¤ã‚º
 				int MateIndexSize = pPmxData->m_Head.m_pData[4];
 
-				//Ş¿ƒCƒ“ƒfƒbƒNƒX“Ç‚İ‚İ—p
+				//æè³ªã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹èª­ã¿è¾¼ã¿ç”¨
 				unsigned char* pMate = nullptr;
 				pMate = new unsigned char[MateIndexSize];
 
-				//“Ç‚İ‚İ
+				//èª­ã¿è¾¼ã¿
 				for (int j = 0; j < pPmxData->m_pMorph[i].m_DataNum; j++)
 				{
-					//Ş¿ƒCƒ“ƒfƒbƒNƒX
+					//æè³ªã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹
 					fread_s(pMate, MateIndexSize, MateIndexSize, 1, fp);
 					pPmxData->m_pMorph[i].m_pMateMorph[j].m_MateId = StrToInt(pMate, MateIndexSize);
 
-					//ƒIƒtƒZƒbƒg‰‰ZŒ`®
+					//ã‚ªãƒ•ã‚»ãƒƒãƒˆæ¼”ç®—å½¢å¼
 					fread_s(&pPmxData->m_pMorph[i].m_pMateMorph[j].m_Format, sizeof(unsigned char), sizeof(unsigned char), 1, fp);
 
-					//ƒfƒBƒtƒ…[ƒY
+					//ãƒ‡ã‚£ãƒ•ãƒ¥ãƒ¼ã‚º
 					for (int k = 0; k < 4; k++)
 					{
 						fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
 						pPmxData->m_pMorph[i].m_pMateMorph[j].m_fDiffuse[k] = StrToFloat(Data);
 					}
 
-					//ƒXƒyƒLƒ…ƒ‰[
+					//ã‚¹ãƒšã‚­ãƒ¥ãƒ©ãƒ¼
 					for (int k = 0; k < 3; k++)
 					{
 						fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
 						pPmxData->m_pMorph[i].m_pMateMorph[j].m_fSpecular[k] = StrToFloat(Data);
 					}
 
-					//ƒXƒyƒLƒ…ƒ‰ƒpƒ[
+					//ã‚¹ãƒšã‚­ãƒ¥ãƒ©ãƒ‘ãƒ¯ãƒ¼
 					fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
 					pPmxData->m_pMorph[i].m_pMateMorph[j].m_fSpePower = StrToFloat(Data);
 					
-					//ƒAƒ“ƒrƒGƒ“ƒg
+					//ã‚¢ãƒ³ãƒ“ã‚¨ãƒ³ãƒˆ
 					for (int k = 0; k < 3; k++)
 					{
 						fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
 						pPmxData->m_pMorph[i].m_pMateMorph[j].m_fAmbient[k] = StrToFloat(Data);
 					}
 
-					//ƒGƒbƒWF
+					//ã‚¨ãƒƒã‚¸è‰²
 					for (int k = 0; k < 4; k++)
 					{
 						fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
 						pPmxData->m_pMorph[i].m_pMateMorph[j].m_fEdge[k] = StrToFloat(Data);
 					}
 
-					//ƒGƒbƒWƒTƒCƒY
+					//ã‚¨ãƒƒã‚¸ã‚µã‚¤ã‚º
 					fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
 					pPmxData->m_pMorph[i].m_pMateMorph[j].m_fEdgeSize = StrToFloat(Data);
 
-					//ƒeƒNƒXƒ`ƒƒŒW”
+					//ãƒ†ã‚¯ã‚¹ãƒãƒ£ä¿‚æ•°
 					for (int k = 0; k < 4; k++)
 					{
 						fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
 						pPmxData->m_pMorph[i].m_pMateMorph[j].m_fTex[k] = StrToFloat(Data);
 					}
 
-					//ƒXƒtƒBƒAƒeƒNƒXƒ`ƒƒŒW”
+					//ã‚¹ãƒ•ã‚£ã‚¢ãƒ†ã‚¯ã‚¹ãƒãƒ£ä¿‚æ•°
 					for (int k = 0; k < 4; k++)
 					{
 						fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
 						pPmxData->m_pMorph[i].m_pMateMorph[j].m_fSphereTex[k]= StrToFloat(Data);
 					}
 
-					//ToonƒeƒNƒXƒ`ƒƒ
+					//Toonãƒ†ã‚¯ã‚¹ãƒãƒ£
 					for (int k = 0; k < 4; k++)
 					{
 						fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
@@ -1088,33 +1030,33 @@ bool CPmxLoader::MorphLoad(FILE* fp, PMX_DATA* pPmxData)
 					}
 				}
 
-				//“Ç‚İ‚İ—p”jŠü
+				//èª­ã¿è¾¼ã¿ç”¨ç ´æ£„
 				delete[] pMate;
 				pMate = nullptr;
 
 				break;
 			}
-			//UVor’Ç‰ÁUV
+			//UVorè¿½åŠ UV
 			default:
 			{
-				//ƒƒ‚ƒŠŠm•Û
+				//ãƒ¡ãƒ¢ãƒªç¢ºä¿
 				pPmxData->m_pMorph[i].m_pUvMorph= new PMX_UV_MORPH[pPmxData->m_pMorph[i].m_DataNum];
 				
-				//’¸“_ƒCƒ“ƒfƒbƒNƒXƒTƒCƒY
+				//é ‚ç‚¹ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã‚µã‚¤ã‚º
 				int VerIndexSize = pPmxData->m_Head.m_pData[2];
 
-				//’¸“_ƒCƒ“ƒfƒbƒNƒX“Ç‚İ‚İ—p
+				//é ‚ç‚¹ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹èª­ã¿è¾¼ã¿ç”¨
 				unsigned char* pVer = nullptr;
 				pVer = new unsigned char[VerIndexSize];
 
-				//“Ç‚İ‚İ
+				//èª­ã¿è¾¼ã¿
 				for (int j = 0; j < pPmxData->m_pMorph[i].m_DataNum; j++)
 				{
-					//’¸“_ID
+					//é ‚ç‚¹ID
 					fread_s(pVer, VerIndexSize, VerIndexSize, 1, fp);
 					pPmxData->m_pMorph[i].m_pUvMorph[j].m_VerId = StrToInt(pVer, VerIndexSize);
 
-					//ƒIƒtƒZƒbƒg’l
+					//ã‚ªãƒ•ã‚»ãƒƒãƒˆå€¤
 					for (int k = 0; k < 4; k++)
 					{
 						fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
@@ -1122,7 +1064,7 @@ bool CPmxLoader::MorphLoad(FILE* fp, PMX_DATA* pPmxData)
 					}
 				}
 
-				//“Ç‚İ‚İ—p”jŠü
+				//èª­ã¿è¾¼ã¿ç”¨ç ´æ£„
 				delete[] pVer;
 				pVer = nullptr;
 
@@ -1133,176 +1075,176 @@ bool CPmxLoader::MorphLoad(FILE* fp, PMX_DATA* pPmxData)
 	return true;
 }
 
-//‘‚«o‚µ
+//æ›¸ãå‡ºã—
 bool CPmxLoader::Write(const char* FileName, PMX_DATA* pPmxData)
 {
 	FILE* fp = nullptr;
 	fopen_s(&fp, FileName, "w");
 
-	//ƒI[ƒvƒ“¸”s
+	//ã‚ªãƒ¼ãƒ—ãƒ³å¤±æ•—
 	if (fp == nullptr)
 		return false;
 
-	fprintf_s(fp, "ƒtƒ@ƒCƒ‹ƒ^ƒCƒv:%s\n", pPmxData->m_Head.m_FileType);
-	fprintf_s(fp, "ƒo[ƒWƒ‡ƒ“:%f\n", pPmxData->m_Head.m_Ver);
+	//fprintf_s(fp, "ãƒ•ã‚¡ã‚¤ãƒ«ã‚¿ã‚¤ãƒ—:%s\n", pPmxData->m_Head.m_FileType);
+	//fprintf_s(fp, "ãƒãƒ¼ã‚¸ãƒ§ãƒ³:%f\n", pPmxData->m_Head.m_Ver);
 
-	fprintf_s(fp, "ƒoƒCƒg—ñƒTƒCƒY:%d\n", pPmxData->m_Head.m_Size);
-	for (int i = 0; i < pPmxData->m_Head.m_Size; i++)
-	{
-		fprintf_s(fp, "%d,", pPmxData->m_Head.m_pData[i]);
-	}
-	fprintf_s(fp, "\n");
+	//fprintf_s(fp, "ãƒã‚¤ãƒˆåˆ—ã‚µã‚¤ã‚º:%d\n", pPmxData->m_Head.m_Size);
+	//for (int i = 0; i < pPmxData->m_Head.m_Size; i++)
+	//{
+	//	fprintf_s(fp, "%d,", pPmxData->m_Head.m_pData[i]);
+	//}
+	//fprintf_s(fp, "\n");
 
-	fprintf_s(fp,"ƒ‚ƒfƒ‹–¼(“ú):%s\n", pPmxData->m_ModelInfo.m_pNameJap);
-	fprintf_s(fp,"ƒ‚ƒfƒ‹–¼(‰p):%s\n", pPmxData->m_ModelInfo.m_pNameEng);
-	fprintf_s(fp,"ƒRƒƒ“ƒg(“ú):%s\n", pPmxData->m_ModelInfo.m_pCommentJap);
-	fprintf_s(fp,"ƒRƒƒ“ƒg(‰p):%s\n", pPmxData->m_ModelInfo.m_pCommentEng);
-	fprintf_s(fp, "\n");
+	fprintf_s(fp,"ãƒ¢ãƒ‡ãƒ«å(æ—¥):%ls\n", pPmxData->m_ModelInfo.m_pNameJap);
+	fprintf_s(fp,"ãƒ¢ãƒ‡ãƒ«å(è‹±):%ls\n", pPmxData->m_ModelInfo.m_pNameEng);
+	fprintf_s(fp,"ã‚³ãƒ¡ãƒ³ãƒˆ(æ—¥):%ls\n", pPmxData->m_ModelInfo.m_pCommentJap);
+	fprintf_s(fp,"ã‚³ãƒ¡ãƒ³ãƒˆ(è‹±):%ls\n", pPmxData->m_ModelInfo.m_pCommentEng);
+	//fprintf_s(fp, "\n");
 
-	fprintf_s(fp, "’¸“_”F%d\n", pPmxData->m_VerNum);
+	//fprintf_s(fp, "é ‚ç‚¹æ•°ï¼š%d\n", pPmxData->m_VerNum);
 
-	for (int i = 0; i < pPmxData->m_VerNum; i++)
-	{
-		fprintf_s(fp, "’¸“_%8d\n", i);
-	
-		fprintf_s(fp, "Pos:");
-		for (int j = 0; j < 3; j++)
-		{
-			fprintf_s(fp, "%f,", pPmxData->m_pVertex[i].m_fPos[j]);
-		}
-		fprintf_s(fp, "\n");
+	//for (int i = 0; i < pPmxData->m_VerNum; i++)
+	//{
+	//	fprintf_s(fp, "é ‚ç‚¹%8d\n", i);
+	//
+	//	fprintf_s(fp, "Pos:");
+	//	for (int j = 0; j < 3; j++)
+	//	{
+	//		fprintf_s(fp, "%f,", pPmxData->m_pVertex[i].m_fPos[j]);
+	//	}
+	//	fprintf_s(fp, "\n");
 
-		fprintf_s(fp, "Norm:");
-		for (int j = 0; j < 3; j++)
-		{
-			fprintf_s(fp, "%f,", pPmxData->m_pVertex[i].m_fNorm[j]);
-		}
-		fprintf_s(fp, "\n");
+	//	fprintf_s(fp, "Norm:");
+	//	for (int j = 0; j < 3; j++)
+	//	{
+	//		fprintf_s(fp, "%f,", pPmxData->m_pVertex[i].m_fNorm[j]);
+	//	}
+	//	fprintf_s(fp, "\n");
 
-		fprintf_s(fp, "Uv:");
-		for (int j = 0; j < 2; j++)
-		{
-			fprintf_s(fp, "%f,", pPmxData->m_pVertex[i].m_fUv[j]);
-		}
-		fprintf_s(fp, "\n");
+	//	fprintf_s(fp, "Uv:");
+	//	for (int j = 0; j < 2; j++)
+	//	{
+	//		fprintf_s(fp, "%f,", pPmxData->m_pVertex[i].m_fUv[j]);
+	//	}
+	//	fprintf_s(fp, "\n");
 
-		//’Ç‰Á’¸“_‚ª‚ ‚ê‚Î
-		if (pPmxData->m_pVertex->m_pfAddUv != nullptr)
-		{
-			fprintf_s(fp, "AddUv:");
-			for (int j = 0; j < 4; j++)
-			{
-				fprintf_s(fp, "%f,", pPmxData->m_pVertex[i].m_pfAddUv[i]);
-			}
-			fprintf_s(fp, "\n");
-		}
+	//	//è¿½åŠ é ‚ç‚¹ãŒã‚ã‚Œã°
+	//	if (pPmxData->m_pVertex->m_pfAddUv != nullptr)
+	//	{
+	//		fprintf_s(fp, "AddUv:");
+	//		for (int j = 0; j < 4; j++)
+	//		{
+	//			fprintf_s(fp, "%f,", pPmxData->m_pVertex[i].m_pfAddUv[i]);
+	//		}
+	//		fprintf_s(fp, "\n");
+	//	}
 
-		fprintf_s(fp, "ƒEƒFƒCƒg•ÏŒ`•û®:%d\n",pPmxData->m_pVertex[i].m_WeightData.m_WeightType);
+	//	fprintf_s(fp, "ã‚¦ã‚§ã‚¤ãƒˆå¤‰å½¢æ–¹å¼:%d\n",pPmxData->m_pVertex[i].m_WeightData.m_WeightType);
 
-		//•ÏŒ`•û®‚É‰‚¶‚Ä“f‚«o‚·
-		switch (pPmxData->m_pVertex[i].m_WeightData.m_WeightType)
-		{
-			//BDEF1
-			case 0:
-			{
-				fprintf_s(fp, "ƒ{[ƒ“ID:");
-				fprintf_s(fp, "%d\n", pPmxData->m_pVertex[i].m_WeightData.m_pBdef1->m_BoneID);
-				break;
-			}
-			//BDEF2
-			case 1:
-			{
+	//	//å¤‰å½¢æ–¹å¼ã«å¿œã˜ã¦åãå‡ºã™
+	//	switch (pPmxData->m_pVertex[i].m_WeightData.m_WeightType)
+	//	{
+	//		//BDEF1
+	//		case 0:
+	//		{
+	//			fprintf_s(fp, "ãƒœãƒ¼ãƒ³ID:");
+	//			fprintf_s(fp, "%d\n", pPmxData->m_pVertex[i].m_WeightData.m_pBdef1->m_BoneID);
+	//			break;
+	//		}
+	//		//BDEF2
+	//		case 1:
+	//		{
 
-				fprintf_s(fp, "ƒ{[ƒ“ID:");
-				for (int j = 0; j < 2; j++)
-				{
-					fprintf_s(fp, "%d,", pPmxData->m_pVertex[i].m_WeightData.m_pBdef2->m_BoneID[j]);
-				}
-				fprintf_s(fp,"\n");
-				
-				fprintf_s(fp, "ƒEƒFƒCƒg’l:");
-				fprintf_s(fp, "%f\n", pPmxData->m_pVertex[i].m_WeightData.m_pBdef2->m_Weight);
-				break;
-			}
-			//BDEF4
-			case 2:
-			{
-				fprintf_s(fp, "ƒ{[ƒ“ID:");
-				for (int j = 0; j < 4; j++)
-				{
-					fprintf_s(fp, "%d,", pPmxData->m_pVertex[i].m_WeightData.m_pBdef4->m_BoneID[j]);
-				}
-				fprintf_s(fp, "\n");
+	//			fprintf_s(fp, "ãƒœãƒ¼ãƒ³ID:");
+	//			for (int j = 0; j < 2; j++)
+	//			{
+	//				fprintf_s(fp, "%d,", pPmxData->m_pVertex[i].m_WeightData.m_pBdef2->m_BoneID[j]);
+	//			}
+	//			fprintf_s(fp,"\n");
+	//			
+	//			fprintf_s(fp, "ã‚¦ã‚§ã‚¤ãƒˆå€¤:");
+	//			fprintf_s(fp, "%f\n", pPmxData->m_pVertex[i].m_WeightData.m_pBdef2->m_Weight);
+	//			break;
+	//		}
+	//		//BDEF4
+	//		case 2:
+	//		{
+	//			fprintf_s(fp, "ãƒœãƒ¼ãƒ³ID:");
+	//			for (int j = 0; j < 4; j++)
+	//			{
+	//				fprintf_s(fp, "%d,", pPmxData->m_pVertex[i].m_WeightData.m_pBdef4->m_BoneID[j]);
+	//			}
+	//			fprintf_s(fp, "\n");
 
-				fprintf_s(fp, "ƒEƒFƒCƒg’l:");
-				for (int j = 0; j < 4; j++)
-				{
-					fprintf_s(fp, "%f,", pPmxData->m_pVertex[i].m_WeightData.m_pBdef4->m_Weight[j]);
-				}
-				fprintf_s(fp, "\n");
-				break;
-			}
-			//BDEF2
-			case 3:
-			{
-				fprintf_s(fp, "ƒ{[ƒ“ID:");
-				for (int j = 0; j < 2; j++)
-				{
-					fprintf_s(fp, "%d,", pPmxData->m_pVertex[i].m_WeightData.m_pSdef->m_BoneID[j]);
-				}
-				fprintf_s(fp, "\n");
+	//			fprintf_s(fp, "ã‚¦ã‚§ã‚¤ãƒˆå€¤:");
+	//			for (int j = 0; j < 4; j++)
+	//			{
+	//				fprintf_s(fp, "%f,", pPmxData->m_pVertex[i].m_WeightData.m_pBdef4->m_Weight[j]);
+	//			}
+	//			fprintf_s(fp, "\n");
+	//			break;
+	//		}
+	//		//BDEF2
+	//		case 3:
+	//		{
+	//			fprintf_s(fp, "ãƒœãƒ¼ãƒ³ID:");
+	//			for (int j = 0; j < 2; j++)
+	//			{
+	//				fprintf_s(fp, "%d,", pPmxData->m_pVertex[i].m_WeightData.m_pSdef->m_BoneID[j]);
+	//			}
+	//			fprintf_s(fp, "\n");
 
-				fprintf_s(fp, "ƒEƒFƒCƒg’l:");
-				fprintf_s(fp, "%f\n", pPmxData->m_pVertex[i].m_WeightData.m_pSdef->m_Weight);
+	//			fprintf_s(fp, "ã‚¦ã‚§ã‚¤ãƒˆå€¤:");
+	//			fprintf_s(fp, "%f\n", pPmxData->m_pVertex[i].m_WeightData.m_pSdef->m_Weight);
 
-				fprintf_s(fp, "•ÏŒ`—ps—ñ3x3:");
-				for (int j = 0; j < 3; j++)
-				{
-					for (int k = 0; k < 3; k++)
-					{
-						fprintf_s(fp, "%f", pPmxData->m_pVertex[i].m_WeightData.m_pSdef->m_Matrix[j][k]);
-					}
-					fprintf_s(fp, "\n");
-				}
-				fprintf_s(fp, "\n");
-				break;
-			}
-			default:
-				break;
-		}
-		
-		fprintf_s(fp, "ƒGƒbƒW”{—¦F");
-		fprintf_s(fp, "%f\n", pPmxData->m_pVertex->m_EdgeMagn);
-		fprintf_s(fp, "\n");
-	}
+	//			fprintf_s(fp, "å¤‰å½¢ç”¨è¡Œåˆ—3x3:");
+	//			for (int j = 0; j < 3; j++)
+	//			{
+	//				for (int k = 0; k < 3; k++)
+	//				{
+	//					fprintf_s(fp, "%f", pPmxData->m_pVertex[i].m_WeightData.m_pSdef->m_Matrix[j][k]);
+	//				}
+	//				fprintf_s(fp, "\n");
+	//			}
+	//			fprintf_s(fp, "\n");
+	//			break;
+	//		}
+	//		default:
+	//			break;
+	//	}
+	//	
+	//	fprintf_s(fp, "ã‚¨ãƒƒã‚¸å€ç‡ï¼š");
+	//	fprintf_s(fp, "%f\n", pPmxData->m_pVertex->m_EdgeMagn);
+	//	fprintf_s(fp, "\n");
+	//}
 
-	fprintf_s(fp, "–Ê‚Ì”F%d\n", pPmxData->m_FaceNum);
+	//fprintf_s(fp, "é¢ã®æ•°ï¼š%d\n", pPmxData->m_FaceNum);
 
-	for (int i = 0; i < pPmxData->m_FaceNum; i++)
-	{
-		fprintf_s(fp, "%5d:", i);
-		for (int j = 0; j < 3; j++)
-		{
-			fprintf_s(fp, "%8d", pPmxData->m_pFace[i].m_VerIndex[j]);
-		}
-		fprintf_s(fp, "\n");
-	}
+	//for (int i = 0; i < pPmxData->m_FaceNum; i++)
+	//{
+	//	fprintf_s(fp, "%5d:", i);
+	//	for (int j = 0; j < 3; j++)
+	//	{
+	//		fprintf_s(fp, "%8d", pPmxData->m_pFace[i].m_VerIndex[j]);
+	//	}
+	//	fprintf_s(fp, "\n");
+	//}
 
-	fprintf_s(fp, "ƒeƒNƒXƒ`ƒƒ”F%d\n", pPmxData->m_TexNum);
+	fprintf_s(fp, "ãƒ†ã‚¯ã‚¹ãƒãƒ£æ•°ï¼š%d\n", pPmxData->m_TexNum);
 
 	for (int i = 0; i < pPmxData->m_TexNum; i++)
 	{
 		fprintf_s(fp, "%s\n", pPmxData->m_pTex[i].m_pPass);
 	}
 	
-	fprintf_s(fp, "ƒ}ƒeƒŠƒAƒ‹”F%d\n", pPmxData->m_MaterialNum);
+	fprintf_s(fp, "ãƒãƒ†ãƒªã‚¢ãƒ«æ•°ï¼š%d\n", pPmxData->m_MaterialNum);
 
 	for (int i = 0; i < pPmxData->m_MaterialNum; i++)
 	{
-		fprintf_s(fp, "ƒ}ƒeƒŠƒAƒ‹–¼(“ú):%s\n", pPmxData->m_pMaterial[i].m_pNameJap);
-		fprintf_s(fp, "ƒ}ƒeƒŠƒAƒ‹–¼(‰p):%s\n", pPmxData->m_pMaterial[i].m_pNameEng);
+		fprintf_s(fp, "ãƒãƒ†ãƒªã‚¢ãƒ«å(æ—¥):%s\n", pPmxData->m_pMaterial[i].m_pNameJap);
+		fprintf_s(fp, "ãƒãƒ†ãƒªã‚¢ãƒ«å(è‹±):%s\n", pPmxData->m_pMaterial[i].m_pNameEng);
 		
-		fprintf_s(fp, "Diffuse:");
+	/*	fprintf_s(fp, "Diffuse:");
 		for (int j = 0; j < 4; j++)
 		{
 			fprintf_s(fp, "%f,",pPmxData->m_pMaterial[i].m_Diffuse[j]);
@@ -1325,7 +1267,7 @@ bool CPmxLoader::Write(const char* FileName, PMX_DATA* pPmxData)
 		}
 		fprintf_s(fp, "\n");
 
-		fprintf_s(fp, "•`‰æƒtƒ‰ƒO:%d\n", pPmxData->m_pMaterial[i].m_BitFlag);
+		fprintf_s(fp, "æç”»ãƒ•ãƒ©ã‚°:%d\n", pPmxData->m_pMaterial[i].m_BitFlag);
 
 		fprintf_s(fp, "Edge:");
 		for (int j = 0; j < 4; j++)
@@ -1342,28 +1284,28 @@ bool CPmxLoader::Write(const char* FileName, PMX_DATA* pPmxData)
 		fprintf_s(fp, "ToonTexture:%d\n", pPmxData->m_pMaterial[i].m_ToonTex);
 		fprintf_s(fp, "ToonFlag:%d\n", pPmxData->m_pMaterial[i].m_ToonFlag);
 
-		fprintf_s(fp, "ƒƒ‚:%s\n", pPmxData->m_pMaterial[i].m_pMemo);
-		fprintf_s(fp, "g—p‚·‚é’¸“_”:%d\n", pPmxData->m_pMaterial[i].m_UseVerNum);
-
+		fprintf_s(fp, "ãƒ¡ãƒ¢:%s\n", pPmxData->m_pMaterial[i].m_pMemo);
+		fprintf_s(fp, "ä½¿ç”¨ã™ã‚‹é ‚ç‚¹æ•°:%d\n", pPmxData->m_pMaterial[i].m_UseVerNum);
+*/
 		fprintf_s(fp, "\n");
 	}
 
-	fprintf_s(fp, "ƒ{[ƒ“”F%d\n", pPmxData->m_BoneNum);
+	fprintf_s(fp, "ãƒœãƒ¼ãƒ³æ•°ï¼š%d\n", pPmxData->m_BoneNum);
 
 	for (int i = 0; i < pPmxData->m_BoneNum; i++)
 	{
-		fprintf_s(fp, "ƒ{[ƒ“–¼(“ú):%s\n", pPmxData->m_pBone[i].m_pNameJap);
-		fprintf_s(fp, "ƒ{[ƒ“–¼(‰p):%s\n", pPmxData->m_pBone[i].m_pNameEng);
+		fprintf_s(fp, "ãƒœãƒ¼ãƒ³å(æ—¥):%s\n", pPmxData->m_pBone[i].m_pNameJap);
+		fprintf_s(fp, "ãƒœãƒ¼ãƒ³å(è‹±):%s\n", pPmxData->m_pBone[i].m_pNameEng);
 
-		fprintf_s(fp, "Pos:");
+		/*fprintf_s(fp, "Pos:");
 		for (int j = 0; j < 3; j++)
 		{
 			fprintf_s(fp, "%f,", pPmxData->m_pBone[i].m_fPos[j]);
 		}
 		fprintf_s(fp, "\n");
 
-		fprintf_s(fp, "eƒ{[ƒ“ID:%d\n", pPmxData->m_pBone[i].m_ParentId);
-		fprintf_s(fp, "•ÏŒ`ŠK‘w:%d\n", pPmxData->m_pBone[i].m_Hierarchy);
+		fprintf_s(fp, "è¦ªãƒœãƒ¼ãƒ³ID:%d\n", pPmxData->m_pBone[i].m_ParentId);
+		fprintf_s(fp, "å¤‰å½¢éšå±¤:%d\n", pPmxData->m_pBone[i].m_Hierarchy);
 		fprintf_s(fp, "BitFlag:");
 		for (int j = 0; j < 2; j++)
 		{
@@ -1378,26 +1320,26 @@ bool CPmxLoader::Write(const char* FileName, PMX_DATA* pPmxData)
 		}
 		fprintf_s(fp, "\n");
 		
-		fprintf_s(fp, "Ú‘±æƒ{[ƒ“:%d\n",pPmxData->m_pBone[i].m_ConnectId);
+		fprintf_s(fp, "æ¥ç¶šå…ˆãƒœãƒ¼ãƒ³:%d\n",pPmxData->m_pBone[i].m_ConnectId);
 
-		fprintf_s(fp, "•t—^eƒ{[ƒ“:%d\n", pPmxData->m_pBone[i].m_GrantId);
-		fprintf_s(fp, "•t—^—¦:%f\n", pPmxData->m_pBone[i].m_fGrantRate);
+		fprintf_s(fp, "ä»˜ä¸è¦ªãƒœãƒ¼ãƒ³:%d\n", pPmxData->m_pBone[i].m_GrantId);
+		fprintf_s(fp, "ä»˜ä¸ç‡:%f\n", pPmxData->m_pBone[i].m_fGrantRate);
 
-		fprintf_s(fp, "²ŒÅ’è:");
+		fprintf_s(fp, "è»¸å›ºå®š:");
 		for (int j = 0; j < 3; j++)
 		{
 			fprintf_s(fp, "%f,", pPmxData->m_pBone[i].m_fFixedAxis[j]);
 		}
 		fprintf_s(fp, "\n");
 
-		fprintf_s(fp, "ƒ[ƒJƒ‹²X:");
+		fprintf_s(fp, "ãƒ­ãƒ¼ã‚«ãƒ«è»¸X:");
 		for (int j = 0; j < 3; j++)
 		{
 			fprintf_s(fp, "%f,", pPmxData->m_pBone[i].m_fAxisX[j]);
 		}
 		fprintf_s(fp, "\n");
 
-		fprintf_s(fp, "ƒ[ƒJƒ‹²Z:");
+		fprintf_s(fp, "ãƒ­ãƒ¼ã‚«ãƒ«è»¸Z:");
 		for (int j = 0; j < 3; j++)
 		{
 			fprintf_s(fp, "%f,", pPmxData->m_pBone[i].m_fAxisZ[j]);
@@ -1406,182 +1348,182 @@ bool CPmxLoader::Write(const char* FileName, PMX_DATA* pPmxData)
 		
 		fprintf_s(fp, "Key:%d\n",pPmxData->m_pBone[i].m_Key);
 			
-		fprintf_s(fp, "ƒ^[ƒQƒbƒgƒ{[ƒ“:%d\n", pPmxData->m_pBone[i].m_Ik.m_TargetId);
-		fprintf_s(fp, "ƒ‹[ƒv‰ñ”:%d\n", pPmxData->m_pBone[i].m_Ik.m_RoopTime);
-		fprintf_s(fp, "‰ñ“]Šp:%f\n", pPmxData->m_pBone[i].m_Ik.m_fRad);
+		fprintf_s(fp, "ã‚¿ãƒ¼ã‚²ãƒƒãƒˆãƒœãƒ¼ãƒ³:%d\n", pPmxData->m_pBone[i].m_Ik.m_TargetId);
+		fprintf_s(fp, "ãƒ«ãƒ¼ãƒ—å›æ•°:%d\n", pPmxData->m_pBone[i].m_Ik.m_RoopTime);
+		fprintf_s(fp, "å›è»¢è§’:%f\n", pPmxData->m_pBone[i].m_Ik.m_fRad);
 
-		fprintf_s(fp, "ƒŠƒ“ƒN”:%d\n", pPmxData->m_pBone[i].m_Ik.m_LinkNum);
+		fprintf_s(fp, "ãƒªãƒ³ã‚¯æ•°:%d\n", pPmxData->m_pBone[i].m_Ik.m_LinkNum);
 		
 		for (int j = 0; j < pPmxData->m_pBone[i].m_Ik.m_LinkNum; j++)
 		{
-			fprintf_s(fp, "ƒŠƒ“ƒNƒ{[ƒ“:%d\n", pPmxData->m_pBone[i].m_Ik.m_pLink[j].m_LinkBoneId);
-			fprintf_s(fp, "Šp“x§ŒÀ:%d\n", pPmxData->m_pBone[i].m_Ik.m_pLink[j].m_RadRest);
+			fprintf_s(fp, "ãƒªãƒ³ã‚¯ãƒœãƒ¼ãƒ³:%d\n", pPmxData->m_pBone[i].m_Ik.m_pLink[j].m_LinkBoneId);
+			fprintf_s(fp, "è§’åº¦åˆ¶é™:%d\n", pPmxData->m_pBone[i].m_Ik.m_pLink[j].m_RadRest);
 
-			fprintf_s(fp, "‰ºŒÀŠp:");
+			fprintf_s(fp, "ä¸‹é™è§’:");
 			for (int k = 0; k < 3; k++)
 			{
 				fprintf_s(fp, "%f,", pPmxData->m_pBone[i].m_Ik.m_pLink[j].m_fLowerRad[k]);
 			}
 			fprintf_s(fp, "\n");
 
-			fprintf_s(fp, "ãŒÀŠp:");
+			fprintf_s(fp, "ä¸Šé™è§’:");
 			for (int k = 0; k < 3; k++)
 			{
 				fprintf_s(fp, "%f,", pPmxData->m_pBone[i].m_Ik.m_pLink[j].m_fUpperRad[k]);
 			}
 			fprintf_s(fp, "\n");
 		}
-		fprintf_s(fp, "\n");
+		fprintf_s(fp, "\n");*/
 	}
 
-	fprintf_s(fp, "ƒ‚[ƒt”:%d\n", pPmxData->m_MorphNum);
+	fprintf_s(fp, "ãƒ¢ãƒ¼ãƒ•æ•°:%d\n", pPmxData->m_MorphNum);
 
 	for (int i = 0; i < pPmxData->m_MorphNum; i++)
 	{
-		fprintf_s(fp, "ƒ‚[ƒt–¼(“ú):%ls\n", pPmxData->m_pMorph[i].m_pNameJap);
-		fprintf_s(fp, "ƒ‚[ƒt–¼(‰p):%ls\n", pPmxData->m_pMorph[i].m_pNameEng);
+		fprintf_s(fp, "ãƒ¢ãƒ¼ãƒ•å(æ—¥):%ls\n", pPmxData->m_pMorph[i].m_pNameJap);
+		fprintf_s(fp, "ãƒ¢ãƒ¼ãƒ•å(è‹±):%ls\n", pPmxData->m_pMorph[i].m_pNameEng);
 
-		fprintf_s(fp, "PMDƒJƒeƒSƒŠ:%d\n", pPmxData->m_pMorph[i].m_PmdType);
-		fprintf_s(fp, "ƒ‚[ƒtƒ^ƒCƒv:%d\n", pPmxData->m_pMorph[i].m_MorphType);
-		fprintf_s(fp, "ƒf[ƒ^”:%d\n", pPmxData->m_pMorph[i].m_DataNum);
-		
-		//ƒ^ƒCƒv‚²‚Æ‚Éo—Í‚·‚é
-		switch (pPmxData->m_pMorph[i].m_MorphType)
-		{
-			//ƒOƒ‹[ƒvƒ‚[ƒt
-			case 0:
-			{				
-				for (int j = 0; j < pPmxData->m_pMorph[i].m_DataNum; j++)
-				{
-					fprintf_s(fp, "ƒ‚[ƒtID:%d\n", pPmxData->m_pMorph[i].m_pGroupMorph[j].m_MorphId);
-					fprintf_s(fp, "ƒ‚[ƒt—¦:%f\n", pPmxData->m_pMorph[i].m_pGroupMorph[j].m_fRate);
-				}
-				fprintf_s(fp, "\n");
-				break;
-			}
-			//’¸“_ƒ‚[ƒt
-			case 1:
-			{
-				for (int j = 0; j < pPmxData->m_pMorph[i].m_DataNum; j++)
-				{
-					fprintf_s(fp, "’¸“_ID:%d\n", pPmxData->m_pMorph[i].m_pVerMorph[j].m_VerId);
+		//fprintf_s(fp, "PMDã‚«ãƒ†ã‚´ãƒª:%d\n", pPmxData->m_pMorph[i].m_PmdType);
+		//fprintf_s(fp, "ãƒ¢ãƒ¼ãƒ•ã‚¿ã‚¤ãƒ—:%d\n", pPmxData->m_pMorph[i].m_MorphType);
+		//fprintf_s(fp, "ãƒ‡ãƒ¼ã‚¿æ•°:%d\n", pPmxData->m_pMorph[i].m_DataNum);
+		//
+		////ã‚¿ã‚¤ãƒ—ã”ã¨ã«å‡ºåŠ›ã™ã‚‹
+		//switch (pPmxData->m_pMorph[i].m_MorphType)
+		//{
+		//	//ã‚°ãƒ«ãƒ¼ãƒ—ãƒ¢ãƒ¼ãƒ•
+		//	case 0:
+		//	{				
+		//		for (int j = 0; j < pPmxData->m_pMorph[i].m_DataNum; j++)
+		//		{
+		//			fprintf_s(fp, "ãƒ¢ãƒ¼ãƒ•ID:%d\n", pPmxData->m_pMorph[i].m_pGroupMorph[j].m_MorphId);
+		//			fprintf_s(fp, "ãƒ¢ãƒ¼ãƒ•ç‡:%f\n", pPmxData->m_pMorph[i].m_pGroupMorph[j].m_fRate);
+		//		}
+		//		fprintf_s(fp, "\n");
+		//		break;
+		//	}
+		//	//é ‚ç‚¹ãƒ¢ãƒ¼ãƒ•
+		//	case 1:
+		//	{
+		//		for (int j = 0; j < pPmxData->m_pMorph[i].m_DataNum; j++)
+		//		{
+		//			fprintf_s(fp, "é ‚ç‚¹ID:%d\n", pPmxData->m_pMorph[i].m_pVerMorph[j].m_VerId);
 
-					fprintf_s(fp, "À•WƒIƒtƒZƒbƒg:");
-					for (int k = 0; k < 3; k++)
-					{
-						fprintf_s(fp, "%f,", pPmxData->m_pMorph[i].m_pVerMorph[j].m_fOffset[k]);
-					}
-					fprintf_s(fp, "\n");					
-				}
-				fprintf_s(fp, "\n");
-				break;
-			}
-			//ƒ{[ƒ“
-			case 2:
-			{
-				for (int j = 0; j < pPmxData->m_pMorph[i].m_DataNum; j++)
-				{
-					fprintf_s(fp, "ƒ{[ƒ“ID:%d\n", pPmxData->m_pMorph[i].m_pBoneMorph[j].m_BoneId);
+		//			fprintf_s(fp, "åº§æ¨™ã‚ªãƒ•ã‚»ãƒƒãƒˆ:");
+		//			for (int k = 0; k < 3; k++)
+		//			{
+		//				fprintf_s(fp, "%f,", pPmxData->m_pMorph[i].m_pVerMorph[j].m_fOffset[k]);
+		//			}
+		//			fprintf_s(fp, "\n");					
+		//		}
+		//		fprintf_s(fp, "\n");
+		//		break;
+		//	}
+		//	//ãƒœãƒ¼ãƒ³
+		//	case 2:
+		//	{
+		//		for (int j = 0; j < pPmxData->m_pMorph[i].m_DataNum; j++)
+		//		{
+		//			fprintf_s(fp, "ãƒœãƒ¼ãƒ³ID:%d\n", pPmxData->m_pMorph[i].m_pBoneMorph[j].m_BoneId);
 
-					fprintf_s(fp, "ˆÚ“®—Ê:");
-					for (int k = 0; k < 3; k++)
-					{
-						fprintf_s(fp, "%f,", pPmxData->m_pMorph[i].m_pBoneMorph[j].m_fMove[k]);
-					}
-					fprintf_s(fp, "\n");
+		//			fprintf_s(fp, "ç§»å‹•é‡:");
+		//			for (int k = 0; k < 3; k++)
+		//			{
+		//				fprintf_s(fp, "%f,", pPmxData->m_pMorph[i].m_pBoneMorph[j].m_fMove[k]);
+		//			}
+		//			fprintf_s(fp, "\n");
 
-					fprintf_s(fp, "‰ñ“]—Ê:");
-					for (int k = 0; k < 4; k++)
-					{
-						fprintf_s(fp, "%f,", pPmxData->m_pMorph[i].m_pBoneMorph[j].m_fRot[k]);
-					}
-					fprintf_s(fp, "\n");
-				}
-				fprintf_s(fp, "\n");
-				break;
-			}
-			//Ş¿
-			case 8:
-			{
-				for (int j = 0; j < pPmxData->m_pMorph[i].m_DataNum; j++)
-				{
-					fprintf_s(fp, "Ş¿ID:%d\n", pPmxData->m_pMorph[i].m_pMateMorph[j].m_MateId);
-					fprintf_s(fp, "ƒIƒtƒZƒbƒg‰‰ZŒ`®:%d\n", pPmxData->m_pMorph[i].m_pMateMorph[j].m_Format);
-					
-					fprintf_s(fp, "Diffuse:");
-					for (int k = 0; k < 4; k++)
-					{
-						fprintf_s(fp, "%f,", pPmxData->m_pMorph[i].m_pMateMorph[j].m_fDiffuse[k]);
-					}
-					fprintf_s(fp, "\n");
-					
-					fprintf_s(fp, "Specular:");
-					for (int k = 0; k < 3; k++)
-					{
-						fprintf_s(fp, "%f,", pPmxData->m_pMorph[i].m_pMateMorph[j].m_fSpecular[k]);
-					}
-					fprintf_s(fp, "\n");
+		//			fprintf_s(fp, "å›è»¢é‡:");
+		//			for (int k = 0; k < 4; k++)
+		//			{
+		//				fprintf_s(fp, "%f,", pPmxData->m_pMorph[i].m_pBoneMorph[j].m_fRot[k]);
+		//			}
+		//			fprintf_s(fp, "\n");
+		//		}
+		//		fprintf_s(fp, "\n");
+		//		break;
+		//	}
+		//	//æè³ª
+		//	case 8:
+		//	{
+		//		for (int j = 0; j < pPmxData->m_pMorph[i].m_DataNum; j++)
+		//		{
+		//			fprintf_s(fp, "æè³ªID:%d\n", pPmxData->m_pMorph[i].m_pMateMorph[j].m_MateId);
+		//			fprintf_s(fp, "ã‚ªãƒ•ã‚»ãƒƒãƒˆæ¼”ç®—å½¢å¼:%d\n", pPmxData->m_pMorph[i].m_pMateMorph[j].m_Format);
+		//			
+		//			fprintf_s(fp, "Diffuse:");
+		//			for (int k = 0; k < 4; k++)
+		//			{
+		//				fprintf_s(fp, "%f,", pPmxData->m_pMorph[i].m_pMateMorph[j].m_fDiffuse[k]);
+		//			}
+		//			fprintf_s(fp, "\n");
+		//			
+		//			fprintf_s(fp, "Specular:");
+		//			for (int k = 0; k < 3; k++)
+		//			{
+		//				fprintf_s(fp, "%f,", pPmxData->m_pMorph[i].m_pMateMorph[j].m_fSpecular[k]);
+		//			}
+		//			fprintf_s(fp, "\n");
 
-					fprintf_s(fp, "SpecularPower:%f\n", pPmxData->m_pMorph[i].m_pMateMorph[j].m_fSpePower);
+		//			fprintf_s(fp, "SpecularPower:%f\n", pPmxData->m_pMorph[i].m_pMateMorph[j].m_fSpePower);
 
-					fprintf_s(fp, "Ambient:");
-					for (int k = 0; k < 3; k++)
-					{
-						fprintf_s(fp, "%f,", pPmxData->m_pMorph[i].m_pMateMorph[j].m_fAmbient[k]);
-					}
-					fprintf_s(fp, "\n");
+		//			fprintf_s(fp, "Ambient:");
+		//			for (int k = 0; k < 3; k++)
+		//			{
+		//				fprintf_s(fp, "%f,", pPmxData->m_pMorph[i].m_pMateMorph[j].m_fAmbient[k]);
+		//			}
+		//			fprintf_s(fp, "\n");
 
-					fprintf_s(fp, "EdgeColor:");
-					for (int k = 0; k < 4; k++)
-					{
-						fprintf_s(fp, "%f,", pPmxData->m_pMorph[i].m_pMateMorph[j].m_fAmbient[k]);
-					}
-					fprintf_s(fp, "\n");
+		//			fprintf_s(fp, "EdgeColor:");
+		//			for (int k = 0; k < 4; k++)
+		//			{
+		//				fprintf_s(fp, "%f,", pPmxData->m_pMorph[i].m_pMateMorph[j].m_fAmbient[k]);
+		//			}
+		//			fprintf_s(fp, "\n");
 
-					fprintf_s(fp, "EdgeSize:%f\n", pPmxData->m_pMorph[i].m_pMateMorph[j].m_fEdgeSize);
+		//			fprintf_s(fp, "EdgeSize:%f\n", pPmxData->m_pMorph[i].m_pMateMorph[j].m_fEdgeSize);
 
-					fprintf_s(fp, "Tex:");
-					for (int k = 0; k < 4; k++)
-					{
-						fprintf_s(fp, "%f,", pPmxData->m_pMorph[i].m_pMateMorph[j].m_fTex[k]);
-					}
-					fprintf_s(fp, "\n");
-					
-					fprintf_s(fp, "SphereTex:");
-					for (int k = 0; k < 4; k++)
-					{
-						fprintf_s(fp, "%f,", pPmxData->m_pMorph[i].m_pMateMorph[j].m_fSphereTex[k]);
-					}
-					fprintf_s(fp, "\n");
-					
-					fprintf_s(fp, "ToonTex:");
-					for (int k = 0; k < 4; k++)
-					{
-						fprintf_s(fp, "%f,", pPmxData->m_pMorph[i].m_pMateMorph[j].m_fToonTex[k]);
-					}
-					fprintf_s(fp, "\n");
-				}
-				fprintf_s(fp, "\n");
-				break;
-			}
-			//UVor’Ç‰ÁUV
-			default:
-			{
-				for (int j = 0; j < pPmxData->m_pMorph[i].m_DataNum; j++)
-				{
-					fprintf_s(fp, "’¸“_ID:%d\n", pPmxData->m_pMorph[i].m_pUvMorph[j].m_VerId);
+		//			fprintf_s(fp, "Tex:");
+		//			for (int k = 0; k < 4; k++)
+		//			{
+		//				fprintf_s(fp, "%f,", pPmxData->m_pMorph[i].m_pMateMorph[j].m_fTex[k]);
+		//			}
+		//			fprintf_s(fp, "\n");
+		//			
+		//			fprintf_s(fp, "SphereTex:");
+		//			for (int k = 0; k < 4; k++)
+		//			{
+		//				fprintf_s(fp, "%f,", pPmxData->m_pMorph[i].m_pMateMorph[j].m_fSphereTex[k]);
+		//			}
+		//			fprintf_s(fp, "\n");
+		//			
+		//			fprintf_s(fp, "ToonTex:");
+		//			for (int k = 0; k < 4; k++)
+		//			{
+		//				fprintf_s(fp, "%f,", pPmxData->m_pMorph[i].m_pMateMorph[j].m_fToonTex[k]);
+		//			}
+		//			fprintf_s(fp, "\n");
+		//		}
+		//		fprintf_s(fp, "\n");
+		//		break;
+		//	}
+		//	//UVorè¿½åŠ UV
+		//	default:
+		//	{
+		//		for (int j = 0; j < pPmxData->m_pMorph[i].m_DataNum; j++)
+		//		{
+		//			fprintf_s(fp, "é ‚ç‚¹ID:%d\n", pPmxData->m_pMorph[i].m_pUvMorph[j].m_VerId);
 
-					fprintf_s(fp, "UVƒIƒtƒZƒbƒg:");
-					for (int k = 0; k < 4; k++)
-					{
-						fprintf_s(fp, "%f,", pPmxData->m_pMorph[i].m_pUvMorph[j].m_fOffset[k]);
-					}
-					fprintf_s(fp, "\n");
-				}
-				fprintf_s(fp, "\n");
-				break;
-			}
-		}
+		//			fprintf_s(fp, "UVã‚ªãƒ•ã‚»ãƒƒãƒˆ:");
+		//			for (int k = 0; k < 4; k++)
+		//			{
+		//				fprintf_s(fp, "%f,", pPmxData->m_pMorph[i].m_pUvMorph[j].m_fOffset[k]);
+		//			}
+		//			fprintf_s(fp, "\n");
+		//		}
+		//		fprintf_s(fp, "\n");
+		//		break;
+		//	}
+		//}
 		fprintf_s(fp, "\n");
 	}
 

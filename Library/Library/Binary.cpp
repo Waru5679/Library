@@ -1,5 +1,6 @@
 #include "Binary.h"
 #include <math.h>
+#include <stdio.h>
 
 //Strからintへ
 int StrToInt(unsigned char* pStr, int Size)
@@ -144,32 +145,47 @@ unsigned char* ErasCharFromString(unsigned char* pSource,int Size, char Erace)
 	return pOut;
 }
 
-constexpr int BYTE1_MAX{ 128 };
-constexpr int BYTE2_MAX{ 2048 };
-constexpr int BYTE3_MAX{ 65536 };
-
-
 //テキスト変換
-wchar_t* CharToWchar_t(unsigned char* str)
+wchar_t* CharToWchar_t(unsigned char* pStr,int StrSize)
 {
 	wchar_t* pOut = nullptr;
 	
-	//文字列サイズを測る
-	int size = 0;
-	for ( size = 0; str[size] != '\0'; size += 2);
+	//wcharは2文字で1文字+\0
+	int wStrSize = StrSize / 2 + 1;
 
 	//メモリ確保
-	pOut = new wchar_t[(size/2)+1];
+	pOut = new wchar_t[wStrSize];
 
 	int count = 0;
-	for (int i = 0; str[i] != '\0'; i += 2)
+	for (int i = 0; i< StrSize; i += 2)
 	{
-		pOut[count++] = (str[0]) | (str[1] << 8);
+		pOut[count++] = (pStr[i]) | (pStr[i+1] << 8);
 	}
 
 	//終わりに\0を入れる
-	pOut[size / 2] = '\0';
+	pOut[count] = '\0';
 
 	return pOut;
 }
 
+
+//wchar_t文字列読み込み
+wchar_t* WcharStrRead(int StrSize,FILE* fp)
+{
+	wchar_t* pOut = nullptr;
+
+	//読み込み用メモリ確保
+	unsigned char* pData = new unsigned char[StrSize];
+
+	//文字列読み込み
+	fread_s(pData, StrSize, StrSize, 1, fp);
+
+	//wcharに変換
+	pOut = CharToWchar_t(pData,StrSize);
+
+	//読み込み用破棄
+	delete[] pData;
+	pData = nullptr;
+
+	return pOut;
+}

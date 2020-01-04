@@ -147,10 +147,10 @@ struct PMX_MODEL_INFO
 			m_pCommentEng = nullptr;
 		}
 	}
-	unsigned char* m_pNameJap;	//モデル名(日)
-	unsigned char* m_pNameEng;	//モデル名(英)
-	unsigned char* m_pCommentJap;//コメント(日)
-	unsigned char* m_pCommentEng;//コメント(英)
+	wchar_t* m_pNameJap;	//モデル名(日)
+	wchar_t* m_pNameEng;	//モデル名(英)
+	wchar_t* m_pCommentJap;	//コメント(日)
+	wchar_t* m_pCommentEng;	//コメント(英)
 };
 
 //pmx頂点データ
