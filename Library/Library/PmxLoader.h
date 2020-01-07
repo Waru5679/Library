@@ -492,6 +492,49 @@ struct PMX_DISPLAY
 	FRAME_ELEMENT*	m_pElement;		//枠内要素数
 };
 
+//剛体
+struct PMX_RIGIT_BODY
+{
+	PMX_RIGIT_BODY()
+	{
+		m_pNameJap = nullptr;
+		m_pNameEng = nullptr;
+	}
+	~PMX_RIGIT_BODY()
+	{
+		//剛体名(日)
+		if (m_pNameJap != nullptr)
+		{
+			delete[] m_pNameJap;
+			m_pNameJap = nullptr;
+		}
+		//剛体名(英)
+		if (m_pNameJap != nullptr)
+		{
+			delete[] m_pNameEng;
+			m_pNameEng = nullptr;
+		}
+	}
+
+	wchar_t* m_pNameJap;	//剛体名(日)
+	wchar_t* m_pNameEng;	//剛体名(英)
+	
+	unsigned char	m_Group;		//グループ	
+	unsigned char	m_Shape;		//0:球,1:箱,2:カプセル
+	unsigned char   m_Operation;	//0:ボーン追従(static) 1:物理演算(dynamic) 2:物理演算 + Bone位置合わせ
+	unsigned short	m_NoCollision;	//非衝突グループ
+
+	int		m_BoneId;		//ボーンID
+	float	m_fSize[3];		//サイズ
+	float	m_fPos[3];		//位置
+	float	m_fRad[3];		//回転
+	float	m_fMass;			//質量
+	float	m_fMoveDecay;	//移動減衰
+	float	m_fRotDecay;		//回転減衰
+	float	m_fRepulsive;	//反発力
+	float	m_fFriction;		//摩擦力
+};
+
 //pmxデータ
 struct PMX_DATA
 {
@@ -558,6 +601,7 @@ struct PMX_DATA
 	int		m_BoneNum;		//ボーン数
 	int		m_MorphNum;		//モーフ数
 	int		m_DisplayNum;	//表示枠数
+	int		m_RigidNum;		//剛体数
 
 	PMX_HEADER		m_Head;			//ヘッダー
 	PMX_MODEL_INFO	m_ModelInfo;	//モデルデータ
@@ -567,7 +611,9 @@ struct PMX_DATA
 	PMX_MATERIAL*	m_pMaterial;	//マテリアルデータ
 	PMX_BONE*		m_pBone;		//ボーンデータ
 	PMX_MORPH*		m_pMorph;		//モーフデータ	
-	PMX_DISPLAY* m_pDisplay;		//表示枠データ
+	PMX_DISPLAY*	m_pDisplay;		//表示枠データ
+	PMX_RIGIT_BODY* m_pRigidBody;	//剛体データ
+
 };
 
 //PMX読み込み
@@ -611,4 +657,7 @@ private:
 
 	//表示枠読み込み
 	bool DisplayFrameLoad(FILE* fp, PMX_DATA* pPmxData);
+
+	//剛体読み込み
+	bool RigidBodyLoad(FILE* fp, PMX_DATA* pPmxData);
 };
