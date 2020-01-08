@@ -528,11 +528,51 @@ struct PMX_RIGIT_BODY
 	float	m_fSize[3];		//サイズ
 	float	m_fPos[3];		//位置
 	float	m_fRad[3];		//回転
-	float	m_fMass;			//質量
+	float	m_fMass;		//質量
 	float	m_fMoveDecay;	//移動減衰
-	float	m_fRotDecay;		//回転減衰
+	float	m_fRotDecay;	//回転減衰
 	float	m_fRepulsive;	//反発力
-	float	m_fFriction;		//摩擦力
+	float	m_fFriction;	//摩擦力
+};
+
+//Joint
+struct PMX_JOINT
+{
+	PMX_JOINT()
+	{
+		m_pNameJap = nullptr;
+		m_pNameEng = nullptr;
+	}
+	~PMX_JOINT()
+	{
+		//joint名(日
+		if (m_pNameJap != nullptr)
+		{
+			delete[] m_pNameJap;
+			m_pNameJap = nullptr;
+		}
+		//joint名(英)
+		if (m_pNameEng!= nullptr)
+		{
+			delete[] m_pNameEng;
+			m_pNameEng = nullptr;
+		}
+	}
+	wchar_t* m_pNameJap;//joint名(日)
+	wchar_t* m_pNameEng;//joint名(英)
+
+	unsigned char m_Type;//Jointの種類(ver2.0は0のみ)
+
+	int		m_RigitId[2];		//関連剛体のインデックス
+	float	m_fPos[3];			//位置
+	float	m_fRad[3];			//回転
+	float	m_fUpperMove[3];	//移動制限(上限)
+	float	m_fLowerMove[3];	//移動制限(下限)
+	float	m_fUpperRad[3];		//回転制限(上限)
+	float	m_fLowerRad[3];		//回転制限(下限)
+	float	m_fSpringMove[3];	//ばね定数_移動
+	float	m_fSpringRad[3];	//ばね定数_回転
+
 };
 
 //pmxデータ
@@ -540,13 +580,15 @@ struct PMX_DATA
 {
 	PMX_DATA()
 	{	
-		m_pVertex	= nullptr;//頂点データ
-		m_pFace		= nullptr;//面のデータ
-		m_pTex		= nullptr;//テクスチャデータ
-		m_pMaterial = nullptr;//マテリアルデータ
-		m_pBone		= nullptr;//ボーンデータ
-		m_pMorph	= nullptr;//モーフデータ
-		m_pDisplay	= nullptr;//表示枠
+		m_pVertex		= nullptr;	//頂点データ
+		m_pFace			= nullptr;	//面のデータ
+		m_pTex			= nullptr;	//テクスチャデータ
+		m_pMaterial		= nullptr;	//マテリアルデータ
+		m_pBone			= nullptr;	//ボーンデータ
+		m_pMorph		= nullptr;	//モーフデータ
+		m_pDisplay		= nullptr;	//表示枠
+		m_pRigidBody	= nullptr;	//剛体
+		m_pJoint		= nullptr;	//Joint
 	}
 	~PMX_DATA()
 	{
@@ -592,6 +634,18 @@ struct PMX_DATA
 			delete[] m_pDisplay;
 			m_pDisplay = nullptr;
 		}
+		//剛体
+		if (m_pRigidBody != nullptr)
+		{
+			delete[] m_pRigidBody;
+			m_pRigidBody = nullptr;
+		}
+		//Joint
+		if (m_pJoint != nullptr)
+		{
+			delete[] m_pJoint;
+			m_pJoint = nullptr;
+		}
 	}
 
 	int		m_VerNum;		//頂点数
@@ -602,6 +656,7 @@ struct PMX_DATA
 	int		m_MorphNum;		//モーフ数
 	int		m_DisplayNum;	//表示枠数
 	int		m_RigidNum;		//剛体数
+	int		m_JointNum;		//Joint数
 
 	PMX_HEADER		m_Head;			//ヘッダー
 	PMX_MODEL_INFO	m_ModelInfo;	//モデルデータ
@@ -613,7 +668,7 @@ struct PMX_DATA
 	PMX_MORPH*		m_pMorph;		//モーフデータ	
 	PMX_DISPLAY*	m_pDisplay;		//表示枠データ
 	PMX_RIGIT_BODY* m_pRigidBody;	//剛体データ
-
+	PMX_JOINT*		m_pJoint;		//Jointデータ
 };
 
 //PMX読み込み
@@ -660,4 +715,7 @@ private:
 
 	//剛体読み込み
 	bool RigidBodyLoad(FILE* fp, PMX_DATA* pPmxData);
+
+	//Joint読み込み
+	bool JointLoad(FILE* fp, PMX_DATA* pPmxData);
 };

@@ -69,6 +69,11 @@ bool CPmxLoader::Load(const char* FileName, PMX_DATA* pPmxData)
 		return false;
 	}
 
+	//Joint読み込み
+	if (JointLoad(fp, pPmxData) == false)
+	{
+		return false;
+	}
 	return true;
 }
 
@@ -1273,6 +1278,125 @@ bool CPmxLoader::RigidBodyLoad(FILE* fp, PMX_DATA* pPmxData)
 	return true;
 }
 
+//Joint読み込み
+bool CPmxLoader::JointLoad(FILE* fp, PMX_DATA* pPmxData)
+{
+	unsigned char Data[4];
+
+	//Joint数
+	fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
+	pPmxData->m_JointNum = StrToInt(Data, sizeof(Data));
+
+	//Jointなし
+	if (pPmxData->m_JointNum <= 0)
+	{
+		return false;
+	}
+
+	//メモリ確保
+	pPmxData->m_pJoint = new PMX_JOINT[pPmxData->m_JointNum];
+
+	//joint名サイズ
+	int JapSize;
+	int EngSize;
+
+	//剛体インデックスサイズ
+	int RigidIndexSize = pPmxData->m_Head.m_pData[7];
+	
+	//剛体インデックス読み込みよう
+	unsigned char* pRigid = nullptr;
+	pRigid = new unsigned char[RigidIndexSize];
+
+	for (int i = 0; i < pPmxData->m_JointNum; i++)
+	{
+		//Joint名(日)サイズ
+		fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
+		JapSize = StrToInt(Data, sizeof(Data));
+
+		//サイズあるときのみ
+		if (JapSize > 0)
+		{
+			//Joint名(日)読み込み
+			pPmxData->m_pJoint[i].m_pNameJap = WcharStrRead(JapSize, fp);
+		}
+
+		//Joint名(英)サイズ
+		fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
+		EngSize = StrToInt(Data, sizeof(Data));
+
+		//サイズあるときのみ
+		if (EngSize > 0)
+		{
+			//Joint名(英)読み込み
+			pPmxData->m_pJoint[i].m_pNameEng = WcharStrRead(EngSize, fp);
+		}
+
+		//Jointタイプ
+		fread_s(&pPmxData->m_pJoint[i].m_Type, sizeof(unsigned char), sizeof(unsigned char), 1, fp);
+
+		//剛体ID
+		for (int j = 0; j < 2; j++)
+		{
+			fread_s(pRigid, RigidIndexSize, RigidIndexSize, 1, fp);
+			pPmxData->m_pJoint[i].m_RigitId[j] = StrToInt(pRigid, RigidIndexSize);
+		}
+
+		//位置
+		for (int j = 0; j < 3; j++)
+		{
+			fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
+			pPmxData->m_pJoint[i].m_fPos[j] = StrToFloat(Data);
+		}
+		//回転
+		for (int j = 0; j < 3; j++)
+		{
+			fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
+			pPmxData->m_pJoint[i].m_fRad[j] = StrToFloat(Data);
+		}
+		//移動制限(下限）
+		for (int j = 0; j < 3; j++)
+		{
+			fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
+			pPmxData->m_pJoint[i].m_fLowerMove[j] = StrToFloat(Data);
+		}
+		//移動制限(上限）
+		for (int j = 0; j < 3; j++)
+		{
+			fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
+			pPmxData->m_pJoint[i].m_fUpperMove[j] = StrToFloat(Data);
+		}
+		//回転制限(下限）
+		for (int j = 0; j < 3; j++)
+		{
+			fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
+			pPmxData->m_pJoint[i].m_fLowerRad[j] = StrToFloat(Data);
+		}
+		//回転制限(上限）
+		for (int j = 0; j < 3; j++)
+		{
+			fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
+			pPmxData->m_pJoint[i].m_fUpperRad[j] = StrToFloat(Data);
+		}
+		//ばね定数_移動
+		for (int j = 0; j < 3; j++)
+		{
+			fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
+			pPmxData->m_pJoint[i].m_fSpringMove[j] = StrToFloat(Data);
+		}
+		//ばね定数_回転
+		for (int j = 0; j < 3; j++)
+		{
+			fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
+			pPmxData->m_pJoint[i].m_fSpringRad[j] = StrToFloat(Data);
+		}
+	}
+
+	//読み込み用破棄
+	delete[] pRigid;
+	pRigid = nullptr;
+
+	return true;
+}
 
 //書き出し
 bool CPmxLoader::Write(const char* FileName, PMX_DATA* pPmxData)
@@ -1744,48 +1868,123 @@ bool CPmxLoader::Write(const char* FileName, PMX_DATA* pPmxData)
 	//	fprintf_s(fp, "\n");
 	//}
 
-	fprintf_s(fp, "剛体数:%d\n", pPmxData->m_RigidNum);
+	//fprintf_s(fp, "剛体数:%d\n", pPmxData->m_RigidNum);
 
-	for (int i = 0; i < pPmxData->m_RigidNum; i++)
+	//for (int i = 0; i < pPmxData->m_RigidNum; i++)
+	//{
+	//	fprintf_s(fp, "剛体名(日):%ls\n", pPmxData->m_pRigidBody[i].m_pNameJap);
+	//	fprintf_s(fp, "剛体名(英):%ls\n", pPmxData->m_pRigidBody[i].m_pNameEng);
+	//	fprintf_s(fp, "関連ボーンID:%d\n", pPmxData->m_pRigidBody[i].m_BoneId);
+	//	fprintf_s(fp, "グループ:%d\n", pPmxData->m_pRigidBody[i].m_Group);
+	//	fprintf_s(fp, "非衝突グループフラグ:%d\n", pPmxData->m_pRigidBody[i].m_NoCollision);
+	//	fprintf_s(fp, "形状:%d\n", pPmxData->m_pRigidBody[i].m_Shape);
+
+	//	fprintf_s(fp, "サイズ:");
+	//	for(int j=0;j<3;j++)
+	//	{
+	//		fprintf_s(fp, "%f,", pPmxData->m_pRigidBody[i].m_fSize[j]);
+	//	}
+	//	fprintf_s(fp, "\n");
+
+
+	//	fprintf_s(fp, "位置");
+	//	for (int j = 0; j < 3; j++)
+	//	{
+	//		fprintf_s(fp, "%f,", pPmxData->m_pRigidBody[i].m_fPos[j]);
+	//	}
+	//	fprintf_s(fp, "\n");
+
+
+	//	fprintf_s(fp, "回転:");
+	//	for (int j = 0; j < 3; j++)
+	//	{
+	//		fprintf_s(fp, "%f,", pPmxData->m_pRigidBody[i].m_fRad[j]);
+	//	}
+	//	fprintf_s(fp, "\n");
+
+	//	fprintf_s(fp, "質量:%f\n", pPmxData->m_pRigidBody[i].m_fMass);
+	//	fprintf_s(fp, "移動減衰:%f\n", pPmxData->m_pRigidBody[i].m_fMoveDecay);
+	//	fprintf_s(fp, "回転減衰:%f\n", pPmxData->m_pRigidBody[i].m_fRotDecay);
+	//	fprintf_s(fp, "反発力:%f\n", pPmxData->m_pRigidBody[i].m_fRepulsive);
+	//	fprintf_s(fp, "摩擦力:%f\n", pPmxData->m_pRigidBody[i].m_fFriction);
+	//	fprintf_s(fp, "物理演算:%d\n", pPmxData->m_pRigidBody[i].m_Operation);
+	//	fprintf_s(fp, "\n");
+	//}
+
+	fprintf_s(fp, "Joint数:%d\n", pPmxData->m_JointNum);
+
+	for (int i = 0; i < pPmxData->m_JointNum; i++)
 	{
-		fprintf_s(fp, "剛体名(日):%ls\n", pPmxData->m_pRigidBody[i].m_pNameJap);
-		fprintf_s(fp, "剛体名(英):%ls\n", pPmxData->m_pRigidBody[i].m_pNameEng);
-		fprintf_s(fp, "関連ボーンID:%d\n", pPmxData->m_pRigidBody[i].m_BoneId);
-		fprintf_s(fp, "グループ:%d\n", pPmxData->m_pRigidBody[i].m_Group);
-		fprintf_s(fp, "非衝突グループフラグ:%d\n", pPmxData->m_pRigidBody[i].m_NoCollision);
-		fprintf_s(fp, "形状:%d\n", pPmxData->m_pRigidBody[i].m_Shape);
-
-		fprintf_s(fp, "サイズ:");
-		for(int j=0;j<3;j++)
+		fprintf_s(fp,"Joint名(日):%ls\n", pPmxData->m_pJoint[i].m_pNameJap);
+		fprintf_s(fp,"Joint名(英):%ls\n", pPmxData->m_pJoint[i].m_pNameEng);
+		fprintf_s(fp,"JointType:%d\n", pPmxData->m_pJoint[i].m_Type);
+		
+		fprintf_s(fp, "剛体Index:");
+		for (int j = 0; j < 2; j++)
 		{
-			fprintf_s(fp, "%f,", pPmxData->m_pRigidBody[i].m_fSize[j]);
+			fprintf_s(fp, "%d,", pPmxData->m_pJoint[i].m_RigitId[j]);
 		}
 		fprintf_s(fp, "\n");
 
-
-		fprintf_s(fp, "位置");
+		fprintf_s(fp, "Pos:");
 		for (int j = 0; j < 3; j++)
 		{
-			fprintf_s(fp, "%f,", pPmxData->m_pRigidBody[i].m_fPos[j]);
+			fprintf_s(fp, "%f,", pPmxData->m_pJoint[i].m_fPos[j]);
 		}
 		fprintf_s(fp, "\n");
 
-
-		fprintf_s(fp, "回転:");
+		fprintf_s(fp, "Rad:");
 		for (int j = 0; j < 3; j++)
 		{
-			fprintf_s(fp, "%f,", pPmxData->m_pRigidBody[i].m_fRad[j]);
+			fprintf_s(fp, "%f,", pPmxData->m_pJoint[i].m_fRad[j]);
 		}
 		fprintf_s(fp, "\n");
 
-		fprintf_s(fp, "質量:%f\n", pPmxData->m_pRigidBody[i].m_fMass);
-		fprintf_s(fp, "移動減衰:%f\n", pPmxData->m_pRigidBody[i].m_fMoveDecay);
-		fprintf_s(fp, "回転減衰:%f\n", pPmxData->m_pRigidBody[i].m_fRotDecay);
-		fprintf_s(fp, "反発力:%f\n", pPmxData->m_pRigidBody[i].m_fRepulsive);
-		fprintf_s(fp, "摩擦力:%f\n", pPmxData->m_pRigidBody[i].m_fFriction);
-		fprintf_s(fp, "物理演算:%d\n", pPmxData->m_pRigidBody[i].m_Operation);
+		fprintf_s(fp, "移動制限(上限):");
+		for (int j = 0; j < 3; j++)
+		{
+			fprintf_s(fp, "%f,", pPmxData->m_pJoint[i].m_fUpperMove[j]);
+		}
+		fprintf_s(fp, "\n");
+
+		fprintf_s(fp, "移動制限(下限):");
+		for (int j = 0; j < 3; j++)
+		{
+			fprintf_s(fp, "%f,", pPmxData->m_pJoint[i].m_fLowerMove[j]);
+		}
+		fprintf_s(fp, "\n");
+
+		fprintf_s(fp, "回転制限(上限):");
+		for (int j = 0; j < 3; j++)
+		{
+			fprintf_s(fp, "%f,", pPmxData->m_pJoint[i].m_fUpperRad[j]);
+		}
+		fprintf_s(fp, "\n");
+
+		fprintf_s(fp, "回転制限(下限):");
+		for (int j = 0; j < 3; j++)
+		{
+			fprintf_s(fp, "%f,", pPmxData->m_pJoint[i].m_fLowerRad[j]);
+		}
+		fprintf_s(fp, "\n");
+
+		fprintf_s(fp, "ばね定数(移動):");
+		for (int j = 0; j < 3; j++)
+		{
+			fprintf_s(fp, "%f,", pPmxData->m_pJoint[i].m_fSpringMove[j]);
+		}
+		fprintf_s(fp, "\n");
+		
+		fprintf_s(fp, "ばね定数(回転):");
+		for (int j = 0; j < 3; j++)
+		{
+			fprintf_s(fp, "%f,", pPmxData->m_pJoint[i].m_fSpringRad[j]);
+		}
+		fprintf_s(fp, "\n");
+
 		fprintf_s(fp, "\n");
 	}
+	
 
 	return true;
 }
