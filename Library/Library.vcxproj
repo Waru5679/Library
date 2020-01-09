@@ -161,6 +161,7 @@
     <ClInclude Include="Library\ObjLoader.h" />
     <ClInclude Include="Library\ModelManager.h" />
     <ClInclude Include="Library\PmxLoader.h" />
+    <ClInclude Include="Library\PmxStruct.h" />
     <ClInclude Include="Library\Polygon.h" />
     <ClInclude Include="Library\Ray.h" />
     <ClInclude Include="Library\Release.h" />

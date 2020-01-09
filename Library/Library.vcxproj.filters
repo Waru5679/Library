@@ -249,6 +249,9 @@
     <ClInclude Include="Library\Binary.h">
       <Filter>リソース ファイル\Binary</Filter>
     </ClInclude>
+    <ClInclude Include="Library\PmxStruct.h">
+      <Filter>リソース ファイル\PmxLoader</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Library\Audio.cpp">

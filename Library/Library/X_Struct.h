@@ -68,10 +68,10 @@ struct MATERIAL
 	D3DXVECTOR3					m_vKs;						//スペキュラー
 	float						m_fPower;					//スペキュラーのパワー
 	D3DXVECTOR3					m_vKe;						//エミッシブ
-	ID3D10ShaderResourceView*	m_pTexture;					//テクスチャポインタ	
 	int							m_FaceNum;					//このマテリアルを使用する面の数
 	int*						m_pFaceIndex;				//このマテリアルで使用する面のインデックスリスト
 	ID3D10Buffer**				m_ppIndexBuffer;			//インデックスバッファ
+	ID3D10ShaderResourceView*	m_pTexture;					//テクスチャポインタ	
 };
 
 //ボーン構造体
