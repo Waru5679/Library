@@ -791,8 +791,6 @@ bool CPmxLoader::MorphLoad(FILE* fp, PMX_DATA* pPmxData)
 	//読み込み
 	for (int i = 0; i < pPmxData->m_MorphNum; i++)
 	{
-		long ReadStartPos = ftell(fp);
-
 		//モーフ名(日)サイズ
 		fread_s(Data, sizeof(Data), sizeof(Data), 1, fp);
 		JapSize = StrToInt(Data, sizeof(Data));
@@ -812,7 +810,7 @@ bool CPmxLoader::MorphLoad(FILE* fp, PMX_DATA* pPmxData)
 		if (EngSize > 0)
 		{
 			//モーフ名(英)読み込み
-			pPmxData->m_pMorph[i].m_pNameJap = WcharStrRead(JapSize, fp);
+			pPmxData->m_pMorph[i].m_pNameJap = WcharStrRead(EngSize, fp);
 		}
 		
 		//PMDカテゴリ
@@ -1546,7 +1544,7 @@ bool CPmxLoader::Write(const char* FileName, PMX_DATA* pPmxData)
 	}
 
 	fprintf_s(fp, "FaceNum：%d\n", pPmxData->m_FaceNum);
-
+	
 	for (int i = 0; i < pPmxData->m_FaceNum; i++)
 	{
 		for (int j = 0; j < 3; j++)
