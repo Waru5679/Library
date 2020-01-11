@@ -18,7 +18,7 @@ public:
 
 private:
 
-	SKIN_MESH m_SkinMesh;
-	MESH m_Mesh;
+	X_SKIN_MESH m_SkinMesh;
+	X_MESH m_Mesh;
 	int m_Frame;
 };

@@ -158,6 +158,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="Library\Math.h" />
+    <ClInclude Include="Library\ModelLoader.h" />
     <ClInclude Include="Library\ObjLoader.h" />
     <ClInclude Include="Library\ModelManager.h" />
     <ClInclude Include="Library\PmxLoader.h" />
@@ -202,6 +203,7 @@
     <ClCompile Include="Library\LibraryMain.cpp" />
     <ClCompile Include="Library\Main.cpp" />
     <ClCompile Include="Library\Math.cpp" />
+    <ClCompile Include="Library\ModelLoader.cpp" />
     <ClCompile Include="Library\ObjLoader.cpp" />
     <ClCompile Include="Library\ModelManager.cpp" />
     <ClCompile Include="Library\PmxLoader.cpp" />

@@ -26,37 +26,37 @@ public:
 	long GetTemplateSkipStartPos(FILE* fp);
 
 	//メッシュ情報の読み込み
-	bool LoadMesh(FILE* fp, MESH* pMesh, SKIN_MESH_HEADER* pSkinHeader, long lStartPos);
+	bool LoadMesh(FILE* fp, X_MESH* pMesh, X_SKIN_MESH_HEADER* pSkinHeader, long lStartPos);
 
 	//スキンメッシュヘッダー読み込み
-	void LoadSkinMeshHeader(FILE* fp, SKIN_MESH_HEADER* pSkinHeader, long lStartPos);
+	void LoadSkinMeshHeader(FILE* fp, X_SKIN_MESH_HEADER* pSkinHeader, long lStartPos);
 
 	//ボーン読み込み
-	bool LoadBone(FILE* fp, BONE* pBone, long lStartPos);
+	bool LoadBone(FILE* fp, X_BONE* pBone, long lStartPos);
 
 	//ボーン情報の読み込み(再起関数))
-	BONE LoadBoneInfo(FILE* fp, int* pBoneIndex, BONE* pBone);
+	X_BONE LoadBoneInfo(FILE* fp, int* pBoneIndex, X_BONE* pBone);
 
 	//スキンウェイトの読み込み
-	bool LoadSkinWeight(FILE* fp, SKIN_WEIGHT* pSkinWeight, long lStartPos);
+	bool LoadSkinWeight(FILE* fp, X_SKIN_WEIGHT* pSkinWeight, long lStartPos);
 
 	//アニメーション読み込み
-	bool LoadAnimation(FILE* fp, ANIMATION* pAnime, long lStartPos);
+	bool LoadAnimation(FILE* fp, X_ANIMATION* pAnime, long lStartPos);
 
 	//スキンメッシュにまとめる
-	void SkinMeshPutTogether(MESH Mesh, BONE* pBone, int BoneNum, SKIN_WEIGHT* pSkinWeight, int WeightNum, ANIMATION* pAnimation, int AnimeNum, SKIN_MESH* pSkinMesh, SKIN_MESH_HEADER SkinHeader);
+	void SkinMeshPutTogether(X_MESH Mesh, X_BONE* pBone, int BoneNum, X_SKIN_WEIGHT* pSkinWeight, int WeightNum, X_ANIMATION* pAnimation, int AnimeNum, X_SKIN_MESH* pSkinMesh, X_SKIN_MESH_HEADER SkinHeader);
 
 	//ボーン毎のキー情報読み込み
-	BONE_KEY LoadBoneKey(FILE* fp);
+	X_BONE_KEY LoadBoneKey(FILE* fp);
 
 	//アニメーションキーの数を取得する
 	int GetAnimeKeyNum(FILE* fp);
 
 	//アニメーションキーの読み込み
-	ANIMATOIN_KEY LoadAnimationKey(FILE* fp);
+	X_ANIMATOIN_KEY LoadAnimationKey(FILE* fp);
 
 	//スキンウェイトの情報をもとに各頂点に対応ボーンとウェイトの情報を持たせる
-	void VertexMatchBone(SKIN_MESH* pSkin);
+	void VertexMatchBone(X_SKIN_MESH* pSkin);
 
 	//指定文字を文字列から消す
 	void ErasCharFromString(char* pSource, int Size, char Erace);

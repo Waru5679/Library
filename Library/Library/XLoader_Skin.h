@@ -19,25 +19,26 @@ public:
 	void Release();//開放
 
 	//スキンメッシュの読み込み
-	bool LoadSkinMesh(const char* FileName, SKIN_MESH* pSkinMesh);
+	bool LoadSkinMesh(const char* FileName, X_SKIN_MESH* pSkinMesh);
 
 	//アニメーション
-	void Animation(int AnimeId, int NowFrame, SKIN_MESH* pSkinMesh);
+	void Animation(int AnimeId, int NowFrame, X_SKIN_MESH* pSkinMesh);
 
 	//メッシュ描画(テスト用)
-	void DrawMesh(D3DMATRIX matWorld, SKIN_MESH* pSkinMesh, CColorData* pColor);
+	void DrawMesh(D3DMATRIX matWorld, X_SKIN_MESH* pSkinMesh, CColorData* pColor);
 private:
 	
 	//ボーンの更新
-	void BoneUpdate(SKIN_MESH* pSkin, int AnimeId, int NowFrame);
+	void BoneUpdate(X_SKIN_MESH* pSkin, int AnimeId, int NowFrame);
 
 	//ポーズを取得する
-	D3DXMATRIX GetPose(bool* bFind, SKIN_MESH* pSkin, BONE* pBone, ANIMATION Anime, int NowFrame, int BoneID);
+	D3DXMATRIX GetPose(bool* bFind, X_SKIN_MESH* pSkin, X_BONE* pBone, X_ANIMATION Anime, int NowFrame, int BoneID);
 
 	//ウェイトが大きい順にソートする
-	void WeightSort(SKIN_MESH* pSkin);
+	void WeightSort(X_SKIN_MESH* pSkin);
 
 	//フレーム補完
-	KEY FrameComplement(int NowFrame, ANIMATOIN_KEY AnimKey);
-	SKIN_MESH m_SkinMesh;	//スキンメッシュ
+	X_KEY FrameComplement(int NowFrame, X_ANIMATOIN_KEY AnimKey);
+
+	X_SKIN_MESH m_SkinMesh;	//スキンメッシュ
 };

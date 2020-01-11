@@ -17,9 +17,9 @@ enum KEY_TYPE
 };
 
 //頂点構造体
-struct VERTEX
+struct X_VERTEX
 {
-	VERTEX()
+	X_VERTEX()
 	{
 		for (int i = 0; i < MAX_VER_WEIGH; i++)
 		{
@@ -39,9 +39,9 @@ struct VERTEX
 };
 
 //ポリゴン
-struct FACE
+struct X_FACE
 {
-	FACE()
+	X_FACE()
 	{
 		m_FaceOfVer = -1;
 		m_pIndex = nullptr;
@@ -53,11 +53,11 @@ struct FACE
 };
 
 //マテリアル構造体
-struct MATERIAL
+struct X_MATERIAL
 {
-	MATERIAL()
+	X_MATERIAL()
 	{
-		ZeroMemory(this, sizeof(MATERIAL));
+		ZeroMemory(this, sizeof(X_MATERIAL));
 		m_pTexture = nullptr;
 		m_pFaceIndex = nullptr;
 		m_ppIndexBuffer = nullptr;
@@ -75,9 +75,9 @@ struct MATERIAL
 };
 
 //ボーン構造体
-struct BONE
+struct X_BONE
 {
-	BONE()
+	X_BONE()
 	{
 		m_pChildIndex = nullptr;
 		D3DXMatrixIdentity(&m_matBindPose);
@@ -94,9 +94,9 @@ struct BONE
 };
 
 //どのボーンが度の頂点にどれだけの影響を与えるか
-struct SKIN_WEIGHT
+struct X_SKIN_WEIGHT
 {
-	SKIN_WEIGHT()
+	X_SKIN_WEIGHT()
 	{
 		m_WeightNum = -1;
 		m_pIndex = nullptr;
@@ -112,9 +112,9 @@ struct SKIN_WEIGHT
 };
 
 //アニメーションのキー
-struct KEY
+struct X_KEY
 {
-	KEY()
+	X_KEY()
 	{
 		m_Time = -1;
 		m_ValueNum = -1;
@@ -126,9 +126,9 @@ struct KEY
 	float*	m_pfValue;	//値のリスト
 };
 
-struct  ANIMATOIN_KEY
+struct  X_ANIMATOIN_KEY
 {
-	ANIMATOIN_KEY()
+	X_ANIMATOIN_KEY()
 	{
 		m_KeyNum = -1;
 		m_KeyType = -1;
@@ -136,27 +136,28 @@ struct  ANIMATOIN_KEY
 	}
 	int		m_KeyType;	//キータイプ
 	int		m_KeyNum;	//キーの数
-	KEY*	m_pKey;		//キーリスト
+	X_KEY*	m_pKey;		//キーリスト
 };
 
 //ボーンのキー
-struct BONE_KEY
+struct X_BONE_KEY
 {
-	BONE_KEY()
+	X_BONE_KEY()
 	{
 		m_AniKeyNum = -1;
 		m_pAniKey = nullptr;
 	}
 
-	char			m_AffectBoneName[NAME_ARRAY_SIZE];	//影響を受けるボーン名
-	int				m_AniKeyNum;						//キーの数
-	ANIMATOIN_KEY*	m_pAniKey;							//キーリスト
+	char	m_AffectBoneName[NAME_ARRAY_SIZE];	//影響を受けるボーン名
+	int		m_AniKeyNum;						//キーの数
+
+	X_ANIMATOIN_KEY*	m_pAniKey;				//キーリスト
 };
 
 //アニメーション構造体
-struct ANIMATION
+struct X_ANIMATION
 {
-	ANIMATION()
+	X_ANIMATION()
 	{
 		m_BoneKeyNum = -1;
 		m_pBoneKey = nullptr;
@@ -164,13 +165,13 @@ struct ANIMATION
 
 	char		m_Name[NAME_ARRAY_SIZE];//アニメーション名
 	int			m_BoneKeyNum;			//対応ボーンの数
-	BONE_KEY*	m_pBoneKey;				//ボーンのキーリスト
+	X_BONE_KEY*	m_pBoneKey;				//ボーンのキーリスト
 };
 
 //メッシュ
-struct MESH
+struct X_MESH
 {
-	MESH()
+	X_MESH()
 	{
 		m_VerNum = -1;
 		m_FaceNum = -1;
@@ -182,17 +183,17 @@ struct MESH
 	}
 	int				m_VerNum;		//頂点数
 	int				m_FaceNum;		//面(ポリゴン)数
-	FACE*			m_pFace;		//面リスト
+	X_FACE*			m_pFace;		//面リスト
 	int				m_MaterialNum;	//マテリアルの数
-	MATERIAL*		m_pMaterial;	//マテリアルリスト
+	X_MATERIAL*		m_pMaterial;	//マテリアルリスト
 	ID3D10Buffer*	m_pVertexBuffer;//頂点バッファ
-	VERTEX*			 m_pVertex;		//頂点情報のリスト
+	X_VERTEX*			 m_pVertex;		//頂点情報のリスト
 };
 
 //スキンメッシュヘッダー
-struct SKIN_MESH_HEADER
+struct X_SKIN_MESH_HEADER
 {
-	SKIN_MESH_HEADER()
+	X_SKIN_MESH_HEADER()
 	{
 		m_MaxVertex = -1;
 		m_MaxFace = -1;
@@ -204,14 +205,14 @@ struct SKIN_MESH_HEADER
 };
 
 //スキンメッシュ
-struct SKIN_MESH
+struct X_SKIN_MESH
 {
-	SKIN_MESH()
+	X_SKIN_MESH()
 	{
-		m_Mesh = MESH();
+		m_Mesh = X_MESH();
 		m_BoneNum = -1;
 		m_pBone = nullptr;
-		m_SkinHeader = SKIN_MESH_HEADER();
+		m_SkinHeader = X_SKIN_MESH_HEADER();
 		m_WeightNum = -1;
 		m_pWeight = nullptr;
 		m_AnimeNum = -1;
@@ -219,13 +220,13 @@ struct SKIN_MESH
 		m_pRoot = nullptr;
 	}
 
-	MESH				m_Mesh;			//メッシュ
+	X_MESH				m_Mesh;			//メッシュ
 	int					m_BoneNum;		//ボーン数
-	BONE*				m_pBone;		//ボーンリスト
-	SKIN_MESH_HEADER	m_SkinHeader;	//スキンメッシュヘッダー
+	X_BONE*				m_pBone;		//ボーンリスト
+	X_SKIN_MESH_HEADER	m_SkinHeader;	//スキンメッシュヘッダー
 	int					m_WeightNum;	//ウェイト数
-	SKIN_WEIGHT*		m_pWeight;		//スキンウェイト
+	X_SKIN_WEIGHT*		m_pWeight;		//スキンウェイト
 	int					m_AnimeNum;		//アニメーション数
-	ANIMATION*			m_pAnimation;	//アニメーション
-	BONE*				m_pRoot;		//ルートボーン
+	X_ANIMATION*			m_pAnimation;	//アニメーション
+	X_BONE*				m_pRoot;		//ルートボーン
 };

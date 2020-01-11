@@ -112,6 +112,9 @@
     <Filter Include="リソース ファイル\Binary">
       <UniqueIdentifier>{40a6c04d-0e45-493e-8d6b-7a8d28effd99}</UniqueIdentifier>
     </Filter>
+    <Filter Include="リソース ファイル\ModelLoader">
+      <UniqueIdentifier>{f021f6c3-f56c-4cc0-b551-ad8797c36a5e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Library\Camera.h">
@@ -252,6 +255,9 @@
     <ClInclude Include="Library\PmxStruct.h">
       <Filter>リソース ファイル\PmxLoader</Filter>
     </ClInclude>
+    <ClInclude Include="Library\ModelLoader.h">
+      <Filter>リソース ファイル\ModelLoader</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Library\Audio.cpp">
@@ -364,6 +370,9 @@
     </ClCompile>
     <ClCompile Include="Library\Binary.cpp">
       <Filter>リソース ファイル\Binary</Filter>
+    </ClCompile>
+    <ClCompile Include="Library\ModelLoader.cpp">
+      <Filter>リソース ファイル\ModelLoader</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

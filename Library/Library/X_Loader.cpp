@@ -31,7 +31,7 @@ long CX_Loader::GetTemplateSkipStartPos(FILE* fp)
 }
 
 //メッシュ情報の読み込み
-bool CX_Loader::LoadMesh(FILE* fp, MESH* pMesh, SKIN_MESH_HEADER* pSkinHeader, long lStartPos)
+bool CX_Loader::LoadMesh(FILE* fp, X_MESH* pMesh, X_SKIN_MESH_HEADER* pSkinHeader, long lStartPos)
 {
 	//読み込みの開始位置にセット
 	fseek(fp, lStartPos, SEEK_SET);
@@ -48,9 +48,9 @@ bool CX_Loader::LoadMesh(FILE* fp, MESH* pMesh, SKIN_MESH_HEADER* pSkinHeader, l
 	D3DXVECTOR2* pvTex		= nullptr;//テクスチャ座標
 
 	//読み込み後そのまま使うもの
-	FACE* pFace			= nullptr;//面のリスト
-	MATERIAL* pMaterial = nullptr;//マテリアルのリスト
-	VERTEX* pVertex		= nullptr;//頂点リスト
+	X_FACE*		pFace		= nullptr;//面のリスト
+	X_MATERIAL* pMaterial	= nullptr;//マテリアルのリスト
+	X_VERTEX*	pVertex		= nullptr;//頂点リスト
 
 	//読み込み用
 	float x, y, z, w;
@@ -95,7 +95,7 @@ bool CX_Loader::LoadMesh(FILE* fp, MESH* pMesh, SKIN_MESH_HEADER* pSkinHeader, l
 			faceNum = atoi(str);
 
 			//面のメモリ確保
-			pFace = new FACE[faceNum];
+			pFace = new X_FACE[faceNum];
 
 			int faceOfVer = 0;//面を構成する頂点数
 
@@ -184,7 +184,7 @@ bool CX_Loader::LoadMesh(FILE* fp, MESH* pMesh, SKIN_MESH_HEADER* pSkinHeader, l
 			mateNum = atoi(str);
 
 			//マテリアルメモリ確保
-			pMaterial = new MATERIAL[mateNum];
+			pMaterial = new X_MATERIAL[mateNum];
 
 			//面の数
 			fgets(str, sizeof(str), fp);
@@ -268,7 +268,7 @@ bool CX_Loader::LoadMesh(FILE* fp, MESH* pMesh, SKIN_MESH_HEADER* pSkinHeader, l
 	}
 
 	//頂点構造体メモリ確保
-	pVertex = new VERTEX[verNum];
+	pVertex = new X_VERTEX[verNum];
 
 	//頂点構造体にまとめる
 	for (int i = 0; i < verNum; i++)
@@ -315,7 +315,7 @@ bool CX_Loader::LoadMesh(FILE* fp, MESH* pMesh, SKIN_MESH_HEADER* pSkinHeader, l
 		//面の数だけインデックスバッファ作成
 		for (int j = 0; j < pMaterial[i].m_FaceNum; j++)
 		{
-			FACE face = pFace[pMaterial[i].m_pFaceIndex[j]];
+			X_FACE face = pFace[pMaterial[i].m_pFaceIndex[j]];
 
 			//インデックスバッファ作成
 			pMaterial[i].m_ppIndexBuffer[j] = DRAW->BufferCreate(face.m_pIndex, sizeof(int) * face.m_FaceOfVer, D3D10_BIND_INDEX_BUFFER);
@@ -359,7 +359,7 @@ void CX_Loader::ErasCharFromString(char* pSource, int Size, char Erace)
 }
 
 //スキンメッシュヘッダー読み込み
-void CX_Loader::LoadSkinMeshHeader(FILE* fp, SKIN_MESH_HEADER* pSkinHeader, long lStartPos)
+void CX_Loader::LoadSkinMeshHeader(FILE* fp, X_SKIN_MESH_HEADER* pSkinHeader, long lStartPos)
 {
 	//ファイルの先頭にセット
 	fseek(fp, lStartPos, SEEK_SET);
@@ -418,7 +418,7 @@ int CX_Loader::GetBoneNum(FILE* fp, long lStartPos)
 }
 
 //ボーン読み込み
-bool CX_Loader::LoadBone(FILE* fp, BONE* pBone, long lStartPos)
+bool CX_Loader::LoadBone(FILE* fp, X_BONE* pBone, long lStartPos)
 {
 	//ファイルの先頭にセット
 	fseek(fp, lStartPos, SEEK_SET);
@@ -442,7 +442,7 @@ bool CX_Loader::LoadBone(FILE* fp, BONE* pBone, long lStartPos)
 		if (strcmp(str, "Frame") == 0)
 		{
 			//ボーンをリストに保存
-			BONE bone = LoadBoneInfo(fp, &boneIndex, pBone);
+			X_BONE bone = LoadBoneInfo(fp, &boneIndex, pBone);
 			pBone[bone.m_index] = bone;
 		}
 	}
@@ -450,7 +450,7 @@ bool CX_Loader::LoadBone(FILE* fp, BONE* pBone, long lStartPos)
 }
 
 //ボーン情報の読み込み
-BONE CX_Loader::LoadBoneInfo(FILE* fp, int* pBoneIndex, BONE* pBone)
+X_BONE CX_Loader::LoadBoneInfo(FILE* fp, int* pBoneIndex, X_BONE* pBone)
 {
 	//関数呼び出し時のファイルの位置を保存
 	long ReadStartPos = ftell(fp);
@@ -463,7 +463,7 @@ BONE CX_Loader::LoadBoneInfo(FILE* fp, int* pBoneIndex, BONE* pBone)
 	char str[READ_ARRAY_SIZE];
 
 	//ボーン読み込み用
-	BONE bone;
+	X_BONE bone;
 
 	//自身のインデックス
 	bone.m_index = *(pBoneIndex);
@@ -568,7 +568,7 @@ BONE CX_Loader::LoadBoneInfo(FILE* fp, int* pBoneIndex, BONE* pBone)
 			bone.m_pChildIndex[childNum++] = *pBoneIndex;
 
 			//ボーンをリストに保存
-			BONE read = LoadBoneInfo(fp, pBoneIndex, pBone);
+			X_BONE read = LoadBoneInfo(fp, pBoneIndex, pBone);
 			pBone[read.m_index] = read;
 		}
 	}
@@ -604,7 +604,7 @@ int CX_Loader::GetSkinWeightNum(FILE* fp, long lStartPos)
 }
 
 //スキンウェイトの読み込み
-bool CX_Loader::LoadSkinWeight(FILE* fp, SKIN_WEIGHT* pSkinWeight, long lStartPos)
+bool CX_Loader::LoadSkinWeight(FILE* fp, X_SKIN_WEIGHT* pSkinWeight, long lStartPos)
 {
 	//読み込み開始位置にセットする
 	fseek(fp, lStartPos, SEEK_SET);
@@ -703,7 +703,7 @@ int CX_Loader::GetAnimeNum(FILE* fp, long lStartPos)
 }
 
 //スキンウェイトの情報をもとに各頂点に対応ボーンとウェイトの情報を持たせる
-void CX_Loader::VertexMatchBone(SKIN_MESH* pSkin)
+void CX_Loader::VertexMatchBone(X_SKIN_MESH* pSkin)
 {
 	//対応ボーン名
 	char boneName[NAME_ARRAY_SIZE];
@@ -732,7 +732,7 @@ void CX_Loader::VertexMatchBone(SKIN_MESH* pSkin)
 		//対応頂点にボーンIDとウェイトを渡す
 		for (int j = 0; j < pSkin->m_pWeight[i].m_WeightNum; j++)
 		{
-			VERTEX ver = pSkin->m_Mesh.m_pVertex[pSkin->m_pWeight[i].m_pIndex[j]];
+			X_VERTEX ver = pSkin->m_Mesh.m_pVertex[pSkin->m_pWeight[i].m_pIndex[j]];
 
 			//ボーンID
 			ver.m_BoneIndex[ver.m_WeightNum] = boneID;
@@ -750,9 +750,9 @@ void CX_Loader::VertexMatchBone(SKIN_MESH* pSkin)
 }
 
 //ボーン毎のキー情報の読み込み
-BONE_KEY CX_Loader::LoadBoneKey(FILE* fp)
+X_BONE_KEY CX_Loader::LoadBoneKey(FILE* fp)
 {
-	BONE_KEY Out;
+	X_BONE_KEY Out;
 
 	//キーワード読み込み用
 	char str[READ_ARRAY_SIZE];
@@ -776,7 +776,7 @@ BONE_KEY CX_Loader::LoadBoneKey(FILE* fp)
 	int AnimeKeyNum = GetAnimeKeyNum(fp);
 
 	//アニメーションキーのメモリ確保
-	Out.m_pAniKey = new ANIMATOIN_KEY[AnimeKeyNum];
+	Out.m_pAniKey = new X_ANIMATOIN_KEY[AnimeKeyNum];
 
 	//アニメーションキーの数保存
 	Out.m_AniKeyNum = AnimeKeyNum;
@@ -864,9 +864,9 @@ int CX_Loader::GetAnimeKeyNum(FILE* fp)
 }
 
 //アニメーションキーの読み込み
-ANIMATOIN_KEY CX_Loader::LoadAnimationKey(FILE* fp)
+X_ANIMATOIN_KEY CX_Loader::LoadAnimationKey(FILE* fp)
 {
-	ANIMATOIN_KEY Out;
+	X_ANIMATOIN_KEY Out;
 
 	//キーワード読み込み用
 	char str[READ_ARRAY_SIZE];
@@ -883,7 +883,7 @@ ANIMATOIN_KEY CX_Loader::LoadAnimationKey(FILE* fp)
 	Out.m_KeyNum = keyNum;
 
 	//キーのメモリ確保
-	Out.m_pKey = new KEY[keyNum];
+	Out.m_pKey = new X_KEY[keyNum];
 
 	//キーの読み込み
 	for (int i = 0; i < keyNum; i++)
@@ -919,7 +919,7 @@ ANIMATOIN_KEY CX_Loader::LoadAnimationKey(FILE* fp)
 
 
 //アニメーション読み込み
-bool CX_Loader::LoadAnimation(FILE* fp, ANIMATION* pAnime, long lStartPos)
+bool CX_Loader::LoadAnimation(FILE* fp, X_ANIMATION* pAnime, long lStartPos)
 {
 	//読み込み開始位置にセットする
 	fseek(fp, lStartPos, SEEK_SET);
@@ -980,7 +980,7 @@ bool CX_Loader::LoadAnimation(FILE* fp, ANIMATION* pAnime, long lStartPos)
 			pAnime[animeCount].m_BoneKeyNum = boneNum;
 
 			//メモリ確保
-			pAnime[animeCount].m_pBoneKey = new BONE_KEY[boneNum];
+			pAnime[animeCount].m_pBoneKey = new X_BONE_KEY[boneNum];
 
 			//アニメーション読み込み位置にセットする
 			fseek(fp, ReadStartPos, SEEK_SET);
@@ -1006,7 +1006,7 @@ bool CX_Loader::LoadAnimation(FILE* fp, ANIMATION* pAnime, long lStartPos)
 }
 
 //スキンメッシュにまとめる
-void CX_Loader::SkinMeshPutTogether(MESH Mesh, BONE* pBone, int BoneNum, SKIN_WEIGHT* pSkinWeight, int WeightNum, ANIMATION* pAnimation, int AnimeNum, SKIN_MESH* pSkinMesh, SKIN_MESH_HEADER SkinHeader)
+void CX_Loader::SkinMeshPutTogether(X_MESH Mesh, X_BONE* pBone, int BoneNum, X_SKIN_WEIGHT* pSkinWeight, int WeightNum, X_ANIMATION* pAnimation, int AnimeNum, X_SKIN_MESH* pSkinMesh, X_SKIN_MESH_HEADER SkinHeader)
 {
 	pSkinMesh->m_Mesh = Mesh;						//メッシュ
 	pSkinMesh->m_BoneNum = BoneNum;					//ボーン数

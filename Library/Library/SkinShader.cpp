@@ -57,7 +57,7 @@ bool CSkinShader::CreateLayOut(ID3D10Device* pDevice)
 }
 
 //シェーダーセット
-void CSkinShader::SetShader(ID3D10ShaderResourceView* pTexture, RECT_F* pSrc, CColorData* pColor, D3DXMATRIX matWorld, SKIN_MESH* pSkin)
+void CSkinShader::SetShader(ID3D10ShaderResourceView* pTexture, RECT_F* pSrc, CColorData* pColor, D3DXMATRIX matWorld, X_SKIN_MESH* pSkin)
 {
 	//頂点インプットレイアウトをセット
 	DX->GetDevice()->IASetInputLayout(m_pVertexLayout);

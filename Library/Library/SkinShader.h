@@ -21,7 +21,7 @@ public:
 	void SetCamera(CCameraBase* pCamera) { m_pCamera = pCamera; }
 
 	//シェーダーセット
-	void SetShader(ID3D10ShaderResourceView* pTexture, RECT_F* pSrc, CColorData* pColor, D3DXMATRIX matWorld, SKIN_MESH* pSkin);
+	void SetShader(ID3D10ShaderResourceView* pTexture, RECT_F* pSrc, CColorData* pColor, D3DXMATRIX matWorld, X_SKIN_MESH* pSkin);
 
 	//インプットレイアウトの作成
 	bool CreateLayOut(ID3D10Device* pDevice);

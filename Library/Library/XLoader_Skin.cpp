@@ -9,7 +9,7 @@
 CX_Skin* CX_Skin::m_pInstance = nullptr;
 
 //スキンメッシュの読み込み
-bool CX_Skin::LoadSkinMesh(const char* FileName, SKIN_MESH* pSkinMesh)
+bool CX_Skin::LoadSkinMesh(const char* FileName, X_SKIN_MESH* pSkinMesh)
 {
 	//ファイル読み込み
 	FILE* fp = nullptr;
@@ -24,16 +24,16 @@ bool CX_Skin::LoadSkinMesh(const char* FileName, SKIN_MESH* pSkinMesh)
 	//templateを省いたファイルの読み込み開始位置を保存
 	long ReadStartPos = X_LOADER->GetTemplateSkipStartPos(fp);
 
-	MESH	Mesh;				//メッシュ
+	X_MESH	Mesh;				//メッシュ
 	int		BoneNum			= 0;//ボーン数
 	int		SkinWeightNum	= 0;//スキンウェイトの数
 	int		AnimeNum		= 0;//アニメーションの数
 
-	BONE*			pBone		= nullptr;	//ボーンリスト
-	SKIN_WEIGHT*	pSkinWeight	= nullptr;	//スキンウェイトリスト
-	ANIMATION*		pAnime		= nullptr;	//アニメションリスト
+	X_BONE*			pBone		= nullptr;	//ボーンリスト
+	X_SKIN_WEIGHT*	pSkinWeight	= nullptr;	//スキンウェイトリスト
+	X_ANIMATION*	pAnime		= nullptr;	//アニメションリスト
 
-	SKIN_MESH_HEADER SkinHeader;	//スキンメッシュヘッダー
+	X_SKIN_MESH_HEADER SkinHeader;	//スキンメッシュヘッダー
 
 	//スキンメッシュヘッダー読み込み
 	X_LOADER->LoadSkinMeshHeader(fp, &SkinHeader, ReadStartPos);
@@ -52,7 +52,7 @@ bool CX_Skin::LoadSkinMesh(const char* FileName, SKIN_MESH* pSkinMesh)
 	if (BoneNum != 0)
 	{
 		//ボーンリストメモリ確保
-		pBone = new BONE[BoneNum];
+		pBone = new X_BONE[BoneNum];
 
 		//ボーン読み込み
 		if (X_LOADER->LoadBone(fp, pBone, ReadStartPos) == false)
@@ -69,7 +69,7 @@ bool CX_Skin::LoadSkinMesh(const char* FileName, SKIN_MESH* pSkinMesh)
 	if (SkinWeightNum != 0)
 	{
 		//スキンウェイトメモリ確保
-		pSkinWeight = new SKIN_WEIGHT[SkinWeightNum];
+		pSkinWeight = new X_SKIN_WEIGHT[SkinWeightNum];
 		
 		//スキン情報の読み込み
 		if (X_LOADER->LoadSkinWeight(fp, pSkinWeight, ReadStartPos) == false)
@@ -86,7 +86,7 @@ bool CX_Skin::LoadSkinMesh(const char* FileName, SKIN_MESH* pSkinMesh)
 	if (AnimeNum != 0)
 	{
 		//アニメーションメモリ確保
-		pAnime = new ANIMATION[AnimeNum];
+		pAnime = new X_ANIMATION[AnimeNum];
 
 		//アニメーション読み込み
 		if (X_LOADER->LoadAnimation(fp, pAnime, ReadStartPos) == false)
@@ -106,13 +106,13 @@ bool CX_Skin::LoadSkinMesh(const char* FileName, SKIN_MESH* pSkinMesh)
 	WeightSort(pSkinMesh);
 
 	//バーテックスバッファーを作成
-	pSkinMesh->m_Mesh.m_pVertexBuffer = DRAW->BufferCreate(pSkinMesh->m_Mesh.m_pVertex, sizeof(VERTEX) * pSkinMesh->m_Mesh.m_VerNum, D3D10_BIND_VERTEX_BUFFER);
+	pSkinMesh->m_Mesh.m_pVertexBuffer = DRAW->BufferCreate(pSkinMesh->m_Mesh.m_pVertex, sizeof(X_VERTEX) * pSkinMesh->m_Mesh.m_VerNum, D3D10_BIND_VERTEX_BUFFER);
 
 	return true;
 }
 
 //ウェイトが大きい順にソートする
-void CX_Skin::WeightSort(SKIN_MESH* pSkin)
+void CX_Skin::WeightSort(X_SKIN_MESH* pSkin)
 {
 	//頂点分回す
 	for (int i=0;i<pSkin->m_Mesh.m_VerNum; i++)
@@ -139,9 +139,9 @@ void CX_Skin::WeightSort(SKIN_MESH* pSkin)
 }
 
 //フレーム補完
-KEY CX_Skin::FrameComplement(int NowFrame, ANIMATOIN_KEY AnimKey)
+X_KEY CX_Skin::FrameComplement(int NowFrame, X_ANIMATOIN_KEY AnimKey)
 {
-	KEY out;
+	X_KEY out;
 
 	int	 keyNum		= AnimKey.m_KeyNum;
 	int* pFrameDiff = new int[keyNum];
@@ -163,8 +163,8 @@ KEY CX_Skin::FrameComplement(int NowFrame, ANIMATOIN_KEY AnimKey)
 	//キーフレーム以外なら補完する
 	if(bKey==false)
 	{
-		KEY before= AnimKey.m_pKey[0];
-		KEY after= AnimKey.m_pKey[keyNum-1];
+		X_KEY before= AnimKey.m_pKey[0];
+		X_KEY after= AnimKey.m_pKey[keyNum-1];
 		
 		//前フレームを探す
 		for (int i = 0; i < keyNum; i++)
@@ -225,10 +225,10 @@ KEY CX_Skin::FrameComplement(int NowFrame, ANIMATOIN_KEY AnimKey)
 }
 
 //ボーンの更新
-void CX_Skin::BoneUpdate(SKIN_MESH* pSkin, int AnimeId, int NowFrame)
+void CX_Skin::BoneUpdate(X_SKIN_MESH* pSkin, int AnimeId, int NowFrame)
 {
 	//実行するアニメーションデータ
-	ANIMATION anime = pSkin->m_pAnimation[AnimeId];
+	X_ANIMATION anime = pSkin->m_pAnimation[AnimeId];
 	
 	//ボーン毎に更新する
 	bool bBoneFind = false;
@@ -240,7 +240,7 @@ void CX_Skin::BoneUpdate(SKIN_MESH* pSkin, int AnimeId, int NowFrame)
 }
 
 //ポーズを取得する
-D3DXMATRIX CX_Skin::GetPose(bool* bBoneFind,SKIN_MESH* pSkin, BONE* pBone, ANIMATION Anime, int NowFrame, int BoneID)
+D3DXMATRIX CX_Skin::GetPose(bool* bBoneFind, X_SKIN_MESH* pSkin, X_BONE* pBone, X_ANIMATION Anime, int NowFrame, int BoneID)
 {
 	//ポーズ
 	D3DXMATRIX matOut;
@@ -273,7 +273,7 @@ D3DXMATRIX CX_Skin::GetPose(bool* bBoneFind,SKIN_MESH* pSkin, BONE* pBone, ANIMA
 				if (Anime.m_pBoneKey[i].m_pAniKey[j].m_KeyType==KEY_TYPE::ROT)
 				{
 					//フレーム補完
-					KEY newPose = FrameComplement(NowFrame, Anime.m_pBoneKey[i].m_pAniKey[j]);
+					X_KEY newPose = FrameComplement(NowFrame, Anime.m_pBoneKey[i].m_pAniKey[j]);
 
 					//補完したデータをベクトルにする
 					D3DXVECTOR3 vRot(newPose.m_pfValue[0], newPose.m_pfValue[1], newPose.m_pfValue[2]);
@@ -285,7 +285,7 @@ D3DXMATRIX CX_Skin::GetPose(bool* bBoneFind,SKIN_MESH* pSkin, BONE* pBone, ANIMA
 				if (Anime.m_pBoneKey[i].m_pAniKey[j].m_KeyType == KEY_TYPE::SCALE)
 				{
 					//フレーム補完
-					KEY newPose = FrameComplement(NowFrame, Anime.m_pBoneKey[i].m_pAniKey[j]);
+					X_KEY newPose = FrameComplement(NowFrame, Anime.m_pBoneKey[i].m_pAniKey[j]);
 
 					//補完したデータをベクトルにする
 					D3DXVECTOR3 vScale(newPose.m_pfValue[0], newPose.m_pfValue[1], newPose.m_pfValue[2]);
@@ -297,7 +297,7 @@ D3DXMATRIX CX_Skin::GetPose(bool* bBoneFind,SKIN_MESH* pSkin, BONE* pBone, ANIMA
 				if (Anime.m_pBoneKey[i].m_pAniKey[j].m_KeyType == KEY_TYPE::TRANS)
 				{
 					//フレーム補完
-					KEY newPose = FrameComplement(NowFrame, Anime.m_pBoneKey[i].m_pAniKey[j]);
+					X_KEY newPose = FrameComplement(NowFrame, Anime.m_pBoneKey[i].m_pAniKey[j]);
 
 					//補完したデータをベクトルにする
 					D3DXVECTOR3 vTrans(newPose.m_pfValue[0], newPose.m_pfValue[1], newPose.m_pfValue[2]);
@@ -309,7 +309,7 @@ D3DXMATRIX CX_Skin::GetPose(bool* bBoneFind,SKIN_MESH* pSkin, BONE* pBone, ANIMA
 				if (Anime.m_pBoneKey[i].m_pAniKey[j].m_KeyType >= KEY_TYPE::MATRIX)
 				{
 					//フレーム補完
-					KEY newPose = FrameComplement(NowFrame, Anime.m_pBoneKey[i].m_pAniKey[j]);		
+					X_KEY newPose = FrameComplement(NowFrame, Anime.m_pBoneKey[i].m_pAniKey[j]);
 
 					//行列に変換
 					matMatrix = D3DXMATRIX(newPose.m_pfValue);
@@ -349,17 +349,17 @@ D3DXMATRIX CX_Skin::GetPose(bool* bBoneFind,SKIN_MESH* pSkin, BONE* pBone, ANIMA
 }
 
 //アニメーション
-void CX_Skin::Animation(int AnimeId,int NowFrame,SKIN_MESH* pSkinMesh)
+void CX_Skin::Animation(int AnimeId,int NowFrame, X_SKIN_MESH* pSkinMesh)
 {
 	//ボーン更新
 	BoneUpdate(pSkinMesh, AnimeId, NowFrame);
 }
 
 //メッシュ描画
-void CX_Skin::DrawMesh(D3DMATRIX matWorld, SKIN_MESH* pSkinMesh, CColorData* pColor)
+void CX_Skin::DrawMesh(D3DMATRIX matWorld, X_SKIN_MESH* pSkinMesh, CColorData* pColor)
 {
 	//バーテックスバッファーをセット）
-	UINT stride = sizeof(VERTEX);
+	UINT stride = sizeof(X_VERTEX);
 	UINT offset = 0;
 	DX->GetDevice()->IASetVertexBuffers(0, 1, &pSkinMesh->m_Mesh.m_pVertexBuffer, &stride, &offset);
 
@@ -369,7 +369,7 @@ void CX_Skin::DrawMesh(D3DMATRIX matWorld, SKIN_MESH* pSkinMesh, CColorData* pCo
 		//面ごとに描画
 		for (int j = 0; j < pSkinMesh->m_Mesh.m_pMaterial[i].m_FaceNum; j++)
 		{
-			FACE face = pSkinMesh->m_Mesh.m_pFace[pSkinMesh->m_Mesh.m_pMaterial[i].m_pFaceIndex[j]];
+			X_FACE face = pSkinMesh->m_Mesh.m_pFace[pSkinMesh->m_Mesh.m_pMaterial[i].m_pFaceIndex[j]];
 
 			//インデックスバッファーをセット
 			stride = sizeof(int);

@@ -5,6 +5,7 @@
 
 #include "../Library/VmdLoader.h"
 #include "..//Library/PmxLoader.h"
+#include "..//Library/ModelLoader.h"
 
 //VmdƒeƒXƒg
 class CVmdTest:public CObj3DBase
@@ -18,4 +19,5 @@ public:
 private:
 	VMD_DATA m_data;
 	PMX_DATA m_PmxData;
+	MODEL_DATA m_Model;
 };
