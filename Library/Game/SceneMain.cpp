@@ -43,15 +43,13 @@ void CSceneMain::Init()
 	CTest* pTest = new CTest(vPos, vAngle, vScale);
 	g_Task.InsertObj(pTest, ObjName::ObjTest);
 
-
 	//Vmdテスト
-	vPos = D3DXVECTOR3(10.0f, 0.0f, 0.0f);
+	vPos = D3DXVECTOR3(10.0f, -10.0f, 0.0f);
 	vScale = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
 
 	CVmdTest* pVmdTest = new CVmdTest(vPos, vAngle, vScale);
 	g_Task.InsertObj(pVmdTest, ObjName::ObjVmdTest);
-
-
+	
 	//シェーダーにカメラセット
 	SHADER->SetCamera(dynamic_cast<CCameraBase*>(pCamera));
 	SKIN_SHADER->SetCamera(dynamic_cast<CCameraBase*>(pCamera));

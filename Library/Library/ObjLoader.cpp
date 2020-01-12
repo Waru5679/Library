@@ -322,7 +322,7 @@ HRESULT CObjLoader::LoadMaterial(char* FileName, CModelData* pMesh)
 	int mate_count = 0;
 
 	constexpr int ARRAY_SIZE{ 100 };
-	char key[ARRAY_SIZE] = { 0 };
+	char key[ARRAY_SIZE];
 	D3DXVECTOR3 v;
 
 	//キーワード読み込み
