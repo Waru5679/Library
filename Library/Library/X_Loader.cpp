@@ -2,6 +2,7 @@
 
 CX_Loader* CX_Loader::m_pInstance = nullptr;
 
+
 //template‚ğ”ò‚Î‚µ‚½“Ç‚İ‚İŠJnˆÊ’u‚ğæ“¾‚·‚é
 long CX_Loader::GetTemplateSkipStartPos(FILE* fp)
 {

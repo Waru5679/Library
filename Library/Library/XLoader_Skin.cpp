@@ -2,6 +2,7 @@
 #include "XLoader_Skin.h"
 #include "Release.h"
 #include "Math.h"
+
 #include <math.h>
 
 //インスタンス
