@@ -50,7 +50,7 @@ struct FACE
 			m_pIndexBuffer->Release();
 		}
 	}
-	int m_VerIn[3];		//構成する頂点ID
+	int m_VerId[3];						//構成する頂点ID
 	int m_UseMateId;					//使用するマテリアルID
 	ID3D10Buffer* m_pIndexBuffer;		//インデックスバッファー
 };
@@ -77,14 +77,53 @@ struct MODEL_DATA
 		m_pFace = nullptr;
 		m_pMaterial = nullptr;
 		m_pVertexBuffer = nullptr;
+		m_ppTex = nullptr;
 	}
-	int				m_VerNum;		//頂点数
-	int				m_FaceNum;		//面(ポリゴン)数
-	int				m_MateNum;		//マテリアルの数
-	VERTEX*			m_pVertex;		//頂点情報のリスト
-	FACE*			m_pFace;		//面リスト
-	MATERIAL*		m_pMaterial;	//マテリアルリスト
-	ID3D10Buffer* m_pVertexBuffer;	//頂点バッファ	
+	~MODEL_DATA()
+	{
+		//頂点データ
+		if (m_pVertex != nullptr)
+		{
+			delete[] m_pVertex;
+			m_pVertex = nullptr;
+		}
+		//面データ
+		if (m_pFace != nullptr)
+		{
+			delete[] m_pFace;
+			m_pFace = nullptr;
+		}
+		//マテリアルデータ
+		if (m_pMaterial != nullptr)
+		{
+			delete[] m_pMaterial;
+			m_pMaterial = nullptr;
+		}
+		//頂点バッファ
+		if (m_pVertexBuffer != nullptr)
+		{
+			m_pVertexBuffer->Release();
+		}
+		//テクスチャ
+		for (int i = 0; i < m_TexNum; i++)
+		{
+			if (m_ppTex[i] != nullptr)
+			{
+				m_ppTex[i]->Release();
+			}
+			m_ppTex = nullptr;
+		}
+	}
+	char						m_ModelName[20];	//モデル名
+	int							m_VerNum;			//頂点数
+	int							m_FaceNum;			//面(ポリゴン)数
+	int							m_MateNum;			//マテリアルの数
+	int							m_TexNum;			//テクスチャ数
+	VERTEX*						m_pVertex;			//頂点情報のリスト
+	FACE*						m_pFace;			//面リスト
+	MATERIAL*					m_pMaterial;		//マテリアルリスト
+	ID3D10Buffer*				m_pVertexBuffer;	//頂点バッファ	
+	ID3D10ShaderResourceView**	m_ppTex;			//テクスチャリスト
 };
 
 //モデル読み込み
