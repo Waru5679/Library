@@ -1,5 +1,6 @@
 #include "ModelLoader.h"
 #include "LibraryHeader.h"
+
 #include <stdio.h>
 
 //インスタンス
@@ -127,6 +128,8 @@ bool CModelLoader::Load(const char* FileName, MODEL_DATA* pModel)
 					}
 				}
 			}
+			//頂点バッファ作成
+			pModel->m_pVertexBuffer = DRAW->BufferCreate(pModel->m_pVertex, sizeof(VERTEX) * pModel->m_VerNum, D3D10_BIND_VERTEX_BUFFER);
 		}
 		//面
 		if (strcmp(Key, "FaceNum") == 0)
@@ -152,7 +155,6 @@ bool CModelLoader::Load(const char* FileName, MODEL_DATA* pModel)
 
 						//インデックスバッファーを作成
 						pModel->m_pFace[i].m_pIndexBuffer = DRAW->BufferCreate(pModel->m_pFace[i].m_VerId, sizeof(int) * 3, D3D10_BIND_INDEX_BUFFER);
-
 						break;
 					}
 				}
@@ -239,8 +241,27 @@ bool CModelLoader::Load(const char* FileName, MODEL_DATA* pModel)
 			}
 		}
 	}
-
 	return true;
+}
+
+
+//描画
+void CModelLoader::Draw(D3DMATRIX matWorld, MODEL_DATA* pModel, CColorData* pColor)
+{
+	for (int i = 0; i < pModel->m_FaceNum; i++)
+	{
+		//使用するマテリアル
+		MATERIAL UseMaterial = pModel->m_pMaterial[pModel->m_pFace[i].m_UseMateId];
+
+		//使用するテクスチャ
+		ID3D10ShaderResourceView* pTex = pModel->m_ppTex[UseMaterial.m_TexId];
+
+		//シェーダーのセット
+		SHADER->SetShader(pTex,NULL, pColor, matWorld);
+
+		//ポリゴン描画
+		DRAW->DrawPolygon(3, pModel->m_pVertexBuffer,pModel->m_pFace[i].m_pIndexBuffer);
+	}
 }
 
 //解放

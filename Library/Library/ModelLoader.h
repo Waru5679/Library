@@ -1,6 +1,7 @@
 #pragma once
 #include "Main.h"
 #include "Singleton.h"
+#include "Struct.h"
 
 //頂点構造体
 struct VERTEX
@@ -12,18 +13,18 @@ struct VERTEX
 	}
 	~VERTEX()
 	{
-		//ボーンID
-		if (m_pBoneId != nullptr)
-		{
-			delete[] m_pBoneId;
-			m_pBoneId = nullptr;
-		}
-		//ウェイト
-		if (m_pfWeight != nullptr)
-		{
-			delete[] m_pfWeight;
-			m_pfWeight = nullptr;
-		}
+	//ボーンID
+	if (m_pBoneId != nullptr)
+	{
+		delete[] m_pBoneId;
+		m_pBoneId = nullptr;
+	}
+	//ウェイト
+	if (m_pfWeight != nullptr)
+	{
+		delete[] m_pfWeight;
+		m_pfWeight = nullptr;
+	}
 	}
 
 	D3DXVECTOR3 vPos;	//位置
@@ -52,6 +53,7 @@ struct FACE
 	}
 	int m_VerId[3];						//構成する頂点ID
 	int m_UseMateId;					//使用するマテリアルID
+	ID3D10Buffer* m_pVertexBuffer;		//頂点バッファ
 	ID3D10Buffer* m_pIndexBuffer;		//インデックスバッファー
 };
 
@@ -137,5 +139,9 @@ private:
 public:
 	void Release();	//解放
 
+	//モデル読み込み
 	bool Load(const char* FileName, MODEL_DATA* pModel);
+
+	//描画
+	void Draw(D3DMATRIX matWorld, MODEL_DATA* pModel, CColorData* pColor);
 };

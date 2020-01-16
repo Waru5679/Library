@@ -148,7 +148,14 @@ void CDraw::DrawPolygon(int VerNum, ID3D10Buffer* VertexBuffer, ID3D10Buffer* In
 	for (UINT p = 0; p < dc.Passes; ++p)
 	{
 		SHADER->GetTechnique()->GetPassByIndex(p)->Apply(0);
-		DX->GetDevice()->Draw(VerNum, 0);
+		if (IndexBuffer != NULL)
+		{
+			DX->GetDevice()->DrawIndexed(VerNum, 0, 0);
+		}
+		else
+		{
+			DX->GetDevice()->Draw(VerNum, 0);
+		}
 	}
 }
 
