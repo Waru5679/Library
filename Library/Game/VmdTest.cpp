@@ -22,7 +22,7 @@ void CVmdTest::Init()
 	//PMX->Load("Model/Alicia_solid/Alicia_solid.pmx", &m_PmxData);
 	//PMX->Load("Model/01_Normal_通常/プロ生ちゃん.pmx", &m_PmxData);
 	//PMX->Write("PmxOutTest.txt", &m_PmxData);
-//	MODEL_LOAD->Load("Model/Alicia/アリシア.txt", &m_Model);
+	//MODEL_LOAD->Load("Model/Alicia/アリシア.txt", &m_Model);
 
 	MODEL_LOAD->Load("Model/Out.txt", &m_Model);
 

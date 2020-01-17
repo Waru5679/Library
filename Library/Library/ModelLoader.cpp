@@ -73,60 +73,56 @@ bool CModelLoader::Load(const char* FileName, MODEL_DATA* pModel)
 			//頂点データ読み込み
 			for (int i = 0; i < pModel->m_VerNum; i++)
 			{
-				while(1)
-				{
-					//キーワード読み込み
-					fscanf_s(fp, "%s ", Key, sizeof(Key));
+				//位置
+				fscanf_s(fp, "%s ", Key, sizeof(Key));
+				fscanf_s(fp, "%f,%f,%f,", &x, &y, &z);
+				pModel->m_pVertex[i].vPos = D3DXVECTOR3(x, y, z);
+				
+				//法線
+				fscanf_s(fp, "%s ", Key, sizeof(Key));
+				fscanf_s(fp, "%f,%f,%f,", &x, &y, &z);
+				pModel->m_pVertex[i].vNorm = D3DXVECTOR3(x, y, z);
 					
-					//位置
-					if (strcmp(Key, "Pos") == 0)
-					{
-						fscanf_s(fp, "%f,%f,%f,", &x, &y, &z);
-						pModel->m_pVertex[i].vPos = D3DXVECTOR3(x, y, z);
-					}
-					//法線
-					if (strcmp(Key, "Norm") == 0)
-					{
-						fscanf_s(fp, "%f,%f,%f,", &x, &y, &z);
-						pModel->m_pVertex[i].vNorm = D3DXVECTOR3(x, y, z);
-					}
-					//Uv
-					if (strcmp(Key, "Uv") == 0)
-					{
-						fscanf_s(fp, "%f,%f,", &x, &y);
-						pModel->m_pVertex[i].vUv = D3DXVECTOR2(x, y);
-					}
-					//ウェイト数
-					if (strcmp(Key, "WeightNum") == 0)
-					{
-						fscanf_s(fp, "%d", &pModel->m_pVertex[i].WeightNum);
+				//Uv
+				fscanf_s(fp, "%s ", Key, sizeof(Key));
+				fscanf_s(fp, "%f,%f,", &x, &y);
+				pModel->m_pVertex[i].vUv = D3DXVECTOR2(x, y);
+					
+				//ウェイト数
+				fscanf_s(fp, "%s ", Key, sizeof(Key));
+				int dammy;
+				fscanf_s(fp, "%d", &dammy);
 
-						//メモリ確保
-						pModel->m_pVertex[i].m_pBoneId = new int[pModel->m_pVertex[i].WeightNum];
-						pModel->m_pVertex[i].m_pfWeight = new float[pModel->m_pVertex[i].WeightNum];
-					}
-					//ボーンID
-					if (strcmp(Key, "BoneID") == 0)
-					{
-						for (int j = 0; j < pModel->m_pVertex[i].WeightNum; j++)
-						{
-							fscanf_s(fp, "%d,", &pModel->m_pVertex[i].m_pBoneId[j]);
-						}
-					}
-					//ウェイト
-					if (strcmp(Key, "Weight") == 0)
-					{
-						for (int j = 0; j < pModel->m_pVertex[i].WeightNum; j++)
-						{
-							fscanf_s(fp, "%f,", &pModel->m_pVertex[i].m_pfWeight[j]);
-						}
-					}
-					//}でこの頂点終わり
-					if (strcmp(Key, "}") == 0)
-					{
-						break;
-					}
+//				fscanf_s(fp, "%d", &pModel->m_pVertex[i].WeightNum);
+
+				//メモリ確保
+	/*			pModel->m_pVertex[i].m_pBoneId = new int[pModel->m_pVertex[i].WeightNum];
+				pModel->m_pVertex[i].m_pfWeight = new float[pModel->m_pVertex[i].WeightNum];
+	*/				
+				//ボーンID
+				fscanf_s(fp, "%s ", Key, sizeof(Key));
+				for (int j = 0; j < dammy; j++)
+				{
+					int dammy2;
+					fscanf_s(fp, "%d,", &dammy2);
 				}
+
+				/*for (int j = 0; j < pModel->m_pVertex[i].WeightNum; j++)
+				{
+					fscanf_s(fp, "%d,", &pModel->m_pVertex[i].m_pBoneId[j]);
+				}
+					*/
+				//ウェイト
+				fscanf_s(fp, "%s ", Key, sizeof(Key));
+				for (int j = 0; j < dammy; j++)
+				{
+					float fdammy;
+					fscanf_s(fp, "%f,", &fdammy);
+				}			
+				/*for (int j = 0; j < pModel->m_pVertex[i].WeightNum; j++)
+				{
+					fscanf_s(fp, "%f,", &pModel->m_pVertex[i].m_pfWeight[j]);
+				}*/
 			}
 			//頂点バッファ作成
 			pModel->m_pVertexBuffer = DRAW->BufferCreate(pModel->m_pVertex, sizeof(VERTEX) * pModel->m_VerNum, D3D10_BIND_VERTEX_BUFFER);
@@ -143,21 +139,13 @@ bool CModelLoader::Load(const char* FileName, MODEL_DATA* pModel)
 			//面情報読み込み
 			for (int i = 0; i < pModel->m_FaceNum; i++)
 			{
-				while (1)
-				{
-					fscanf_s(fp, "%s", Key, sizeof(Key));
-					if (strcmp(Key, "Face") == 0)
-					{
-						fscanf_s(fp, "%d,%d,%d,", &a, &b, &c);
-						pModel->m_pFace[i].m_VerId[0] = a;
-						pModel->m_pFace[i].m_VerId[1] = b;
-						pModel->m_pFace[i].m_VerId[2] = c;
+				fscanf_s(fp, "%d,%d,%d,", &a, &b, &c);
+				pModel->m_pFace[i].m_VerId[0] = a;
+				pModel->m_pFace[i].m_VerId[1] = b;
+				pModel->m_pFace[i].m_VerId[2] = c;
 
-						//インデックスバッファーを作成
-						pModel->m_pFace[i].m_pIndexBuffer = DRAW->BufferCreate(pModel->m_pFace[i].m_VerId, sizeof(int) * 3, D3D10_BIND_INDEX_BUFFER);
-						break;
-					}
-				}
+				//インデックスバッファーを作成
+				pModel->m_pFace[i].m_pIndexBuffer = DRAW->BufferCreate(pModel->m_pFace[i].m_VerId, sizeof(int) * 3, D3D10_BIND_INDEX_BUFFER);
 			}
 		}
 		//マテリアル
@@ -166,78 +154,61 @@ bool CModelLoader::Load(const char* FileName, MODEL_DATA* pModel)
 			//マテリアルの数
 			fscanf_s(fp, "%d", &pModel->m_MateNum);
 
+			//面カウント
+			int FaceCount = 0;
+
 			//メモリ確保
 			pModel->m_pMaterial = new MATERIAL[pModel->m_MateNum];
 
-			//面の数
-			int FaceCount = 0;
-
-			//面情報読み込み
+			//マテリアル読み込み
 			for (int i = 0; i < pModel->m_MateNum; i++)
 			{
-				while (1)
+				fscanf_s(fp, "%s", Key, sizeof(Key));
+
+				//マテリアル名
+				fscanf_s(fp, "%s", Key, sizeof(Key));
+				fscanf_s(fp, "%s", pModel->m_pMaterial[i].m_Name, sizeof(pModel->m_pMaterial[i].m_Name));
+				
+				//色
+				fscanf_s(fp, "%s", Key, sizeof(Key));
+				fscanf_s(fp, "%f,%f,%f,%f,", &x, &y, &z, &w);
+				pModel->m_pMaterial[i].m_vColor = D3DXVECTOR4(x, y, z, w);
+				
+				//ディフューズ
+				fscanf_s(fp, "%s", Key, sizeof(Key));
+				fscanf_s(fp, "%f,%f,%f,%f,", &x, &y, &z, &w);
+				pModel->m_pMaterial[i].m_vDiffuse = D3DXVECTOR4(x, y, z, w);
+
+				//スペキュラ
+				fscanf_s(fp, "%s", Key, sizeof(Key));
+				fscanf_s(fp, "%f,%f,%f,%f,", &x, &y, &z, &w);
+				pModel->m_pMaterial[i].m_vSpecular = D3DXVECTOR4(x, y, z, w);
+				
+				//アンビエント
+				fscanf_s(fp, "%s", Key, sizeof(Key));
+				fscanf_s(fp, "%f,%f,%f,%f,", &x, &y, &z, &w);
+				pModel->m_pMaterial[i].m_vAmbient = D3DXVECTOR4(x, y, z, w);
+	
+				//スペキュラパワー
+				fscanf_s(fp, "%s", Key, sizeof(Key));
+				fscanf_s(fp, "%f", &pModel->m_pMaterial[i].m_fSpePower);
+
+				//テクスチャID
+				fscanf_s(fp, "%s", Key, sizeof(Key));
+				fscanf_s(fp, "%d", &pModel->m_pMaterial[i].m_TexId);
+				
+				//使用する面数
+				int UseFaceNum = -1;
+				fscanf_s(fp, "%s", Key, sizeof(Key));
+				fscanf_s(fp, "%d", &UseFaceNum);
+
+				//使用する面にマテリアル情報を渡す
+				for (int j = FaceCount; j < FaceCount + UseFaceNum; j++)
 				{
-					fscanf_s(fp, "%s", Key, sizeof(Key));
-
-					//マテリアル名
-					if (strcmp(Key, "MateName") == 0)
-					{
-						fscanf_s(fp, "%s", pModel->m_pMaterial[i].m_Name, sizeof(pModel->m_pMaterial[i].m_Name));
-					}
-					//色
-					if (strcmp(Key, "Color") == 0)
-					{
-						fscanf_s(fp, "%f,%f,%f,%f,", &x, &y, &z, &w);
-						pModel->m_pMaterial[i].m_vColor = D3DXVECTOR4(x, y, z, w);
-					}
-					//ディフューズ
-					if (strcmp(Key, "Diffuse") == 0)
-					{
-						fscanf_s(fp, "%f,%f,%f,%f,", &x, &y, &z, &w);
-						pModel->m_pMaterial[i].m_vDiffuse = D3DXVECTOR4(x, y, z, w);
-					}
-					//スペキュラ
-					if (strcmp(Key, "Specular") == 0)
-					{
-						fscanf_s(fp, "%f,%f,%f,%f,", &x, &y, &z, &w);
-						pModel->m_pMaterial[i].m_vSpecular = D3DXVECTOR4(x, y, z, w);
-					}
-					//アンビエント
-					if (strcmp(Key, "Ambient") == 0)
-					{
-						fscanf_s(fp, "%f,%f,%f,%f,", &x, &y, &z, &w);
-						pModel->m_pMaterial[i].m_vAmbient = D3DXVECTOR4(x, y, z, w);
-					}
-					//スペキュラパワー
-					if (strcmp(Key, "SpePower") == 0)
-					{
-						fscanf_s(fp, "%f", &pModel->m_pMaterial[i].m_fSpePower);
-					}
-					//テクスチャID
-					if (strcmp(Key, "TexId") == 0)
-					{
-						fscanf_s(fp, "%d", &pModel->m_pMaterial[i].m_TexId);
-					}
-					//使用する面数
-					if (strcmp(Key, "UseFaceNum") == 0)
-					{
-						int UseFaceNum = -1;
-						fscanf_s(fp, "%d", &UseFaceNum);
-
-						//使用する面にマテリアル情報を渡す
-						for (int j = FaceCount; j < FaceCount + UseFaceNum; j++)
-						{
-							pModel->m_pFace[j].m_UseMateId = i;
-						}
-						//カウンタ更新
-						FaceCount += UseFaceNum;
-					}
-					//}でこのマテリアル終わり
-					if (strcmp(Key, "}") == 0)
-					{
-						break;
-					}
+					pModel->m_pFace[j].m_UseMateId = i;
 				}
+				//カウンタ更新
+				FaceCount += UseFaceNum;
 			}
 		}
 	}
@@ -254,7 +225,7 @@ void CModelLoader::Draw(D3DMATRIX matWorld, MODEL_DATA* pModel, CColorData* pCol
 		MATERIAL UseMaterial = pModel->m_pMaterial[pModel->m_pFace[i].m_UseMateId];
 
 		//使用するテクスチャ
-		ID3D10ShaderResourceView* pTex = pModel->m_ppTex[UseMaterial.m_TexId];
+		ID3D10ShaderResourceView* pTex  = pModel->m_ppTex[UseMaterial.m_TexId];
 
 		//シェーダーのセット
 		SHADER->SetShader(pTex,NULL, pColor, matWorld);

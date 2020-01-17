@@ -6,34 +6,34 @@
 //頂点構造体
 struct VERTEX
 {
-	VERTEX()
-	{
-		m_pBoneId = nullptr;
-		m_pfWeight = nullptr;
-	}
-	~VERTEX()
-	{
-	//ボーンID
-	if (m_pBoneId != nullptr)
-	{
-		delete[] m_pBoneId;
-		m_pBoneId = nullptr;
-	}
-	//ウェイト
-	if (m_pfWeight != nullptr)
-	{
-		delete[] m_pfWeight;
-		m_pfWeight = nullptr;
-	}
-	}
+	//VERTEX()
+	//{
+	//	m_pBoneId = nullptr;
+	//	m_pfWeight = nullptr;
+	//}
+	//~VERTEX()
+	//{
+	//	//ボーンID
+	//	if (m_pBoneId != nullptr)
+	//	{
+	//		delete[] m_pBoneId;
+	//		m_pBoneId = nullptr;
+	//	}
+	//	//ウェイト
+	//	if (m_pfWeight != nullptr)
+	//	{
+	//		delete[] m_pfWeight;
+	//		m_pfWeight = nullptr;
+	//	}
+	//}
 
 	D3DXVECTOR3 vPos;	//位置
 	D3DXVECTOR3 vNorm;	//法線
 	D3DXVECTOR2 vUv;	//UV
 
-	int		WeightNum;	//ウェイト数
-	int*	m_pBoneId;	//影響を受けるボーンID
-	float*	m_pfWeight;	//ウェイト
+	//int		WeightNum;	//ウェイト数
+	//int*	m_pBoneId;	//影響を受けるボーンID
+	//float*	m_pfWeight;	//ウェイト
 };
 
 //ポリゴン
