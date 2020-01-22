@@ -139,7 +139,10 @@
     <ClInclude Include="Game\MainCamera.h" />
     <ClInclude Include="Game\Player.h" />
     <ClInclude Include="Game\SceneMain.h" />
+    <ClInclude Include="Game\SceneTItle.h" />
     <ClInclude Include="Game\Test.h" />
+    <ClInclude Include="Game\TitleCamera.h" />
+    <ClInclude Include="Game\TitleObj.h" />
     <ClInclude Include="Game\VmdTest.h" />
     <ClInclude Include="Library\Audio.h" />
     <ClInclude Include="Library\Binary.h" />
@@ -190,7 +193,10 @@
     <ClCompile Include="Game\MainCamera.cpp" />
     <ClCompile Include="Game\Player.cpp" />
     <ClCompile Include="Game\SceneMain.cpp" />
+    <ClCompile Include="Game\SceneTitle.cpp" />
     <ClCompile Include="Game\Test.cpp" />
+    <ClCompile Include="Game\TitleCamera.cpp" />
+    <ClCompile Include="Game\TitleObj.cpp" />
     <ClCompile Include="Game\VmdTest.cpp" />
     <ClCompile Include="Library\Audio.cpp" />
     <ClCompile Include="Library\Binary.cpp" />

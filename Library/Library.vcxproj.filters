@@ -55,20 +55,11 @@
     <Filter Include="リソース ファイル\Scene">
       <UniqueIdentifier>{8428ceb3-004a-4aeb-8c3c-d9fd55d2b5c9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\2D">
-      <UniqueIdentifier>{0fcceea1-99c6-4f74-bdb2-2924a52bf396}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Player">
-      <UniqueIdentifier>{49799f6e-c1b9-4513-9d25-d7aad45464a4}</UniqueIdentifier>
-    </Filter>
     <Filter Include="リソース ファイル\Struct">
       <UniqueIdentifier>{8e1d718e-4a9c-45cf-9c2f-8d97a756b1c0}</UniqueIdentifier>
     </Filter>
     <Filter Include="リソース ファイル\Hit">
       <UniqueIdentifier>{805a6bb3-e752-41b0-a0e4-3f478b18ef25}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Enemy">
-      <UniqueIdentifier>{d4d6d514-aead-4462-bebe-ca98e4195e7d}</UniqueIdentifier>
     </Filter>
     <Filter Include="リソース ファイル\FrameRate">
       <UniqueIdentifier>{5c43d44d-2b30-4c08-a1f6-ac262a44af2d}</UniqueIdentifier>
@@ -78,15 +69,6 @@
     </Filter>
     <Filter Include="リソース ファイル\Singleton">
       <UniqueIdentifier>{03d5bdf2-bc95-47ae-872e-9e4869b49239}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Aiming">
-      <UniqueIdentifier>{2239e455-d814-4402-b126-1b5e473a889f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\EnemyBullet">
-      <UniqueIdentifier>{318c806b-44b0-4a9c-8651-e182b8ed2808}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Bullet">
-      <UniqueIdentifier>{58faef8b-9e74-4ee5-80df-749434fd28dd}</UniqueIdentifier>
     </Filter>
     <Filter Include="リソース ファイル\Manager">
       <UniqueIdentifier>{ee763742-e844-4f88-992c-5f4324f5393b}</UniqueIdentifier>
@@ -114,6 +96,30 @@
     </Filter>
     <Filter Include="リソース ファイル\ModelLoader">
       <UniqueIdentifier>{f021f6c3-f56c-4cc0-b551-ad8797c36a5e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Main">
+      <UniqueIdentifier>{17f80dbe-b0f8-44b0-858d-cbe0d7f957d4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Main\2D">
+      <UniqueIdentifier>{0fcceea1-99c6-4f74-bdb2-2924a52bf396}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Main\Aiming">
+      <UniqueIdentifier>{2239e455-d814-4402-b126-1b5e473a889f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Main\Bullet">
+      <UniqueIdentifier>{58faef8b-9e74-4ee5-80df-749434fd28dd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Main\Enemy">
+      <UniqueIdentifier>{d4d6d514-aead-4462-bebe-ca98e4195e7d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Main\EnemyBullet">
+      <UniqueIdentifier>{318c806b-44b0-4a9c-8651-e182b8ed2808}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Main\Player">
+      <UniqueIdentifier>{49799f6e-c1b9-4513-9d25-d7aad45464a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Title">
+      <UniqueIdentifier>{af0808c3-f026-4184-9873-bfec654a22d3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -165,14 +171,8 @@
     <ClInclude Include="Library\SceneInclude.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Game\MainCamera.h">
-      <Filter>ソース ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Game\SceneMain.h">
-      <Filter>ソース ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Game\Player.h">
-      <Filter>ソース ファイル\Player</Filter>
+      <Filter>ソース ファイル\Main\Player</Filter>
     </ClInclude>
     <ClInclude Include="Library\Struct.h">
       <Filter>リソース ファイル\Struct</Filter>
@@ -187,7 +187,7 @@
       <Filter>リソース ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Game\Enemy.h">
-      <Filter>ソース ファイル\Enemy</Filter>
+      <Filter>ソース ファイル\Main\Enemy</Filter>
     </ClInclude>
     <ClInclude Include="Library\LibraryMain.h">
       <Filter>ヘッダー ファイル</Filter>
@@ -202,19 +202,19 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Game\Aiming.h">
-      <Filter>ソース ファイル\Aiming</Filter>
+      <Filter>ソース ファイル\Main\Aiming</Filter>
     </ClInclude>
     <ClInclude Include="Game\2DPolygon.h">
-      <Filter>ソース ファイル\2D</Filter>
+      <Filter>ソース ファイル\Main\2D</Filter>
     </ClInclude>
     <ClInclude Include="Game\GameHeader.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Game\EnemyBullet.h">
-      <Filter>ソース ファイル\EnemyBullet</Filter>
+      <Filter>ソース ファイル\Main\EnemyBullet</Filter>
     </ClInclude>
     <ClInclude Include="Game\Bullet.h">
-      <Filter>ソース ファイル\Bullet</Filter>
+      <Filter>ソース ファイル\Main\Bullet</Filter>
     </ClInclude>
     <ClInclude Include="Library\TextureManager.h">
       <Filter>リソース ファイル\Manager\TextureManager</Filter>
@@ -224,9 +224,6 @@
     </ClInclude>
     <ClInclude Include="Library\ModelManager.h">
       <Filter>リソース ファイル\Manager\ModelManager</Filter>
-    </ClInclude>
-    <ClInclude Include="Game\Test.h">
-      <Filter>ソース ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Library\XLoader_Skin.h">
       <Filter>リソース ファイル\XLoader</Filter>
@@ -239,9 +236,6 @@
     </ClInclude>
     <ClInclude Include="Library\X_Struct.h">
       <Filter>リソース ファイル\XLoader</Filter>
-    </ClInclude>
-    <ClInclude Include="Game\VmdTest.h">
-      <Filter>ソース ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Library\PmxLoader.h">
       <Filter>リソース ファイル\PmxLoader</Filter>
@@ -257,6 +251,27 @@
     </ClInclude>
     <ClInclude Include="Library\ModelLoader.h">
       <Filter>リソース ファイル\ModelLoader</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\MainCamera.h">
+      <Filter>ソース ファイル\Main</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\SceneMain.h">
+      <Filter>ソース ファイル\Main</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Test.h">
+      <Filter>ソース ファイル\Main</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\VmdTest.h">
+      <Filter>ソース ファイル\Main</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\SceneTItle.h">
+      <Filter>ソース ファイル\Title</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\TitleCamera.h">
+      <Filter>ソース ファイル\Title</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\TitleObj.h">
+      <Filter>ソース ファイル\Title</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -305,20 +320,14 @@
     <ClCompile Include="Library\SceneInclude.cpp">
       <Filter>ヘッダー ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Game\MainCamera.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Game\SceneMain.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="Game\Player.cpp">
-      <Filter>ソース ファイル\Player</Filter>
+      <Filter>ソース ファイル\Main\Player</Filter>
     </ClCompile>
     <ClCompile Include="Library\Hit.cpp">
       <Filter>リソース ファイル\Hit</Filter>
     </ClCompile>
     <ClCompile Include="Game\Enemy.cpp">
-      <Filter>ソース ファイル\Enemy</Filter>
+      <Filter>ソース ファイル\Main\Enemy</Filter>
     </ClCompile>
     <ClCompile Include="Library\FrameRate.cpp">
       <Filter>リソース ファイル\FrameRate</Filter>
@@ -327,16 +336,16 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Game\Aiming.cpp">
-      <Filter>ソース ファイル\Aiming</Filter>
+      <Filter>ソース ファイル\Main\Aiming</Filter>
     </ClCompile>
     <ClCompile Include="Game\2DPolygon.cpp">
-      <Filter>ソース ファイル\2D</Filter>
+      <Filter>ソース ファイル\Main\2D</Filter>
     </ClCompile>
     <ClCompile Include="Game\EnemyBullet.cpp">
-      <Filter>ソース ファイル\EnemyBullet</Filter>
+      <Filter>ソース ファイル\Main\EnemyBullet</Filter>
     </ClCompile>
     <ClCompile Include="Game\Bullet.cpp">
-      <Filter>ソース ファイル\Bullet</Filter>
+      <Filter>ソース ファイル\Main\Bullet</Filter>
     </ClCompile>
     <ClCompile Include="Library\TextureManager.cpp">
       <Filter>リソース ファイル\Manager\TextureManager</Filter>
@@ -347,9 +356,6 @@
     <ClCompile Include="Library\ModelManager.cpp">
       <Filter>リソース ファイル\Manager\ModelManager</Filter>
     </ClCompile>
-    <ClCompile Include="Game\Test.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="Library\XLoader_Skin.cpp">
       <Filter>リソース ファイル\XLoader</Filter>
     </ClCompile>
@@ -358,9 +364,6 @@
     </ClCompile>
     <ClCompile Include="Library\X_Loader.cpp">
       <Filter>リソース ファイル\XLoader</Filter>
-    </ClCompile>
-    <ClCompile Include="Game\VmdTest.cpp">
-      <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Library\VmdLoader.cpp">
       <Filter>リソース ファイル\VmdLoader</Filter>
@@ -373,6 +376,27 @@
     </ClCompile>
     <ClCompile Include="Library\ModelLoader.cpp">
       <Filter>リソース ファイル\ModelLoader</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\MainCamera.cpp">
+      <Filter>ソース ファイル\Main</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\SceneMain.cpp">
+      <Filter>ソース ファイル\Main</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Test.cpp">
+      <Filter>ソース ファイル\Main</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\VmdTest.cpp">
+      <Filter>ソース ファイル\Main</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\SceneTitle.cpp">
+      <Filter>ソース ファイル\Title</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\TitleCamera.cpp">
+      <Filter>ソース ファイル\Title</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\TitleObj.cpp">
+      <Filter>ソース ファイル\Title</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -73,7 +73,10 @@ class CModelManager :public CSingleton<CModelManager>
 private:
 	//シングルトン
 	friend CSingleton<CModelManager>;
-	CModelManager() {};	//コンストラクタ
+	CModelManager() 
+	{
+		m_List.resize(0);
+	};	//コンストラクタ
 	~CModelManager() {};//デストラクタ
 public:
 

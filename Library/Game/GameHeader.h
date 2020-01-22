@@ -1,7 +1,7 @@
 #pragma once
 
 //初めのシーン
-#define START_SCENE SceneName::SceneMain 
+#define START_SCENE SceneName::SceneTitle
 
 //ゲームで使うオブジェクトファイル
 #include "../Game/2DPolygon.h"
@@ -12,6 +12,8 @@
 #include "../Game/Bullet.h"
 #include "../Game/Player.h"
 #include "../Game/Aiming.h"
+#include "../Game/TitleCamera.h"
+#include "../Game/TitleObj.h"
 
 //Debug
 #include "../Game/RayTest.h"
@@ -19,11 +21,13 @@
 
 //ゲームで使うシーンファイル
 #include "../Game/SceneMain.h"
+#include "../Game/SceneTitle.h"
 
 //シーン
 enum SceneName
 {
 	SceneMain,	//メイン
+	SceneTitle,	//タイトル
 };
 
 //オブジェクトID(処理順)
@@ -37,9 +41,10 @@ enum ObjName
 	ObjEnemyBullet,	//敵の弾
 	ObjBullet,		//弾
 	ObjAiming,		//照準
-
 	ObjTest,		//テスト
 	ObjVmdTest,		//vmd
+	ObjTitleCamera,	//タイトルカメラ
+	ObjTitle,		//タイトルObj
 };
 
 //モデル

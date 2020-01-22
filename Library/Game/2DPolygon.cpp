@@ -44,12 +44,6 @@ void C2DPolygon::Update()
 		m_Move.y = 1.0f;
 	}
 
-	////‰ñ“]ƒeƒXƒg
-	//if (INPUT->GetKeyPush(VK_RETURN) == true)
-	//{
-	//	m_fRad += 1.0f;
-	//}
-
 	//ˆÚ“®
 	m_ScreenPos.x += m_Move.x;
 	m_ScreenPos.y += m_Move.y;

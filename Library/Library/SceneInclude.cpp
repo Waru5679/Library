@@ -8,6 +8,11 @@
 void CSceneInclude::LoadScene()
 {
 	//メイン
-	CSceneMain* main = new CSceneMain();
-	SCENE->Insert(main, SceneName::SceneMain);
+	CSceneMain* pMain = new CSceneMain();
+	SCENE->Insert(pMain, SceneName::SceneMain);
+
+	//タイトル
+	CSceneTitle* pTitle = new CSceneTitle();
+	SCENE->Insert(pTitle, SceneName::SceneTitle);
+
 }
