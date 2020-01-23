@@ -1,14 +1,14 @@
 //ライブラリファイル
-#include "../Library/LibraryHeader.h"
+#include "../../Library/LibraryHeader.h"
 
 //ゲームファイル
-#include "GameHeader.h"
+#include "../GameHeader.h"
 
 //初期化
 void CMainCamera::Init()
 {
 	//初期カメラの位置
-	m_vEye = D3DXVECTOR3(0.0f, 5.0f, -2.0f);
+	m_vEye = D3DXVECTOR3(0.0f, 5.0f, -10.0f);
 	m_vLook = D3DXVECTOR3(0.0f, 2.0f, 1.0f);
 	m_vUp = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
 

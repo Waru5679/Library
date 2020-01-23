@@ -1,11 +1,11 @@
 #pragma once
 
-#include "../Library/LibraryHeader.h"
-#include "../Library/CObj.h"
+#include "../../Library/LibraryHeader.h"
+#include "../../Library/CObj.h"
 
-#include "../Library/VmdLoader.h"
-#include "..//Library/PmxLoader.h"
-#include "..//Library/ModelLoader.h"
+#include "../../Library/VmdLoader.h"
+#include "../../Library/PmxLoader.h"
+#include "../../Library/ModelLoader.h"
 
 //VmdƒeƒXƒg
 class CVmdTest:public CObj3DBase

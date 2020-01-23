@@ -1,7 +1,7 @@
 #pragma once
 
 //ライブラリファイル
-#include "../Library/Header.h"
+#include "../../Library/Header.h"
 
 constexpr int ATTACK_TIME{ 300 };	//攻撃の間隔
 constexpr int ATTACK_NUM_Y{ 10 };	//攻撃の数

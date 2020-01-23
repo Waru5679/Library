@@ -1,5 +1,5 @@
-#include "../Library/LibraryHeader.h"
-#include "GameHeader.h"
+#include "../../Library/LibraryHeader.h"
+#include "../GameHeader.h"
 
 #include "Test.h"
 #include "VmdTest.h"
@@ -51,7 +51,6 @@ void CSceneMain::Init()
 	CVmdTest* pVmdTest = new CVmdTest(vPos, vAngle, vScale);
 	g_Task.InsertObj(pVmdTest, ObjName::ObjVmdTest);
 
-
 	//シェーダーにカメラセット
 	SHADER->SetCamera(dynamic_cast<CCameraBase*>(pCamera));
 	SKIN_SHADER->SetCamera(dynamic_cast<CCameraBase*>(pCamera));
@@ -78,10 +77,6 @@ void CSceneMain::Release()
 {
 	g_Task.Release();
 	AUDIO->DeleteMusic();
-	LOADER->Release();
-	RAY->Release();	
-	TEXTURE->Release();
-	MODEL->Release();
 }
 
 //音楽

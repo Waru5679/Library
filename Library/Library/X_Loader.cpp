@@ -927,9 +927,6 @@ bool CX_Loader::LoadAnimation(FILE* fp, X_ANIMATION* pAnime, long lStartPos)
 	//キーワード読み込み用
 	char str[READ_ARRAY_SIZE];
 
-	//アニメーション名
-	char AnimeName[NAME_ARRAY_SIZE];
-
 	//読み込み用
 	char animeName[NAME_ARRAY_SIZE];	//アニメーション名
 	int animeCount = 0;					//アニメーションカウンター

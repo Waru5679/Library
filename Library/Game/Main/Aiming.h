@@ -1,5 +1,5 @@
 #pragma once
-#include "../Library/CObj.h"
+#include "../../Library/CObj.h"
 #include "Player.h"
 #include "MainCamera.h"
 //Æ€ƒNƒ‰ƒX

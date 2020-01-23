@@ -1,5 +1,5 @@
 #include "Aiming.h"
-#include "GameHeader.h"
+#include "../GameHeader.h"
 
 //コンストラクタ
 CAiming::CAiming(D3DXVECTOR3 vPos, D3DXVECTOR3 vAngle, D3DXVECTOR3 vScale)

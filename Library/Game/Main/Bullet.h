@@ -1,5 +1,5 @@
 #pragma once
-#include "../Library/CObj.h"
+#include "../../Library/CObj.h"
 
 //’eƒNƒ‰ƒX
 class CBullet:public CObj3DBase

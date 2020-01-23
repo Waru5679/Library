@@ -1,7 +1,7 @@
 #include "VmdTest.h"
-#include "..//Library/VmdLoader.h"
-#include "..//Library/PmxLoader.h"
-#include "..//Library/ModelLoader.h"
+#include "../../Library/VmdLoader.h"
+#include "../../Library/PmxLoader.h"
+#include "../../Library/ModelLoader.h"
 
 #define VMD CVmdLoader::GetInstance()
 #define PMX CPmxLoader::GetInstance()

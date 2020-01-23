@@ -1,8 +1,8 @@
 //ライブラリファイル
-#include "../Library/LibraryHeader.h"
+#include "../../Library/LibraryHeader.h"
 
 //ゲームファイル
-#include "GameHeader.h"
+#include "../GameHeader.h"
 
 //初期化
 void CTitleCamera::Init()

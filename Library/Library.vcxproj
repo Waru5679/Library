@@ -130,20 +130,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Game\2DPolygon.h" />
-    <ClInclude Include="Game\Aiming.h" />
-    <ClInclude Include="Game\Bullet.h" />
-    <ClInclude Include="Game\EnemyBullet.h" />
-    <ClInclude Include="Game\Enemy.h" />
     <ClInclude Include="Game\GameHeader.h" />
-    <ClInclude Include="Game\MainCamera.h" />
-    <ClInclude Include="Game\Player.h" />
-    <ClInclude Include="Game\SceneMain.h" />
-    <ClInclude Include="Game\SceneTItle.h" />
-    <ClInclude Include="Game\Test.h" />
-    <ClInclude Include="Game\TitleCamera.h" />
-    <ClInclude Include="Game\TitleObj.h" />
-    <ClInclude Include="Game\VmdTest.h" />
+    <ClInclude Include="Game\Main\2DPolygon.h" />
+    <ClInclude Include="Game\Main\Aiming.h" />
+    <ClInclude Include="Game\Main\Bullet.h" />
+    <ClInclude Include="Game\Main\Enemy.h" />
+    <ClInclude Include="Game\Main\EnemyBullet.h" />
+    <ClInclude Include="Game\Main\MainCamera.h" />
+    <ClInclude Include="Game\Main\Player.h" />
+    <ClInclude Include="Game\Main\SceneMain.h" />
+    <ClInclude Include="Game\Main\Test.h" />
+    <ClInclude Include="Game\Main\VmdTest.h" />
+    <ClInclude Include="Game\Title\SceneTItle.h" />
+    <ClInclude Include="Game\Title\TitleCamera.h" />
+    <ClInclude Include="Game\Title\TitleObj.h" />
     <ClInclude Include="Library\Audio.h" />
     <ClInclude Include="Library\Binary.h" />
     <ClInclude Include="Library\Camera.h" />
@@ -185,19 +185,19 @@
     <ClInclude Include="Library\X_Struct.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Game\2DPolygon.cpp" />
-    <ClCompile Include="Game\Aiming.cpp" />
-    <ClCompile Include="Game\Bullet.cpp" />
-    <ClCompile Include="Game\EnemyBullet.cpp" />
-    <ClCompile Include="Game\Enemy.cpp" />
-    <ClCompile Include="Game\MainCamera.cpp" />
-    <ClCompile Include="Game\Player.cpp" />
-    <ClCompile Include="Game\SceneMain.cpp" />
-    <ClCompile Include="Game\SceneTitle.cpp" />
-    <ClCompile Include="Game\Test.cpp" />
-    <ClCompile Include="Game\TitleCamera.cpp" />
-    <ClCompile Include="Game\TitleObj.cpp" />
-    <ClCompile Include="Game\VmdTest.cpp" />
+    <ClCompile Include="Game\Main\2DPolygon.cpp" />
+    <ClCompile Include="Game\Main\Aiming.cpp" />
+    <ClCompile Include="Game\Main\Bullet.cpp" />
+    <ClCompile Include="Game\Main\Enemy.cpp" />
+    <ClCompile Include="Game\Main\EnemyBullet.cpp" />
+    <ClCompile Include="Game\Main\MainCamera.cpp" />
+    <ClCompile Include="Game\Main\Player.cpp" />
+    <ClCompile Include="Game\Main\SceneMain.cpp" />
+    <ClCompile Include="Game\Main\Test.cpp" />
+    <ClCompile Include="Game\Main\VmdTest.cpp" />
+    <ClCompile Include="Game\Title\SceneTitle.cpp" />
+    <ClCompile Include="Game\Title\TitleCamera.cpp" />
+    <ClCompile Include="Game\Title\TitleObj.cpp" />
     <ClCompile Include="Library\Audio.cpp" />
     <ClCompile Include="Library\Binary.cpp" />
     <ClCompile Include="Library\Csv.cpp" />

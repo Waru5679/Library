@@ -13,8 +13,6 @@ void CModelManager::LoadModel(int Id, const char* Name)
 	//“Ç‚İ‚İ
 	LOADER->LoadMesh(Name, &Mesh);
 
-	//‚±‚±‚Ìm_List‚ª‚¨‚©‚µ‚¢‚Á‚Û‚¢II
-
 	//“o˜^
 	m_List.push_back(Mesh);
 }

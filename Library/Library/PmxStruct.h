@@ -88,7 +88,7 @@ struct PMX_WEIGHT_DATA
 	BDEF1* m_pBdef1;	//BDEF1形式のデータ
 	BDEF2* m_pBdef2;	//BDEF2形式のデータ
 	BDEF4* m_pBdef4;	//BDEF4形式のデータ
-	SDEF* m_pSdef;	//SDEF形式のデータ
+	SDEF* m_pSdef;		//SDEF形式のデータ
 };
 
 //pmxヘッダー
@@ -168,12 +168,11 @@ struct PMX_VERTEX
 		}
 	}
 
-	float m_fPos[3];				//位置
-	float m_fNorm[3];				//法線
-	float m_fUv[2];					//UV
-	float* m_pfAddUv;				//追加UV
-	float m_EdgeMagn;				//エッジ倍率
-
+	float			m_fPos[3];		//位置
+	float			m_fNorm[3];		//法線
+	float			m_fUv[2];		//UV
+	float*			m_pfAddUv;		//追加UV
+	float			m_EdgeMagn;		//エッジ倍率
 	PMX_WEIGHT_DATA m_WeightData;	//ウェイトデータ
 };
 
@@ -233,24 +232,22 @@ struct PMX_MATERIAL
 		}
 	}
 
-	wchar_t* m_pNameJap;	//材質名(日)
-	wchar_t* m_pNameEng;	//材質名(英)
-	wchar_t* m_pMemo;		//メモ	
-
+	wchar_t*		m_pNameJap;		//材質名(日)
+	wchar_t*		m_pNameEng;		//材質名(英)
+	wchar_t*		m_pMemo;		//メモ	
 	unsigned char	m_BitFlag;		//描画フラグ( 0x01:両面描画, 0x02:地面影, 0x04:セルフシャドウマップへの描画, 0x08:セルフシャドウの描画, 0x10:エッジ描画)
 	unsigned char	m_SphereMode;	//スフィアモード(0:無効 1:乗算(sph) 2:加算(spa) 3:サブテクスチャ)
 	unsigned char	m_ToonFlag;		//共有Toonフラグ
-
-	float	m_Diffuse[4];	//拡散光
-	float	m_Specular[3];	//スペキュラー（鏡面反射
-	float	m_SpePower;		//スペキュラーパワー
-	float	m_Ambient[3];	//アンビエント
-	float	m_Edge[4];		//エッジ色
-	float	m_EdgeSize;		//エッジサイズ
-	int		m_NormTex;		//通常テクスチャインデックス
-	int		m_SphereTex;	//スフィアテクスチャインデックス
-	int		m_ToonTex;		//トゥーンテクスチャインデックス
-	int		m_UseVerNum;	//使用する頂点数
+	float			m_Diffuse[4];	//拡散光
+	float			m_Specular[3];	//スペキュラー（鏡面反射
+	float			m_SpePower;		//スペキュラーパワー
+	float			m_Ambient[3];	//アンビエント
+	float			m_Edge[4];		//エッジ色
+	float			m_EdgeSize;		//エッジサイズ
+	int				m_NormTex;		//通常テクスチャインデックス
+	int				m_SphereTex;	//スフィアテクスチャインデックス
+	int				m_ToonTex;		//トゥーンテクスチャインデックス
+	int				m_UseVerNum;	//使用する頂点数
 };
 
 //pmxIKリンク
@@ -307,23 +304,21 @@ struct PMX_BONE
 			m_pNameEng = nullptr;
 		}
 	}
-	wchar_t* m_pNameJap;		//ボーン名(日)
-	wchar_t* m_pNameEng;		//ボーン名(英)
+	wchar_t*		m_pNameJap;		//ボーン名(日)
+	wchar_t*		m_pNameEng;		//ボーン名(英)
 	unsigned char	m_BitFlag[2];	//ビットフラグ
-
-	int		m_ParentId;		//親インデックス
-	int		m_Hierarchy;	//変形階層
-	int		m_ConnectId;	//接続先ボーンID
-	int		m_GrantId;		//付与親ボーン
-
-	float	m_fOffset[3];	//オフセット
-	float	m_fGrantRate;	//付与率
-	float	m_fPos[3];		//位置
-	float	m_fFixedAxis[3];//固定軸
-	float	m_fAxisX[3];	//X軸
-	float	m_fAxisZ[3];	//Z軸
-	int		m_Key;			//Key
-	PMX_IK	m_Ik;			//IKデータ
+	int				m_ParentId;		//親インデックス
+	int				m_Hierarchy;	//変形階層
+	int				m_ConnectId;	//接続先ボーンID
+	int				m_GrantId;		//付与親ボーン
+	int				m_Key;			//Key
+	float			m_fOffset[3];	//オフセット
+	float			m_fGrantRate;	//付与率
+	float			m_fPos[3];		//位置
+	float			m_fFixedAxis[3];//固定軸
+	float			m_fAxisX[3];	//X軸
+	float			m_fAxisZ[3];	//Z軸
+	PMX_IK			m_Ik;			//IKデータ
 };
 
 
@@ -357,12 +352,12 @@ struct PMX_MATE_MORPH
 	int		m_MateId;		//対応マテリアルID(-1は全マテリアル対応)
 	float	m_fDiffuse[4];	//拡散光
 	float	m_fSpecular[3];	//スペキュラー（鏡面反射
-	float	m_fSpePower;		//スペキュラーパワー
+	float	m_fSpePower;	//スペキュラーパワー
 	float	m_fAmbient[3];	//アンビエント
 	float	m_fEdge[4];		//エッジ色
-	float	m_fEdgeSize;		//エッジサイズ
+	float	m_fEdgeSize;	//エッジサイズ
 	float	m_fTex[4];		//テクスチャ係数
-	float	m_fSphereTex[4];	//スフィアテクスチャ係数
+	float	m_fSphereTex[4];//スフィアテクスチャ係数
 	float	m_fToonTex[4];	//Toonテクスチャ係数
 };
 
@@ -432,25 +427,23 @@ struct PMX_MORPH
 		}
 	}
 
-	wchar_t* m_pNameJap;		//モーフ名(日)
-	wchar_t* m_pNameEng;		//モーフ名(英)
-	unsigned char m_PmdType;		//PMDカテゴリー(0:システム予約,1:眉(左下),2:目(左上),3:口(右上),4:その他(右下)) 
-	unsigned char m_MorphType;		//モーフタイプ(0:グループ,1:頂点,2:ボーン,3:UV,4-7:追加UV,8:材質)
-
-	int	m_DataNum;	//データ数
-
-	PMX_VER_MORPH* m_pVerMorph;	//頂点モーフ
-	PMX_UV_MORPH* m_pUvMorph;		//UVモーフ
-	PMX_BONE_MORPH* m_pBoneMorph;	//ボーンモーフ
-	PMX_MATE_MORPH* m_pMateMorph;	//材質モーフ
-	PMX_GROUP_MORPH* m_pGroupMorph;	//グループモーフ
+	wchar_t*			m_pNameJap;		//モーフ名(日)
+	wchar_t*			m_pNameEng;		//モーフ名(英)
+	unsigned char		m_PmdType;		//PMDカテゴリー(0:システム予約,1:眉(左下),2:目(左上),3:口(右上),4:その他(右下)) 
+	unsigned char		m_MorphType;	//モーフタイプ(0:グループ,1:頂点,2:ボーン,3:UV,4-7:追加UV,8:材質)
+	int					m_DataNum;		//データ数
+	PMX_VER_MORPH*		m_pVerMorph;	//頂点モーフ
+	PMX_UV_MORPH*		m_pUvMorph;		//UVモーフ
+	PMX_BONE_MORPH*		m_pBoneMorph;	//ボーンモーフ
+	PMX_MATE_MORPH*		m_pMateMorph;	//材質モーフ
+	PMX_GROUP_MORPH*	m_pGroupMorph;	//グループモーフ
 };
 
 //枠内要素
 struct FRAME_ELEMENT
 {
-	unsigned char m_Flag;	//0:ボーン 1:モーフ
-	int m_Index;			//ボーンまたはモーフのインデックス
+	unsigned char	m_Flag;		//0:ボーン 1:モーフ
+	int				m_Index;	//ボーンまたはモーフのインデックス
 };
 
 //表示枠
@@ -482,12 +475,11 @@ struct PMX_DISPLAY
 			m_pElement = nullptr;
 		}
 	}
-	wchar_t* m_pNameJap;		//表示枠名(日)
-	wchar_t* m_pNameEng;		//表示枠名(英)
-
+	wchar_t*		m_pNameJap;		//表示枠名(日)
+	wchar_t*		m_pNameEng;		//表示枠名(英)
 	unsigned char	m_SpecialFlag;	//特殊フラグ
 	int				m_ElementNum;	//要素数
-	FRAME_ELEMENT* m_pElement;		//枠内要素数
+	FRAME_ELEMENT*	m_pElement;		//枠内要素数
 };
 
 //剛体
@@ -514,23 +506,21 @@ struct PMX_RIGIT_BODY
 		}
 	}
 
-	wchar_t* m_pNameJap;	//剛体名(日)
-	wchar_t* m_pNameEng;	//剛体名(英)
-
+	wchar_t*		m_pNameJap;		//剛体名(日)
+	wchar_t*		m_pNameEng;		//剛体名(英)
 	unsigned char	m_Group;		//グループ	
 	unsigned char	m_Shape;		//0:球,1:箱,2:カプセル
 	unsigned char   m_Operation;	//0:ボーン追従(static) 1:物理演算(dynamic) 2:物理演算 + Bone位置合わせ
 	unsigned short	m_NoCollision;	//非衝突グループ
-
-	int		m_BoneId;		//ボーンID
-	float	m_fSize[3];		//サイズ
-	float	m_fPos[3];		//位置
-	float	m_fRad[3];		//回転
-	float	m_fMass;		//質量
-	float	m_fMoveDecay;	//移動減衰
-	float	m_fRotDecay;	//回転減衰
-	float	m_fRepulsive;	//反発力
-	float	m_fFriction;	//摩擦力
+	int				m_BoneId;		//ボーンID
+	float			m_fSize[3];		//サイズ
+	float			m_fPos[3];		//位置
+	float			m_fRad[3];		//回転
+	float			m_fMass;		//質量
+	float			m_fMoveDecay;	//移動減衰
+	float			m_fRotDecay;	//回転減衰
+	float			m_fRepulsive;	//反発力
+	float			m_fFriction;	//摩擦力
 };
 
 //Joint
@@ -556,18 +546,16 @@ struct PMX_JOINT
 			m_pNameEng = nullptr;
 		}
 	}
-	wchar_t* m_pNameJap;//joint名(日)
-	wchar_t* m_pNameEng;//joint名(英)
-
-	unsigned char m_Type;//Jointの種類(ver2.0は0のみ)
-
-	int		m_RigitId[2];		//関連剛体のインデックス
-	float	m_fPos[3];			//位置
-	float	m_fRad[3];			//回転
-	float	m_fUpperMove[3];	//移動制限(上限)
-	float	m_fLowerMove[3];	//移動制限(下限)
-	float	m_fUpperRad[3];		//回転制限(上限)
-	float	m_fLowerRad[3];		//回転制限(下限)
-	float	m_fSpringMove[3];	//ばね定数_移動
-	float	m_fSpringRad[3];	//ばね定数_回転
+	wchar_t*		m_pNameJap;			//joint名(日)
+	wchar_t*		m_pNameEng;			//joint名(英)
+	unsigned char	m_Type;				//Jointの種類(ver2.0は0のみ)
+	int				m_RigitId[2];		//関連剛体のインデックス
+	float			m_fPos[3];			//位置
+	float			m_fRad[3];			//回転
+	float			m_fUpperMove[3];	//移動制限(上限)
+	float			m_fLowerMove[3];	//移動制限(下限)
+	float			m_fUpperRad[3];		//回転制限(上限)
+	float			m_fLowerRad[3];		//回転制限(下限)
+	float			m_fSpringMove[3];	//ばね定数_移動
+	float			m_fSpringRad[3];	//ばね定数_回転
 };

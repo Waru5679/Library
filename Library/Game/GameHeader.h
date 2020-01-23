@@ -1,27 +1,22 @@
 #pragma once
 
 //初めのシーン
-#define START_SCENE SceneName::SceneTitle
+#define START_SCENE SceneName::SceneMain
 
 //ゲームで使うオブジェクトファイル
-#include "../Game/2DPolygon.h"
-#include "../Game/Street.h"
-#include "../Game/MainCamera.h"
-#include "../Game/Enemy.h"
-#include "../Game/EnemyBullet.h"
-#include "../Game/Bullet.h"
-#include "../Game/Player.h"
-#include "../Game/Aiming.h"
-#include "../Game/TitleCamera.h"
-#include "../Game/TitleObj.h"
-
-//Debug
-#include "../Game/RayTest.h"
-#include "../Game/Sphere.h"
+#include "../Game/Main/2DPolygon.h"
+#include "../Game/Main/MainCamera.h"
+#include "../Game/Main/Enemy.h"
+#include "../Game/Main/EnemyBullet.h"
+#include "../Game/Main/Bullet.h"
+#include "../Game/Main/Player.h"
+#include "../Game/Main/Aiming.h"
+#include "../Game/Title/TitleCamera.h"
+#include "../Game/Title/TitleObj.h"
 
 //ゲームで使うシーンファイル
-#include "../Game/SceneMain.h"
-#include "../Game/SceneTitle.h"
+#include "../Game/Main/SceneMain.h"
+#include "../Game/Title/SceneTitle.h"
 
 //シーン
 enum SceneName
@@ -60,6 +55,7 @@ enum ModelName
 enum TexName
 {
 	TexTest	,	//描画テスト
+	TexTitle,	//タイトルテクスチャ
 };
 
 //定数

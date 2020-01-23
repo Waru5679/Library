@@ -1,8 +1,8 @@
 //ライブラリファイル
-#include "../Library/LibraryHeader.h"
+#include "../../Library/LibraryHeader.h"
 
 //ゲームファイル
-#include "GameHeader.h"
+#include "../GameHeader.h"
 
 //コンストラクタ
 CEnemy::CEnemy(D3DXVECTOR3 Pos, D3DXVECTOR3 Angle, D3DXVECTOR3 Scale)

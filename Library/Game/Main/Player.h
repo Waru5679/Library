@@ -1,8 +1,8 @@
 #pragma once
 
 //ライブラリファイル
-#include "../Library/CObj.h"
-#include "../Library/LibraryHeader.h"
+#include "../../Library/CObj.h"
+#include "../../Library/LibraryHeader.h"
 
 //ゲームファイル
 #include "MainCamera.h"

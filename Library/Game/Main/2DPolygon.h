@@ -1,11 +1,11 @@
 #pragma once
 
 //ライブラリファイル
-#include "../Library/CObj.h"
-#include "../Library/LibraryHeader.h"
+#include "../../Library/CObj.h"
+#include "../../Library/LibraryHeader.h"
 
-//TitleObj
-class CTitleObj :public CObj2DBase
+//2Dポリゴンクラス
+class C2DPolygon:public CObj2DBase
 {
 public:
 	void Init();	//初期化

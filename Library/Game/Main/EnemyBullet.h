@@ -1,7 +1,7 @@
 #pragma once
 
 //ライブラリファイル
-#include "../Library/LibraryHeader.h"
+#include "../../Library/LibraryHeader.h"
 
 //ゲームファイル
 #include "Player.h"

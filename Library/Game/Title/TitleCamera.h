@@ -1,7 +1,7 @@
 #pragma once
 
 //ライブラリファイル
-#include "../Library/Camera.h"
+#include "../../Library/Camera.h"
 
 //メインカメラクラス
 class CTitleCamera :public CCameraBase

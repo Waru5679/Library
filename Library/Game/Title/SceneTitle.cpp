@@ -1,5 +1,5 @@
-#include "../Library/LibraryHeader.h"
-#include "GameHeader.h"
+#include "../../Library/LibraryHeader.h"
+#include "../GameHeader.h"
 
 //初期化
 void CSceneTitle::Init()
@@ -42,22 +42,17 @@ void CSceneTitle::Release()
 {
 	g_Task.Release();
 	AUDIO->DeleteMusic();
-	LOADER->Release();
-	RAY->Release();
-	TEXTURE->Release();
-	MODEL->Release();
 }
 
 //音楽
 void CSceneTitle::LoadAudio()
 {
-	AUDIO->Load(0, "Audio/King.wav", true);
 }
 
 //テクスチャ
 void CSceneTitle::LoadTexture()
 {
-	TEXTURE->Load(0, "Texture/Test.png", 512, 512);
+	TEXTURE->Load(TexName::TexTitle, "Texture/Title.png", 640, 480);
 }
 
 //メッシュ

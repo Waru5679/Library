@@ -76,16 +76,15 @@ struct PMX_DATA
 		}
 	}
 
-	int		m_VerNum;		//頂点数
-	int		m_FaceNum;		//面の数
-	int		m_TexNum;		//テクスチャ数
-	int		m_MaterialNum;	//マテリアル数
-	int		m_BoneNum;		//ボーン数
-	int		m_MorphNum;		//モーフ数
-	int		m_DisplayNum;	//表示枠数
-	int		m_RigidNum;		//剛体数
-	int		m_JointNum;		//Joint数
-
+	int				m_VerNum;		//頂点数
+	int				m_FaceNum;		//面の数
+	int				m_TexNum;		//テクスチャ数
+	int				m_MaterialNum;	//マテリアル数
+	int				m_BoneNum;		//ボーン数
+	int				m_MorphNum;		//モーフ数
+	int				m_DisplayNum;	//表示枠数
+	int				m_RigidNum;		//剛体数
+	int				m_JointNum;		//Joint数
 	PMX_HEADER		m_Head;			//ヘッダー
 	PMX_MODEL_INFO	m_ModelInfo;	//モデルデータ
 	PMX_VERTEX*		m_pVertex;		//頂点データ

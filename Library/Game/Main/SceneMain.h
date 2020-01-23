@@ -1,12 +1,12 @@
 #pragma once
 
 //ライブラリファイル
-#include "../Library/Scene.h"
+#include "../../Library/Scene.h"
 
 #include "MainCamera.h"
 
 //シーンメイン
-class CSceneTitle :public CSceneBase
+class CSceneMain :public CSceneBase
 {
 public:
 	void Init();	//初期化

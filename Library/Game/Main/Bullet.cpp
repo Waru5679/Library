@@ -1,6 +1,5 @@
-#include "../Library/LibraryHeader.h"
-#include "GameHeader.h"
-
+#include "../../Library/LibraryHeader.h"
+#include "../GameHeader.h"
 #include "Bullet.h"
 
 //コンストラクタ

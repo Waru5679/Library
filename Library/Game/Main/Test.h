@@ -1,10 +1,9 @@
 #pragma once
 
 //ライブラリファイル
-#include "../Library/CObj.h"
-#include "../Library/LibraryHeader.h"
-
-#include "../Library/XLoader_Skin.h"
+#include "../../Library/CObj.h"
+#include "../../Library/LibraryHeader.h"
+#include "../../Library/XLoader_Skin.h"
 
 //テストクラス
 class CTest :public CObj3DBase
